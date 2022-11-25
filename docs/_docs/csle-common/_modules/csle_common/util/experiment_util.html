@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.util.experiment_util &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.util.experiment_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.util.experiment_util</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utility functions for training with the csle environments</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.containers_config</span> <span class="kn">import</span> <span class="n">ContainersConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.encoding.np_encoder</span> <span class="kn">import</span> <span class="n">NpEncoder</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="ExperimentUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil">[docs]</a><span class="k">class</span> <span class="nc">ExperimentUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions related to training</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ExperimentUtil.get_subdir"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.get_subdir">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function to construct the subdir string from a given results dir, subdir, and random seed</span>
+
+<span class="sd">        :param output_dir: the base output directory</span>
+<span class="sd">        :param results_dir: the base results dir</span>
+<span class="sd">        :param subdir: the subdirectory (e.g. logs, data, tensorboard, etc)</span>
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :return: the directory path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_dir</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="n">results_dir</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="n">subdir</span>
+                <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.create_artifact_dirs"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.create_artifact_dirs">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_artifact_dirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates artifact directories if they do not already exist</span>
+
+<span class="sd">        :param output_dir: the base directory</span>
+<span class="sd">        :param random_seed: the random seed of the experiment</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">PLOTS_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">PLOTS_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">HYPERPARAMETERS_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">HYPERPARAMETERS_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">GIFS_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">GIFS_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">TENSORBOARD_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">TENSORBOARD_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                        <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">ENV_DATA_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">RESULTS_DIR</span><span class="p">,</span>
+                                                  <span class="n">constants</span><span class="o">.</span><span class="n">EXPERIMENT</span><span class="o">.</span><span class="n">ENV_DATA_DIR</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.setup_experiment_logger"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.setup_experiment_logger">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">setup_experiment_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configures the logger for writing log-data of training</span>
+
+<span class="sd">        :param name: name of the logger</span>
+<span class="sd">        :param logdir: directory to save log files</span>
+<span class="sd">        :param time_str: time string for file names</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># create formatter</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1">,</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># log to console</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="c1"># log to file</span>
+        <span class="k">if</span> <span class="n">time_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">time_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+        <span class="n">fh</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">logdir</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="n">time_str</span> <span class="o">+</span>
+                                 <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">UNDERSCORE_DELIM</span> <span class="o">+</span>
+                                 <span class="n">name</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILE_PATTERNS</span><span class="o">.</span><span class="n">LOG_SUFFIX</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+
+        <span class="c1"># add the handlers to the logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">logger</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.write_emulation_config_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.write_emulation_config_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">write_emulation_config_file</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes a config object to a config file</span>
+
+<span class="sd">        :param emulation_env_config: the emulation env config object</span>
+<span class="sd">        :param path: the path to write the file</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.write_simulation_config_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.write_simulation_config_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">write_simulation_config_file</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes a config object to a config file</span>
+
+<span class="sd">        :param simulation_env_config: the simulation env config object</span>
+<span class="sd">        :param path: the path to write the file</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NpEncoder</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.read_emulation_env_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_emulation_env_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_emulation_env_config</span><span class="p">(</span><span class="n">emulation_env_config_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvConfig</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads emulation env config from a json file</span>
+
+<span class="sd">        :param emulation_env_config_path: the path to the emulation env config file</span>
+<span class="sd">        :return: the emulation env configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">emulation_env_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span> <span class="o">=</span> <span class="n">EmulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">emulation_env_config</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.read_simulation_env_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_simulation_env_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_simulation_env_config</span><span class="p">(</span><span class="n">simulation_env_config_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulationEnvConfig</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads simulation env config from a json file</span>
+
+<span class="sd">        :param simulation_env_config_path: the path to the simulation env config file</span>
+<span class="sd">        :return: the simulation env configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">simulation_env_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span> <span class="o">=</span> <span class="n">SimulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">simulation_env_config</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.read_env_picture"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_env_picture">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_env_picture</span><span class="p">(</span><span class="n">env_picture_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the environment topology picture from a file</span>
+
+<span class="sd">        :param env_picture_path: the path to picture</span>
+<span class="sd">        :return: the emulation env configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">env_picture_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
+            <span class="n">image_data</span> <span class="o">=</span> <span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">image_data</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.read_containers_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_containers_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_containers_config</span><span class="p">(</span><span class="n">containers_config_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainersConfig</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads containers_config of the experiment from a json file</span>
+
+<span class="sd">        :param containers_config_path: the path to the containers_config file</span>
+<span class="sd">        :return: the configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">containers_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">containers_cfg</span><span class="p">:</span> <span class="n">ContainersConfig</span> <span class="o">=</span> <span class="n">ContainersConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">containers_cfg</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.parse_args"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.parse_args">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">default_config_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the commandline arguments with argparse</span>
+
+<span class="sd">        :param default_config_path: default path to config file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Parse flags to configure the json parsing&#39;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-cp&quot;</span><span class="p">,</span> <span class="s2">&quot;--configpath&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to configuration file&quot;</span><span class="p">,</span>
+                            <span class="n">default</span><span class="o">=</span><span class="n">default_config_path</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-po&quot;</span><span class="p">,</span> <span class="s2">&quot;--plotonly&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Boolean parameter, if true, only plot&quot;</span><span class="p">,</span>
+                            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-nc&quot;</span><span class="p">,</span> <span class="s2">&quot;--noconfig&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Boolean parameter, if true always override config&quot;</span><span class="p">,</span>
+                            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-cs&quot;</span><span class="p">,</span> <span class="s2">&quot;--csvfile&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;CSV file for plotting&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-rd&quot;</span><span class="p">,</span> <span class="s2">&quot;--resultdirs&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;List of comma-separated result dirs to combine for plotting&quot;</span><span class="p">,</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">args</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.get_script_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.get_script_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_script_path</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the script path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_output_dir"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_output_dir">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_output_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the default output dir</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">script_dir</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_script_path</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">script_dir</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_emulation_config_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_emulation_config_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_emulation_config_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to emulation config file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_simulation_config_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_simulation_config_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_simulation_config_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to simulatio config file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SIMULATION</span><span class="o">.</span><span class="n">SIMULATION_ENV_CFG_PATH</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SIMULATION</span><span class="o">.</span><span class="n">SIMULATION_ENV_CFG_PATH</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_emulation_picture_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_emulation_picture_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_emulation_picture_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to emulation img file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span> <span class="o">+</span>
+                                                                          <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_IMAGE</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_IMAGE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_simulation_picture_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_simulation_picture_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_simulation_picture_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to simulatio img file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                    <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">SIMULATION_ENV_IMAGE</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                    <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">SIMULATION_ENV_IMAGE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_containers_folders_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_containers_folders_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_containers_folders_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to container folders</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONTAINERS_DIR</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONTAINERS_DIR</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_makefile_template_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_makefile_template_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_makefile_template_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to makefile tempalte</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">MAKEFILE_TEMPLATE</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">MAKEFILE_TEMPLATE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.default_makefile_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_makefile_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_makefile_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param out_dir: directory to write</span>
+<span class="sd">        :return: the default path to makefile tempalte</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">(),</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span>
+                                       <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">MAKEFILE</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOT_DELIM</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">MAKEFILE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config_path</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.running_average"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.running_average">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">running_average</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Function used to compute the running average</span>
+<span class="sd">            of the last N elements of a vector x</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="p">))</span> <span class="o">/</span> <span class="n">N</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.running_average_list"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.running_average_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">running_average_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Function used to compute the running average</span>
+<span class="sd">            of the last N elements of a vector x</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="p">))</span> <span class="o">/</span> <span class="n">N</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.mean_confidence_interval"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.mean_confidence_interval">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute confidence intervals</span>
+
+<span class="sd">        :param data: the data</span>
+<span class="sd">        :param confidence: the interval confidence</span>
+<span class="sd">        :return: the mean, the lower confidence interval, the upper confidence interval</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">m</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">se</span> <span class="o">*</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">confidence</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="n">h</span></div>
+
+<div class="viewcode-block" id="ExperimentUtil.set_seed"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.set_seed">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the random seed</span>
+
+<span class="sd">        :param seed: the seed to set</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

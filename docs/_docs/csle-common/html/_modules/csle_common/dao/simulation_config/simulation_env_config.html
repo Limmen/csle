@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.simulation_config.simulation_env_config &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.simulation_config.simulation_env_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.simulation_config.simulation_env_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_input_config</span> <span class="kn">import</span> <span class="n">SimulationEnvInputConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.players_config</span> <span class="kn">import</span> <span class="n">PlayersConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.state_space_config</span> <span class="kn">import</span> <span class="n">StateSpaceConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.joint_action_space_config</span> <span class="kn">import</span> <span class="n">JointActionSpaceConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.joint_observation_space_config</span> <span class="kn">import</span> <span class="n">JointObservationSpaceConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.time_step_type</span> <span class="kn">import</span> <span class="n">TimeStepType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.reward_function_config</span> <span class="kn">import</span> <span class="n">RewardFunctionConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.transition_operator_config</span> <span class="kn">import</span> <span class="n">TransitionOperatorConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.observation_function_config</span> <span class="kn">import</span> <span class="n">ObservationFunctionConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.initial_state_distribution_config</span> <span class="kn">import</span> <span class="n">InitialStateDistributionConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.env_parameters_config</span> <span class="kn">import</span> <span class="n">EnvParametersConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_config</span> <span class="kn">import</span> <span class="n">StoppingGameConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config</span> <span class="kn">import</span> <span class="n">StoppingGameDefenderPomdpConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config</span> <span class="kn">import</span> <span class="n">StoppingGameAttackerMdpConfig</span>
+
+
+<div class="viewcode-block" id="SimulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">SimulationEnvConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A DTO class representing the configuration of a simulation environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">gym_env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">simulation_env_input_config</span><span class="p">:</span> <span class="n">SimulationEnvInputConfig</span><span class="p">,</span>
+                 <span class="n">players_config</span><span class="p">:</span> <span class="n">PlayersConfig</span><span class="p">,</span> <span class="n">state_space_config</span><span class="p">:</span> <span class="n">StateSpaceConfig</span><span class="p">,</span>
+                 <span class="n">joint_action_space_config</span><span class="p">:</span> <span class="n">JointActionSpaceConfig</span><span class="p">,</span>
+                 <span class="n">joint_observation_space_config</span><span class="p">:</span> <span class="n">JointObservationSpaceConfig</span><span class="p">,</span> <span class="n">time_step_type</span><span class="p">:</span> <span class="n">TimeStepType</span><span class="p">,</span>
+                 <span class="n">reward_function_config</span><span class="p">:</span> <span class="n">RewardFunctionConfig</span><span class="p">,</span> <span class="n">transition_operator_config</span><span class="p">:</span> <span class="n">TransitionOperatorConfig</span><span class="p">,</span>
+                 <span class="n">observation_function_config</span><span class="p">:</span> <span class="n">ObservationFunctionConfig</span><span class="p">,</span>
+                 <span class="n">initial_state_distribution_config</span><span class="p">:</span> <span class="n">InitialStateDistributionConfig</span><span class="p">,</span>
+                 <span class="n">env_parameters_config</span><span class="p">:</span> <span class="n">EnvParametersConfig</span><span class="p">,</span> <span class="n">plot_transition_probabilities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">plot_observation_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">plot_reward_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param name: the name of the simulation</span>
+<span class="sd">        :param gym_env_name: the name of the OpenAI gym environment</span>
+<span class="sd">        :param descr: the description of the simulation</span>
+<span class="sd">        :param simulation_env_input_config: the input configuration to the simulation</span>
+<span class="sd">        :param players_config: the players configuration of the simulation</span>
+<span class="sd">        :param state_space_config: the state space configuration of the simulation</span>
+<span class="sd">        :param joint_action_space_config: the joint action space configuration of the simulation</span>
+<span class="sd">        :param joint_observation_space_config: the joint observation space config of the simulation</span>
+<span class="sd">        :param time_step_type: the time step type of the simulation</span>
+<span class="sd">        :param reward_function_config: the reward function configuration of the of the simulation</span>
+<span class="sd">        :param transition_operator_config: the transition operator configuration of the simulation</span>
+<span class="sd">        :param observation_function_config: the observation function configuration of the simulation</span>
+<span class="sd">        :param emulation_statistic_id: the id of the emulation statistic</span>
+<span class="sd">        :param initial_state_distribution_config: the initial state distribution configuration of the simulation</span>
+<span class="sd">        :param version: the version of the environment</span>
+<span class="sd">        :param env_parameters_config: parameters that are not part of the state but that the poliy depends on.</span>
+<span class="sd">        :param plot_transition_probabilities: boolean parameter whether to plot transition probabilities or not</span>
+<span class="sd">        :param plot_observation_function: boolean parameter whether to plot the observation function or not</span>
+<span class="sd">        :param plot_reward_function: boolean parameter whether to plot the reward function or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_input_config</span> <span class="o">=</span> <span class="n">simulation_env_input_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players_config</span> <span class="o">=</span> <span class="n">players_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_space_config</span> <span class="o">=</span> <span class="n">state_space_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joint_action_space_config</span> <span class="o">=</span> <span class="n">joint_action_space_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joint_observation_space_config</span> <span class="o">=</span> <span class="n">joint_observation_space_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_type</span> <span class="o">=</span> <span class="n">time_step_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_function_config</span> <span class="o">=</span> <span class="n">reward_function_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_operator_config</span> <span class="o">=</span> <span class="n">transition_operator_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_function_config</span> <span class="o">=</span> <span class="n">observation_function_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_state_distribution_config</span> <span class="o">=</span> <span class="n">initial_state_distribution_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gym_env_name</span> <span class="o">=</span> <span class="n">gym_env_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_parameters_config</span> <span class="o">=</span> <span class="n">env_parameters_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_transition_probabilities</span> <span class="o">=</span> <span class="n">plot_transition_probabilities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_observation_function</span> <span class="o">=</span> <span class="n">plot_observation_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_reward_function</span> <span class="o">=</span> <span class="n">plot_reward_function</span>
+
+<div class="viewcode-block" id="SimulationEnvConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">input_config</span> <span class="o">=</span> <span class="n">StoppingGameConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_input_config&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">input_config</span> <span class="o">=</span> <span class="n">StoppingGameAttackerMdpConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_input_config&quot;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">input_config</span> <span class="o">=</span> <span class="n">StoppingGameDefenderPomdpConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_input_config&quot;</span><span class="p">])</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">SimulationEnvConfig</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">descr</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">],</span>
+            <span class="n">simulation_env_input_config</span><span class="o">=</span><span class="n">input_config</span><span class="p">,</span>
+            <span class="n">players_config</span><span class="o">=</span><span class="n">PlayersConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;players_config&quot;</span><span class="p">]),</span>
+            <span class="n">state_space_config</span><span class="o">=</span><span class="n">StateSpaceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;state_space_config&quot;</span><span class="p">]),</span>
+            <span class="n">joint_action_space_config</span><span class="o">=</span><span class="n">JointActionSpaceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_action_space_config&quot;</span><span class="p">]),</span>
+            <span class="n">joint_observation_space_config</span><span class="o">=</span><span class="n">JointObservationSpaceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_observation_space_config&quot;</span><span class="p">]),</span>
+            <span class="n">time_step_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_type&quot;</span><span class="p">],</span>
+            <span class="n">reward_function_config</span><span class="o">=</span><span class="n">RewardFunctionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;reward_function_config&quot;</span><span class="p">]),</span>
+            <span class="n">transition_operator_config</span><span class="o">=</span><span class="n">TransitionOperatorConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;transition_operator_config&quot;</span><span class="p">]),</span>
+            <span class="n">observation_function_config</span><span class="o">=</span><span class="n">ObservationFunctionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;observation_function_config&quot;</span><span class="p">]),</span>
+            <span class="n">initial_state_distribution_config</span><span class="o">=</span><span class="n">InitialStateDistributionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+                <span class="n">d</span><span class="p">[</span><span class="s2">&quot;initial_state_distribution_config&quot;</span><span class="p">]),</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span> <span class="n">gym_env_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;gym_env_name&quot;</span><span class="p">],</span>
+            <span class="n">env_parameters_config</span><span class="o">=</span><span class="n">EnvParametersConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;env_parameters_config&quot;</span><span class="p">]),</span>
+            <span class="n">plot_transition_probabilities</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;plot_transition_probabilities&quot;</span><span class="p">],</span>
+            <span class="n">plot_observation_function</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;plot_observation_function&quot;</span><span class="p">],</span>
+            <span class="n">plot_reward_function</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;plot_reward_function&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="SimulationEnvConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descr</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_input_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;players_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;state_space_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_space_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_action_space_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_observation_space_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_observation_space_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step_type</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;reward_function_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_function_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;transition_operator_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_operator_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;observation_function_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_function_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;initial_state_distribution_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_state_distribution_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;gym_env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gym_env_name</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;env_parameters_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_parameters_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;plot_transition_probabilities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_transition_probabilities</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;plot_observation_function&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_observation_function</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;plot_reward_function&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_reward_function</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, descr: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;simulation_env_input_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;players_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">players_config</span><span class="si">}</span><span class="s2">, state_space_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state_space_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;joint_action_space_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;joint_observation_space_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">joint_observation_space_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;time_step_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_type</span><span class="si">}</span><span class="s2">, reward_function_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_function_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;transition_operator_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_operator_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;observation_function_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_function_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;initial_state_distribution_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_state_distribution_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, gym_env_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gym_env_name</span><span class="si">}</span><span class="s2">, id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;env_parameters_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env_parameters_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;plot_observation_function: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_observation_function</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;plot_transition_probabilities: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_transition_probabilities</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;plot_reward_function: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_reward_function</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="SimulationEnvConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

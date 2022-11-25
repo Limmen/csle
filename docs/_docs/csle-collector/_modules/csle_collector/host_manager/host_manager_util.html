@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.host_manager.host_manager_util &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.host_manager.host_manager_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.host_manager.host_manager_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_collector.host_manager.failed_login_attempt</span> <span class="kn">import</span> <span class="n">FailedLoginAttempt</span>
+<span class="kn">from</span> <span class="nn">csle_collector.host_manager.successful_login</span> <span class="kn">import</span> <span class="n">SuccessfulLogin</span>
+<span class="kn">from</span> <span class="nn">csle_collector.host_manager.host_metrics</span> <span class="kn">import</span> <span class="n">HostMetrics</span>
+<span class="kn">import</span> <span class="nn">csle_collector.host_manager.host_manager_pb2</span>
+
+
+<div class="viewcode-block" id="HostManagerUtil"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil">[docs]</a><span class="k">class</span> <span class="nc">HostManagerUtil</span><span class="p">:</span>
+
+<div class="viewcode-block" id="HostManagerUtil.read_latest_ts_auth"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_auth">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_latest_ts_auth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the timestamp of the latest failed login attempt</span>
+
+<span class="sd">        :return: the number of recently failed login attempts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_FAILED_LOGIN_ATTEMPTS</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">login_attempts_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">login_attempts</span> <span class="o">=</span> <span class="n">login_attempts_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">login_attempts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="n">login_attempts</span><span class="p">))</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+            <span class="n">parsed_ts</span> <span class="o">=</span> <span class="n">FailedLoginAttempt</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span>
+                                                          <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">login_attempts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span><span class="o">.</span><span class="n">timestamp</span>
+            <span class="k">return</span> <span class="n">parsed_ts</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_failed_login_attempts"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_failed_login_attempts">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_failed_login_attempts</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the number of recent failed login attempts</span>
+
+<span class="sd">        :param emulation_config: configuration to connect to the node in the emulation</span>
+<span class="sd">        :return: the number of recently failed login attempts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_FAILED_LOGIN_ATTEMPTS</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">login_attempts_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">login_attempts</span> <span class="o">=</span> <span class="n">login_attempts_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">login_attempts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="n">login_attempts</span><span class="p">))</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">login_attempts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">FailedLoginAttempt</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())),</span> <span class="n">login_attempts</span><span class="p">))</span>
+        <span class="n">login_attempts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">failed_auth_last_ts</span><span class="p">,</span> <span class="n">login_attempts</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">login_attempts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_latest_ts_login"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_login">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_latest_ts_login</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the timestamp of the latest successful login attempt</span>
+
+<span class="sd">        :return: the number of recently failed login attempts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_SUCCESSFUL_LOGIN_ATTEMPTS</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">logins</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">logins</span> <span class="o">=</span> <span class="n">logins</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">&quot;wtmp begins&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">x</span><span class="p">,</span> <span class="n">logins</span><span class="p">))</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+            <span class="k">return</span> <span class="n">SuccessfulLogin</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()),</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_successful_login_events"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_successful_login_events">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_successful_login_events</span><span class="p">(</span><span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the number of recent successful login attempts</span>
+
+<span class="sd">        :param login_last_ts: the timestamp to use when filtering logins</span>
+<span class="sd">        :return: the number of recently failed login attempts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_SUCCESSFUL_LOGIN_ATTEMPTS</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">logins</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">logins</span> <span class="o">=</span> <span class="n">logins</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">&quot;wtmp begins&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">x</span><span class="p">,</span> <span class="n">logins</span><span class="p">))</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">successful_logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">SuccessfulLogin</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()),</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">),</span> <span class="n">logins</span><span class="p">))</span>
+        <span class="n">successful_logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="n">successful_logins</span><span class="p">))</span>
+        <span class="n">successful_logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">login_last_ts</span><span class="p">,</span> <span class="n">successful_logins</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">successful_logins</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_open_connections"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_open_connections">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_open_connections</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the number of open connections to the server</span>
+
+<span class="sd">        :return: the number of open connections</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_OPEN_CONNECTIONS_CMD</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">connections_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">connections_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Active UNIX domain sockets&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">parts2</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;State&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">parts3</span> <span class="o">=</span> <span class="n">parts2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_users"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_users">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_users</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the number of user accounts on the server</span>
+
+<span class="sd">        :return: the number of user accounts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_USER_ACCOUNTS</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">users_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_logged_in_users"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_logged_in_users">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_logged_in_users</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the number of logged-in users on the server</span>
+
+<span class="sd">        :return: the number of logged in users</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_LOGGED_IN_USERS_CMD</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">users_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">users_str</span> <span class="o">=</span> <span class="n">users_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_processes"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_processes">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_processes</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures the number of processes on the server</span>
+
+<span class="sd">        :param emulation_config: configuration to connect to the node in the emulation</span>
+<span class="sd">        :return: the number of processes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_NUMBER_OF_PROCESSES</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">processes_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">num_processes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">processes_str</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">num_processes</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">num_processes</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.read_host_metrics"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_host_metrics</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostMetrics</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the latest metrics from the host</span>
+
+<span class="sd">        :param failed_auth_last_ts: the last time-step of read failed authentication attempts</span>
+<span class="sd">        :param login_last_ts: the last time-step of read successful logins</span>
+<span class="sd">        :return: The parsed host metrics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_logged_in_users</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_logged_in_users</span><span class="p">()</span>
+        <span class="n">num_failed_login_attempts</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_failed_login_attempts</span><span class="p">(</span>
+            <span class="n">failed_auth_last_ts</span><span class="o">=</span><span class="n">failed_auth_last_ts</span><span class="p">)</span>
+        <span class="n">num_open_connections</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_open_connections</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">num_open_connections</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">num_open_connections</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">num_login_events</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_successful_login_events</span><span class="p">(</span><span class="n">login_last_ts</span><span class="o">=</span><span class="n">login_last_ts</span><span class="p">)</span>
+        <span class="n">num_processes</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_processes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">num_processes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">num_processes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">num_users</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_users</span><span class="p">()</span>
+        <span class="n">host_metrics</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="p">(</span>
+            <span class="n">num_logged_in_users</span><span class="o">=</span><span class="n">num_logged_in_users</span><span class="p">,</span>
+            <span class="n">num_failed_login_attempts</span><span class="o">=</span><span class="n">num_failed_login_attempts</span><span class="p">,</span>
+            <span class="n">num_open_connections</span><span class="o">=</span><span class="n">num_open_connections</span><span class="p">,</span>
+            <span class="n">num_login_events</span><span class="o">=</span><span class="n">num_login_events</span><span class="p">,</span>
+            <span class="n">num_processes</span><span class="o">=</span><span class="n">num_processes</span><span class="p">,</span>
+            <span class="n">num_users</span><span class="o">=</span><span class="n">num_users</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">host_metrics</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">host_monitor_dto_to_dict</span><span class="p">(</span><span class="n">host_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a HostMonitorDTO to a dict</span>
+
+<span class="sd">        :param host_monitor_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">running</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">host_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a HostMonitorDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">()</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">host_monitor_dto</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">host_metrics_dto_to_dict</span><span class="p">(</span><span class="n">host_metrics_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a HostMetricsDTO to a dict</span>
+
+<span class="sd">        :param host_metrics_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_logged_in_users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_logged_in_users</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_failed_login_attempts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_failed_login_attempts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_open_connections&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_open_connections</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_login_events&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_login_events</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_processes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_processes</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_users</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">host_metrics_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a HostMetricsDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">host_metrics_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">()</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_logged_in_users</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_logged_in_users&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_failed_login_attempts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_failed_login_attempts&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_open_connections</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_open_connections&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_login_events</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_login_events&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_processes</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_processes&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_users</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_users&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">host_metrics_dto</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_empty"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">host_metrics_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty HostMetricsDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">host_metrics_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">()</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_logged_in_users</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_failed_login_attempts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_open_connections</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_login_events</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_processes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">num_users</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">host_metrics_dto</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">host_metrics_dto</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">host_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty HostMonitorDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">()</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">host_monitor_dto</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.vi.vi_agent &mdash; csle-agents 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.vi.vi_agent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.vi.vi_agent</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_config</span> <span class="kn">import</span> <span class="n">ExperimentConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_result</span> <span class="kn">import</span> <span class="n">ExperimentResult</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.agent_type</span> <span class="kn">import</span> <span class="n">AgentType</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.experiment_util</span> <span class="kn">import</span> <span class="n">ExperimentUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.base.base_agent</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
+<span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agents_constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_execution</span> <span class="kn">import</span> <span class="n">ExperimentExecution</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.tabular_policy</span> <span class="kn">import</span> <span class="n">TabularPolicy</span>
+
+
+<div class="viewcode-block" id="VIAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent">[docs]</a><span class="k">class</span> <span class="nc">VIAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Value Iteration Agent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
+                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
+                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the value iteration agent</span>
+
+<span class="sd">        :param simulation_env_config: configuration of the simulation environment</span>
+<span class="sd">        :param experiment_config: the experiment configuration</span>
+<span class="sd">        :param training_job: an existing training job to use (optional)</span>
+<span class="sd">        :param save_to_metastore: boolean flag whether to save the execution to the metastore</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">experiment_config</span><span class="o">=</span><span class="n">experiment_config</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">VALUE_ITERATION</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">training_job</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span> <span class="o">=</span> <span class="n">save_to_metastore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VIAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the value iteration algorithm to compute V*</span>
+
+<span class="sd">        :return: the results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+
+        <span class="c1"># Initialize metrics</span>
+        <span class="n">exp_result</span> <span class="o">=</span> <span class="n">ExperimentResult</span><span class="p">()</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">DELTA</span><span class="p">)</span>
+
+        <span class="n">descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Computation of V* with the Value Iteration algorithm using &quot;</span> \
+                <span class="sa">f</span><span class="s2">&quot;simulation:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">:</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Initialize training job</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">TrainingJobConfig</span><span class="p">(</span>
+                <span class="n">simulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span>
+                <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">experiment_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">num_cached_traces</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
+                <span class="n">training_job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">training_job_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">pid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">experiment_result</span> <span class="o">=</span> <span class="n">exp_result</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="c1"># Initialize execution result</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">emulation_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">simulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span> <span class="o">=</span> <span class="n">ExperimentExecution</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span>
+                                                 <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">simulation_name</span><span class="o">=</span><span class="n">simulation_name</span><span class="p">,</span>
+                                                 <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">log_file_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">log_file_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
+            <span class="n">exp_execution_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_experiment_execution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">exp_execution_id</span>
+
+        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">:</span>
+            <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">exp_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_iteration</span><span class="p">(</span><span class="n">exp_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="c1"># Calculate average and std metrics</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">value_vectors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">:</span>
+                <span class="n">value_vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">metric</span><span class="p">])</span>
+
+            <span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">std_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">float</span> \
+                        <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span>
+                    <span class="n">seed_values</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">seed_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">)):</span>
+                        <span class="n">seed_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="n">seed_idx</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">avg</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">mean_confidence_interval</span><span class="p">(</span>
+                        <span class="n">data</span><span class="o">=</span><span class="n">seed_values</span><span class="p">,</span>
+                        <span class="n">confidence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">avg</span><span class="p">):</span>
+                        <span class="n">avg_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg</span><span class="p">)</span>
+                    <span class="n">ci</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">mean_confidence_interval</span><span class="p">(</span>
+                        <span class="n">data</span><span class="o">=</span><span class="n">seed_values</span><span class="p">,</span>
+                        <span class="n">confidence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ci</span><span class="p">):</span>
+                        <span class="n">std_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">std_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">avg_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">std_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_metrics</span>
+                <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">std_metrics</span>
+
+                <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">ts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">exp_result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">experiment_result</span> <span class="o">=</span> <span class="n">exp_result</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_experiment_execution</span><span class="p">(</span><span class="n">experiment_execution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="p">,</span>
+                                                        <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
+
+<div class="viewcode-block" id="VIAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a list with the hyperparameter names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">,</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">,</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">THETA</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">TRANSITION_TENSOR</span><span class="p">,</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">REWARD_TENSOR</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">NUM_STATES</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">NUM_ACTIONS</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="VIAgent.value_iteration"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.value_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">value_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the value iteration algorithm</span>
+
+<span class="sd">        :param exp_result: the experiment result object</span>
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :return: the updated experiment result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">THETA</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">discount_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">num_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">NUM_STATES</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">num_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">NUM_ACTIONS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">TRANSITION_TENSOR</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">REWARD_TENSOR</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the value iteration algorithm, theta:</span><span class="si">{</span><span class="n">theta</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;num_states:</span><span class="si">{</span><span class="n">num_states</span><span class="si">}</span><span class="s2">, discount_factor: </span><span class="si">{</span><span class="n">discount_factor</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;num_actions: </span><span class="si">{</span><span class="n">num_actions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">V</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">avg_returns</span><span class="p">,</span> <span class="n">running_avg_returns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="p">(</span>
+            <span class="n">T</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">num_states</span><span class="o">=</span><span class="n">num_states</span><span class="p">,</span> <span class="n">num_actions</span><span class="o">=</span><span class="n">num_actions</span><span class="p">,</span>
+            <span class="n">R</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">),</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">discount_factor</span><span class="o">=</span><span class="n">discount_factor</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">DELTA</span><span class="p">]</span> <span class="o">=</span> <span class="n">deltas</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_returns</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="n">running_avg_returns</span>
+        <span class="n">tabular_policy</span> <span class="o">=</span> <span class="n">TabularPolicy</span><span class="p">(</span><span class="n">player_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">player_type</span><span class="p">,</span>
+                                       <span class="n">actions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">[</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">actions</span><span class="p">,</span>
+                                       <span class="n">agent_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span><span class="p">,</span> <span class="n">value_function</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">V</span><span class="p">),</span>
+                                       <span class="n">lookup_table</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">policy</span><span class="p">),</span> <span class="n">simulation_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                       <span class="n">avg_R</span><span class="o">=</span><span class="n">avg_returns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="n">tabular_policy</span>
+        <span class="k">return</span> <span class="n">exp_result</span></div>
+
+<div class="viewcode-block" id="VIAgent.one_step_lookahead"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.one_step_lookahead">[docs]</a>    <span class="k">def</span> <span class="nf">one_step_lookahead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">num_states</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs a one-step lookahead for value iteration</span>
+<span class="sd">        :param state: the current state</span>
+<span class="sd">        :param V: the current value function</span>
+<span class="sd">        :param num_actions: the number of actions</span>
+<span class="sd">        :param num_states: the number of states</span>
+<span class="sd">        :param T: the transition kernel</span>
+<span class="sd">        :param discount_factor: the discount factor</span>
+<span class="sd">        :param R: the table with rewards</span>
+<span class="sd">        :param next_state_lookahead: the next state lookahead table</span>
+<span class="sd">        :return: an array with lookahead values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_actions</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_actions</span><span class="p">):</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">state</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">next_state</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_states</span><span class="p">):</span>
+                <span class="n">prob</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">state</span><span class="p">][</span><span class="n">next_state</span><span class="p">]</span>
+                <span class="n">A</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prob</span> <span class="o">*</span> <span class="p">(</span><span class="n">reward</span> <span class="o">+</span> <span class="n">discount_factor</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">next_state</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">A</span></div>
+
+<div class="viewcode-block" id="VIAgent.vi"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.vi">[docs]</a>    <span class="k">def</span> <span class="nf">vi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+           <span class="n">theta</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">discount_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An implementation of the Value Iteration algorithm</span>
+<span class="sd">        :param T: the transition kernel T</span>
+<span class="sd">        :param num_states: the number of states</span>
+<span class="sd">        :param num_actions: the number of actions</span>
+<span class="sd">        :param state_to_id: the state-to-id lookup table</span>
+<span class="sd">        :param HP: the table with hack probabilities</span>
+<span class="sd">        :param R: the table with rewards</span>
+<span class="sd">        :param next_state_lookahead: the next-state-lookahead table</span>
+<span class="sd">        :param theta: convergence threshold</span>
+<span class="sd">        :param discount_factor: the discount factor</span>
+<span class="sd">        :return: (greedy policy, value function, deltas, average_returns)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deltas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">average_returns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">running_average_returns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_states</span><span class="p">)</span>
+        <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Stopping condition</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Update each state...</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_states</span><span class="p">):</span>
+                <span class="c1"># Do a one-step lookahead to find the best action</span>
+                <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_step_lookahead</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">num_states</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+                <span class="n">best_action_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+                <span class="c1"># Calculate delta across all states seen so far</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">best_action_value</span> <span class="o">-</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span>
+                <span class="c1"># Update the value function. Ref: Sutton book eq. 4.10.</span>
+                <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_action_value</span>
+
+            <span class="n">deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+
+            <span class="n">avg_return</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_EVERY</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_policy_from_value_function</span><span class="p">(</span><span class="n">num_states</span><span class="o">=</span><span class="n">num_states</span><span class="p">,</span> <span class="n">num_actions</span><span class="o">=</span><span class="n">num_actions</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span>
+                                                                <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">discount_factor</span><span class="o">=</span><span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
+                <span class="n">avg_return</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_policy</span><span class="p">(</span><span class="n">policy</span><span class="o">=</span><span class="n">policy</span><span class="p">,</span> <span class="n">eval_batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                    <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">average_returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_return</span><span class="p">)</span>
+                <span class="n">running_avg_J</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                    <span class="n">average_returns</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">running_average_returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">running_avg_J</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">log_every</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[VI] i:</span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s2">, delta: </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                                    <span class="sa">f</span><span class="s2">&quot;theta: </span><span class="si">{</span><span class="n">theta</span><span class="si">}</span><span class="s2">, avg_return: </span><span class="si">{</span><span class="n">avg_return</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Check if we can stop</span>
+            <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_policy_from_value_function</span><span class="p">(</span><span class="n">num_states</span><span class="o">=</span><span class="n">num_states</span><span class="p">,</span> <span class="n">num_actions</span><span class="o">=</span><span class="n">num_actions</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span>
+                                                        <span class="n">discount_factor</span><span class="o">=</span><span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">average_returns</span><span class="p">,</span> <span class="n">running_average_returns</span></div>
+
+<div class="viewcode-block" id="VIAgent.evaluate_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.evaluate_policy">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">eval_batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evalutes a tabular policy</span>
+
+<span class="sd">        :param policy: the tabular policy to evaluate</span>
+<span class="sd">        :param eval_batch_size: the batch size</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">returns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eval_batch_size</span><span class="p">):</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+                <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
+                <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
+            <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+        <span class="n">avg_return</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">avg_return</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VIAgent.create_policy_from_value_function"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.create_policy_from_value_function">[docs]</a>    <span class="k">def</span> <span class="nf">create_policy_from_value_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                          <span class="n">discount_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a tabular policy from a value function</span>
+
+<span class="sd">        :param num_states: the number of states</span>
+<span class="sd">        :param num_actions: the number of actions</span>
+<span class="sd">        :param V: the value function</span>
+<span class="sd">        :param T: the transition operator</span>
+<span class="sd">        :param discount_factor: the discount factor</span>
+<span class="sd">        :param R: the reward function</span>
+<span class="sd">        :return: the tabular policy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create a deterministic policy using the optimal value function</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">num_states</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_states</span><span class="p">):</span>
+            <span class="c1"># One step lookahead to find the best action for this state</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_step_lookahead</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">num_states</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+            <span class="n">best_action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+            <span class="c1"># Always take the best action</span>
+            <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">best_action</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="n">policy</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

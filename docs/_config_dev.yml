@@ -1,0 +1,8 @@
+#Config required because of Baseurl
+baseurl: ""
+
+host: 0.0.0.0
+port: 4000
+
+sass:
+  style: full

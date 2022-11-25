@@ -17,8 +17,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'gym-csle-ctf'
-copyright = '2021, Kim Hammar'
+project = 'gym-csle-stopping-game'
+copyright = '2020-2022, Kim Hammar'
 author = 'Kim Hammar'
 
 # The full version, including alpha/beta/rc tags

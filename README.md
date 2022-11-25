@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="docs/csle_logo.png" width="40%", height="40%">
+<img src="docs/imag/csle_logo_cropped.png" width="40%", height="40%">
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@ emulation, to simulation and implementation of network commands have been co-des
 is possible to train and evaluate reinforcement learning agents on practical problems in cyber security.
 
 <p align="center">
-<img src="docs/arch.png" width="600">
+<img src="docs/img/arch.png" width="600">
 </p>
 
 # Main Features

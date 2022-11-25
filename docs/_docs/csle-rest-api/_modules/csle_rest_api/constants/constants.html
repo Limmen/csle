@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_rest_api.constants.constants &mdash; csle-rest-api 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-rest-api
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_rest_api.constants.html">csle_rest_api.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_rest_api.util.html">csle_rest_api.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_rest_api.web_sockets.html">csle_rest_api.web_sockets package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-rest-api</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_rest_api.constants.constants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_rest_api.constants.constants</h1><div class="highlight"><pre>
+<span></span>
+
+<div class="viewcode-block" id="MGMT_WEBAPP"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP">[docs]</a><span class="k">class</span> <span class="nc">MGMT_WEBAPP</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the management webapp</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span> <span class="o">=</span> <span class="s2">&quot;Access-Control-Allow-Origin&quot;</span>
+    <span class="n">IDS_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;ids&quot;</span>
+    <span class="n">DOWNLOAD_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;download&quot;</span>
+    <span class="n">TOKEN_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;token&quot;</span>
+    <span class="n">STOP_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;stop&quot;</span>
+    <span class="n">EMULATION_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;emulation&quot;</span>
+    <span class="n">EXECUTION_ID_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;executionid&quot;</span>
+    <span class="n">IP_QUERY_PARAM</span> <span class="o">=</span> <span class="s2">&quot;ip&quot;</span>
+    <span class="n">CONTAINER_NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;container_name&quot;</span>
+    <span class="n">STATIC_RESOURCE_INDEX</span> <span class="o">=</span> <span class="s2">&quot;index.html&quot;</span>
+    <span class="n">HTTP_REST_GET</span> <span class="o">=</span> <span class="s2">&quot;GET&quot;</span>
+    <span class="n">HTTP_REST_POST</span> <span class="o">=</span> <span class="s2">&quot;POST&quot;</span>
+    <span class="n">HTTP_REST_DELETE</span> <span class="o">=</span> <span class="s2">&quot;DELETE&quot;</span>
+    <span class="n">HTTP_REST_PUT</span> <span class="o">=</span> <span class="s2">&quot;PUT&quot;</span>
+    <span class="n">STATIC</span> <span class="o">=</span> <span class="s2">&quot;static&quot;</span>
+    <span class="n">ABOUT_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;about-page&quot;</span>
+    <span class="n">LOGIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;login-page&quot;</span>
+    <span class="n">REGISTER_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;register-page&quot;</span>
+    <span class="n">EMULATION_STATISTICS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-statistics-page&quot;</span>
+    <span class="n">EMULATIONS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulations-page&quot;</span>
+    <span class="n">IMAGES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;images-page&quot;</span>
+    <span class="n">DOWNLOADS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;downloads-page&quot;</span>
+    <span class="n">JOBS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;jobs-page&quot;</span>
+    <span class="n">MONITORING_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;monitoring-page&quot;</span>
+    <span class="n">POLICIES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;policies-page&quot;</span>
+    <span class="n">POLICY_EXAMINATION_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;policy-examination-page&quot;</span>
+    <span class="n">SDN_CONTROLLERS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;sdn-controllers-page&quot;</span>
+    <span class="n">CONTROL_PLANE_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;control-plane-page&quot;</span>
+    <span class="n">USER_ADMIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;user-admin-page&quot;</span>
+    <span class="n">HOST_TERMINAL_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-page&quot;</span>
+    <span class="n">CONTAINER_TERMINAL_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-page&quot;</span>
+    <span class="n">SYSTEM_ADMIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;system-admin-page&quot;</span>
+    <span class="n">LOGS_ADMIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;logs-admin-page&quot;</span>
+    <span class="n">SIMULATIONS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;simulations-page&quot;</span>
+    <span class="n">SYSTEM_MODELS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;system-models-page&quot;</span>
+    <span class="n">TRACES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traces-page&quot;</span>
+    <span class="n">TRAINING_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;training-page&quot;</span>
+    <span class="n">CADVISOR_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;cadvisor&quot;</span>
+    <span class="n">GRAFANA_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;grafana&quot;</span>
+    <span class="n">NODE_EXPORTER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;node-exporter&quot;</span>
+    <span class="n">PROMETHEUS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;prometheus&quot;</span>
+    <span class="n">EMULATIONS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulations&quot;</span>
+    <span class="n">EXECUTIONS_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;executions&quot;</span>
+    <span class="n">INFO_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="n">CLIENT_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;client-manager&quot;</span>
+    <span class="n">CLIENT_POPULATION_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;client-population&quot;</span>
+    <span class="n">CLIENT_PRODUCER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;client-producer&quot;</span>
+    <span class="n">KAFKA_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;kafka-manager&quot;</span>
+    <span class="n">KAFKA_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span>
+    <span class="n">ELK_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;elk-manager&quot;</span>
+    <span class="n">ELK_STACK_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;elk-stack&quot;</span>
+    <span class="n">ELASTIC_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;elastic&quot;</span>
+    <span class="n">KIBANA_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;kibana&quot;</span>
+    <span class="n">LOGSTASH_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;logstash&quot;</span>
+    <span class="n">OSSEC_IDS_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ossec-ids-manager&quot;</span>
+    <span class="n">OSSEC_IDS_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ossec-ids&quot;</span>
+    <span class="n">OSSEC_IDS_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ossec-ids-monitor&quot;</span>
+    <span class="n">SNORT_IDS_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;snort-ids-manager&quot;</span>
+    <span class="n">SNORT_IDS_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;snort-ids&quot;</span>
+    <span class="n">SNORT_IDS_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;snort-ids-monitor&quot;</span>
+    <span class="n">HOST_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;host-manager&quot;</span>
+    <span class="n">HOST_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;host-monitor&quot;</span>
+    <span class="n">TRAFFIC_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traffic-manager&quot;</span>
+    <span class="n">TRAFFIC_GENERATOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traffic-generator&quot;</span>
+    <span class="n">DOCKER_STATS_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;docker-stats-manager&quot;</span>
+    <span class="n">DOCKER_STATS_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;docker-stats-monitor&quot;</span>
+    <span class="n">CREATE_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;create&quot;</span>
+    <span class="n">CONTAINER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;container&quot;</span>
+    <span class="n">SWITCHES_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;switches&quot;</span>
+    <span class="n">MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;monitor&quot;</span>
+    <span class="n">EMULATION_EXECUTIONS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-executions&quot;</span>
+    <span class="n">EMULATION_TRACES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-traces&quot;</span>
+    <span class="n">EMULATION_SIMULATION_TRACES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-simulation-traces&quot;</span>
+    <span class="n">SIMULATION_TRACES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;simulation-traces&quot;</span>
+    <span class="n">TRACES_DATASETS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traces-datasets&quot;</span>
+    <span class="n">STATISTICS_DATASETS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;statistics-datasets&quot;</span>
+    <span class="n">SIMULATIONS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;simulations&quot;</span>
+    <span class="n">EMULATION_STATISTICS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-statistics&quot;</span>
+    <span class="n">IMAGES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;images&quot;</span>
+    <span class="n">FILE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;file&quot;</span>
+    <span class="n">LOGIN_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;login&quot;</span>
+    <span class="n">JOBS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;jobs&quot;</span>
+    <span class="n">MONITORING_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;monitoring&quot;</span>
+    <span class="n">POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;policies&quot;</span>
+    <span class="n">SDN_CONTROLLERS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;sdn-controllers&quot;</span>
+    <span class="n">SYSTEM_MODELS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;system-models&quot;</span>
+    <span class="n">GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;gaussian-mixture-system-models&quot;</span>
+    <span class="n">EMPIRICAL_SYSTEM_MODELS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;empirical-system-models&quot;</span>
+    <span class="n">GP_SYSTEM_MODELS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;gp-system-models&quot;</span>
+    <span class="n">EXPERIMENTS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;experiments&quot;</span>
+    <span class="n">MULTI_THRESHOLD_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;multi-threshold-policies&quot;</span>
+    <span class="n">PPO_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ppo-policies&quot;</span>
+    <span class="n">ALPHA_VEC_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;alpha-vec-policies&quot;</span>
+    <span class="n">VECTOR_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;vector-policies&quot;</span>
+    <span class="n">TABULAR_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;tabular-policies&quot;</span>
+    <span class="n">USERS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+    <span class="n">LOGS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;logs&quot;</span>
+    <span class="n">CONFIG_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
+    <span class="n">DQN_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;dqn-policies&quot;</span>
+    <span class="n">FNN_W_SOFTMAX_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;fnn-w-softmax-policies&quot;</span>
+    <span class="n">TRACES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traces&quot;</span>
+    <span class="n">TRAINING_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;training&quot;</span>
+    <span class="n">RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="n">OUTPUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span>
+    <span class="n">INPUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;input&quot;</span>
+    <span class="n">ROWS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span>
+    <span class="n">COLS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">WS_CONNECT_MSG</span> <span class="o">=</span> <span class="s2">&quot;connect&quot;</span>
+    <span class="n">WS_HOST_TERMINAL_OUTPUT_MSG</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-output&quot;</span>
+    <span class="n">WS_HOST_TERMINAL_INPUT_MSG</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-input&quot;</span>
+    <span class="n">WS_RESIZE_MSG</span> <span class="o">=</span> <span class="s2">&quot;resize&quot;</span>
+    <span class="n">IP_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;ip&quot;</span>
+    <span class="n">EXEC_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;exec_id&quot;</span>
+    <span class="n">EMULATION_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;emulation&quot;</span>
+    <span class="n">STATISTIC_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;statistic_id&quot;</span>
+    <span class="n">SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;system_model_type&quot;</span>
+    <span class="n">SIMULATION_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span>
+    <span class="n">TRACES_DATASET_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;traces_dataset&quot;</span>
+    <span class="n">STATISTICS_DATASET_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;statistics_dataset&quot;</span>
+    <span class="n">ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
+    <span class="n">NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+    <span class="n">SIZE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;size&quot;</span>
+    <span class="n">TRAINING_JOBS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;training-jobs&quot;</span>
+    <span class="n">DATA_COLLECTION_JOBS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;data-collection-jobs&quot;</span>
+    <span class="n">SYSTEM_IDENTIFICATION_JOBS_RESOUCE</span> <span class="o">=</span> <span class="s2">&quot;system-identification-jobs&quot;</span>
+    <span class="n">LOGS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;logs&quot;</span>
+    <span class="n">PATH_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;path&quot;</span>
+    <span class="n">USER_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span>
+    <span class="n">PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;port&quot;</span>
+    <span class="n">THREAD_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;thread&quot;</span>
+    <span class="n">START_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;start&quot;</span>
+    <span class="n">CONFIG_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
+    <span class="n">STOP_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;stop&quot;</span>
+    <span class="n">STOP_ALL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;stop-all&quot;</span>
+    <span class="n">START_ALL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;start-all&quot;</span>
+    <span class="n">USERNAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;username&quot;</span>
+    <span class="n">PASSWORD_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
+    <span class="n">FIRST_NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;first_name&quot;</span>
+    <span class="n">LAST_NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;last_name&quot;</span>
+    <span class="n">EMAIL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;email&quot;</span>
+    <span class="n">ORGANIZATION_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;organization&quot;</span>
+    <span class="n">TOKEN_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;token&quot;</span>
+    <span class="n">ADMIN_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">DPID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;dpid&quot;</span>
+    <span class="n">DESC_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;desc&quot;</span>
+    <span class="n">FLOWS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;flows&quot;</span>
+    <span class="n">AGG_FLOWS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;aggflows&quot;</span>
+    <span class="n">TABLES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;tables&quot;</span>
+    <span class="n">TABLE_FEATURES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;tablefeatures&quot;</span>
+    <span class="n">PORT_STATS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;portstats&quot;</span>
+    <span class="n">PORT_DESCS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;portdescs&quot;</span>
+    <span class="n">QUEUES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;queues&quot;</span>
+    <span class="n">QUEUE_CONFIGS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;queueconfigs&quot;</span>
+    <span class="n">GROUPS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;groups&quot;</span>
+    <span class="n">GROUP_DESCS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;groupdescs&quot;</span>
+    <span class="n">GROUP_FEATURES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;groupfeatures&quot;</span>
+    <span class="n">METERS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;meters&quot;</span>
+    <span class="n">METER_CONFIGS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;meter_configs&quot;</span>
+    <span class="n">METER_FEATURES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;meter_features&quot;</span>
+    <span class="n">ROLES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;roles&quot;</span>
+    <span class="n">ACTIVE_COUNT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;active_count&quot;</span>
+    <span class="n">TABLE_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;table_id&quot;</span>
+    <span class="n">URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;url&quot;</span>
+    <span class="n">TRAJECTORIES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;trajectories&quot;</span>
+    <span class="n">CONTENT_TYPE_HEADER</span> <span class="o">=</span> <span class="s2">&quot;Content-type&quot;</span>
+    <span class="n">ACCEPT_HEADER</span> <span class="o">=</span> <span class="s2">&quot;Accept&quot;</span>
+    <span class="n">APPLICATION_JSON_DATA_TYPE</span> <span class="o">=</span> <span class="s2">&quot;application/json&quot;</span>
+    <span class="n">GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;gaussian_mixture&quot;</span>
+    <span class="n">EMPIRICAL_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;empirical&quot;</span>
+    <span class="n">GP_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;gp&quot;</span>
+    <span class="n">KIBANA_TUNNELS_DICT</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">KIBANA_TUNNEL_BASE_PORT</span> <span class="o">=</span> <span class="mi">17000</span>
+    <span class="n">WS_HOST_TERMINAL_NAMESPACE</span> <span class="o">=</span> <span class="s2">&quot;host-terminal&quot;</span>
+    <span class="n">HOST_TERMINAL_FD</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-fd&quot;</span>
+    <span class="n">HOST_TERMINAL_CHILD_PID</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-child-pid&quot;</span>
+    <span class="n">HOST_TERMINAL_CMD</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-cmd&quot;</span></div>
+
+
+<div class="viewcode-block" id="SESSION_TOKENS"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.SESSION_TOKENS">[docs]</a><span class="k">class</span> <span class="nc">SESSION_TOKENS</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to session tokens</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">EXPIRE_TIME_HOURS</span> <span class="o">=</span> <span class="mi">48</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

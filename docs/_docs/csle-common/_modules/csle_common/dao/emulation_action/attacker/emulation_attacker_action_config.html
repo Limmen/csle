@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_action.attacker.emulation_attacker_action_config &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_action.attacker.emulation_attacker_action_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_action.attacker.emulation_attacker_action_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionId</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions</span> <span class="kn">import</span> <span class="n">EmulationAttackerNMAPActions</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_nikto_actions</span> <span class="kn">import</span> <span class="n">EmulationAttackerNIKTOActions</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_masscan_actions</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerMasscanActions</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerNetworkServiceActions</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions</span> <span class="kn">import</span> <span class="n">EmulationAttackerShellActions</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerStoppingActions</span>
+
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerActionConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configuration of the action space for the attacker in the emulation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_indices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">nmap_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">network_service_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">shell_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">nikto_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">masscan_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stopping_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class constructor</span>
+
+<span class="sd">        :param num_indices: max num machine indexes allowed</span>
+<span class="sd">        :param actions: list of actions in the action space</span>
+<span class="sd">        :param nmap_action_ids: list of ids of the actions that are NMAP actions</span>
+<span class="sd">        :param network_service_action_ids: list of ids of the actions that are network service actions</span>
+<span class="sd">        :param shell_action_ids: list of ids of the actions that are shell actions</span>
+<span class="sd">        :param nikto_action_ids: list of ids of the actions that are Nikto actions</span>
+<span class="sd">        :param masscan_action_ids: list of ids of the actions that are Masscan actions</span>
+<span class="sd">        :param stopping_action_ids: List of ids of the actions that are actions related to optimal stopping</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span> <span class="o">=</span> <span class="n">num_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d_val</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d</span><span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span> <span class="o">=</span> <span class="n">action</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d_val</span><span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span> <span class="o">=</span> <span class="n">action</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nmap_action_ids</span> <span class="o">=</span> <span class="n">nmap_action_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network_service_action_ids</span> <span class="o">=</span> <span class="n">network_service_action_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shell_action_ids</span> <span class="o">=</span> <span class="n">shell_action_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span> <span class="o">=</span> <span class="n">nikto_action_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span> <span class="o">=</span> <span class="n">masscan_action_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span> <span class="o">=</span> <span class="n">stopping_action_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nmap_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_service_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell_action_ids</span>
+                           <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_node_specific_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m_action_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_node_specific_actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ar_action_converter</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Add all (temp</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
+            <span class="n">idx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_indices</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ar_action_converter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+
+        <span class="c1"># Add subnet actions</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
+            <span class="n">idx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_indices</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ar_action_converter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+
+        <span class="c1"># Add subnet actions to all machines</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_indices</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
+                <span class="n">idx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ar_action_converter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+
+        <span class="c1"># Add rest of actions</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span><span class="p">:</span>
+                <span class="n">idx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ar_action_converter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.print_actions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.print_actions">[docs]</a>    <span class="k">def</span> <span class="nf">print_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for printing the list of actions</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attacker Actions:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">tag</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.dict_brute_same_user_ids"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.dict_brute_same_user_ids">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">dict_brute_same_user_ids</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: list of brute-force attack ids for teh attacker</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_ALL</span>
+        <span class="p">]</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.get_continue_action_idx"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.get_continue_action_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_continue_action_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the id of the continue-action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No Continue Action in the action space&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.get_action_by_id"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.get_action_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="n">EmulationAttackerActionId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the action of a given id</span>
+
+<span class="sd">        :param action_id: the action id</span>
+<span class="sd">        :return: the action of the id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">action_id</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">a</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;action id not found: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">action_id</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.all_actions_config"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.all_actions_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">all_actions_config</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">subnet_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">hacker_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerActionConfig&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the default action config for a given environment, which includes all actions</span>
+
+<span class="sd">        :param num_nodes: the number of nodes in the environment</span>
+<span class="sd">        :param subnet_masks: the subnet masks of the environment</span>
+<span class="sd">        :param hacker_ip: the hacker ip</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attacker_actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Host actions</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">):</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">PING_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">UDP_PORT_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_FIN_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_NULL_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">NMAP_VULNERS</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNIKTOActions</span><span class="o">.</span><span class="n">NIKTO_WEB_HOST_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">EmulationAttackerMasscanActions</span><span class="o">.</span><span class="n">MASSCAN_HOST_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">host_ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">FIREWALK</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">HTTP_ENUM</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">HTTP_GREP</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">VULSCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">FINGER</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">)),</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">SAMBACRY_EXPLOIT</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">SHELLSHOCK_EXPLOIT</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">DVWA_SQL_INJECTION</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">CVE_2015_3306_EXPLOIT</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">CVE_2015_1427_EXPLOIT</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">CVE_2016_10033_EXPLOIT</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">CVE_2010_0426_PRIV_ESC</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">CVE_2015_5602_PRIV_ESC</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span>
+
+        <span class="c1"># Subnet actions</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">PING_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">UDP_PORT_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_FIN_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_NULL_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">NMAP_VULNERS</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                                                                              <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                                                                           <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                                                                           <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                                                                                 <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                                                                           <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">FIND_FLAG</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNetworkServiceActions</span><span class="o">.</span><span class="n">SERVICE_LOGIN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerMasscanActions</span><span class="o">.</span><span class="n">MASSCAN_HOST_SCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                                                                  <span class="n">host_ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">FIREWALK</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">HTTP_ENUM</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">HTTP_GREP</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">VULSCAN</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerNMAPActions</span><span class="o">.</span><span class="n">FINGER</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">subnet_masks</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">INSTALL_TOOLS</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerShellActions</span><span class="o">.</span><span class="n">SSH_BACKDOOR</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerStoppingActions</span><span class="o">.</span><span class="n">STOP</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">attacker_actions</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">attacker_actions</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+        <span class="n">nmap_action_ids</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">PING_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">PING_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">UDP_PORT_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">UDP_PORT_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_FIN_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_FIN_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_NULL_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_NULL_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NMAP_VULNERS_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NMAP_VULNERS_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_HOST</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIREWALK_HOST</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIREWALK_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_ENUM_HOST</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_ENUM_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_GREP_HOST</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_GREP_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">VULSCAN_HOST</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">VULSCAN_ALL</span><span class="p">,</span>
+            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FINGER_HOST</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FINGER_ALL</span>
+        <span class="p">]</span>
+        <span class="n">network_service_action_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NETWORK_SERVICE_LOGIN</span><span class="p">]</span>
+        <span class="n">shell_action_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIND_FLAG</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">INSTALL_TOOLS</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_BACKDOOR</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SAMBACRY_EXPLOIT</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SHELLSHOCK_EXPLOIT</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">DVWA_SQL_INJECTION</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2015_3306_EXPLOIT</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2015_1427_EXPLOIT</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2016_10033_EXPLOIT</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2010_0426_PRIV_ESC</span><span class="p">,</span>
+                            <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2015_5602_PRIV_ESC</span>
+                            <span class="p">]</span>
+        <span class="n">nikto_action_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NIKTO_WEB_HOST_SCAN</span><span class="p">]</span>
+        <span class="n">masscan_action_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MASSCAN_HOST_SCAN</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MASSCAN_ALL_SCAN</span><span class="p">]</span>
+        <span class="n">stopping_action_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">STOP</span><span class="p">,</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">]</span>
+        <span class="n">attacker_action_config</span> <span class="o">=</span> <span class="n">EmulationAttackerActionConfig</span><span class="p">(</span><span class="n">num_indices</span><span class="o">=</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="n">attacker_actions</span><span class="p">,</span>
+                                                               <span class="n">nmap_action_ids</span><span class="o">=</span><span class="n">nmap_action_ids</span><span class="p">,</span>
+                                                               <span class="n">network_service_action_ids</span><span class="o">=</span><span class="n">network_service_action_ids</span><span class="p">,</span>
+                                                               <span class="n">shell_action_ids</span><span class="o">=</span><span class="n">shell_action_ids</span><span class="p">,</span>
+                                                               <span class="n">nikto_action_ids</span><span class="o">=</span><span class="n">nikto_action_ids</span><span class="p">,</span>
+                                                               <span class="n">masscan_action_ids</span><span class="o">=</span><span class="n">masscan_action_ids</span><span class="p">,</span>
+                                                               <span class="n">stopping_action_ids</span><span class="o">=</span><span class="n">stopping_action_ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">attacker_action_config</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

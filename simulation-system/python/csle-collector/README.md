@@ -20,6 +20,40 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_p
 python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/traffic_manager/. ./protos/traffic_manager.proto
 ```
 
+## Requirements
+
+- Python 3.5+
+- `grpcio` (for the collector API)
+- `grpcio-tools` (for the collector API)
+- `scipy` (for statistical models of client processes)
+- `confluent-kafka` (for interacting with Kafka)
+- `docker` (for interacting with Docker)
+
+## API documentation
+
+This section contains instructions for generating API documentation using `sphinx`.
+
+### Latest Documentation
+
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-collector](https://limmen.dev/csle/docs/csle-collector)
+
+### Generate API Documentation
+
+First make sure that the `CSLE_HOME` environment variable is set:
+```bash
+echo $CSLE_HOME
+```
+Then generate the documentation with the commands:
+```bash
+cd docs
+sphinx-apidoc -f -o source/ ../csle_collector/
+make html
+```
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
+```bash
+cp -r build/html ../../../../docs/_docs/csle-collector
+```
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>

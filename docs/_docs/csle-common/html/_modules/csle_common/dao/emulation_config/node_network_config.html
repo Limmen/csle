@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_config.node_network_config &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_config.node_network_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_config.node_network_config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Network configuration of a container in the emulation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.packet_loss_type</span> <span class="kn">import</span> <span class="n">PacketLossType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.packet_delay_distribution_type</span> <span class="kn">import</span> <span class="n">PacketDelayDistributionType</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="NodeNetworkConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig">[docs]</a><span class="k">class</span> <span class="nc">NodeNetworkConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A DTO object representing the network configuration of a specific container in an emulation environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NETWORKING</span><span class="o">.</span><span class="n">ETH0</span><span class="p">,</span>
+                 <span class="n">limit_packets_queue</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">,</span> <span class="n">packet_delay_ms</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">packet_delay_jitter_ms</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.025</span><span class="p">,</span>
+                 <span class="n">packet_delay_correlation_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+                 <span class="n">packet_delay_distribution</span><span class="p">:</span> <span class="n">PacketDelayDistributionType</span> <span class="o">=</span> <span class="n">PacketDelayDistributionType</span><span class="o">.</span><span class="n">PARETO</span><span class="p">,</span>
+                 <span class="n">packet_loss_type</span><span class="p">:</span> <span class="n">PacketLossType</span> <span class="o">=</span> <span class="n">PacketLossType</span><span class="o">.</span><span class="n">GEMODEL</span><span class="p">,</span>
+                 <span class="n">packet_loss_rate_random_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                 <span class="n">packet_loss_random_correlation_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+                 <span class="n">loss_state_markov_chain_p13</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loss_state_markov_chain_p31</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">loss_state_markov_chain_p32</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loss_state_markov_chain_p23</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">loss_state_markov_chain_p14</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loss_gemodel_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span>
+                 <span class="n">loss_gemodel_r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.999</span><span class="p">,</span>
+                 <span class="n">loss_gemodel_h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">loss_gemodel_k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9999</span><span class="p">,</span>
+                 <span class="n">packet_corrupt_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="n">packet_corrupt_correlation_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+                 <span class="n">packet_duplicate_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="n">packet_duplicate_correlation_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+                 <span class="n">packet_reorder_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0025</span><span class="p">,</span> <span class="n">packet_reorder_correlation_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+                 <span class="n">packet_reorder_gap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                 <span class="n">rate_limit_mbit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                 <span class="n">packet_overhead_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cell_overhead_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param interface: the name of the network interface</span>
+<span class="sd">        :param limit_packets_queue: Maximum number of packets that the output queue (queueing discpline) stores</span>
+<span class="sd">                                    Note that to be able to rate limit at relatively high speeds, this queue must be</span>
+<span class="sd">                                    quite large (FIFO by default)</span>
+<span class="sd">        :param packet_delay_ms: a delay that is added to outgoing packets (specified in ms)</span>
+<span class="sd">        :param packet_delay_jitter_ms: the jitter of the dealy added to outgoing packets (specified in ms)</span>
+<span class="sd">        :param packet_delay_correlation_percentage: the amount of correlation in delay of outgoing packets</span>
+<span class="sd">                                                   (specified in %)</span>
+<span class="sd">                                                   for example delay 100ms jitter=10ms correlation=25% causes delay</span>
+<span class="sd">                                                   to be 100ms +- 10ms with successive packets depending 25%</span>
+<span class="sd">                                                   on each other</span>
+<span class="sd">        :param packet_delay_distribution: the delay distribution, defaults to Gaussian, but can also be uniform,</span>
+<span class="sd">                                                normal, pareto, or paretonormal</span>
+<span class="sd">        :param packet_loss_type: the type of packet loss (random, state, or gemodel)</span>
+<span class="sd">        :param packet_loss_rate_random_percentage: The packet loss percent when using the random packet loss type</span>
+<span class="sd">        :param packet_loss_random_correlation_percentage: The packet loss correlation when using the random</span>
+<span class="sd">                                                          packet loss type</span>
+<span class="sd">        :param loss_state_markov_chain_p13: The 1-&gt;3 transition probability when using the 2-state Markov</span>
+<span class="sd">                                            chain state loss type</span>
+<span class="sd">        :param loss_state_markov_chain_p31: The 3-&gt;1 transition probability when using the 2,3,or 4-state</span>
+<span class="sd">                                            Markov chain state loss type</span>
+<span class="sd">        :param loss_state_markov_chain_p32: The 3-&gt;2 transition probability when using the 3,or 4-state Markov chain</span>
+<span class="sd">                                            state loss type</span>
+<span class="sd">        :param loss_state_markov_chain_p23: The 2-&gt;3 transition probability when using the 3,or 4-state Markov chain</span>
+<span class="sd">                                            state loss type</span>
+<span class="sd">        :param loss_state_markov_chain_p14: The 1-&gt;4 transition probability when using the 4-state Markov chain state</span>
+<span class="sd">                                            loss type</span>
+<span class="sd">        :param loss_gemodel_p: The p parameter when using the Bernoulli,Simple Gilbert or Gilbert model</span>
+<span class="sd">                               in the gemodel loss type</span>
+<span class="sd">        :param loss_gemodel_r: The p parameter when using the Simple Gilbert or Gilbert-Elliot model in the</span>
+<span class="sd">                               gemodel loss type</span>
+<span class="sd">        :param loss_gemodel_h: The h parameter when using the Simple Gilbert or Gilbert-Elliot model</span>
+<span class="sd">                               in the gemodel loss type</span>
+<span class="sd">        :param loss_gemodel_k: The k parameter when using the Gilbert-Elliot model in the gemodel loss type</span>
+<span class="sd">        :param packet_corrupt_percentage: The percentage of corrupt outgoing packets</span>
+<span class="sd">        :param packet_corrupt_correlation_percentage: The correlation of corrupt outgoing packets</span>
+<span class="sd">        :param packet_duplicate_percentage: The percentage of duplicated outgoing packets</span>
+<span class="sd">        :param packet_duplicate_correlation_percentage: The correlation of duplicated outgoing packets</span>
+<span class="sd">        :param packet_reorder_percentage: The percentage of reordered packets</span>
+<span class="sd">        :param packet_reorder_correlation_percentage: The correlation of reordered packets</span>
+<span class="sd">        :param packet_reorder_gap: The packet reordering gap</span>
+<span class="sd">        :param rate_limit_mbit: The bandwidth limit</span>
+<span class="sd">        :param packet_overhead_bytes: The emulated packet overhead</span>
+<span class="sd">        :param cell_overhead_bytes: The emulated cell overhead</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_packets_queue</span> <span class="o">=</span> <span class="n">limit_packets_queue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_ms</span> <span class="o">=</span> <span class="n">packet_delay_ms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_jitter_ms</span> <span class="o">=</span> <span class="n">packet_delay_jitter_ms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_correlation_percentage</span> <span class="o">=</span> <span class="n">packet_delay_correlation_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_distribution</span> <span class="o">=</span> <span class="n">packet_delay_distribution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_type</span> <span class="o">=</span> <span class="n">packet_loss_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_rate_random_percentage</span> <span class="o">=</span> <span class="n">packet_loss_rate_random_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_random_correlation_percentage</span> <span class="o">=</span> <span class="n">packet_loss_random_correlation_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p13</span> <span class="o">=</span> <span class="n">loss_state_markov_chain_p13</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p31</span> <span class="o">=</span> <span class="n">loss_state_markov_chain_p31</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p32</span> <span class="o">=</span> <span class="n">loss_state_markov_chain_p32</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p23</span> <span class="o">=</span> <span class="n">loss_state_markov_chain_p23</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p14</span> <span class="o">=</span> <span class="n">loss_state_markov_chain_p14</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_p</span> <span class="o">=</span> <span class="n">loss_gemodel_p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_r</span> <span class="o">=</span> <span class="n">loss_gemodel_r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_h</span> <span class="o">=</span> <span class="n">loss_gemodel_h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_k</span> <span class="o">=</span> <span class="n">loss_gemodel_k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_corrupt_percentage</span> <span class="o">=</span> <span class="n">packet_corrupt_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_corrupt_correlation_percentage</span> <span class="o">=</span> <span class="n">packet_corrupt_correlation_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_duplicate_percentage</span> <span class="o">=</span> <span class="n">packet_duplicate_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_duplicate_correlation_percentage</span> <span class="o">=</span> <span class="n">packet_duplicate_correlation_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_percentage</span> <span class="o">=</span> <span class="n">packet_reorder_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_correlation_percentage</span> <span class="o">=</span> <span class="n">packet_reorder_correlation_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_gap</span> <span class="o">=</span> <span class="n">packet_reorder_gap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_mbit</span> <span class="o">=</span> <span class="n">rate_limit_mbit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packet_overhead_bytes</span> <span class="o">=</span> <span class="n">packet_overhead_bytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell_overhead_bytes</span> <span class="o">=</span> <span class="n">cell_overhead_bytes</span>
+
+<div class="viewcode-block" id="NodeNetworkConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;NodeNetworkConfig&quot;</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">NodeNetworkConfig</span><span class="p">(</span>
+            <span class="n">interface</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;interface&quot;</span><span class="p">],</span>
+            <span class="n">limit_packets_queue</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;limit_packets_queue&quot;</span><span class="p">],</span>
+            <span class="n">packet_delay_ms</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_ms&quot;</span><span class="p">],</span>
+            <span class="n">packet_delay_jitter_ms</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_jitter_ms&quot;</span><span class="p">],</span>
+            <span class="n">packet_delay_correlation_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_correlation_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_delay_distribution</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_distribution&quot;</span><span class="p">],</span>
+            <span class="n">packet_loss_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_loss_type&quot;</span><span class="p">],</span>
+            <span class="n">packet_loss_rate_random_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_loss_rate_random_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_loss_random_correlation_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_loss_random_correlation_percentage&quot;</span><span class="p">],</span>
+            <span class="n">loss_state_markov_chain_p13</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p13&quot;</span><span class="p">],</span>
+            <span class="n">loss_state_markov_chain_p31</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p31&quot;</span><span class="p">],</span>
+            <span class="n">loss_state_markov_chain_p32</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p32&quot;</span><span class="p">],</span>
+            <span class="n">loss_state_markov_chain_p23</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p23&quot;</span><span class="p">],</span>
+            <span class="n">loss_state_markov_chain_p14</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p14&quot;</span><span class="p">],</span>
+            <span class="n">loss_gemodel_p</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_p&quot;</span><span class="p">],</span>
+            <span class="n">loss_gemodel_r</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_r&quot;</span><span class="p">],</span>
+            <span class="n">loss_gemodel_h</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_h&quot;</span><span class="p">],</span>
+            <span class="n">loss_gemodel_k</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_k&quot;</span><span class="p">],</span>
+            <span class="n">packet_corrupt_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_corrupt_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_corrupt_correlation_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_corrupt_correlation_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_duplicate_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_duplicate_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_duplicate_correlation_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_duplicate_correlation_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_reorder_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_reorder_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_reorder_correlation_percentage</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_reorder_correlation_percentage&quot;</span><span class="p">],</span>
+            <span class="n">packet_reorder_gap</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_reorder_gap&quot;</span><span class="p">],</span>
+            <span class="n">rate_limit_mbit</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;rate_limit_mbit&quot;</span><span class="p">],</span>
+            <span class="n">packet_overhead_bytes</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_overhead_bytes&quot;</span><span class="p">],</span>
+            <span class="n">cell_overhead_bytes</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cell_overhead_bytes&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="NodeNetworkConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;interface&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;limit_packets_queue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_packets_queue</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_ms</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_jitter_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_jitter_ms</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_correlation_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_correlation_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_delay_distribution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_distribution</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_loss_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_type</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_loss_rate_random_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_rate_random_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_loss_random_correlation_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_random_correlation_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p13&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p13</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p31&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p31</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p32&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p32</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p23&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p23</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_state_markov_chain_p14&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p14</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_p</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_r&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_r</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_h&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_h</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;loss_gemodel_k&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_k</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_corrupt_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_corrupt_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_corrupt_correlation_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_corrupt_correlation_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_duplicate_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_duplicate_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_duplicate_correlation_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_duplicate_correlation_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_reorder_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_reorder_correlation_percentage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_correlation_percentage</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_reorder_gap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_gap</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;rate_limit_mbit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_mbit</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packet_overhead_bytes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_overhead_bytes</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cell_overhead_bytes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_overhead_bytes</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;limits_packets_queue:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">limit_packets_queue</span><span class="si">}</span><span class="s2">, packet_delay_ms:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_ms</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_delay_jitter_ms:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_jitter_ms</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_delay_correlation_percentage: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_correlation_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_delay_distribution: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_delay_distribution</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_loss_type:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_type</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_loss_rate_random_percentage: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_rate_random_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_loss_correlation_percentage: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_loss_random_correlation_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_state_markov_chain_p13: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p13</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_state_markov_chain_p31: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p31</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_state_markov_chain_p32: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p32</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_state_markov_chain_p23: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p23</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_state_markov_chain_p14: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_state_markov_chain_p14</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_gemodel_p:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_p</span><span class="si">}</span><span class="s2">, loss_gemodel_r: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_r</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;loss_gemodel_h:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_h</span><span class="si">}</span><span class="s2">, loss_gemodel_k:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_gemodel_k</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_corrupt_percentage:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_corrupt_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_corrupt_correlation_percentage:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_corrupt_correlation_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_duplicate_percentage:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_duplicate_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_duplicate_correlation_percentage:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_duplicate_correlation_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_reorder_percentage:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_reorder_correlation_percentage:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_correlation_percentage</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;packet_reorder_gap: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_reorder_gap</span><span class="si">}</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;rate_limit_mbit:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_mbit</span><span class="si">}</span><span class="s2">, packet_overhead_bytes:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_overhead_bytes</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;cell_overhead_bytes:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_overhead_bytes</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="NodeNetworkConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the DTO into a json string</span>
+
+<span class="sd">        :return: the json string representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json_str</span></div>
+
+<div class="viewcode-block" id="NodeNetworkConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the DTO to a json file</span>
+
+<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeNetworkConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeNetworkConfig&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">NodeNetworkConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="NodeNetworkConfig.schema"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_network_config.NodeNetworkConfig.schema">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeNetworkConfig&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: get the schema of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">NodeNetworkConfig</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

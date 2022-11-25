@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_attacker.emulation package &mdash; csle-attacker 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_attacker.emulation.util package" href="csle_attacker.emulation.util.html" />
+    <link rel="prev" title="csle_attacker package" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-attacker
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">csle_attacker.emulation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_attacker.emulation.util.html">csle_attacker.emulation.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attacker.emulation.attacker_stopping_middleware">csle_attacker.emulation.attacker_stopping_middleware module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attacker.emulation.emulated_attacker">csle_attacker.emulation.emulated_attacker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attacker.emulation.exploit_middleware">csle_attacker.emulation.exploit_middleware module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attacker.emulation.post_exploit_middleware">csle_attacker.emulation.post_exploit_middleware module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attacker.emulation.recon_middleware">csle_attacker.emulation.recon_middleware module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attacker.emulation">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-attacker</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_attacker.emulation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_attacker.emulation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-attacker-emulation-package">
+<h1>csle_attacker.emulation package<a class="headerlink" href="#csle-attacker-emulation-package" title="Permalink to this headline"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_attacker.emulation.util.html">csle_attacker.emulation.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.emulation.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.emulation.util.html#module-csle_attacker.emulation.util.exploit_util">csle_attacker.emulation.util.exploit_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.emulation.util.html#module-csle_attacker.emulation.util.nikto_util">csle_attacker.emulation.util.nikto_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.emulation.util.html#module-csle_attacker.emulation.util.nmap_util">csle_attacker.emulation.util.nmap_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.emulation.util.html#module-csle_attacker.emulation.util.shell_util">csle_attacker.emulation.util.shell_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.emulation.util.html#module-csle_attacker.emulation.util">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_attacker.emulation.attacker_stopping_middleware">
+<span id="csle-attacker-emulation-attacker-stopping-middleware-module"></span><h2>csle_attacker.emulation.attacker_stopping_middleware module<a class="headerlink" href="#module-csle_attacker.emulation.attacker_stopping_middleware" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attacker.emulation.attacker_stopping_middleware.AttackerStoppingMiddleware">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attacker.emulation.attacker_stopping_middleware.</span></span><span class="sig-name descname"><span class="pre">AttackerStoppingMiddleware</span></span><a class="reference internal" href="_modules/csle_attacker/emulation/attacker_stopping_middleware.html#AttackerStoppingMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.attacker_stopping_middleware.AttackerStoppingMiddleware" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that implements optimal stopping actions for the attacker</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.attacker_stopping_middleware.AttackerStoppingMiddleware.continue_intrusion">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">continue_intrusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/attacker_stopping_middleware.html#AttackerStoppingMiddleware.continue_intrusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.attacker_stopping_middleware.AttackerStoppingMiddleware.continue_intrusion" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a “continue” action for the attacker (does nothing)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime, reward, done</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.attacker_stopping_middleware.AttackerStoppingMiddleware.stop_intrusion">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_intrusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/attacker_stopping_middleware.html#AttackerStoppingMiddleware.stop_intrusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.attacker_stopping_middleware.AttackerStoppingMiddleware.stop_intrusion" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a stopping action for the attacker</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_attacker.emulation.emulated_attacker">
+<span id="csle-attacker-emulation-emulated-attacker-module"></span><h2>csle_attacker.emulation.emulated_attacker module<a class="headerlink" href="#module-csle_attacker.emulation.emulated_attacker" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attacker.emulation.emulated_attacker.EmulatedAttacker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attacker.emulation.emulated_attacker.</span></span><span class="sig-name descname"><span class="pre">EmulatedAttacker</span></span><a class="reference internal" href="_modules/csle_attacker/emulation/emulated_attacker.html#EmulatedAttacker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.emulated_attacker.EmulatedAttacker" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an emulated attacker agent</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_exploit_action">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attacker_exploit_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/emulated_attacker.html#EmulatedAttacker.attacker_exploit_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_exploit_action" title="Permalink to this definition"></a></dt>
+<dd><p>Implements transition of an exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_post_exploit_action">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attacker_post_exploit_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/emulated_attacker.html#EmulatedAttacker.attacker_post_exploit_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_post_exploit_action" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the transition of a post-exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_recon_action">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attacker_recon_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/emulated_attacker.html#EmulatedAttacker.attacker_recon_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_recon_action" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the transition of a reconnaissance action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_stopping_action">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attacker_stopping_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/emulated_attacker.html#EmulatedAttacker.attacker_stopping_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_stopping_action" title="Permalink to this definition"></a></dt>
+<dd><p>Implements transition of a stopping action of the attacker</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_transition">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attacker_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/emulated_attacker.html#EmulatedAttacker.attacker_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_transition" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the transition operator T: (s,a) -&gt; s’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>attacker_action</strong> – the attacker action</p></li>
+<li><p><strong>emulation_env_config</strong> – the emulation environment configuration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_attacker.emulation.exploit_middleware">
+<span id="csle-attacker-emulation-exploit-middleware-module"></span><h2>csle_attacker.emulation.exploit_middleware module<a class="headerlink" href="#module-csle_attacker.emulation.exploit_middleware" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attacker.emulation.exploit_middleware.</span></span><span class="sig-name descname"><span class="pre">ExploitMiddleware</span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that implements functionality for executing exploits actions on the emulation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cassandra_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_cassandra_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_cassandra_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cassandra_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Cassandra Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2010_0426_exploit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_cve_2010_0426_exploit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_cve_2010_0426_exploit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2010_0426_exploit" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a CVE-2010-0426 Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2015_1427_exploit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_cve_2015_1427_exploit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_cve_2015_1427_exploit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2015_1427_exploit" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a CVE-2015-1427 Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2015_3306_exploit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_cve_2015_3306_exploit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_cve_2015_3306_exploit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2015_3306_exploit" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a CVE-2015-3306 Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2015_5602_exploit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_cve_2015_5602_exploit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_cve_2015_5602_exploit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2015_5602_exploit" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a CVE-2015-5602 Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2016_10033_exploit">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_cve_2016_10033_exploit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_cve_2016_10033_exploit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_cve_2016_10033_exploit" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a CVE-2016-10033 Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_dvwa_sql_injection">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_dvwa_sql_injection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_dvwa_sql_injection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_dvwa_sql_injection" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a DVWA SQL Injection Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_ftp_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_ftp_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_ftp_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_ftp_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a FTP Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_irc_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_irc_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_irc_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_irc_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a IRC Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_mongo_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_mongo_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_mongo_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_mongo_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Mongo Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_mysql_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_mysql_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_mysql_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_mysql_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a MySQL Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_postgres_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_postgres_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_postgres_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_postgres_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Postgres Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_sambacry">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_sambacry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_sambacry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_sambacry" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Sambacry Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_shellshock">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_shellshock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_shellshock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_shellshock" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a ShellShock Exploit action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_smtp_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_smtp_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_smtp_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_smtp_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a SMTP Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_ssh_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_ssh_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_ssh_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_ssh_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a SSH Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_telnet_same_user_dictionary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_telnet_same_user_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/exploit_middleware.html#ExploitMiddleware.execute_telnet_same_user_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.exploit_middleware.ExploitMiddleware.execute_telnet_same_user_dictionary" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Telnet Dictionary Password Attack action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_attacker.emulation.post_exploit_middleware">
+<span id="csle-attacker-emulation-post-exploit-middleware-module"></span><h2>csle_attacker.emulation.post_exploit_middleware module<a class="headerlink" href="#module-csle_attacker.emulation.post_exploit_middleware" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attacker.emulation.post_exploit_middleware.</span></span><span class="sig-name descname"><span class="pre">PostExploitMiddleware</span></span><a class="reference internal" href="_modules/csle_attacker/emulation/post_exploit_middleware.html#PostExploitMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that implements functionality for executing post-exploits actions on the emulation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_bash_find_flag">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_bash_find_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/post_exploit_middleware.html#PostExploitMiddleware.execute_bash_find_flag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_bash_find_flag" title="Permalink to this definition"></a></dt>
+<dd><p>Searches the file system for all servers where the agent is currently logged in to find flags</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime, reward, done</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_install_tools">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_install_tools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/post_exploit_middleware.html#PostExploitMiddleware.execute_install_tools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_install_tools" title="Permalink to this definition"></a></dt>
+<dd><p>Uses compromised machines with root access to install tools</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_service_login">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_service_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/post_exploit_middleware.html#PostExploitMiddleware.execute_service_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_service_login" title="Permalink to this definition"></a></dt>
+<dd><p>Executes a service login on the emulation using previously found credentials</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_ssh_backdoor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_ssh_backdoor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/post_exploit_middleware.html#PostExploitMiddleware.execute_ssh_backdoor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.post_exploit_middleware.PostExploitMiddleware.execute_ssh_backdoor" title="Permalink to this definition"></a></dt>
+<dd><p>Uses compromised machines with root access to setup SSH backdoor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_attacker.emulation.recon_middleware">
+<span id="csle-attacker-emulation-recon-middleware-module"></span><h2>csle_attacker.emulation.recon_middleware module<a class="headerlink" href="#module-csle_attacker.emulation.recon_middleware" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attacker.emulation.recon_middleware.</span></span><span class="sig-name descname"><span class="pre">ReconMiddleware</span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that implements functionality for executing reconnaissance actions on the emulation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_finger">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_finger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_finger" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a finger scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_firewalk_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_firewalk_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_firewalk_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_firewalk_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a firewalk scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_http_enum">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_http_enum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_http_enum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_http_enum" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a http enum scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_http_grep">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_http_grep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_http_grep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_http_grep" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a http grep scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_masscan_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_masscan_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_masscan_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_masscan_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a masscan scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_nikto_web_host_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_nikto_web_host_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_nikto_web_host_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_nikto_web_host_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a nikto web host scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_nmap_vulners">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_nmap_vulners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_nmap_vulners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_nmap_vulners" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a nmap_vulners scan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_os_detection_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_os_detection_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_os_detection_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_os_detection_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a OS detection scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_ping_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_ping_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_ping_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_ping_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Ping Scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_con_stealth_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_tcp_con_stealth_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_tcp_con_stealth_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_con_stealth_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a TCP CON Stealth scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_fin_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_tcp_fin_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_tcp_fin_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_fin_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a TCP FIN scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_null_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_tcp_null_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_tcp_null_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_null_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a TCP Null scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_syn_stealth_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_tcp_syn_stealth_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_tcp_syn_stealth_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_syn_stealth_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a TCP SYN Stealth Scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_xmas_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_tcp_xmas_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_tcp_xmas_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_xmas_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a TCP Xmas scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_udp_port_scan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_udp_port_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_udp_port_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_udp_port_scan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a UDP Port Scan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_vulscan">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_vulscan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/recon_middleware.html#ReconMiddleware.execute_vulscan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_vulscan" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a vulscan action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – the current state</p></li>
+<li><p><strong>a</strong> – the action to take</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>s_prime</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_attacker.emulation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_attacker.emulation" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="csle_attacker package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_attacker.emulation.util.html" class="btn btn-neutral float-right" title="csle_attacker.emulation.util package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

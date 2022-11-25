@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_config.emulation_env_state &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_config.emulation_env_state</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_config.emulation_env_state</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerObservationState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.defender.emulation_defender_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationDefenderObservationState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerMachineObservationState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationDefenderMachineObservationState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_config</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_config</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionConfig</span>
+
+
+<div class="viewcode-block" id="EmulationEnvState"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvState</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the combined state of the emulation environment,</span>
+<span class="sd">    including both the attacker&#39;s and the defender&#39;s states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the state</span>
+
+<span class="sd">        :param emulation_env_config: the environment configuration</span>
+<span class="sd">        :param attacker_action_config: the configuration of the attacker agent</span>
+<span class="sd">        :param defender_agent_config: the configuration of the defender agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_action_config</span> <span class="o">=</span> <span class="n">EmulationAttackerActionConfig</span><span class="o">.</span><span class="n">all_actions_config</span><span class="p">(</span>
+            <span class="n">num_nodes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">),</span>
+            <span class="n">subnet_masks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">topology_config</span><span class="o">.</span><span class="n">subnetwork_masks</span><span class="p">,</span>
+            <span class="n">hacker_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_action_config</span> <span class="o">=</span> <span class="n">EmulationDefenderActionConfig</span><span class="o">.</span><span class="n">all_actions_config</span><span class="p">(</span>
+            <span class="n">num_nodes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">),</span>
+            <span class="n">subnet_masks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">topology_config</span><span class="o">.</span><span class="n">subnetwork_masks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vuln_lookup</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">VULNERABILITIES</span><span class="o">.</span><span class="n">vuln_lookup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vuln_lookup_inv</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vuln_lookup</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_lookup</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SERVICES</span><span class="o">.</span><span class="n">service_lookup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_lookup_inv</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_lookup</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_lookup</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OS</span><span class="o">.</span><span class="n">os_lookup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_lookup_inv</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">os_lookup</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationAttackerObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationDefenderObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_ssh_connections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_telnet_connections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_ftp_connections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_backdoor_credentials</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_cached_ssh_connections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<div class="viewcode-block" id="EmulationEnvState.initialize_defender_machines"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.initialize_defender_machines">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_defender_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the defender observation state based on the emulation configuration</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">defender_machines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="n">defender_machines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationDefenderMachineObservationState</span><span class="o">.</span><span class="n">from_container</span><span class="p">(</span>
+                <span class="n">c</span><span class="p">,</span> <span class="n">kafka_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="n">defender_machines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">start_monitoring_threads</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EmulationEnvState.reset"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the env state. Caches connections</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">agent_reachable</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">agent_reachable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_ssh_connections</span><span class="p">[(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">port</span><span class="p">)]</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">telnet_connections</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_telnet_connections</span><span class="p">[(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">port</span><span class="p">)]</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ftp_connections</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_ftp_connections</span><span class="p">[(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">port</span><span class="p">)]</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">backdoor_credentials</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_backdoor_credentials</span><span class="p">[(</span><span class="n">ip</span><span class="p">,</span> <span class="n">cr</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">cr</span><span class="o">.</span><span class="n">pw</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="o">=</span> <span class="n">EmulationAttackerObservationState</span><span class="p">(</span><span class="n">catched_flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">agent_reachable</span><span class="o">=</span><span class="n">agent_reachable</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">last_attacker_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">undetected_intrusions_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">all_flags</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">catched_flags</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">defender_cached_ssh_connections</span><span class="p">[(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">port</span><span class="p">)]</span> <span class="o">=</span> <span class="n">c</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span> <span class="o">=</span> <span class="n">EmulationDefenderObservationState</span><span class="p">(</span>
+                <span class="n">kafka_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationEnvState.cleanup"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleanup</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_ssh_connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_ftp_connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_cached_telnet_connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_cached_ssh_connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="p">(</span><span class="n">ssh_conns</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="k">for</span> <span class="n">c2</span> <span class="ow">in</span> <span class="n">ssh_conns</span><span class="p">:</span>
+                <span class="n">c2</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EmulationEnvState.get_attacker_machine"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.get_attacker_machine">[docs]</a>    <span class="k">def</span> <span class="nf">get_attacker_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for extracting the attacker machine from the attacker&#39;s observation</span>
+
+<span class="sd">        :param ip: the ip of the attacker machine</span>
+<span class="sd">        :return: the machine if is found, otherwise None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EmulationEnvState.get_defender_machine"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.get_defender_machine">[docs]</a>    <span class="k">def</span> <span class="nf">get_defender_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationDefenderMachineObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for extracting the defender machine from the defender&#39;s observation given an IP</span>
+
+<span class="sd">        :param ip: the ip of the machine</span>
+<span class="sd">        :return: the machine if found otherwise None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">ip</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">m</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EmulationEnvState.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvState&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the env state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="n">EmulationEnvState</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">defender_obs_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">copy</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Attacker observation state: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="si">}</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;Defender observation state: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -2,6 +2,8 @@
 
 A REST API for the CSLE management platform.
 
+## Endpoints
+
 | resource                                                                                              | description                                                    | Method                                  |
 |:------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------|:----------------------------------------|
 | `/emulations`                                                                                         | List of emulations                                             | `GET`,`DELETE`                          |
@@ -158,6 +160,45 @@ A REST API for the CSLE management platform.
 | `/host-terminal-page`                                                                                 | Get the host-terminal page                                     | `GET`                                   |
 | `/container-terminal-page`                                                                            | Get the container-terminal page                                | `GET`                                   |
 | `/host-terminal?token=<valid_token>`                                                                  | Web socket API for host terminal emulation                     | `Websockets`                            |
+
+
+## Requirements
+
+- Python 3.5+
+- `flask` (for HTTP server)
+- `csle-common`
+- `csle-agents`
+- `csle-system-identification`
+- `csle-ryu`
+- `bcrypt` (for encrypting user credentials)
+- `pyopenssl` (for encrypting user credentials)
+- `eventlet` (for HTTP server)
+- `gevent` (for HTTP server)
+
+## API documentation
+
+This section contains instructions for generating API documentation using `sphinx`.
+
+### Latest Documentation
+
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-rest-api](https://limmen.dev/csle/docs/csle-rest-api)
+
+### Generate API Documentation
+
+First make sure that the `CSLE_HOME` environment variable is set:
+```bash
+echo $CSLE_HOME
+```
+Then generate the documentation with the commands:
+```bash
+cd docs
+sphinx-apidoc -f -o source/ ../csle_rest_api/
+make html
+```
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
+```bash
+cp -r build/html ../../../../docs/_docs/csle-rest-api
+```
 
 ## Author & Maintainer
 

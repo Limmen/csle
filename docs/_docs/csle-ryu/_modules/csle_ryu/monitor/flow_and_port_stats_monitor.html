@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_ryu.monitor.flow_and_port_stats_monitor &mdash; csle-ryu 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-ryu
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.constants.html">csle_ryu.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.controllers.html">csle_ryu.controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.dao.html">csle_ryu.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.monitor.html">csle_ryu.monitor package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-ryu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_ryu.monitor.flow_and_port_stats_monitor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_ryu.monitor.flow_and_port_stats_monitor</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">ryu.controller.handler</span> <span class="kn">import</span> <span class="n">MAIN_DISPATCHER</span><span class="p">,</span> <span class="n">DEAD_DISPATCHER</span>
+<span class="kn">from</span> <span class="nn">ryu.lib</span> <span class="kn">import</span> <span class="n">hub</span>
+<span class="kn">from</span> <span class="nn">ryu.base</span> <span class="kn">import</span> <span class="n">app_manager</span>
+<span class="kn">from</span> <span class="nn">ryu.controller</span> <span class="kn">import</span> <span class="n">ofp_event</span>
+<span class="kn">from</span> <span class="nn">ryu.controller.handler</span> <span class="kn">import</span> <span class="n">set_ev_cls</span>
+<span class="kn">from</span> <span class="nn">ryu.ofproto</span> <span class="kn">import</span> <span class="n">ofproto_v1_3</span>
+<span class="kn">from</span> <span class="nn">ryu.app.wsgi</span> <span class="kn">import</span> <span class="n">ControllerBase</span>
+<span class="kn">from</span> <span class="nn">ryu.app.wsgi</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">ryu.app.wsgi</span> <span class="kn">import</span> <span class="n">route</span>
+<span class="kn">from</span> <span class="nn">ryu.app.wsgi</span> <span class="kn">import</span> <span class="n">WSGIApplication</span>
+<span class="kn">import</span> <span class="nn">csle_ryu.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.flow_statistic</span> <span class="kn">import</span> <span class="n">FlowStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.port_statistic</span> <span class="kn">import</span> <span class="n">PortStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.avg_flow_statistic</span> <span class="kn">import</span> <span class="n">AvgFlowStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.avg_port_statistic</span> <span class="kn">import</span> <span class="n">AvgPortStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.agg_flow_statistic</span> <span class="kn">import</span> <span class="n">AggFlowStatistic</span>
+
+
+<div class="viewcode-block" id="FlowAndPortStatsMonitor"><a class="viewcode-back" href="../../../csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor">[docs]</a><span class="k">class</span> <span class="nc">FlowAndPortStatsMonitor</span><span class="p">(</span><span class="n">app_manager</span><span class="o">.</span><span class="n">RyuApp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contains general functionality to monitor of flow and port statistics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># OpenFlow version to use</span>
+    <span class="n">OFP_VERSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="n">ofproto_v1_3</span><span class="o">.</span><span class="n">OFP_VERSION</span><span class="p">]</span>
+
+    <span class="c1"># Include WSGI context for the northbound API</span>
+    <span class="c1"># Specifyies Ryu&#39;s WSGI-compatible Web server clas to use</span>
+    <span class="n">_CONTEXTS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;wsgi&#39;</span><span class="p">:</span> <span class="n">WSGIApplication</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the class</span>
+
+<span class="sd">        :param args: app arguments</span>
+<span class="sd">        :param kwargs: app arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FlowAndPortStatsMonitor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Dict to keep track of all connected switches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datapaths</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Thread which will periodically query switches for statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitor_thread</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="p">)</span>
+
+        <span class="c1"># State</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_conf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="mi">30</span>
+
+        <span class="c1"># Acquires the the WSGIApplication to register the controller class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Registering CSLE Northbound REST API Controller&quot;</span><span class="p">)</span>
+        <span class="n">wsgi</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wsgi&#39;</span><span class="p">]</span>
+        <span class="n">wsgi</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">NorthBoundRestAPIController</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;controller_app&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">ofp_event</span><span class="o">.</span><span class="n">EventOFPStateChange</span><span class="p">,</span> <span class="p">[</span><span class="n">MAIN_DISPATCHER</span><span class="p">,</span> <span class="n">DEAD_DISPATCHER</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">_state_change_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handler called whenever a new switch connects or disconnects from the controller.</span>
+<span class="sd">        MAIN_DISPATCHER corresponds to the event that a new switch connects and DEAD_DISPATCHER corresponds to the</span>
+<span class="sd">        event that a switch disconnects</span>
+
+<span class="sd">        :param ev: the connection event</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Extract the datapath (abstraction of the link to the switch) that the event concerns</span>
+        <span class="n">datapath</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">datapath</span>
+
+        <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">MAIN_DISPATCHER</span><span class="p">:</span>
+            <span class="c1"># A new switch connected</span>
+            <span class="k">if</span> <span class="n">datapath</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datapaths</span><span class="p">:</span>
+                <span class="c1"># If the switch was not already registered, add it to the datapath dict.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A new switch connection, DPID:</span><span class="si">{</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">datapaths</span><span class="p">[</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">datapath</span>
+        <span class="k">elif</span> <span class="n">ev</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">DEAD_DISPATCHER</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">datapath</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datapaths</span><span class="p">:</span>
+                <span class="c1"># Remove the switch from the dict of datapaths since it disconnected.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Switch with DPID:</span><span class="si">{</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> disconnected&quot;</span><span class="p">)</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">datapaths</span><span class="p">[</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Thread that periodically sends requests to the connected switches to get switch statistics</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">dp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datapaths</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_request_stats</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;id: </span><span class="si">{</span><span class="n">dp</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;http://&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;localhost:8080</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STATS_AGGREGATE_FLOW_RESOURCE</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">dp</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">aggflows</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="nb">str</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">id</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">agg_flow_stat</span> <span class="o">=</span> <span class="n">AggFlowStatistic</span><span class="p">(</span><span class="n">timestamp</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">datapath_id</span><span class="o">=</span><span class="n">dp</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                                     <span class="n">total_num_bytes</span><span class="o">=</span><span class="n">aggflows</span><span class="p">[</span><span class="s2">&quot;byte_count&quot;</span><span class="p">],</span>
+                                                     <span class="n">total_num_packets</span><span class="o">=</span><span class="n">aggflows</span><span class="p">[</span><span class="s2">&quot;packet_count&quot;</span><span class="p">],</span>
+                                                     <span class="n">total_num_flows</span><span class="o">=</span><span class="n">aggflows</span><span class="p">[</span><span class="s2">&quot;flow_count&quot;</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TOPIC_NAMES</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span><span class="p">,</span>
+                                              <span class="n">agg_flow_stat</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">())</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">hub</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_request_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datapath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for sending a request to a switch with a qiven datapath to return its flow and port statistics.</span>
+
+<span class="sd">        :param datapath: the datapath, i.e. abstraction of the link to the switch</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Extract the protocol and message parser to use for sending the request</span>
+        <span class="n">openflow_protocol</span> <span class="o">=</span> <span class="n">datapath</span><span class="o">.</span><span class="n">ofproto</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">datapath</span><span class="o">.</span><span class="n">ofproto_parser</span>
+
+        <span class="c1"># Prepare the request for flow statistics</span>
+        <span class="n">statistics_request</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">OFPFlowStatsRequest</span><span class="p">(</span><span class="n">datapath</span><span class="p">)</span>
+
+        <span class="c1"># Send the request to get the flow statistics of the switch</span>
+        <span class="n">datapath</span><span class="o">.</span><span class="n">send_msg</span><span class="p">(</span><span class="n">statistics_request</span><span class="p">)</span>
+
+        <span class="c1"># Prepare the request for port statistics</span>
+        <span class="n">statistics_request</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">OFPPortStatsRequest</span><span class="p">(</span><span class="n">datapath</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">openflow_protocol</span><span class="o">.</span><span class="n">OFPP_ANY</span><span class="p">)</span>
+
+        <span class="c1"># Send the request to get the port statistics of the switch</span>
+        <span class="n">datapath</span><span class="o">.</span><span class="n">send_msg</span><span class="p">(</span><span class="n">statistics_request</span><span class="p">)</span>
+
+    <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">ofp_event</span><span class="o">.</span><span class="n">EventOFPFlowStatsReply</span><span class="p">,</span> <span class="n">MAIN_DISPATCHER</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_flow_stats_reply_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handler called when a flow statistics response is received from a switch</span>
+
+<span class="sd">        :param ev: the response event</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Extract the response body</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="c1"># Log the statistics</span>
+        <span class="n">flow_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
+            <span class="n">in_port</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">eth_dst</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="s2">&quot;in_port&quot;</span> <span class="ow">in</span> <span class="n">flow</span><span class="o">.</span><span class="n">match</span><span class="p">:</span>
+                <span class="n">in_port</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;in_port&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;eth_dst&quot;</span> <span class="ow">in</span> <span class="n">flow</span><span class="o">.</span><span class="n">match</span><span class="p">:</span>
+                <span class="n">eth_dst</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;eth_dst&#39;</span><span class="p">]</span>
+            <span class="n">flow_statistic_dto</span> <span class="o">=</span> <span class="n">FlowStatistic</span><span class="p">(</span>
+                <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="n">ev</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">in_port</span><span class="o">=</span><span class="n">in_port</span><span class="p">,</span>
+                <span class="n">out_port</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">instructions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">dst_mac_address</span><span class="o">=</span><span class="n">eth_dst</span><span class="p">,</span>
+                <span class="n">num_packets</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">packet_count</span><span class="p">,</span>
+                <span class="n">num_bytes</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">byte_count</span><span class="p">,</span> <span class="n">duration_nanoseconds</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">duration_nsec</span><span class="p">,</span>
+                <span class="n">duration_seconds</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">duration_sec</span><span class="p">,</span>
+                <span class="n">hard_timeout</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">hard_timeout</span><span class="p">,</span> <span class="n">idle_timeout</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">idle_timeout</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
+                <span class="n">cookie</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">cookie</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TOPIC_NAMES</span><span class="o">.</span><span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span><span class="p">,</span>
+                                      <span class="n">flow_statistic_dto</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">flow_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flow_statistic_dto</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">flow_stats</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">avg_flow_stats</span> <span class="o">=</span> <span class="n">AvgFlowStatistic</span><span class="o">.</span><span class="n">average_flow_statistics</span><span class="p">(</span>
+                <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="n">flow_stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">,</span> <span class="n">flow_statistics</span><span class="o">=</span><span class="n">flow_stats</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TOPIC_NAMES</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
+                                  <span class="n">avg_flow_stats</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">ofp_event</span><span class="o">.</span><span class="n">EventOFPPortStatsReply</span><span class="p">,</span> <span class="n">MAIN_DISPATCHER</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_port_stats_reply_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handler called when a port statistics response is received from a switch</span>
+
+<span class="sd">        :param ev: the response event</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Extract the response body</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">port_stats</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Log the statistics</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
+            <span class="n">port_statistics_dto</span> <span class="o">=</span> <span class="n">PortStatistic</span><span class="p">(</span>
+                <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="n">ev</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">port_no</span><span class="p">,</span> <span class="n">num_received_packets</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_packets</span><span class="p">,</span>
+                <span class="n">num_received_bytes</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_bytes</span><span class="p">,</span> <span class="n">num_received_errors</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_errors</span><span class="p">,</span>
+                <span class="n">num_transmitted_packets</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">tx_packets</span><span class="p">,</span> <span class="n">num_transmitted_bytes</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">tx_bytes</span><span class="p">,</span>
+                <span class="n">num_transmitted_errors</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">tx_errors</span><span class="p">,</span> <span class="n">num_received_dropped</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_dropped</span><span class="p">,</span>
+                <span class="n">num_transmitted_dropped</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">tx_dropped</span><span class="p">,</span> <span class="n">num_received_frame_errors</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_frame_err</span><span class="p">,</span>
+                <span class="n">num_received_overrun_errors</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_over_err</span><span class="p">,</span> <span class="n">num_received_crc_errors</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">rx_crc_err</span><span class="p">,</span>
+                <span class="n">num_collisions</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">collisions</span><span class="p">,</span> <span class="n">duration_nanoseconds</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">duration_nsec</span><span class="p">,</span>
+                <span class="n">duration_seconds</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">duration_sec</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TOPIC_NAMES</span><span class="o">.</span><span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span><span class="p">,</span>
+                                      <span class="n">port_statistics_dto</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">port_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">port_statistics_dto</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_running</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_stats</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">avg_flow_stats</span> <span class="o">=</span> <span class="n">AvgPortStatistic</span><span class="o">.</span><span class="n">average_port_statistics</span><span class="p">(</span>
+                <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="n">port_stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">,</span> <span class="n">port_statistics</span><span class="o">=</span><span class="n">port_stats</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TOPIC_NAMES</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
+                                  <span class="n">avg_flow_stats</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NorthBoundRestAPIController"><a class="viewcode-back" href="../../../csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController">[docs]</a><span class="k">class</span> <span class="nc">NorthBoundRestAPIController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Controller class for the Northbound REST API that accepts HTTP requests.</span>
+
+<span class="sd">    Example requests:</span>
+
+<span class="sd">    curl -X GET http://15.12.252.3:8080/cslenorthboundapi/producer/status</span>
+<span class="sd">    curl -X PUT -d &#39;{&quot;bootstrap.servers&quot;: &quot;15.12.253.253&quot;, &quot;time_step_len_seconds&quot;: 30}&#39;</span>
+<span class="sd">    http://15.12.252.3:8080/cslenorthboundapi/producer/start</span>
+<span class="sd">    curl -X POST http://15.12.252.3:8080/cslenorthboundapi/producer/stop</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">link</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NorthBoundRestAPIController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">link</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;controller_app&quot;</span><span class="p">]</span>  <span class="c1"># These names has to match!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NorthBoundRestAPIController.producer_status"><a class="viewcode-back" href="../../../csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.producer_status">[docs]</a>    <span class="nd">@route</span><span class="p">(</span><span class="s1">&#39;controller_app&#39;</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STATUS_PRODUCER_HTTP_RESOURCE</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">producer_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the status of the Kafka producer</span>
+
+<span class="sd">        :param req: the REST API request</span>
+<span class="sd">        :param kwargs: the WSGI arguments</span>
+<span class="sd">        :return: the REST API response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response_body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;kafka_conf&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span><span class="p">,</span>
+                                    <span class="s2">&quot;producer_running&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">producer_running</span><span class="p">,</span>
+                                    <span class="s2">&quot;time_step_len_seconds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">response_body</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NorthBoundRestAPIController.start_producer"><a class="viewcode-back" href="../../../csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.start_producer">[docs]</a>    <span class="nd">@route</span><span class="p">(</span><span class="s1">&#39;controller_app&#39;</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">START_PRODUCER_HTTP_RESOURCE</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PUT&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">start_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts the Kafka producer that sends flow and port statistics</span>
+
+<span class="sd">        :param req: the REST API request</span>
+<span class="sd">        :param kwargs: WSGI arguments</span>
+<span class="sd">        :return: the REST API response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kafka_conf</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span> <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">body</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Response</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span> <span class="ow">in</span> <span class="n">kafka_conf</span> \
+                <span class="ow">and</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">TIME_STEP_LEN_SECONDS</span> <span class="ow">in</span> <span class="n">kafka_conf</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="n">kafka_conf</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">],</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting Kafka producer with conf: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">producer_running</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">kafka_conf</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">TIME_STEP_LEN_SECONDS</span><span class="p">]</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NorthBoundRestAPIController.stop_producer"><a class="viewcode-back" href="../../../csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.stop_producer">[docs]</a>    <span class="nd">@route</span><span class="p">(</span><span class="s1">&#39;controller_app&#39;</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STOP_PRODUCER_HTTP_RESOURCE</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">stop_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops the Kafka producer that sends flow and port statistics</span>
+
+<span class="sd">        :param req: the REST API request</span>
+<span class="sd">        :param kwargs: WSGI arguments</span>
+<span class="sd">        :return: The REST response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping Kafka producer&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">producer_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">response_body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;kafka_conf&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">kafka_conf</span><span class="p">,</span>
+                                    <span class="s2">&quot;producer_running&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">producer_running</span><span class="p">,</span>
+                                    <span class="s2">&quot;time_step_len_seconds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_app</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">response_body</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

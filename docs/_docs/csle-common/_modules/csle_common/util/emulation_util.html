@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.util.emulation_util &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.util.emulation_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.util.emulation_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">paramiko</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.common.emulation_connection_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationConnectionObservationState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionId</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.env_dynamics_util</span> <span class="kn">import</span> <span class="n">EnvDynamicsUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_type</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionOutcome</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.credential</span> <span class="kn">import</span> <span class="n">Credential</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.transport_protocol</span> <span class="kn">import</span> <span class="n">TransportProtocol</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.ssh_util</span> <span class="kn">import</span> <span class="n">SSHUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+
+<div class="viewcode-block" id="EmulationUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil">[docs]</a><span class="k">class</span> <span class="nc">EmulationUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class containing utility functions for the emulation-middleware</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EmulationUtil.execute_ssh_cmds"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmds">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">conn</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes a list of commands over an ssh connection to the emulation</span>
+
+<span class="sd">        :param cmds: the list of commands</span>
+<span class="sd">        :param conn: the ssh connection</span>
+<span class="sd">        :param wait_for_completion: whether to wait for completion of the commands or not</span>
+<span class="sd">        :return: List of tuples (outdata, errdata, total_time)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SSHUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="n">cmds</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="n">wait_for_completion</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.execute_ssh_cmd"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes an action on the emulation over a ssh connection,</span>
+<span class="sd">        this is a synchronous operation that waits for the completion of the action before returning</span>
+
+<span class="sd">        :param cmd: the command to execute</span>
+<span class="sd">        :param conn: the ssh connection</span>
+<span class="sd">        :param wait_for_completion: boolean flag whether to wait for completion or not</span>
+<span class="sd">        :return: outdata, errdata, total_time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SSHUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="n">wait_for_completion</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.log_measured_action_time"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.log_measured_action_time">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">log_measured_action_time</span><span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
+                                 <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs the measured time of an action to Kafka</span>
+
+<span class="sd">        :param total_time: the total time of executing the action</span>
+<span class="sd">        :param action: the action</span>
+<span class="sd">        :param emulation_env_config: the environment config</span>
+<span class="sd">        :param ip: ip</span>
+<span class="sd">        :param user: user</span>
+<span class="sd">        :param service: service</span>
+<span class="sd">        :param conn: conn</span>
+<span class="sd">        :param dir: dir</span>
+<span class="sd">        :param machine_ips: machine_ips</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">action</span><span class="o">.</span><span class="n">execution_time</span> <span class="o">=</span> <span class="n">total_time</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">producer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">create_producer</span><span class="p">()</span>
+        <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS_TOPIC_NAME</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+        <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_if_ssh_server_is_running</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">telnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if an ssh server is running on the machine</span>
+
+<span class="sd">        :param conn: the connection to use for the command</span>
+<span class="sd">        :param telnet: whether the connection is a telnet connection</span>
+<span class="sd">        :return: True if server is running, else false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;service ssh status&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">telnet</span><span class="p">:</span>
+            <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;is running&quot;</span> <span class="ow">in</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;is running&quot;</span> <span class="ow">in</span> <span class="n">errdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;is running&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_list_all_users</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">EmulationConnectionObservationState</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
+                        <span class="n">telnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all users on a machine</span>
+
+<span class="sd">        :param c: the connection to user for the command</span>
+<span class="sd">        :param telnet: whether it is a telnet connection</span>
+<span class="sd">        :param emulation_env_config: emulation env config</span>
+<span class="sd">        :return: list of users</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SHELL</span><span class="o">.</span><span class="n">LIST_ALL_USERS</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">ATTACKER_RETRY_FIND_USERS</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">telnet</span><span class="p">:</span>
+                <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
+                <span class="n">outdata</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="n">errdata</span> <span class="o">=</span> <span class="n">errdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">users</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">users</span><span class="p">))</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">users</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;users empty, ip:</span><span class="si">{}</span><span class="s2">, telnet:</span><span class="si">{}</span><span class="s2">, root:</span><span class="si">{}</span><span class="s2">, username:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">telnet</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+                                                                                          <span class="n">c</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">users</span>
+
+<div class="viewcode-block" id="EmulationUtil.is_connection_active"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_connection_active">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_connection_active</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a given connection is active or not</span>
+
+<span class="sd">        :param conn: the connection to check</span>
+<span class="sd">        :return: True if active, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">is_active</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.setup_custom_connection"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.setup_custom_connection">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">setup_custom_connection</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pw</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">target_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">proxy_conn</span><span class="p">,</span>
+                                <span class="n">root</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for setting up a custom SSH connection given credentials and a proxy connection</span>
+<span class="sd">        :param user: the username of the new connection</span>
+<span class="sd">        :param pw: the pw of the new connection</span>
+<span class="sd">        :param source_ip: the ip of the proxy</span>
+<span class="sd">        :param port: the port of the new connection</span>
+<span class="sd">        :param target_ip: the ip to connect to</span>
+<span class="sd">        :param proxy_conn: the proxy connection</span>
+<span class="sd">        :param root: whether it is a root connection or not</span>
+<span class="sd">        :return: the new connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cr</span> <span class="o">=</span> <span class="n">Credential</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">pw</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">TransportProtocol</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span>
+                        <span class="n">service</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">SERVICE_NAME</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">DEFAULT_PORT</span><span class="p">)</span>
+        <span class="n">agent_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">source_ip</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="n">target_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_ip</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="n">agent_transport</span> <span class="o">=</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">relay_channel</span> <span class="o">=</span> <span class="n">agent_transport</span><span class="o">.</span><span class="n">open_channel</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">DIRECT_CHANNEL</span><span class="p">,</span> <span class="n">target_addr</span><span class="p">,</span> <span class="n">agent_addr</span><span class="p">,</span>
+                                                         <span class="n">timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">target_conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
+            <span class="n">target_conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
+            <span class="n">target_conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">target_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pw</span><span class="p">,</span> <span class="n">sock</span><span class="o">=</span><span class="n">relay_channel</span><span class="p">)</span>
+            <span class="n">target_conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">connection_dto</span> <span class="o">=</span> <span class="n">EmulationConnectionObservationState</span><span class="p">(</span>
+                <span class="n">conn</span><span class="o">=</span><span class="n">target_conn</span><span class="p">,</span> <span class="n">credential</span><span class="o">=</span><span class="n">cr</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">SERVICE_NAME</span><span class="p">,</span>
+                <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">DEFAULT_PORT</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="n">proxy_conn</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">target_ip</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">connection_dto</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Custom connection setup failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.write_remote_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.write_remote_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">write_remote_file</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">write_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for writing contents to a file</span>
+
+<span class="sd">        :param conn: the SSH connection to use for writing</span>
+<span class="sd">        :param file_name: the file name</span>
+<span class="sd">        :param contents: the contents of the file</span>
+<span class="sd">        :param write_mode: the write mode</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sftp_client</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">open_sftp</span><span class="p">()</span>
+        <span class="n">remote_file</span> <span class="o">=</span> <span class="n">sftp_client</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">write_mode</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception writing file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.connect_admin"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.connect_admin">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">create_producer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Connects the admin agent</span>
+
+<span class="sd">        :param emulation_env_config: the configuration of the emulation to connect to</span>
+<span class="sd">        :param ip: the ip of the container to connect to</span>
+<span class="sd">        :param create_producer: boolean flag whether the producer thread to Kafka should be created also</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">agent_ip</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE_ADMIN</span><span class="o">.</span><span class="n">SSH_USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE_ADMIN</span><span class="o">.</span><span class="n">SSH_PW</span><span class="p">,</span>
+                                     <span class="n">create_producer</span><span class="o">=</span><span class="n">create_producer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.disconnect_admin"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.disconnect_admin">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">disconnect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disconnects the admin agent</span>
+
+<span class="sd">        :param emulation_env_config: the configuration of the emulation to disconnect the admin of</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">close_all_connections</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.execute_cmd_interactive_channel"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.execute_cmd_interactive_channel">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">execute_cmd_interactive_channel</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes an action on the emulation using an interactive shell (non synchronous)</span>
+<span class="sd">        :param a: action to execute</span>
+<span class="sd">        :param env_config: environment config</span>
+<span class="sd">        :param channel: the channel to use</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cmd</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.read_result_interactive"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.read_result_interactive">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_result_interactive</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the result of an action executed in interactive mode</span>
+
+<span class="sd">        :param emulation_env_config: the emulation environment config</span>
+<span class="sd">        :param the channel</span>
+<span class="sd">        :return: the result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">read_result_interactive_channel</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+            <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.read_result_interactive_channel"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.read_result_interactive_channel">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_result_interactive_channel</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the result of an action executed in interactive mode</span>
+<span class="sd">        :param emulation_env_config: the emulation environment config</span>
+<span class="sd">        :param channel: the channel to use</span>
+<span class="sd">        :return: the result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">channel</span><span class="o">.</span><span class="n">recv_ready</span><span class="p">():</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">SHELL_READ_WAIT</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LARGE_RECV_SIZE</span><span class="p">)</span>
+        <span class="n">output_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">output_str</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SHELL_ESCAPE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">output_str</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_str</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.is_emulation_defense_action_legal"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_emulation_defense_action_legal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_emulation_defense_action_legal</span><span class="p">(</span><span class="n">defense_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
+                                          <span class="n">env_state</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a given defense action is legal in the current state of the environment</span>
+
+<span class="sd">        :param defense_action_id: the id of the action to check</span>
+<span class="sd">        :param env_config: the environment config</span>
+<span class="sd">        :param env_state: the environment state</span>
+<span class="sd">        :param attacker_action: the id of the previous attack action</span>
+<span class="sd">        :return: True if legal, else false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.is_emulation_attack_action_legal"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_emulation_attack_action_legal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_emulation_attack_action_legal</span><span class="p">(</span><span class="n">attack_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
+                                         <span class="n">env_state</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a given attack action is legal in the current state of the environment</span>
+
+<span class="sd">        :param attack_action_id: the id of the action to check</span>
+<span class="sd">        :param env_config: the environment config</span>
+<span class="sd">        :param env_state: the environment state</span>
+<span class="sd">        :return: True if legal, else false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attack_action_id</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">env_state</span><span class="o">.</span><span class="n">attacker_action_config</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_action_config</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">attack_action_id</span><span class="p">]</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">get_action_ips</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">env_config</span><span class="p">)</span>
+
+        <span class="n">logged_in_ips_str</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">logged_in_ips_str</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">env_config</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">env_state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">logged_in_ips_str</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">actions_tried</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Recon on subnet is always possible</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Recon on set of all found machines is always possible if there exists such machiens</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Optimal Stopping actions are always possible</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">STOP</span> <span class="ow">or</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">machine_discovered</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">target_machine</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logged_in</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">unscanned_filesystems</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">untried_credentials</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">root_login</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">machine_root_login</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">machine_logged_in</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">uninstalled_tools</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">machine_w_tools</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">uninstalled_backdoor</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">target_untried_credentials</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">logged_in</span><span class="p">:</span>
+                <span class="n">logged_in</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">filesystem_searched</span><span class="p">:</span>
+                    <span class="n">unscanned_filesystems</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
+                    <span class="n">root_login</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">tools_installed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">install_tools_tried</span><span class="p">:</span>
+                        <span class="n">uninstalled_tools</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">machine_w_tools</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">tools_installed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">backdoor_installed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">backdoor_tried</span><span class="p">:</span>
+                        <span class="n">uninstalled_backdoor</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">ip</span><span class="p">:</span>
+                <span class="n">machine_discovered</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">target_machine</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">logged_in</span><span class="p">:</span>
+                    <span class="n">machine_logged_in</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
+                        <span class="n">machine_root_login</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">untried_credentials</span><span class="p">:</span>
+                    <span class="n">target_untried_credentials</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">untried_credentials</span>
+            <span class="c1"># if m.shell_access and not m.logged_in:</span>
+            <span class="c1">#     untried_credentials = True</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">untried_credentials</span><span class="p">:</span>
+                <span class="n">untried_credentials</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">untried_credentials</span>
+
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NETWORK_SERVICE_LOGIN</span><span class="p">:</span>
+            <span class="n">machine_discovered</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Privilege escalation only legal if machine discovered and logged in and not root</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">PRIVILEGE_ESCALATION</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="n">machine_discovered</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">machine_logged_in</span> <span class="ow">or</span> <span class="n">machine_root_login</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Exploit only legal if we have not already compromised the node</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span> <span class="ow">and</span> <span class="n">machine_logged_in</span> <span class="ow">and</span> <span class="n">root_login</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Shell-access Exploit only legal if we do not already have untried credentials</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span>
+                <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">action_outcome</span> <span class="o">==</span> <span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span>
+                <span class="ow">and</span> <span class="n">target_untried_credentials</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Priv-Esc Exploit only legal if we are already logged in and do not have root</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span> \
+                <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">action_outcome</span> <span class="o">==</span> <span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">PRIVILEGE_ESCALATION_ROOT</span> \
+                <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">machine_logged_in</span> <span class="ow">or</span> <span class="n">root_login</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># If IP is discovered, then IP specific action without other prerequisites is legal</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">machine_discovered</span> <span class="ow">and</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span> <span class="ow">or</span>
+                                    <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span> <span class="ow">or</span>
+                                    <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">PRIVILEGE_ESCALATION</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">target_machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exploit_tried</span> <span class="o">=</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">exploit_tried</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">action</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">target_machine</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exploit_tried</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># If nothing new to scan, find-flag is illegal</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIND_FLAG</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">unscanned_filesystems</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># If nothing new to backdoor, install backdoor is illegal</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_BACKDOOR</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">uninstalled_backdoor</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># If no new credentials, login to service is illegal</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NETWORK_SERVICE_LOGIN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">untried_credentials</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Pivot recon possible if logged in on pivot machine with tools installed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">machine_discovered</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">POST_EXPLOIT</span> <span class="ow">and</span>
+                <span class="n">logged_in</span> <span class="ow">and</span> <span class="n">machine_w_tools</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal</span>
+        <span class="k">if</span> <span class="n">machine_discovered</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">POST_EXPLOIT</span> \
+                <span class="ow">and</span> <span class="p">((</span><span class="n">target_machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">target_machine</span><span class="o">.</span><span class="n">shell_access</span>
+                      <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_machine</span><span class="o">.</span><span class="n">shell_access_credentials</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+                     <span class="ow">or</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NETWORK_SERVICE_LOGIN</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Bash action not tied to specific IP only possible when having shell access and being logged in</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIND_FLAG</span> <span class="ow">and</span> <span class="n">logged_in</span> <span class="ow">and</span> <span class="n">unscanned_filesystems</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Bash action not tied to specific IP only possible when having shell access and being logged in and root</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">INSTALL_TOOLS</span> <span class="ow">and</span> <span class="n">logged_in</span> <span class="ow">and</span> <span class="n">root_login</span> <span class="ow">and</span> <span class="n">uninstalled_tools</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Bash action not tied to specific IP only possible when having shell access and being logged in and root</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_BACKDOOR</span> <span class="ow">and</span> <span class="n">logged_in</span> <span class="ow">and</span> <span class="n">root_login</span> \
+                <span class="ow">and</span> <span class="n">machine_w_tools</span> <span class="ow">and</span> <span class="n">uninstalled_backdoor</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="EmulationUtil.check_pid"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.check_pid">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_pid</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if a given pid is running on the host</span>
+
+<span class="sd">        :param pid: the pid to check</span>
+<span class="sd">        :return: True if it is running otherwise false.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span><span class="o">.</span><span class="n">is_running</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

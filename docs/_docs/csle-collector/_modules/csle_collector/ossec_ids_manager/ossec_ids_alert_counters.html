@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.ossec_ids_manager.ossec_ids_alert_counters &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.ossec_ids_manager.ossec_ids_alert_counters</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.ossec_ids_manager.ossec_ids_alert_counters</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert</span> <span class="kn">import</span> <span class="n">OSSECIDSAlert</span>
+<span class="kn">import</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_manager_pb2</span>
+
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters">[docs]</a><span class="k">class</span> <span class="nc">OSSECIdsAlertCounters</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO containing statistics from the OSSEC log</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_IDS_ALERT_GROUP_ID</span><span class="o">.</span><span class="n">values</span><span class="p">()))))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.add"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alert_counters</span><span class="p">:</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds another alert counters object to this one</span>
+
+<span class="sd">        :param alert_counters: the counters to add</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">severe_alerts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">warning_alerts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">total_alerts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.count"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alerts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OSSECIDSAlert</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Counts the list of alerts</span>
+
+<span class="sd">        :param alerts: list of alerts from the log</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">level</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">group_id</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">group_ids</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">group_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD</span><span class="p">:])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">)):</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">+=</span> <span class="n">level</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.from_kafka_record"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a kafka record to a DTO</span>
+
+<span class="sd">        :param record: the kafka record to convert</span>
+<span class="sd">        :return: the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">])))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">group_alerts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">level_alerts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERT_RULE_ID_TO_DESCR</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">level_alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERT_RULE_ID_TO_DESCR</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span>
+                       <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_IDS_ALERT_GROUP_ID</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">+</span>
+                       <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERT_RULE_ID_TO_DESCR</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">group_alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.update_with_kafka_record"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.update_with_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the DTO with a kafka record</span>
+
+<span class="sd">        :param record: the kafka record to use for updating</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">])))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERT_RULE_ID_TO_DESCR</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERT_RULE_ID_TO_DESCR</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span>
+                       <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_IDS_ALERT_GROUP_ID</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+                       <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERT_RULE_ID_TO_DESCR</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.to_kafka_record"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the DTO into a kafka record</span>
+
+<span class="sd">        :param ip: the ip to add to the record in addition to the IDS statistics</span>
+<span class="sd">        :return: a comma-separated string representing the kafka record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">total_counters</span> <span class="o">=</span> <span class="p">[</span><span class="n">ts</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span>
+        <span class="n">record_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">total_counters</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">record_str</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.to_dto"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dto">[docs]</a>    <span class="k">def</span> <span class="nf">to_dto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object into a gRPC DTO for serialization</span>
+
+<span class="sd">        :param ip: the ip to add to the DTO in addition to the statistics</span>
+<span class="sd">        :return: A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">(</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+            <span class="n">total_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span><span class="p">,</span>
+            <span class="n">warning_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">,</span>
+            <span class="n">severe_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">,</span>
+            <span class="n">alerts_weighted_by_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span><span class="p">,</span>
+            <span class="n">level_0_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">level_1_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">level_2_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">level_3_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">level_4_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+            <span class="n">level_5_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+            <span class="n">level_6_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+            <span class="n">level_7_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+            <span class="n">level_8_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+            <span class="n">level_9_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
+            <span class="n">level_10_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+            <span class="n">level_11_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+            <span class="n">level_12_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
+            <span class="n">level_13_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
+            <span class="n">level_14_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
+            <span class="n">level_15_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
+            <span class="n">invalid_login_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">authentication_success_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">authentication_failed_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">connection_attempt_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">attacks_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+            <span class="n">adduser_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+            <span class="n">sshd_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+            <span class="n">ids_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+            <span class="n">firewall_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+            <span class="n">squid_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
+            <span class="n">apache_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+            <span class="n">syslog_alerts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;total_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span><span class="si">}</span><span class="s2">, warning_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;severe_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;group_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span><span class="si">}</span><span class="s2">, group_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;alerts_weighted_by_level: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.from_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of the object into an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">level_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_alerts&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">group_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;group_alerts&quot;</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_level&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.to_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;group_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.copy"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">group_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">level_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span>
+        <span class="k">return</span> <span class="n">c</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.get_deltas"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.get_deltas">[docs]</a>    <span class="k">def</span> <span class="nf">get_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counters_prime</span><span class="p">:</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the deltas between two counters objects</span>
+
+<span class="sd">        :param counters_prime: the counters object to compare with</span>
+<span class="sd">        :return: the deltas and the labels</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deltas_level</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">level_alerts</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">deltas_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">deltas</span> <span class="o">=</span> <span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">total_alerts</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">),</span>
+                  <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span><span class="p">)]</span> <span class="o">+</span>
+                  <span class="n">deltas_level</span> <span class="o">+</span> <span class="n">deltas_group</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OSSEC_IDS_ALERTS_LABELS</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">deltas</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">deltas</span><span class="p">),</span> <span class="n">labels</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.num_attributes"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The number of attributes of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">22</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_IDS_ALERT_GROUP_ID</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="OSSECIdsAlertCounters.schema"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.schema">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: get the schema of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

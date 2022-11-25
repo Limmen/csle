@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.elk_manager package &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_collector.host_manager package" href="csle_collector.host_manager.html" />
+    <link rel="prev" title="csle_collector.docker_stats_manager package" href="csle_collector.docker_stats_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.elk_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.elk_manager.elk_manager">csle_collector.elk_manager.elk_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.elk_manager.elk_manager_pb2">csle_collector.elk_manager.elk_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.elk_manager.elk_manager_pb2_grpc">csle_collector.elk_manager.elk_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.elk_manager.elk_manager_util">csle_collector.elk_manager.elk_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.elk_manager.query_elk_server">csle_collector.elk_manager.query_elk_server module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.elk_manager">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_collector.elk_manager package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_collector.elk_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-collector-elk-manager-package">
+<h1>csle_collector.elk_manager package<a class="headerlink" href="#csle-collector-elk-manager-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_collector.elk_manager.elk_manager">
+<span id="csle-collector-elk-manager-elk-manager-module"></span><h2>csle_collector.elk_manager.elk_manager module<a class="headerlink" href="#module-csle_collector.elk_manager.elk_manager" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager.</span></span><span class="sig-name descname"><span class="pre">ElkManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer</span></code></a></p>
+<p>gRPC server for managing an ELK stack. Allows to start/stop the ELK stack remotely and also to query the
+state of the ELK stack.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.getElkStatus">
+<span class="sig-name descname"><span class="pre">getElkStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.GetElkStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.getElkStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.getElkStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the state of the ELK server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK stack server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElastic">
+<span class="sig-name descname"><span class="pre">startElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StartElasticMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElastic" title="Permalink to this definition"></a></dt>
+<dd><p>Starts elasticsearch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElk">
+<span class="sig-name descname"><span class="pre">startElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StartElkMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElk" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the ELK stack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.startKibana">
+<span class="sig-name descname"><span class="pre">startKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StartKibanaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startKibana" title="Permalink to this definition"></a></dt>
+<dd><p>Starts Kibana</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.startLogstash">
+<span class="sig-name descname"><span class="pre">startLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StartLogstashMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startLogstash" title="Permalink to this definition"></a></dt>
+<dd><p>Starts Logstash</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElastic">
+<span class="sig-name descname"><span class="pre">stopElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StartElasticMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElastic" title="Permalink to this definition"></a></dt>
+<dd><p>Stops elasticsearch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElk">
+<span class="sig-name descname"><span class="pre">stopElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StopElkMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElk" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the ELK stack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK stack</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopKibana">
+<span class="sig-name descname"><span class="pre">stopKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StopKibanaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopKibana" title="Permalink to this definition"></a></dt>
+<dd><p>Stops Kibana</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopLogstash">
+<span class="sig-name descname"><span class="pre">stopLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.StopLogstashMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopLogstash" title="Permalink to this definition"></a></dt>
+<dd><p>Stops Logstash</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager.serve">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50045</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'elk_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.serve" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the gRPC server for managing the ELK stack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> – the port that the server will listen to</p></li>
+<li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
+<li><p><strong>log_file_name</strong> – the file name of the log</p></li>
+<li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.elk_manager.elk_manager_pb2">
+<span id="csle-collector-elk-manager-elk-manager-pb2-module"></span><h2>csle_collector.elk_manager.elk_manager_pb2 module<a class="headerlink" href="#module-csle_collector.elk_manager.elk_manager_pb2" title="Permalink to this headline"></a></h2>
+<p>Generated protocol buffer code.</p>
+</section>
+<section id="module-csle_collector.elk_manager.elk_manager_pb2_grpc">
+<span id="csle-collector-elk-manager-elk-manager-pb2-grpc-module"></span><h2>csle_collector.elk_manager.elk_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.elk_manager.elk_manager_pb2_grpc" title="Permalink to this headline"></a></h2>
+<p>Client and server classes corresponding to protobuf-defined services.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">ElkManager</span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.getElkStatus">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getElkStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.getElkStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.getElkStatus" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startElastic">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.startElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startElastic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startElk">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.startElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startElk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startKibana">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.startKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startKibana" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startLogstash">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.startLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.startLogstash" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopElastic">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.stopElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopElastic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopElk">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.stopElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopElk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopKibana">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.stopKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopKibana" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopLogstash">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManager.stopLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManager.stopLogstash" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">ElkManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.getElkStatus">
+<span class="sig-name descname"><span class="pre">getElkStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.getElkStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.getElkStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startElastic">
+<span class="sig-name descname"><span class="pre">startElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.startElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startElastic" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startElk">
+<span class="sig-name descname"><span class="pre">startElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.startElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startElk" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startKibana">
+<span class="sig-name descname"><span class="pre">startKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.startKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startKibana" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startLogstash">
+<span class="sig-name descname"><span class="pre">startLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.startLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.startLogstash" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopElastic">
+<span class="sig-name descname"><span class="pre">stopElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.stopElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopElastic" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopElk">
+<span class="sig-name descname"><span class="pre">stopElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.stopElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopElk" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopKibana">
+<span class="sig-name descname"><span class="pre">stopKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.stopKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopKibana" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopLogstash">
+<span class="sig-name descname"><span class="pre">stopLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerServicer.stopLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerServicer.stopLogstash" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">ElkManagerStub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#ElkManagerStub"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_pb2_grpc.add_ElkManagerServicer_to_server">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">add_ElkManagerServicer_to_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">servicer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_pb2_grpc.html#add_ElkManagerServicer_to_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.add_ElkManagerServicer_to_server" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-csle_collector.elk_manager.elk_manager_util">
+<span id="csle-collector-elk-manager-elk-manager-util-module"></span><h2>csle_collector.elk_manager.elk_manager_util module<a class="headerlink" href="#module-csle_collector.elk_manager.elk_manager_util" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_util.ElkManagerUtil">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager_util.</span></span><span class="sig-name descname"><span class="pre">ElkManagerUtil</span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class with utility functions related to the ELK Manager</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elk_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil.elk_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty ElkDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elk_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil.elk_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of an ElkDTO to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elk_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elk_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">elk_manager_pb2.ElkDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil.elk_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts an ElkDTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>elk_dto</strong> – the dto to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.elk_manager.query_elk_server">
+<span id="csle-collector-elk-manager-query-elk-server-module"></span><h2>csle_collector.elk_manager.query_elk_server module<a class="headerlink" href="#module-csle_collector.elk_manager.query_elk_server" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.get_elk_status">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">get_elk_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#get_elk_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.get_elk_status" title="Permalink to this definition"></a></dt>
+<dd><p>Queries the server for the ELK stack status</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.start_elastic">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_elastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_elastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_elastic" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to start Elasticsearch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.start_elk">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_elk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_elk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_elk" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to start the ELK stack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.start_kibana">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_kibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_kibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_kibana" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to start Kibana</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.start_logstash">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_logstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_logstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_logstash" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to start Logstash</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.stop_elastic">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_elastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_elastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_elastic" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to stop Elabticsearch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.stop_elk">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_elk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_elk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_elk" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to stop the whole ELK stack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.stop_kibana">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_kibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_kibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_kibana" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to stop Kibana</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.elk_manager.query_elk_server.stop_logstash">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_logstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">elk_manager_pb2.ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_logstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_logstash" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the ELK server to stop Logstash</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.elk_manager">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.elk_manager" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_collector.docker_stats_manager.html" class="btn btn-neutral float-left" title="csle_collector.docker_stats_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_collector.host_manager.html" class="btn btn-neutral float-right" title="csle_collector.host_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.traffic_manager.query_traffic_manager &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.traffic_manager.query_traffic_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.traffic_manager.query_traffic_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">csle_collector.traffic_manager.traffic_manager_pb2_grpc</span>
+<span class="kn">import</span> <span class="nn">csle_collector.traffic_manager.traffic_manager_pb2</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="get_traffic_status"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.query_traffic_manager.get_traffic_status">[docs]</a><span class="k">def</span> <span class="nf">get_traffic_status</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerStub</span><span class="p">,</span>
+                       <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Queries the server for the Traffic generator status</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :return: a TrafficDTO describing the status of the traffic generator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">get_traffic_status_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">GetTrafficStatusMsg</span><span class="p">()</span>
+    <span class="n">traffic_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getTrafficStatus</span><span class="p">(</span><span class="n">get_traffic_status_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traffic_dto</span></div>
+
+
+<div class="viewcode-block" id="stop_traffic"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.query_traffic_manager.stop_traffic">[docs]</a><span class="k">def</span> <span class="nf">stop_traffic</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerStub</span><span class="p">,</span>
+                 <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends a request to the traffic manager to stop the traffic generator</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :return: a TrafficDTO describing the status of the traffic generator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stop_traffic_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">StopTrafficMsg</span><span class="p">()</span>
+    <span class="n">traffic_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopTraffic</span><span class="p">(</span><span class="n">stop_traffic_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traffic_dto</span></div>
+
+
+<div class="viewcode-block" id="start_traffic"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.query_traffic_manager.start_traffic">[docs]</a><span class="k">def</span> <span class="nf">start_traffic</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerStub</span><span class="p">,</span>
+                  <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                  <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends a request to the traffic manager to start the traffic generator script</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param commands: list of commands for the traffic generator</span>
+<span class="sd">    :param sleep_time: sleep time for the traffic generator</span>
+<span class="sd">    :return: an TrafficDTO describing the status of the traffic manager</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_traffic_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">StartTrafficMsg</span><span class="p">(</span>
+        <span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span> <span class="n">sleepTime</span><span class="o">=</span><span class="n">sleep_time</span><span class="p">)</span>
+    <span class="n">traffic_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startTraffic</span><span class="p">(</span><span class="n">start_traffic_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traffic_dto</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

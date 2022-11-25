@@ -1,0 +1,53 @@
+# Site settings
+title: CSLE
+email: kimham@kth.se
+description: >
+  Documentation page for the cyber security learning environment (CSLE)
+lang: en-US
+
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: limmen.dev/csle # the base hostname & protocol for your site
+git_address: https://github.com/Limmen/csle
+git_edit_address: https://github.com/Limmen/csle/blob/gh-pages
+
+# theme options from https://bootswatch.com/3/
+# comment out this to use default Bootstrap
+bootwatch: paper # cerulean cosmo custom cyborg darkly flatly journal lumen readable sandstone simplex slate solar spacelab superhero united yeti
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+# Plugins (previously gems:)
+plugins:
+  - jekyll-feed
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - .idea/
+  - .gitignore
+  - README.md
+  - vendor
+
+include:
+  - _publications
+  - _releases
+
+timezone: Europe/Stockholm
+defaults:
+  - scope:
+      path: _docs
+      type: docs
+    values:
+      layout: docs
+      sectionid: docs
+      seo:
+        type: "WebPage"
+
+collections:
+  docs:
+    permalink: /:collection/:path/
+    output: true

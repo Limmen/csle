@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_config.emulation_env_generation_config &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_config.emulation_env_generation_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_config.emulation_env_generation_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Set</span>
+
+
+<div class="viewcode-block" id="EmulationEnvGenerationConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_generation_config.EmulationEnvGenerationConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvGenerationConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A DTO representing the configuration of a dynamically created emulation environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_num_users</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_num_users</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">min_num_flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">max_num_flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">min_num_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">max_num_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="n">container_pool</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">gw_vuln_compatible_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">pw_vuln_compatible_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rce_vuln_compatible_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sql_injection_vuln_compatible_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">priv_esc_vuln_compatible_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">agent_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">router_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">subnet_id_blacklist</span><span class="p">:</span> <span class="n">Set</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">subnet_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">subnet_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_cpus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_cpus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_mem_G</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">max_mem_G</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the object</span>
+
+<span class="sd">        :param min_num_users: the minimum number of users</span>
+<span class="sd">        :param max_num_users: the maximum number of users</span>
+<span class="sd">        :param min_num_flags: the minimum number of flags</span>
+<span class="sd">        :param max_num_flags: the maximum number of flags</span>
+<span class="sd">        :param min_num_nodes: the minimum number of nodes</span>
+<span class="sd">        :param max_num_nodes: the maximum number of nodes</span>
+<span class="sd">        :param container_pool: the pool of containers for emulation</span>
+<span class="sd">        :param gw_vuln_compatible_containers: the pool of gw-compatible containers</span>
+<span class="sd">        :param pw_vuln_compatible_containers: the pool of pw-vuln-compatible containers</span>
+<span class="sd">        :param rce_vuln_compatible_containers: the pool of rce-compatible containers</span>
+<span class="sd">        :param sql_injection_vuln_compatible_containers: the pool of sql-injection-compatible containers</span>
+<span class="sd">        :param priv_esc_vuln_compatible_containers: the pool of priv-esc-compatible containers</span>
+<span class="sd">        :param agent_containers: the pool of agent containers</span>
+<span class="sd">        :param router_containers: the pool of router containers</span>
+<span class="sd">        :param path: the path to the config</span>
+<span class="sd">        :param subnet_id_blacklist: the black list of subnet ids</span>
+<span class="sd">        :param subnet_prefix: the prefix of the subnet</span>
+<span class="sd">        :param subnet_id: the subnet id</span>
+<span class="sd">        :param num_flags: the number of flags</span>
+<span class="sd">        :param num_nodes: the number of nodes</span>
+<span class="sd">        :param min_cpus: the minimum number of CPUs per container</span>
+<span class="sd">        :param max_cpus: the maximum number of CPUs per container</span>
+<span class="sd">        :param min_mem_G: the minimum number of memory GB for each container</span>
+<span class="sd">        :param max_mem_G: the maximum number of memory GB for each container</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_num_users</span> <span class="o">=</span> <span class="n">min_num_users</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_num_users</span> <span class="o">=</span> <span class="n">max_num_users</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_num_flags</span> <span class="o">=</span> <span class="n">min_num_flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_num_flags</span> <span class="o">=</span> <span class="n">max_num_flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_num_nodes</span> <span class="o">=</span> <span class="n">min_num_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_num_nodes</span> <span class="o">=</span> <span class="n">max_num_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container_pool</span> <span class="o">=</span> <span class="n">container_pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gw_vuln_compatible_containers</span> <span class="o">=</span> <span class="n">gw_vuln_compatible_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pw_vuln_compatible_containers</span> <span class="o">=</span> <span class="n">pw_vuln_compatible_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rce_vuln_compatible_containers</span> <span class="o">=</span> <span class="n">rce_vuln_compatible_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sql_injection_vuln_compatible_containers</span> <span class="o">=</span> <span class="n">sql_injection_vuln_compatible_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priv_esc_vuln_compatible_containers</span> <span class="o">=</span> <span class="n">priv_esc_vuln_compatible_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_containers</span> <span class="o">=</span> <span class="n">agent_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">router_containers</span> <span class="o">=</span> <span class="n">router_containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id_blacklist</span> <span class="o">=</span> <span class="n">subnet_id_blacklist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subnet_prefix</span> <span class="o">=</span> <span class="n">subnet_prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span> <span class="o">=</span> <span class="n">subnet_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_flags</span> <span class="o">=</span> <span class="n">num_flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">=</span> <span class="n">num_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus</span> <span class="o">=</span> <span class="n">min_cpus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cpus</span> <span class="o">=</span> <span class="n">max_cpus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_mem_G</span> <span class="o">=</span> <span class="n">min_mem_G</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_mem_G</span> <span class="o">=</span> <span class="n">max_mem_G</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container_pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gw_vuln_compatible_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gw_vuln_compatible_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pw_vuln_compatible_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pw_vuln_compatible_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rce_vuln_compatible_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rce_vuln_compatible_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sql_injection_vuln_compatible_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sql_injection_vuln_compatible_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">priv_esc_vuln_compatible_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priv_esc_vuln_compatible_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">router_containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">router_containers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id_blacklist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id_blacklist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;min_num_users:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_num_users</span><span class="si">}</span><span class="s2">, max_num_users:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_users</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;min_num_flags:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_num_flags</span><span class="si">}</span><span class="s2">, max_num_flags:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_flags</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;min_num_nodes:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_num_nodes</span><span class="si">}</span><span class="s2">, max_num_nodes:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_nodes</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;container_pool:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">container_pool</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;gw_vuln_compatible_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gw_vuln_compatible_containers</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;pw_vuln_compatible_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pw_vuln_compatible_containers</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;rce_vuln_compatible_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rce_vuln_compatible_containers</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;sql_injection_vuln_compatible_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sql_injection_vuln_compatible_containers</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;priv_esc_vuln_compatible_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">priv_esc_vuln_compatible_containers</span><span class="si">}</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;agent_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_containers</span><span class="si">}</span><span class="s2">, router_containers:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">router_containers</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;path:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">, subnet_id_blacklist:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_id_blacklist</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;subnet_prefix:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_prefix</span><span class="si">}</span><span class="s2">, subnet_id:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span><span class="si">}</span><span class="s2">, num_flags:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_flags</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_nodes:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="si">}</span><span class="s2">, min_cpus:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_cpus</span><span class="si">}</span><span class="s2">, max_cpus:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cpus</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;min_mem_G:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_mem_G</span><span class="si">}</span><span class="s2">, max_mem_G:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_mem_G</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="EmulationEnvGenerationConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_generation_config.EmulationEnvGenerationConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvGenerationConfig&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EmulationEnvGenerationConfig</span><span class="p">(</span>
+            <span class="n">min_num_users</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_num_users</span><span class="p">,</span> <span class="n">max_num_users</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_users</span><span class="p">,</span> <span class="n">min_num_flags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_num_flags</span><span class="p">,</span>
+            <span class="n">max_num_flags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_flags</span><span class="p">,</span> <span class="n">min_num_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_num_nodes</span><span class="p">,</span> <span class="n">max_num_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num_nodes</span><span class="p">,</span>
+            <span class="n">container_pool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">container_pool</span><span class="p">,</span> <span class="n">gw_vuln_compatible_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gw_vuln_compatible_containers</span><span class="p">,</span>
+            <span class="n">pw_vuln_compatible_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pw_vuln_compatible_containers</span><span class="p">,</span>
+            <span class="n">rce_vuln_compatible_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rce_vuln_compatible_containers</span><span class="p">,</span>
+            <span class="n">sql_injection_vuln_compatible_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sql_injection_vuln_compatible_containers</span><span class="p">,</span>
+            <span class="n">priv_esc_vuln_compatible_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">priv_esc_vuln_compatible_containers</span><span class="p">,</span>
+            <span class="n">agent_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_containers</span><span class="p">,</span> <span class="n">router_containers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">router_containers</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">subnet_id_blacklist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_id_blacklist</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="n">subnet_prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_prefix</span><span class="p">,</span> <span class="n">subnet_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span><span class="p">,</span> <span class="n">num_flags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_flags</span><span class="p">,</span>
+            <span class="n">num_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">min_cpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_cpus</span><span class="p">,</span> <span class="n">max_cpus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cpus</span><span class="p">,</span>
+            <span class="n">min_mem_G</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_mem_G</span><span class="p">,</span> <span class="n">max_mem_G</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_mem_G</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -6,28 +6,49 @@ CSLE.
 ## Requirements
 
 - Python 3.5+
-- OpenAI Gym
-- NumPy
-- Pyglet (OpenGL 3D graphics)
-- GPU for 3D graphics acceleration (optional)
-- Torch (for baseline algorithms)
-- Paramiko (for SSH tunnels)
-- Docker (for interacting with the emulations)
+- `gym` (for creating RL environments)
+- `pyglet` (OpenGL 3D graphics)
+- `numpy` (for scientific computing)
+- `torch` (for baseline algorithms)
+- `docker` (for interacting with the emulations)
+- `paramiko` (for SSH tunnels)
+- `stable-baselines3` (for baseline RL algorithms)
+- `scp` (for SSH copying)
+- `random_username` (for auto generating emulations)
+- `sphinx` (for API documentation)
+- `sphinxcontrib-napoleon` (for API documentation)
+- `sphinx-rtd-theme` (for API documentation)
+- `psycopg` (to interact with the metastore)
+- `click` (for the command line interface)
+- `flask` (for the management system Web UI)
+- `waitress` (for the management system Web UI)
+- `csle-collector` (for data collection and telemetry)
+- `psutil` (for command line tasks)
+- `csle-ryu` (for SDN network management)
 
-## API Documentation 
+## API documentation 
 
 This section contains instructions for generating API documentation using `sphinx`.
 
-### Latest documentatation
+### Latest Documentation
 
-TODO
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-common](https://limmen.dev/csle/docs/csle-common)
 
 ### Generate API Documentation
 
+First make sure that the `CSLE_HOME` environment variable is set:
+```bash
+echo $CSLE_HOME
+```
+Then generate the documentation with the commands:
 ```bash
 cd docs
 sphinx-apidoc -f -o source/ ../csle_common/
 make html
+```
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
+```bash
+cp -r build/html ../../../../docs/_docs/csle-common
 ```
 
 ## Installation & Tests

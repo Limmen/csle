@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.job_controllers.training_job_manager &mdash; csle-agents 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.job_controllers.training_job_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.job_controllers.training_job_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.agent_type</span> <span class="kn">import</span> <span class="n">AgentType</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.t_spsa.t_spsa_agent</span> <span class="kn">import</span> <span class="n">TSPSAAgent</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.ppo.ppo_agent</span> <span class="kn">import</span> <span class="n">PPOAgent</span>
+
+
+<div class="viewcode-block" id="TrainingJobManager"><a class="viewcode-back" href="../../../csle_agents.job_controllers.html#csle_agents.job_controllers.training_job_manager.TrainingJobManager">[docs]</a><span class="k">class</span> <span class="nc">TrainingJobManager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that manages training jobs in CSLE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TrainingJobManager.run_training_job"><a class="viewcode-back" href="../../../csle_agents.job_controllers.html#csle_agents.job_controllers.training_job_manager.TrainingJobManager.run_training_job">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">run_training_job</span><span class="p">(</span><span class="n">job_config</span><span class="p">:</span> <span class="n">TrainingJobConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a given training job</span>
+
+<span class="sd">        :param job_config: the configuration of the job</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">emulation_env_config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">simulation_env_config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">job_config</span><span class="o">.</span><span class="n">emulation_env_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_env_config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_by_name</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">emulation_env_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">job_config</span><span class="o">.</span><span class="n">simulation_env_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">simulation_env_config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_simulation_by_name</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">simulation_env_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">job_config</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">T_SPSA</span><span class="p">:</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="n">TSPSAAgent</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">,</span>
+                               <span class="n">experiment_config</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span> <span class="n">training_job</span><span class="o">=</span><span class="n">job_config</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">job_config</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">PPO</span><span class="p">:</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="n">PPOAgent</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">,</span>
+                             <span class="n">experiment_config</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span> <span class="n">training_job</span><span class="o">=</span><span class="n">job_config</span><span class="p">)</span>
+            <span class="n">experiment_execution</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">policies</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_ppo_policy</span><span class="p">(</span><span class="n">ppo_policy</span><span class="o">=</span><span class="n">policy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent type: </span><span class="si">{</span><span class="n">job_config</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span><span class="si">}</span><span class="s2"> not recognized&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TrainingJobManager.start_training_job_in_background"><a class="viewcode-back" href="../../../csle_agents.job_controllers.html#csle_agents.job_controllers.training_job_manager.TrainingJobManager.start_training_job_in_background">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">start_training_job_in_background</span><span class="p">(</span><span class="n">training_job</span><span class="p">:</span> <span class="n">TrainingJobConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts a training job with a given configuration in the background</span>
+
+<span class="sd">        :param training_job: the job configuration</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">START_TRAINING_JOB</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

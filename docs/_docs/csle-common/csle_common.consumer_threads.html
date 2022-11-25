@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.consumer_threads package &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_common.consumer_threads package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_common.consumer_threads.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-common-consumer-threads-package">
+<h1>csle_common.consumer_threads package<a class="headerlink" href="#csle-common-consumer-threads-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_common.consumer_threads.aggregated_host_metrics_thread">
+<span id="csle-common-consumer-threads-aggregated-host-metrics-thread-module"></span><h2>csle_common.consumer_threads.aggregated_host_metrics_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.aggregated_host_metrics_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.aggregated_host_metrics_thread.</span></span><span class="sig-name descname"><span class="pre">AggregatedHostMetricsThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState" title="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState"><span class="pre">csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/aggregated_host_metrics_thread.html#AggregatedHostMetricsThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the Kafka log to get the latest status of the docker statistics for a specific host</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.get_average_aggregated_host_metrics">
+<span class="sig-name descname"><span class="pre">get_average_aggregated_host_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/aggregated_host_metrics_thread.html#AggregatedHostMetricsThread.get_average_aggregated_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.get_average_aggregated_host_metrics" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>average of the list of aggregated host metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/aggregated_host_metrics_thread.html#AggregatedHostMetricsThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.attacker_actions_consumer_thread">
+<span id="csle-common-consumer-threads-attacker-actions-consumer-thread-module"></span><h2>csle_common.consumer_threads.attacker_actions_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.attacker_actions_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.attacker_actions_consumer_thread.AttackerActionsConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.attacker_actions_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">AttackerActionsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction" title="csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/attacker_actions_consumer_thread.html#AttackerActionsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.attacker_actions_consumer_thread.AttackerActionsConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls Kafka to get the latest attacker actions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.attacker_actions_consumer_thread.AttackerActionsConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/attacker_actions_consumer_thread.html#AttackerActionsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.attacker_actions_consumer_thread.AttackerActionsConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.avg_host_metrics_thread">
+<span id="csle-common-consumer-threads-avg-host-metrics-thread-module"></span><h2>csle_common.consumer_threads.avg_host_metrics_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.avg_host_metrics_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.avg_host_metrics_thread.</span></span><span class="sig-name descname"><span class="pre">AvgHostMetricsThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState" title="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState"><span class="pre">csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/avg_host_metrics_thread.html#AvgHostMetricsThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the Kafka log to get the latest status of the docker statistics for a specific host</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/avg_host_metrics_thread.html#AvgHostMetricsThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.client_population_consumer_thread">
+<span id="csle-common-consumer-threads-client-population-consumer-thread-module"></span><h2>csle_common.consumer_threads.client_population_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.client_population_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.client_population_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">ClientPopulationConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_population_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/client_population_consumer_thread.html#ClientPopulationConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the Kafka log to get the latest status of the client population</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread.get_average_client_population_metrics">
+<span class="sig-name descname"><span class="pre">get_average_client_population_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/client_population_consumer_thread.html#ClientPopulationConsumerThread.get_average_client_population_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread.get_average_client_population_metrics" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>average of the list of client population metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/client_population_consumer_thread.html#ClientPopulationConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Run thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.defender_actions_consumer_thread">
+<span id="csle-common-consumer-threads-defender-actions-consumer-thread-module"></span><h2>csle_common.consumer_threads.defender_actions_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.defender_actions_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.defender_actions_consumer_thread.DefenderActionsConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.defender_actions_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">DefenderActionsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/defender_actions_consumer_thread.html#DefenderActionsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.defender_actions_consumer_thread.DefenderActionsConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the kafka to get the latest defender actions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.defender_actions_consumer_thread.DefenderActionsConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/defender_actions_consumer_thread.html#DefenderActionsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.defender_actions_consumer_thread.DefenderActionsConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.docker_host_stats_consumer_thread">
+<span id="csle-common-consumer-threads-docker-host-stats-consumer-thread-module"></span><h2>csle_common.consumer_threads.docker_host_stats_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.docker_host_stats_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.docker_host_stats_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">DockerHostStatsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.docker_stats_manager.docker_stats.DockerStats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_host_stats_consumer_thread.html#DockerHostStatsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the Kafka log to get the latest status of the docker statistics for a specific host</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_host_stats_consumer_thread.html#DockerHostStatsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.docker_stats_consumer_thread">
+<span id="csle-common-consumer-threads-docker-stats-consumer-thread-module"></span><h2>csle_common.consumer_threads.docker_stats_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.docker_stats_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.docker_stats_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">DockerStatsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.docker_stats_manager.docker_stats.DockerStats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_stats_consumer_thread.html#DockerStatsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the Kafka log to get the latest status of the docker statistics</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.get_average_docker_stats">
+<span class="sig-name descname"><span class="pre">get_average_docker_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_collector.docker_stats_manager.docker_stats.DockerStats</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_stats_consumer_thread.html#DockerStatsConsumerThread.get_average_docker_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.get_average_docker_stats" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the average of the list of docker stats</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_stats_consumer_thread.html#DockerStatsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.host_metrics_consumer_thread">
+<span id="csle-common-consumer-threads-host-metrics-consumer-thread-module"></span><h2>csle_common.consumer_threads.host_metrics_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.host_metrics_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.host_metrics_consumer_thread.HostMetricsConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.host_metrics_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">HostMetricsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/host_metrics_consumer_thread.html#HostMetricsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.host_metrics_consumer_thread.HostMetricsConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls Kafka to get the latest metrics for a specific host</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.host_metrics_consumer_thread.HostMetricsConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/host_metrics_consumer_thread.html#HostMetricsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.host_metrics_consumer_thread.HostMetricsConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.ossec_ids_log_consumer_thread">
+<span id="csle-common-consumer-threads-ossec-ids-log-consumer-thread-module"></span><h2>csle_common.consumer_threads.ossec_ids_log_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.ossec_ids_log_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.ossec_ids_log_consumer_thread.OSSECIdsLogConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.ossec_ids_log_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">OSSECIdsLogConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ossec_ids_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/ossec_ids_log_consumer_thread.html#OSSECIdsLogConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.ossec_ids_log_consumer_thread.OSSECIdsLogConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the OSSEC IDS log to get the latest metrics</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.ossec_ids_log_consumer_thread.OSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters">
+<span class="sig-name descname"><span class="pre">get_aggregated_ids_alert_counters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/ossec_ids_log_consumer_thread.html#OSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.ossec_ids_log_consumer_thread.OSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>aggregated alert counters from the list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.ossec_ids_log_consumer_thread.OSSECIdsLogConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/ossec_ids_log_consumer_thread.html#OSSECIdsLogConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.ossec_ids_log_consumer_thread.OSSECIdsLogConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads.snort_ids_log_consumer_thread">
+<span id="csle-common-consumer-threads-snort-ids-log-consumer-thread-module"></span><h2>csle_common.consumer_threads.snort_ids_log_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.snort_ids_log_consumer_thread" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.snort_ids_log_consumer_thread.SnortIdsLogConsumerThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.snort_ids_log_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">SnortIdsLogConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/snort_ids_log_consumer_thread.html#SnortIdsLogConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.snort_ids_log_consumer_thread.SnortIdsLogConsumerThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that polls the Snort IDS log to get the latest metrics</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.snort_ids_log_consumer_thread.SnortIdsLogConsumerThread.get_aggregated_ids_alert_counters">
+<span class="sig-name descname"><span class="pre">get_aggregated_ids_alert_counters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/snort_ids_log_consumer_thread.html#SnortIdsLogConsumerThread.get_aggregated_ids_alert_counters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.snort_ids_log_consumer_thread.SnortIdsLogConsumerThread.get_aggregated_ids_alert_counters" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>aggregated alert counters from the list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.consumer_threads.snort_ids_log_consumer_thread.SnortIdsLogConsumerThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/snort_ids_log_consumer_thread.html#SnortIdsLogConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.snort_ids_log_consumer_thread.SnortIdsLogConsumerThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_common.consumer_threads">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_common.consumer_threads" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.kafka_manager package &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_collector.ossec_ids_manager package" href="csle_collector.ossec_ids_manager.html" />
+    <link rel="prev" title="csle_collector.host_manager package" href="csle_collector.host_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.kafka_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager.kafka_manager">csle_collector.kafka_manager.kafka_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager.kafka_manager_pb2">csle_collector.kafka_manager.kafka_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager.kafka_manager_pb2_grpc">csle_collector.kafka_manager.kafka_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager.kafka_manager_util">csle_collector.kafka_manager.kafka_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager.query_kafka_server">csle_collector.kafka_manager.query_kafka_server module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_collector.kafka_manager package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_collector.kafka_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-collector-kafka-manager-package">
+<h1>csle_collector.kafka_manager package<a class="headerlink" href="#csle-collector-kafka-manager-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_collector.kafka_manager.kafka_manager">
+<span id="csle-collector-kafka-manager-kafka-manager-module"></span><h2>csle_collector.kafka_manager.kafka_manager module<a class="headerlink" href="#module-csle_collector.kafka_manager.kafka_manager" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager.</span></span><span class="sig-name descname"><span class="pre">KafkaManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer</span></code></a></p>
+<p>gRPC server for managing a Kafka server. Allows to start/stop the kafka server remotely and also to query the
+state of the server and create/delete topics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.createTopic">
+<span class="sig-name descname"><span class="pre">createTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kafka_manager_pb2.CreateTopicMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.createTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.createTopic" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a new Kafka topic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.getKafkaStatus">
+<span class="sig-name descname"><span class="pre">getKafkaStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kafka_manager_pb2.GetKafkaStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.getKafkaStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.getKafkaStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the state of the kafka server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms">
+<span class="sig-name descname"><span class="pre">hours_to_ms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.hours_to_ms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms" title="Permalink to this definition"></a></dt>
+<dd><p>Convert hours to ms</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hours</strong> – the hours to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the ms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.startKafka">
+<span class="sig-name descname"><span class="pre">startKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kafka_manager_pb2.StartKafkaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.startKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.startKafka" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the kafka server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.stopKafka">
+<span class="sig-name descname"><span class="pre">stopKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kafka_manager_pb2.StopKafkaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.stopKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.stopKafka" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the kafka server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.serve">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50051</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kafka_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.serve" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the gRPC server for managing clients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> – the port that the server will listen to</p></li>
+<li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
+<li><p><strong>log_file_name</strong> – the file name of the log</p></li>
+<li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.kafka_manager.kafka_manager_pb2">
+<span id="csle-collector-kafka-manager-kafka-manager-pb2-module"></span><h2>csle_collector.kafka_manager.kafka_manager_pb2 module<a class="headerlink" href="#module-csle_collector.kafka_manager.kafka_manager_pb2" title="Permalink to this headline"></a></h2>
+<p>Generated protocol buffer code.</p>
+</section>
+<section id="module-csle_collector.kafka_manager.kafka_manager_pb2_grpc">
+<span id="csle-collector-kafka-manager-kafka-manager-pb2-grpc-module"></span><h2>csle_collector.kafka_manager.kafka_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.kafka_manager.kafka_manager_pb2_grpc" title="Permalink to this headline"></a></h2>
+<p>Client and server classes corresponding to protobuf-defined services.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">KafkaManager</span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.createTopic">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">createTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManager.createTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.createTopic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.deleteTopic">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deleteTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManager.deleteTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.deleteTopic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.getKafkaStatus">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getKafkaStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManager.getKafkaStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.getKafkaStatus" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.startKafka">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManager.startKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.startKafka" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.stopKafka">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManager.stopKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManager.stopKafka" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">KafkaManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.createTopic">
+<span class="sig-name descname"><span class="pre">createTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerServicer.createTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.createTopic" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.deleteTopic">
+<span class="sig-name descname"><span class="pre">deleteTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerServicer.deleteTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.deleteTopic" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.getKafkaStatus">
+<span class="sig-name descname"><span class="pre">getKafkaStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerServicer.getKafkaStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.getKafkaStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.startKafka">
+<span class="sig-name descname"><span class="pre">startKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerServicer.startKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.startKafka" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.stopKafka">
+<span class="sig-name descname"><span class="pre">stopKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerServicer.stopKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer.stopKafka" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">KafkaManagerStub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#KafkaManagerStub"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_pb2_grpc.add_KafkaManagerServicer_to_server">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">add_KafkaManagerServicer_to_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">servicer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_pb2_grpc.html#add_KafkaManagerServicer_to_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.add_KafkaManagerServicer_to_server" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-csle_collector.kafka_manager.kafka_manager_util">
+<span id="csle-collector-kafka-manager-kafka-manager-util-module"></span><h2>csle_collector.kafka_manager.kafka_manager_util module<a class="headerlink" href="#module-csle_collector.kafka_manager.kafka_manager_util" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager_util.</span></span><span class="sig-name descname"><span class="pre">KafkaManagerUtil</span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class with utility functions related to the Kafka Manager</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty KafkaDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of a KafkaDTO to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a KafkaDTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kafka_dto</strong> – the dto to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.kafka_manager.query_kafka_server">
+<span id="csle-collector-kafka-manager-query-kafka-server-module"></span><h2>csle_collector.kafka_manager.query_kafka_server module<a class="headerlink" href="#module-csle_collector.kafka_manager.query_kafka_server" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.query_kafka_server.create_topic">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">create_topic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partitions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replicas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retention_time_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#create_topic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.create_topic" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the KafkaManager to create a new Kafka topic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>name</strong> – the name of the Kafka topic</p></li>
+<li><p><strong>partitions</strong> – the number of partitions of the Kafka topic</p></li>
+<li><p><strong>replicas</strong> – the number of replicas of the Kafka topic</p></li>
+<li><p><strong>retention_time_hours</strong> – the retention time for the topic</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.query_kafka_server.get_kafka_status">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">get_kafka_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#get_kafka_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.get_kafka_status" title="Permalink to this definition"></a></dt>
+<dd><p>Queries the server for the kafka server status</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.query_kafka_server.start_kafka">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">start_kafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#start_kafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.start_kafka" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the Kafka server to start the Kafka server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.query_kafka_server.stop_kafka">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">stop_kafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kafka_manager_pb2.KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#stop_kafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.stop_kafka" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the Kafka server to stop the Kafka server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.kafka_manager">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.kafka_manager" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_collector.host_manager.html" class="btn btn-neutral float-left" title="csle_collector.host_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_collector.ossec_ids_manager.html" class="btn btn-neutral float-right" title="csle_collector.ossec_ids_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

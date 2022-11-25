@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_action_result.nmap_port &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_action_result.nmap_port</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_action_result.nmap_port</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.common.emulation_port_observation_state</span> <span class="kn">import</span> <span class="n">EmulationPortObservationState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_port_status</span> <span class="kn">import</span> <span class="n">NmapPortStatus</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.transport_protocol</span> <span class="kn">import</span> <span class="n">TransportProtocol</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_http_enum</span> <span class="kn">import</span> <span class="n">NmapHttpEnum</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_http_grep</span> <span class="kn">import</span> <span class="n">NmapHttpGrep</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_vulscan</span> <span class="kn">import</span> <span class="n">NmapVulscan</span>
+
+
+<div class="viewcode-block" id="NmapPort"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_action_result.html#csle_common.dao.emulation_action_result.nmap_port.NmapPort">[docs]</a><span class="k">class</span> <span class="nc">NmapPort</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO Representing a Port found with a NMAP scan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">NmapPortStatus</span> <span class="o">=</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">DOWN</span><span class="p">,</span>
+                 <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">http_enum</span><span class="p">:</span> <span class="n">NmapHttpEnum</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">http_grep</span><span class="p">:</span> <span class="n">NmapHttpGrep</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">vulscan</span><span class="p">:</span> <span class="n">NmapVulscan</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">service_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">service_fp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param port_id: the id of the port found</span>
+<span class="sd">        :param protocol: the protocol of the port</span>
+<span class="sd">        :param status: the status of the port</span>
+<span class="sd">        :param service_name: the service running on the port</span>
+<span class="sd">        :param http_enum: the http enum output</span>
+<span class="sd">        :param http_grep: the http grep output</span>
+<span class="sd">        :param vulscan: the vulscan output</span>
+<span class="sd">        :param service_version: the service version</span>
+<span class="sd">        :param service_fp: the service fp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port_id</span> <span class="o">=</span> <span class="n">port_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">protocol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">service_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http_enum</span> <span class="o">=</span> <span class="n">http_enum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http_grep</span> <span class="o">=</span> <span class="n">http_grep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vulscan</span> <span class="o">=</span> <span class="n">vulscan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_version</span> <span class="o">=</span> <span class="n">service_version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_fp</span> <span class="o">=</span> <span class="n">service_fp</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;port_id:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port_id</span><span class="si">}</span><span class="s2">, protocol:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protocol</span><span class="si">}</span><span class="s2">, status:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;service_name:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">service_name</span><span class="si">}</span><span class="s2">, http_enum:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">http_enum</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;http_grep:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">http_grep</span><span class="si">}</span><span class="s2">, vulscan:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vulscan</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;service_version:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">service_version</span><span class="si">}</span><span class="s2">, service_fp:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">service_fp</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a hash of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compares equality of the object with another object</span>
+
+<span class="sd">        :param other: the object to compare with</span>
+<span class="sd">        :return: True if equal otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">port_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NmapPort.to_obs"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_action_result.html#csle_common.dao.emulation_action_result.nmap_port.NmapPort.to_obs">[docs]</a>    <span class="k">def</span> <span class="nf">to_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationPortObservationState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object into a PortObservationState</span>
+
+<span class="sd">        :return: the created PortObservationState</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">open</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">UP</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">SERVICES</span><span class="o">.</span><span class="n">service_lookup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="n">hp_enum</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_enum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hp_enum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_enum</span><span class="o">.</span><span class="n">output</span>
+        <span class="n">hp_grep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_grep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hp_grep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_grep</span><span class="o">.</span><span class="n">output</span>
+        <span class="n">vulscan</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vulscan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vulscan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vulscan</span><span class="o">.</span><span class="n">output</span>
+        <span class="n">port_obs</span> <span class="o">=</span> <span class="n">EmulationPortObservationState</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port_id</span><span class="p">,</span> <span class="nb">open</span><span class="o">=</span><span class="nb">open</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">service_name</span><span class="p">,</span>
+                                                 <span class="n">protocol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">protocol</span><span class="p">,</span> <span class="n">http_enum</span><span class="o">=</span><span class="n">hp_enum</span><span class="p">,</span>
+                                                 <span class="n">http_grep</span><span class="o">=</span><span class="n">hp_grep</span><span class="p">,</span> <span class="n">vulscan</span><span class="o">=</span><span class="n">vulscan</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">service_version</span><span class="p">,</span>
+                                                 <span class="n">fingerprint</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">service_fp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">port_obs</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

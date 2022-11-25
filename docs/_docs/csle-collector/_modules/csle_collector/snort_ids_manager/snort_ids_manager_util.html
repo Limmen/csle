@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.snort_ids_manager.snort_ids_manager_util &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.snort_ids_manager.snort_ids_manager_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.snort_ids_manager.snort_ids_manager_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_alert</span> <span class="kn">import</span> <span class="n">SnortIdsAlert</span><span class="p">,</span> <span class="n">SnortIdsFastLogAlert</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsAlertCounters</span>
+<span class="kn">import</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_manager_pb2</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="SnortIdsManagerUtil"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsManagerUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions related to the Snort IDS Manager</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.check_snort_ids_alerts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_snort_ids_alerts</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsAlert</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads alerts from the Snort IDS alerts log</span>
+
+<span class="sd">        :return: a list of alerts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">TAIL_ALERTS_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_ALERTS_FILE</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">alerts</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.check_snort_ids_fast_log"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_snort_ids_fast_log</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsFastLogAlert</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads alerts from the Snort IDS fast-log</span>
+
+<span class="sd">        :param env_config: the environment config</span>
+<span class="sd">        :return: a list of alerts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">TAIL_FAST_LOG_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_FAST_LOG_FILE</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">fast_logs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+                <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">fast_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">fast_log_parse</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fast_logs</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.get_latest_snort_alert_ts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.get_latest_snort_alert_ts">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_latest_snort_alert_ts</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the latest timestamp in the snort alerts log</span>
+
+<span class="sd">        :param env_config: the environment config</span>
+<span class="sd">        :return: the latest timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">TAIL_ALERTS_LATEST_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_ALERTS_FILE</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+                <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># retry once</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+                    <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">alerts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">alerts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.read_snort_ids_data"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_snort_ids_data</span><span class="p">(</span><span class="n">episode_last_alert_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SnortIdsAlertCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures metrics from the Snort ids</span>
+
+<span class="sd">        :param env_config: environment configuration</span>
+<span class="sd">        :param episode_last_alert_ts: timestamp when the episode started</span>
+<span class="sd">        :return: ids statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Read Snort IDS data</span>
+        <span class="c1"># alerts = IdsManagerUtil.check_ids_alerts()</span>
+        <span class="n">fast_logs</span> <span class="o">=</span> <span class="n">SnortIdsManagerUtil</span><span class="o">.</span><span class="n">check_snort_ids_fast_log</span><span class="p">()</span>
+
+        <span class="c1"># Filter IDS data from beginning of episode</span>
+        <span class="c1"># alerts = list(filter(lambda x: x.timestamp &gt; episode_last_alert_ts, alerts))</span>
+        <span class="n">fast_logs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">episode_last_alert_ts</span><span class="p">,</span> <span class="n">fast_logs</span><span class="p">))</span>
+
+        <span class="n">counters</span> <span class="o">=</span> <span class="n">SnortIdsAlertCounters</span><span class="p">()</span>
+        <span class="n">counters</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">fast_logs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">counters</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_monitor_dto_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIDSMonitorDTO to a dict</span>
+
+<span class="sd">        :param snort_ids_monitor_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;monitor_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_monitor_dto</span><span class="o">.</span><span class="n">snort_ids_running</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a SnortIDSMonitorDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snort_ids_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">()</span>
+        <span class="n">snort_ids_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;monitor_running&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_monitor_dto</span><span class="o">.</span><span class="n">snort_ids_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_running&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">snort_ids_monitor_dto</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_log_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_log_dto_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_log_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsLogDTO to a dict</span>
+
+<span class="sd">        :param snort_ids_log_dto: the DTO to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_admin_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_admin_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_user_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_user_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;inappropriate_content_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">inappropriate_content_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;policy_violation_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">policy_violation_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;shellcode_detect_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">shellcode_detect_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_admin_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_admin_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_user_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_user_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trojan_activity_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">trojan_activity_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;unsuccessful_user_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unsuccessful_user_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;web_application_attack_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">web_application_attack_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_dos_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_dos_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_recon_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_recon_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;bad_unknown_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">bad_unknown_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;default_login_attempt_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">default_login_attempt_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;denial_of_service_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">denial_of_service_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;misc_attack_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">misc_attack_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;non_standard_protocol_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">non_standard_protocol_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;rpc_portman_decode_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">rpc_portman_decode_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_dos_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_dos_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_recon_largescale_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_recon_largescale_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_recon_limited_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_recon_limited_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;suspicious_filename_detect_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">suspicious_filename_detect_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;suspicious_login_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">suspicious_login_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;system_call_detect_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">system_call_detect_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;unusual_client_port_connection_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unusual_client_port_connection_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;web_application_activity_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">web_application_activity_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;icmp_event_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">icmp_event_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;misc_activity_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">misc_activity_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;network_scan_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">network_scan_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;not_suspicious_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">not_suspicious_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;protocol_command_decode_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">protocol_command_decode_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;unknown_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unknown_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;tcp_connection_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">tcp_connection_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_1_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_1_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_2_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_2_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_3_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_3_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_4_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_4_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">total_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">warning_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">severe_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_priority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_log_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_log_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a SnortIdsLogDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snort_ids_log_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">()</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_admin_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_admin_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_user_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_user_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">inappropriate_content_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;inappropriate_content_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">policy_violation_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;policy_violation_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">shellcode_detect_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;shellcode_detect_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_admin_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_admin_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_user_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_user_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">trojan_activity_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trojan_activity_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unsuccessful_user_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;unsuccessful_user_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">web_application_attack_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;web_application_attack_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_dos_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_dos_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_recon_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_recon_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">bad_unknown_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;bad_unknown_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">default_login_attempt_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;default_login_attempt_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">denial_of_service_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;denial_of_service_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">misc_attack_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;misc_attack_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">non_standard_protocol_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;non_standard_protocol_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">rpc_portman_decode_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;rpc_portman_decode_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_dos_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_dos_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_recon_largescale_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_recon_largescale_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_recon_limited_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;successful_recon_limited_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">suspicious_filename_detect_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;suspicious_filename_detect_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">suspicious_login_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;suspicious_login_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">system_call_detect_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;system_call_detect_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unusual_client_port_connection_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;unusual_client_port_connection_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">web_application_activity_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;web_application_activity_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">icmp_event_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;icmp_event_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">misc_activity_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;misc_activity_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">network_scan_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;network_scan_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">not_suspicious_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;not_suspicious_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">protocol_command_decode_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;protocol_command_decode_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unknown_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;unknown_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">tcp_connection_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;tcp_connection_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_1_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_1_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_2_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_2_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_3_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_3_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_4_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_4_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_priority&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">snort_ids_log_dto</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_log_dto_empty"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_log_dto_empty</span><span class="p">()</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty SnortIdsLogDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snort_ids_log_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">()</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_admin_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_user_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">inappropriate_content_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">policy_violation_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">shellcode_detect_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_admin_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_user_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">trojan_activity_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unsuccessful_user_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">web_application_attack_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_dos_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">attempted_recon_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">bad_unknown_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">default_login_attempt_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">denial_of_service_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">misc_attack_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">non_standard_protocol_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">rpc_portman_decode_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_dos_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_recon_largescale_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">successful_recon_limited_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">suspicious_filename_detect_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">suspicious_login_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">system_call_detect_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unusual_client_port_connection_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">web_application_activity_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">icmp_event_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">misc_activity_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">network_scan_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">not_suspicious_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">protocol_command_decode_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">unknown_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">tcp_connection_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_1_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_2_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_3_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">priority_4_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_ids_log_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">snort_ids_log_dto</span></div>
+
+<div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: An empty SnortIdsMonitorDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snort_ids_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">()</span>
+        <span class="n">snort_ids_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">snort_ids_monitor_dto</span><span class="o">.</span><span class="n">snort_ids_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">snort_ids_monitor_dto</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

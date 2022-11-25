@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_system_identification.emulator &mdash; csle-system-identification 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> csle-system-identification
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_system_identification.base.html">csle_system_identification.base package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_system_identification.constants.html">csle_system_identification.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_system_identification.empirical.html">csle_system_identification.empirical package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_system_identification.gp.html">csle_system_identification.gp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">csle-system-identification</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>csle_system_identification.emulator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_system_identification.emulator</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_trace</span> <span class="kn">import</span> <span class="n">EmulationTrace</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.experiment_util</span> <span class="kn">import</span> <span class="n">ExperimentUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.env_dynamics_util</span> <span class="kn">import</span> <span class="n">EnvDynamicsUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_attacker.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
+<span class="kn">from</span> <span class="nn">csle_defender.defender</span> <span class="kn">import</span> <span class="n">Defender</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.emulation_statistics</span> <span class="kn">import</span> <span class="n">EmulationStatistics</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.data_collection_job_config</span> <span class="kn">import</span> <span class="n">DataCollectionJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerStoppingActions</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions</span> \
+    <span class="kn">import</span> <span class="nn">EmulationDefenderStoppingActions</span>
+
+
+<div class="viewcode-block" id="Emulator"><a class="viewcode-back" href="../../csle_system_identification.html#csle_system_identification.emulator.Emulator">[docs]</a><span class="k">class</span> <span class="nc">Emulator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for running episodes in the emulation system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Emulator.run_action_sequences"><a class="viewcode-back" href="../../csle_system_identification.html#csle_system_identification.emulator.Emulator.run_action_sequences">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">run_action_sequences</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">attacker_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">],</span>
+            <span class="n">defender_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">],</span>
+            <span class="n">repeat_times</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">emulation_statistics</span><span class="p">:</span> <span class="n">EmulationStatistics</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">descr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_collection_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DataCollectionJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">save_emulation_traces_every</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="n">emulation_traces_to_save_with_data_collection_job</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">intrusion_start_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">intrusion_continue</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs an attacker and defender sequence in the emulation &lt;repeat_times&gt; times</span>
+
+<span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
+<span class="sd">        :param attacker_sequence: the sequence of attacker actions</span>
+<span class="sd">        :param defender_sequence: the sequenceo of defender actions</span>
+<span class="sd">        :param repeat_times: the number of times to repeat the sequences</span>
+<span class="sd">        :param sleep_time: the number of seconds to sleep between time-steps</span>
+<span class="sd">        :param save_dir: the directory to save the collected traces</span>
+<span class="sd">        :param emulation_statistics: the emulation statistics to update</span>
+<span class="sd">        :param descr: descr of the execution</span>
+<span class="sd">        :param save: boolean parameter indicating whether traces and statistics should be saved or not</span>
+<span class="sd">        :param data_collection_job: the system identification job configuration</span>
+<span class="sd">        :param save_emulation_traces_every: how frequently to save emulation traces</span>
+<span class="sd">        :param emulation_traces_to_save_with_data_collection_job: num traces to save with the job</span>
+<span class="sd">        :param intrusion_start_p: the p parameter for the geometric distribution that determines</span>
+<span class="sd">                                  when an intrusion starts</span>
+<span class="sd">        :param intrusion_continue: the p parameter for the geometric distribution that determines</span>
+<span class="sd">                                   when an intrusion continues</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+        <span class="c1"># Setup save dir</span>
+        <span class="k">if</span> <span class="n">save_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">save_dir</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">default_output_dir</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;/results&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">attacker_sequence</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_sequence</span><span class="p">)</span>
+
+        <span class="c1"># Setup emulation statistic</span>
+        <span class="k">if</span> <span class="n">emulation_statistics</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_statistics</span> <span class="o">=</span> <span class="n">EmulationStatistics</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">save</span><span class="p">:</span>
+            <span class="n">statistics_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_emulation_statistic</span><span class="p">(</span><span class="n">emulation_statistics</span><span class="o">=</span><span class="n">emulation_statistics</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">statistics_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="n">emulation_statistics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">statistics_id</span> <span class="o">=</span> <span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="c1"># Setup data collection job</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">data_collection_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_collection_job</span> <span class="o">=</span> <span class="n">DataCollectionJobConfig</span><span class="p">(</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">num_collected_steps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">progress_percentage</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                <span class="n">attacker_sequence</span><span class="o">=</span><span class="n">attacker_sequence</span><span class="p">,</span> <span class="n">defender_sequence</span><span class="o">=</span><span class="n">defender_sequence</span><span class="p">,</span>
+                <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">repeat_times</span><span class="o">=</span><span class="n">repeat_times</span><span class="p">,</span> <span class="n">emulation_statistic_id</span><span class="o">=</span><span class="n">statistics_id</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">num_sequences_completed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">save_emulation_traces_every</span><span class="o">=</span><span class="n">save_emulation_traces_every</span><span class="p">,</span>
+                <span class="n">num_cached_traces</span><span class="o">=</span><span class="n">emulation_traces_to_save_with_data_collection_job</span><span class="p">,</span>
+                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">())</span>
+            <span class="n">job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_data_collection_job</span><span class="p">(</span>
+                <span class="n">data_collection_job</span><span class="o">=</span><span class="n">data_collection_job</span><span class="p">)</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">job_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">pid</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_collected_steps</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_sequences_completed</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data_collection_job</span><span class="o">.</span><span class="n">log_file_path</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">()</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_data_collection_job</span><span class="p">(</span><span class="n">data_collection_job</span><span class="o">=</span><span class="n">data_collection_job</span><span class="p">,</span>
+                                                       <span class="nb">id</span><span class="o">=</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="c1"># Start the collection</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">EmulationEnvState</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">initialize_defender_machines</span><span class="p">()</span>
+        <span class="n">emulation_traces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">collected_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat_times</span><span class="p">):</span>
+            <span class="n">intrusion_start_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">geometric</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">intrusion_start_p</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">attacker_wait_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="n">intrusion_start_time</span>
+            <span class="n">defender_wait_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationDefenderStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="n">intrusion_start_time</span>
+            <span class="n">full_attacker_sequence</span> <span class="o">=</span> <span class="n">attacker_wait_seq</span>
+            <span class="n">full_defender_sequence</span> <span class="o">=</span> <span class="n">defender_wait_seq</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">attacker_sequence</span><span class="p">)):</span>
+                <span class="n">num_wait_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">geometric</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">intrusion_continue</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">wait_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="n">num_wait_steps</span>
+                <span class="n">full_attacker_sequence</span> <span class="o">=</span> <span class="n">full_attacker_sequence</span> <span class="o">+</span> <span class="n">wait_steps</span>
+                <span class="n">full_attacker_sequence</span> <span class="o">=</span> <span class="n">full_attacker_sequence</span> <span class="o">+</span> <span class="p">[</span><span class="n">attacker_sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">full_defender_sequence</span> <span class="o">=</span> <span class="n">full_defender_sequence</span> <span class="o">+</span> <span class="p">[</span>
+                    <span class="n">EmulationDefenderStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_wait_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_attacker_sequence</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_defender_sequence</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_attacker_sequence</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting execution of static action sequences, iteration:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, T:</span><span class="si">{</span><span class="n">T</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;I_t:</span><span class="si">{</span><span class="n">intrusion_start_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">emulation_trace</span> <span class="o">=</span> <span class="n">EmulationTrace</span><span class="p">(</span><span class="n">initial_attacker_observation_state</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="p">,</span>
+                                             <span class="n">initial_defender_observation_state</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="p">,</span>
+                                             <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">reset_metric_lists</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">average_metric_lists</span><span class="p">()</span>
+            <span class="n">emulation_statistics</span><span class="o">.</span><span class="n">update_initial_statistics</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">traces</span> <span class="o">=</span> <span class="n">emulation_traces</span> <span class="o">+</span> <span class="p">[</span><span class="n">emulation_trace</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="p">:</span>
+                <span class="n">data_collection_job</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="n">traces</span><span class="p">[</span><span class="o">-</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data_collection_job</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="n">traces</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+                <span class="n">old_state</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">a1</span> <span class="o">=</span> <span class="n">full_defender_sequence</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="n">a2</span> <span class="o">=</span> <span class="n">full_attacker_sequence</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t:</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">, a1: </span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, a2: </span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">reset_metric_lists</span><span class="p">()</span>
+                <span class="n">emulation_trace</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Emulator</span><span class="o">.</span><span class="n">run_actions</span><span class="p">(</span>
+                    <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">attacker_action</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span> <span class="n">defender_action</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span>
+                    <span class="n">sleep_time</span><span class="o">=</span><span class="n">sleep_time</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="n">emulation_trace</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">emulation_statistics</span><span class="o">.</span><span class="n">update_delta_statistics</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">old_state</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">)</span>
+                <span class="n">total_steps</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">intrusion_start_p</span><span class="p">)</span> <span class="o">*</span> <span class="n">repeat_times</span>
+                <span class="n">collected_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_collected_steps</span> <span class="o">=</span> <span class="n">collected_steps</span>
+                <span class="n">data_collection_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">collected_steps</span> <span class="o">/</span> <span class="n">total_steps</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_sequences_completed</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">data_collection_job</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">emulation_trace</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;job updated, steps collected: </span><span class="si">{</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">num_collected_steps</span><span class="si">}</span><span class="s2">, &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;progress: </span><span class="si">{</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">progress_percentage</span><span class="si">}</span><span class="s2">, &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;sequences completed: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">repeat_times</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_data_collection_job</span><span class="p">(</span><span class="n">data_collection_job</span><span class="o">=</span><span class="n">data_collection_job</span><span class="p">,</span>
+                                                           <span class="nb">id</span><span class="o">=</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_emulation_statistic</span><span class="p">(</span><span class="n">emulation_statistics</span><span class="o">=</span><span class="n">emulation_statistics</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">statistics_id</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">save</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">%</span> <span class="n">save_emulation_traces_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_emulation_trace</span><span class="p">(</span><span class="n">emulation_trace</span><span class="p">)</span>
+            <span class="n">emulation_traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_trace</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All sequences completed, saving traces and emulation statistics&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="n">EmulationTrace</span><span class="o">.</span><span class="n">save_traces_to_disk</span><span class="p">(</span><span class="n">traces_save_dir</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="n">emulation_traces</span><span class="p">)</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_emulation_statistic</span><span class="p">(</span><span class="n">emulation_statistics</span><span class="o">=</span><span class="n">emulation_statistics</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">statistics_id</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+        <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">remove_data_collection_job</span><span class="p">(</span><span class="n">data_collection_job</span><span class="o">=</span><span class="n">data_collection_job</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Emulator.run_actions"><a class="viewcode-back" href="../../csle_system_identification.html#csle_system_identification.emulator.Emulator.run_actions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">run_actions</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">attacker_action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
+                    <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span>
+                    <span class="n">defender_action</span><span class="p">:</span> <span class="n">EmulationDefenderAction</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">EmulationTrace</span><span class="p">,</span>
+                    <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationTrace</span><span class="p">,</span> <span class="n">EmulationEnvState</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a pair of actions in the emulation and updates a provided trace</span>
+
+<span class="sd">        :param emulation_env_config: configuration of the emulation environment</span>
+<span class="sd">        :param attacker_action: the attacker action</span>
+<span class="sd">        :param s: the current emulation state</span>
+<span class="sd">        :param defender_action: the defender action</span>
+<span class="sd">        :param trace: the trace to update</span>
+<span class="sd">        :param sleep_time: the time-step length</span>
+<span class="sd">        :return: the updated trace and state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+        <span class="n">attacker_action</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">get_action_ips</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">,</span>
+                                                                  <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">defender_action</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">get_action_ips</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">defender_action</span><span class="p">,</span>
+                                                                  <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Executing attacker action:</span><span class="si">{</span><span class="n">attacker_action</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> on machine index: </span><span class="si">{</span><span class="n">attacker_action</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;ips:</span><span class="si">{</span><span class="n">attacker_action</span><span class="o">.</span><span class="n">ips</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">Attacker</span><span class="o">.</span><span class="n">attacker_transition</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">attacker_action</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attacker action complete, attacker state:</span><span class="si">{</span><span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">cache_attacker_action</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s_prime</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Executing defender action:</span><span class="si">{</span><span class="n">defender_action</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> on machine index: </span><span class="si">{</span><span class="n">defender_action</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">s_prime_prime</span> <span class="o">=</span> <span class="n">Defender</span><span class="o">.</span><span class="n">defender_transition</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">defender_action</span><span class="o">=</span><span class="n">defender_action</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Defender action complete, defender state:</span><span class="si">{</span><span class="n">s_prime</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;ips:</span><span class="si">{</span><span class="n">defender_action</span><span class="o">.</span><span class="n">ips</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">cache_defender_action</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">defender_action</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s_prime_prime</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
+        <span class="n">s_prime_prime</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">average_metric_lists</span><span class="p">()</span>
+        <span class="n">trace</span><span class="o">.</span><span class="n">attacker_observation_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_prime_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">trace</span><span class="o">.</span><span class="n">defender_observation_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_prime_prime</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">trace</span><span class="o">.</span><span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attacker_action</span><span class="p">)</span>
+        <span class="n">trace</span><span class="o">.</span><span class="n">defender_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_action</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s_prime_prime</span>
+        <span class="k">return</span> <span class="n">trace</span><span class="p">,</span> <span class="n">s</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

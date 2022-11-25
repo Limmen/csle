@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.util.read_emulation_statistics_util &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.util.read_emulation_statistics_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.util.read_emulation_statistics_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Consumer</span><span class="p">,</span> <span class="n">KafkaError</span><span class="p">,</span> <span class="n">KafkaException</span><span class="p">,</span> <span class="n">TopicPartition</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.avg_port_statistic</span> <span class="kn">import</span> <span class="n">AvgPortStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.avg_flow_statistic</span> <span class="kn">import</span> <span class="n">AvgFlowStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.agg_flow_statistic</span> <span class="kn">import</span> <span class="n">AggFlowStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.flow_statistic</span> <span class="kn">import</span> <span class="n">FlowStatistic</span>
+<span class="kn">from</span> <span class="nn">csle_ryu.dao.port_statistic</span> <span class="kn">import</span> <span class="n">PortStatistic</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsAlertCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.client_population_metrics</span> <span class="kn">import</span> <span class="n">ClientPopulationMetrics</span>
+<span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.docker_stats</span> <span class="kn">import</span> <span class="n">DockerStats</span>
+<span class="kn">from</span> <span class="nn">csle_collector.host_manager.host_metrics</span> <span class="kn">import</span> <span class="n">HostMetrics</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_metrics_time_series</span> <span class="kn">import</span> <span class="n">EmulationMetricsTimeSeries</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+
+<div class="viewcode-block" id="ReadEmulationStatisticsUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil">[docs]</a><span class="k">class</span> <span class="nc">ReadEmulationStatisticsUtil</span><span class="p">:</span>
+
+<div class="viewcode-block" id="ReadEmulationStatisticsUtil.read_all"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.read_all">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_all</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">time_window_minutes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">EmulationMetricsTimeSeries</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads all time series data from the kafka log</span>
+
+<span class="sd">        :param emulation_env_config: the configuration of the emulation environment</span>
+<span class="sd">        :param time_window_minutes : the length of the time window in minutes to consume (now-time_windows_minutes, now)</span>
+<span class="sd">        :return: the collected time series data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">agg_docker_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">docker_host_stats</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">host_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">aggregated_host_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">defender_actions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">attacker_actions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snort_ids_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">total_host_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ossec_host_ids_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">total_ossec_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">aggregated_ossec_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">openflow_flow_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">openflow_port_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">avg_openflow_flow_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">avg_openflow_port_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">openflow_flow_metrics_per_switch</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">openflow_port_metrics_per_switch</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">openflow_flow_avg_metrics_per_switch</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">openflow_port_avg_metrics_per_switch</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">agg_openflow_flow_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">agg_openflow_flow_metrics_per_switch</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">num_ossec_containers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">,</span>
+                                               <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">host_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">ossec_host_ids_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">topic_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_HOST_STATS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFENDER_ACTIONS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_STATS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_LOG_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">HOST_METRICS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">CLIENT_POPULATION_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OSSEC_IDS_LOG_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span>
+                       <span class="p">]</span>
+
+        <span class="n">start_consume_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">kafka_conf</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">:&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">GROUP_ID_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;attacker_actions_consumer_thread_</span><span class="si">{</span><span class="n">start_consume_ts</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">AUTO_OFFSET_RESET_PROPERTY</span><span class="p">:</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">EARLIEST_OFFSET</span><span class="p">}</span>
+        <span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="o">**</span><span class="n">kafka_conf</span><span class="p">)</span>
+        <span class="n">start_consume_ts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">timestamp</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                                                           <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">time_window_minutes</span><span class="p">)))</span>
+        <span class="n">start_consume_ts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start_consume_ts</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span>  <span class="c1"># convert to ms</span>
+        <span class="n">topic_partitions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">TopicPartition</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">partition</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">start_consume_ts</span><span class="p">),</span>
+                                    <span class="n">topic_names</span><span class="p">))</span>
+        <span class="n">time_offsets_partitions</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">offsets_for_times</span><span class="p">(</span><span class="n">partitions</span><span class="o">=</span><span class="n">topic_partitions</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">on_assign</span><span class="p">(</span><span class="n">consumer</span><span class="p">,</span> <span class="n">partitions</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Callback called when a Kafka consumer is assigned to a partition</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">consumer</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">time_offsets_partitions</span><span class="p">)</span>
+
+        <span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">topic_names</span><span class="p">,</span> <span class="n">on_assign</span><span class="o">=</span><span class="n">on_assign</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">num_msg</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">num_msg</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">()</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">KafkaError</span><span class="o">.</span><span class="n">_PARTITION_EOF</span><span class="p">:</span>
+                        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;reached end of partition: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">partition</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">():</span>
+                        <span class="k">raise</span> <span class="n">KafkaException</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">topic</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_STATS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">agg_docker_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DockerStats</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">HOST_METRICS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">metrics</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                        <span class="n">host_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                        <span class="n">host_metrics_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">total_host_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OSSEC_IDS_LOG_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">metrics</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                        <span class="n">ossec_host_ids_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                        <span class="n">ossec_host_metrics_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">total_ossec_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationAttackerAction</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFENDER_ACTIONS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">defender_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmulationDefenderAction</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_HOST_STATS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">stats</span> <span class="o">=</span> <span class="n">DockerStats</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                        <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_LOG_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">snort_ids_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlertCounters</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">CLIENT_POPULATION_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">client_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientPopulationMetrics</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">flow_metrics_record</span> <span class="o">=</span> <span class="n">FlowStatistic</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">openflow_flow_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flow_metrics_record</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">flow_metrics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">openflow_flow_metrics_per_switch</span><span class="p">:</span>
+                            <span class="n">openflow_flow_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">flow_metrics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">openflow_flow_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">flow_metrics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">flow_metrics_record</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">port_metrics_record</span> <span class="o">=</span> <span class="n">PortStatistic</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">openflow_port_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">port_metrics_record</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">port_metrics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">openflow_port_metrics_per_switch</span><span class="p">:</span>
+                            <span class="n">openflow_port_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">port_metrics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">openflow_port_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">port_metrics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">port_metrics_record</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">avg_flow_statistics_record</span> <span class="o">=</span> <span class="n">AvgFlowStatistic</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">avg_openflow_flow_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_flow_statistics_record</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">avg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">openflow_flow_avg_metrics_per_switch</span><span class="p">:</span>
+                            <span class="n">openflow_flow_avg_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">openflow_flow_avg_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">avg_flow_statistics_record</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">avg_port_statistics_record</span> <span class="o">=</span> <span class="n">AvgPortStatistic</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">avg_openflow_port_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_port_statistics_record</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">avg_port_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">openflow_port_avg_metrics_per_switch</span><span class="p">:</span>
+                            <span class="n">openflow_port_avg_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_port_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">openflow_port_avg_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_port_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">avg_port_statistics_record</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">agg_flow_statistics_record</span> <span class="o">=</span> <span class="n">AggFlowStatistic</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">agg_openflow_flow_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg_flow_statistics_record</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">agg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">:</span>
+                            <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">agg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">agg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">agg_flow_statistics_record</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">host_metrics_counter</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">):</span>
+                        <span class="n">agg_host_metrics_dto</span> <span class="o">=</span> <span class="n">ReadEmulationStatisticsUtil</span><span class="o">.</span><span class="n">average_host_metrics</span><span class="p">(</span>
+                            <span class="n">host_metrics</span><span class="o">=</span><span class="n">total_host_metrics</span><span class="p">)</span>
+                        <span class="n">aggregated_host_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg_host_metrics_dto</span><span class="p">)</span>
+                        <span class="n">host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">total_host_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">if</span> <span class="n">ossec_host_metrics_counter</span> <span class="o">&gt;=</span> <span class="n">num_ossec_containers</span><span class="p">:</span>
+                        <span class="n">agg_ossec_metrics_dto</span> <span class="o">=</span> <span class="n">ReadEmulationStatisticsUtil</span><span class="o">.</span><span class="n">average_ossec_metrics</span><span class="p">(</span>
+                            <span class="n">ossec_metrics</span><span class="o">=</span><span class="n">total_ossec_metrics</span><span class="p">)</span>
+                        <span class="n">aggregated_ossec_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg_ossec_metrics_dto</span><span class="p">)</span>
+                        <span class="n">ossec_host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">total_ossec_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">EmulationMetricsTimeSeries</span><span class="p">(</span>
+            <span class="n">client_metrics</span><span class="o">=</span><span class="n">client_metrics</span><span class="p">,</span> <span class="n">aggregated_docker_stats</span><span class="o">=</span><span class="n">agg_docker_stats</span><span class="p">,</span> <span class="n">host_metrics</span><span class="o">=</span><span class="n">host_metrics</span><span class="p">,</span>
+            <span class="n">docker_host_stats</span><span class="o">=</span><span class="n">docker_host_stats</span><span class="p">,</span> <span class="n">snort_ids_metrics</span><span class="o">=</span><span class="n">snort_ids_metrics</span><span class="p">,</span> <span class="n">attacker_actions</span><span class="o">=</span><span class="n">attacker_actions</span><span class="p">,</span>
+            <span class="n">defender_actions</span><span class="o">=</span><span class="n">defender_actions</span><span class="p">,</span> <span class="n">aggregated_host_metrics</span><span class="o">=</span><span class="n">aggregated_host_metrics</span><span class="p">,</span>
+            <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">aggregated_ossec_host_alert_counters</span><span class="o">=</span><span class="n">aggregated_ossec_metrics</span><span class="p">,</span>
+            <span class="n">ossec_host_alert_counters</span><span class="o">=</span><span class="n">ossec_host_ids_metrics</span><span class="p">,</span>
+            <span class="n">avg_openflow_flow_stats</span><span class="o">=</span><span class="n">avg_openflow_flow_stats</span><span class="p">,</span> <span class="n">avg_openflow_port_stats</span><span class="o">=</span><span class="n">avg_openflow_port_stats</span><span class="p">,</span>
+            <span class="n">openflow_port_stats</span><span class="o">=</span><span class="n">openflow_port_stats</span><span class="p">,</span> <span class="n">openflow_flow_stats</span><span class="o">=</span><span class="n">openflow_flow_stats</span><span class="p">,</span>
+            <span class="n">openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">openflow_flow_metrics_per_switch</span><span class="p">,</span>
+            <span class="n">openflow_port_metrics_per_switch</span><span class="o">=</span><span class="n">openflow_port_metrics_per_switch</span><span class="p">,</span>
+            <span class="n">openflow_flow_avg_metrics_per_switch</span><span class="o">=</span><span class="n">openflow_flow_avg_metrics_per_switch</span><span class="p">,</span>
+            <span class="n">openflow_port_avg_metrics_per_switch</span><span class="o">=</span><span class="n">openflow_port_avg_metrics_per_switch</span><span class="p">,</span>
+            <span class="n">agg_openflow_flow_stats</span><span class="o">=</span><span class="n">agg_openflow_flow_stats</span><span class="p">,</span>
+            <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">agg_openflow_flow_metrics_per_switch</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="ReadEmulationStatisticsUtil.average_host_metrics"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_host_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">average_host_metrics</span><span class="p">(</span><span class="n">host_metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">HostMetrics</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">HostMetrics</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the average metrics from a list of host metrics</span>
+
+<span class="sd">        :param host_metrics: the list of host metrics to average</span>
+<span class="sd">        :return: the computed averages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_num_logged_in_users</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_num_failed_login_attempts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_num_open_connections</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_num_login_events</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_num_processes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_num_users</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">host_metrics</span><span class="p">:</span>
+            <span class="n">total_num_logged_in_users</span> <span class="o">+=</span> <span class="n">metric</span><span class="o">.</span><span class="n">num_logged_in_users</span>
+            <span class="n">total_num_failed_login_attempts</span> <span class="o">+=</span> <span class="n">metric</span><span class="o">.</span><span class="n">num_failed_login_attempts</span>
+            <span class="n">total_num_open_connections</span> <span class="o">+=</span> <span class="n">metric</span><span class="o">.</span><span class="n">num_open_connections</span>
+            <span class="n">total_num_login_events</span> <span class="o">+=</span> <span class="n">metric</span><span class="o">.</span><span class="n">num_login_events</span>
+            <span class="n">total_num_processes</span> <span class="o">+=</span> <span class="n">metric</span><span class="o">.</span><span class="n">num_processes</span>
+            <span class="n">total_num_users</span> <span class="o">+=</span> <span class="n">metric</span><span class="o">.</span><span class="n">num_users</span>
+        <span class="n">aggregated_host_metrics_dto</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="p">()</span>
+        <span class="n">aggregated_host_metrics_dto</span><span class="o">.</span><span class="n">num_logged_in_users</span> <span class="o">=</span> <span class="n">total_num_logged_in_users</span>
+        <span class="n">aggregated_host_metrics_dto</span><span class="o">.</span><span class="n">num_failed_login_attempts</span> <span class="o">=</span> <span class="n">total_num_failed_login_attempts</span>
+        <span class="n">aggregated_host_metrics_dto</span><span class="o">.</span><span class="n">num_open_connections</span> <span class="o">=</span> <span class="n">total_num_open_connections</span>
+        <span class="n">aggregated_host_metrics_dto</span><span class="o">.</span><span class="n">num_login_events</span> <span class="o">=</span> <span class="n">total_num_login_events</span>
+        <span class="n">aggregated_host_metrics_dto</span><span class="o">.</span><span class="n">num_processes</span> <span class="o">=</span> <span class="n">total_num_processes</span>
+        <span class="n">aggregated_host_metrics_dto</span><span class="o">.</span><span class="n">num_users</span> <span class="o">=</span> <span class="n">total_num_users</span>
+        <span class="k">return</span> <span class="n">aggregated_host_metrics_dto</span></div>
+
+<div class="viewcode-block" id="ReadEmulationStatisticsUtil.average_ossec_metrics"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_ossec_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">average_ossec_metrics</span><span class="p">(</span><span class="n">ossec_metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OSSECIdsAlertCounters</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the average metrics from a list of OSSEC metrics</span>
+
+<span class="sd">        :param ossec_metrics: the list of OSSEC metrics</span>
+<span class="sd">        :return: the computed averages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aggregated_ossec_ids_alert_counters</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alert_counters</span> <span class="ow">in</span> <span class="n">ossec_metrics</span><span class="p">:</span>
+            <span class="n">aggregated_ossec_ids_alert_counters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alert_counters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aggregated_ossec_ids_alert_counters</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

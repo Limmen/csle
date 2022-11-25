@@ -39,14 +39,20 @@ class Logger(metaclass=SingletonType):
 
         # Create logger object and set the format for logging and other attributes
         logger = logging.Logger(log_file_name)
-        # logger.setLevel(logging.DEBUG)
         logger.setLevel(logging.INFO)
+
+        try:
+            self.setup_logfile(log_path=log_path, logger=logger)
+        except Exception:
+            log_path = os.path.join(".", (str(log_file_name)))
+            self.setup_logfile(log_path=log_path, logger=logger)
+
+    def setup_logfile(self, log_path, logger):
         handler = logging.FileHandler(log_path, 'a+')
         os.chmod(log_path, 0o777)
         handler.setFormatter(
             CustomFormatter('%(asctime)s - %(levelname)-10s - %(filename)s - %(funcName)s - %(message)s'))
         logger.addHandler(handler)
-
         handler = logging.StreamHandler(sys.stdout)
         logger.addHandler(handler)
         self.logger = logger

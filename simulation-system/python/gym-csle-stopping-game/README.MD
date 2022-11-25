@@ -5,29 +5,35 @@ TODO
 ## Requirements
 
 - Python 3.5+
-- OpenAI Gym
-- NumPy
-- Pyglet (OpenGL 3D graphics)
-- GPU for 3D graphics acceleration (optional)
-- Torch (for baseline algorithms)
-- Paramiko (for SSH tunnels)
-- Docker (for interacting with the emulations)
-- `csle-common` (library with common functionality for all csle environments)
-
-## API Documentation 
+- `csle-common`
+- `csle-attacker`
+- `csle-csle-defender`
+- `csle-collector`
+- 
+## API documentation
 
 This section contains instructions for generating API documentation using `sphinx`.
 
-### Latest documentation
+### Latest Documentation
 
-TODO
+The latest documentation is available at [https://limmen.dev/csle/docs/gym-csle-stopping-game](https://limmen.dev/csle/docs/gym-csle-stopping-game)
 
 ### Generate API Documentation
 
+First make sure that the `CSLE_HOME` environment variable is set:
+```bash
+echo $CSLE_HOME
+```
+Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../gym_csle_ctf/
+sphinx-apidoc -f -o source/ ../gym_csle_stopping_game/
 make html
+```
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle),
+copy the generated HTML files to the documentation folder:
+```bash
+cp -r build/html ../../../../docs/_docs/gym-csle-stopping-game
 ```
 
 ## Installation & Tests

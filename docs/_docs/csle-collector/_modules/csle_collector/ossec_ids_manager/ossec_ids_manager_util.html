@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.ossec_ids_manager.ossec_ids_manager_util &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.ossec_ids_manager.ossec_ids_manager_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.ossec_ids_manager.ossec_ids_manager_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert</span> <span class="kn">import</span> <span class="n">OSSECIDSAlert</span>
+<span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
+<span class="kn">import</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_manager_pb2</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="OSSecManagerUtil"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil">[docs]</a><span class="k">class</span> <span class="nc">OSSecManagerUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions related to the OSSEC IDS Manager</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OSSecManagerUtil.check_ossec_ids_alerts"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.check_ossec_ids_alerts">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_ossec_ids_alerts</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OSSECIDSAlert</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads alerts from the OSSEC IDS alerts log</span>
+
+<span class="sd">        :return: a list of alerts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">TAIL_ALERTS_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERTS_FILE</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">ruleid</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">linesmatched</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">linematched</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Test for matches. A line will have more than one matching RE.</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">ALERTLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">ALERTLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">groupstr</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">groups</span> <span class="o">=</span> <span class="n">groupstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">DATELINEREGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">DATELINEREGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">datestr</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datestr</span><span class="p">,</span> <span class="s2">&quot;%Y %b </span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">HOSTLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">HOSTLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">ip</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">SERVHOSTLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">SERVHOSTLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">ip</span> <span class="o">=</span> <span class="s1">&#39;0.0.0.0&#39;</span>
+
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">RULELINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">RULELINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">ruleid</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">SRCIPLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">SRCIPLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">src</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">USERLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">linematched</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">USERLINE_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">linesmatched</span> <span class="o">+=</span> <span class="n">linematched</span>
+
+            <span class="k">if</span> <span class="n">linematched</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">linesmatched</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">alert</span> <span class="o">=</span> <span class="n">OSSECIDSAlert</span><span class="p">(</span><span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+                                          <span class="n">rule_id</span><span class="o">=</span><span class="n">ruleid</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">descr</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">src</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">alert</span><span class="p">)</span>
+                    <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alert</span><span class="p">)</span>
+                    <span class="n">linesmatched</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+                    <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+                    <span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+                    <span class="n">ruleid</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+                    <span class="n">level</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+                    <span class="n">src</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+                    <span class="n">user</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="k">return</span> <span class="n">alerts</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.read_ossec_ids_data"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.read_ossec_ids_data">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_ossec_ids_data</span><span class="p">(</span><span class="n">episode_last_alert_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measures metrics from the OSSEC ids</span>
+
+<span class="sd">        :param env_config: environment configuration</span>
+<span class="sd">        :param episode_last_alert_ts: timestamp when the episode started</span>
+<span class="sd">        :return: ids statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Read OSSEC IDS data</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="n">OSSecManagerUtil</span><span class="o">.</span><span class="n">check_ossec_ids_alerts</span><span class="p">()</span>
+
+        <span class="c1"># Filter IDS data from beginning of episode</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">episode_last_alert_ts</span><span class="p">,</span> <span class="n">alerts</span><span class="p">))</span>
+
+        <span class="n">counters</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
+        <span class="n">counters</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">counters</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.ossec_ids_monitor_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ossec_ids_monitor_dto_to_dict</span><span class="p">(</span>
+            <span class="n">ossec_ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a OSSECIdsMonitorDTO to a dict</span>
+
+<span class="sd">        :param ossec_ids_monitor_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;monitor_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_monitor_dto</span><span class="o">.</span><span class="n">ossec_ids_running</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.ossec_ids_log_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ossec_ids_log_dto_to_dict</span><span class="p">(</span>
+            <span class="n">ossec_ids_log_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a OSSECIdsLogDTO to a dict</span>
+
+<span class="sd">        :param ossec_ids_log_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_admin_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">attempted_admin_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">total_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">warning_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">severe_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_0_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_0_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_1_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_1_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_2_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_2_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_3_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_3_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_4_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_4_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_5_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_5_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_6_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_6_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_7_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_7_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_8_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_8_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_9_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_9_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_10_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_10_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_11_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_11_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_12_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_12_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_13_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_13_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_14_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_14_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_15_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_15_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;invalid_login_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">invalid_login_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;authentication_success_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">authentication_success_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;authentication_failed_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">authentication_failed_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;connection_attempt_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">connection_attempt_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attacks_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">attacks_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;adduser_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">adduser_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;sshd_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">sshd_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ids_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">ids_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;firewall_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">firewall_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;squid_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">squid_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;apache_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">apache_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;syslog_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">syslog_alerts</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.ossec_ids_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ossec_ids_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a OSSECIDSMonitorDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ossec_ids_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">()</span>
+        <span class="n">ossec_ids_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;monitor_running&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_monitor_dto</span><span class="o">.</span><span class="n">ossec_ids_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_running&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ossec_ids_monitor_dto</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.ossec_ids_log_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ossec_ids_log_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a OSSECIDSLogDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ossec_ids_log_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">()</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">attempted_admin_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attempted_admin_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_level&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_0_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_0_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_1_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_1_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_2_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_2_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_3_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_3_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_4_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_4_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_5_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_5_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_6_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_6_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_7_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_7_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_8_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_8_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_9_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_9_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_10_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_10_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_11_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_11_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_12_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_12_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_13_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_13_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_14_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_14_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_15_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level_15_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">invalid_login_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;invalid_login_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">authentication_success_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;authentication_success_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">authentication_failed_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;authentication_failed_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">connection_attempt_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;connection_attempt_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">attacks_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attacks_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">adduser_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;adduser_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">sshd_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;sshd_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">ids_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ids_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">firewall_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;firewall_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">squid_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;squid_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">apache_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;apache_alerts&quot;</span><span class="p">]</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">syslog_alerts</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;syslog_alerts&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ossec_ids_log_dto</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.ossec_ids_log_dto_empty"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ossec_ids_log_dto_empty</span><span class="p">()</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty OSSECIdsLogDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ossec_ids_log_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">()</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">attempted_admin_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_level</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_0_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_1_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_2_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_3_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_4_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_5_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_6_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_7_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_8_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_9_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_10_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_11_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_12_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_13_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_14_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">level_15_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">invalid_login_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">authentication_success_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">authentication_failed_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">connection_attempt_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">attacks_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">adduser_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">sshd_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">ids_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">firewall_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">squid_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">apache_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ossec_ids_log_dto</span><span class="o">.</span><span class="n">syslog_alerts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">ossec_ids_log_dto</span></div>
+
+<div class="viewcode-block" id="OSSecManagerUtil.ossec_ids_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ossec_ids_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: An empty OSSECIdsMonitorDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ossec_ids_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">()</span>
+        <span class="n">ossec_ids_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ossec_ids_monitor_dto</span><span class="o">.</span><span class="n">ossec_ids_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">ossec_ids_monitor_dto</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

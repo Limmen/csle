@@ -2,7 +2,8 @@ from setuptools import setup, find_packages
 
 setup(name='csle_ryu',
       version='0.0.19',
-      install_requires=['ryu', 'eventlet==0.30.2', 'confluent-kafka'],
+      install_requires=['ryu', 'eventlet==0.30.2', 'confluent-kafka', 'sphinx',
+                        'sphinxcontrib-napoleon', 'sphinx-rtd-theme',],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='RYU SDN Controllers in CSLE',

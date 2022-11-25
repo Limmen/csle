@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.host_manager package &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_collector.kafka_manager package" href="csle_collector.kafka_manager.html" />
+    <link rel="prev" title="csle_collector.elk_manager package" href="csle_collector.elk_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.host_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.failed_login_attempt">csle_collector.host_manager.failed_login_attempt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_manager">csle_collector.host_manager.host_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_manager_pb2">csle_collector.host_manager.host_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_manager_pb2_grpc">csle_collector.host_manager.host_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_manager_util">csle_collector.host_manager.host_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_metrics">csle_collector.host_manager.host_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.query_host_manager">csle_collector.host_manager.query_host_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.successful_login">csle_collector.host_manager.successful_login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_collector.host_manager package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_collector.host_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-collector-host-manager-package">
+<h1>csle_collector.host_manager package<a class="headerlink" href="#csle-collector-host-manager-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_collector.host_manager.failed_login_attempt">
+<span id="csle-collector-host-manager-failed-login-attempt-module"></span><h2>csle_collector.host_manager.failed_login_attempt module<a class="headerlink" href="#module-csle_collector.host_manager.failed_login_attempt" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.failed_login_attempt.</span></span><span class="sig-name descname"><span class="pre">FailedLoginAttempt</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/failed_login_attempt.html#FailedLoginAttempt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing a failed login event on some server in the emulation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt.parse_from_str">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_attempt_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/failed_login_attempt.html#FailedLoginAttempt.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt.parse_from_str" title="Permalink to this definition"></a></dt>
+<dd><p>Parses a failed login event DTO from a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>login_attempt_str</strong> – the string to parse</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the parsed DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager.host_manager">
+<span id="csle-collector-host-manager-host-manager-module"></span><h2>csle_collector.host_manager.host_manager module<a class="headerlink" href="#module-csle_collector.host_manager.host_manager" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager.</span></span><span class="sig-name descname"><span class="pre">HostManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer</span></code></a></p>
+<p>gRPC server for collecting Host statistics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.getHostMonitorStatus">
+<span class="sig-name descname"><span class="pre">getHostMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">host_manager_pb2.GetHostMonitorStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getHostMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getHostMonitorStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the status of the Host Monitor thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a DTO with the status of the Host monitor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts">
+<span class="sig-name descname"><span class="pre">getIdsAlerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">host_manager_pb2.GetHostMetricsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getIdsAlerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the host metrics from given timestamps</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a DTO with IDS statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.startHostMonitor">
+<span class="sig-name descname"><span class="pre">startHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">host_manager_pb2.StartHostMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.startHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.startHostMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Host monitor thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a DTO with the status of the Host monitor thread</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.stopHostMonitor">
+<span class="sig-name descname"><span class="pre">stopHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">host_manager_pb2.StopHostMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.stopHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopHostMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Host monitor thread if it is running</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a DTO with the status of the Host monitor thread</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostMonitorThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager.</span></span><span class="sig-name descname"><span class="pre">HostMonitorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostMonitorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostMonitorThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<p>Thread that collects the Host statistics and pushes it to Kafka periodically</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostMonitorThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostMonitorThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostMonitorThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>Main loop of the thread. Parses log files and metrics on the host and pushes it to Kafka periodically</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.serve">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50049</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'host_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.serve" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the gRPC server for managing clients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> – the port that the server will listen to</p></li>
+<li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
+<li><p><strong>log_file_name</strong> – the file name of the log</p></li>
+<li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager.host_manager_pb2">
+<span id="csle-collector-host-manager-host-manager-pb2-module"></span><h2>csle_collector.host_manager.host_manager_pb2 module<a class="headerlink" href="#module-csle_collector.host_manager.host_manager_pb2" title="Permalink to this headline"></a></h2>
+<p>Generated protocol buffer code.</p>
+</section>
+<section id="module-csle_collector.host_manager.host_manager_pb2_grpc">
+<span id="csle-collector-host-manager-host-manager-pb2-grpc-module"></span><h2>csle_collector.host_manager.host_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.host_manager.host_manager_pb2_grpc" title="Permalink to this headline"></a></h2>
+<p>Client and server classes corresponding to protobuf-defined services.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">HostManager</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManager.getHostMetrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getHostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManager.getHostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.getHostMetrics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManager.getHostMonitorStatus">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getHostMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManager.getHostMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.getHostMonitorStatus" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManager.startHostMonitor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManager.startHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.startHostMonitor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopHostMonitor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManager.stopHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopHostMonitor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">HostManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostMetrics">
+<span class="sig-name descname"><span class="pre">getHostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManagerServicer.getHostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostMetrics" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostMonitorStatus">
+<span class="sig-name descname"><span class="pre">getHostMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManagerServicer.getHostMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostMonitorStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startHostMonitor">
+<span class="sig-name descname"><span class="pre">startHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManagerServicer.startHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startHostMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopHostMonitor">
+<span class="sig-name descname"><span class="pre">stopHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManagerServicer.stopHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopHostMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">HostManagerStub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#HostManagerStub"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface exported by the server</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_pb2_grpc.add_HostManagerServicer_to_server">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.</span></span><span class="sig-name descname"><span class="pre">add_HostManagerServicer_to_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">servicer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_pb2_grpc.html#add_HostManagerServicer_to_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_pb2_grpc.add_HostManagerServicer_to_server" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager.host_manager_util">
+<span id="csle-collector-host-manager-host-manager-util-module"></span><h2>csle_collector.host_manager.host_manager_util module<a class="headerlink" href="#module-csle_collector.host_manager.host_manager_util" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager_util.</span></span><span class="sig-name descname"><span class="pre">HostManagerUtil</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_metrics_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_metrics_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty HostMetricsDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_metrics_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_metrics_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of a HostMetricsDTO to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_metrics_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_metrics_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">host_manager_pb2.HostMetricsDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_metrics_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a HostMetricsDTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>host_metrics_dto</strong> – the dto to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_monitor_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_monitor_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty HostMonitorDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_monitor_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_monitor_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of a HostMonitorDTO to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_monitor_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_monitor_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_monitor_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a HostMonitorDTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>host_monitor_dto</strong> – the dto to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_failed_login_attempts">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_failed_login_attempts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_failed_login_attempts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_failed_login_attempts" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the number of recent failed login attempts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>emulation_config</strong> – configuration to connect to the node in the emulation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of recently failed login attempts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_host_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Reads the latest metrics from the host</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>failed_auth_last_ts</strong> – the last time-step of read failed authentication attempts</p></li>
+<li><p><strong>login_last_ts</strong> – the last time-step of read successful logins</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed host metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_auth">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_latest_ts_auth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_latest_ts_auth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_auth" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the timestamp of the latest failed login attempt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of recently failed login attempts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_login">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_latest_ts_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_latest_ts_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_login" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the timestamp of the latest successful login attempt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of recently failed login attempts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_logged_in_users">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_logged_in_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_logged_in_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_logged_in_users" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the number of logged-in users on the server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of logged in users</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_open_connections">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_open_connections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_open_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_open_connections" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the number of open connections to the server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of open connections</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_processes">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_processes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_processes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_processes" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the number of processes on the server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>emulation_config</strong> – configuration to connect to the node in the emulation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of processes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_successful_login_events">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_successful_login_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_successful_login_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_successful_login_events" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the number of recent successful login attempts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>login_last_ts</strong> – the timestamp to use when filtering logins</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of recently failed login attempts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_users">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_users" title="Permalink to this definition"></a></dt>
+<dd><p>Measures the number of user accounts on the server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of user accounts</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager.host_metrics">
+<span id="csle-collector-host-manager-host-metrics-module"></span><h2>csle_collector.host_manager.host_metrics module<a class="headerlink" href="#module-csle_collector.host_manager.host_metrics" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_metrics.</span></span><span class="sig-name descname"><span class="pre">HostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_logged_in_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_failed_login_attempts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_open_connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_login_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DTO class containing host metrics</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.copy" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the Kafka record string to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong> – the kafka record</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.get_deltas">
+<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_deltas" title="Permalink to this definition"></a></dt>
+<dd><p>Get the deltas between two stats objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stats_prime</strong> – the stats object to compare with</p></li>
+<li><p><strong>max_counter</strong> – the maximum counter_value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the deltas and the labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.get_values">
+<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_values" title="Permalink to this definition"></a></dt>
+<dd><p>Get the current values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the values and the labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.num_attributes">
+<span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.num_attributes" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of attributes of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">csle_collector.host_manager.host_metrics.HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.schema" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>get the schema of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_dto">
+<span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dto" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object into a gRPC DTO for serialization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO in addition to the metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a csle_collector.host_manager.host_manager_pb2.HostMetricsDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record">
+<span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the DTO into a Kafka record string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ip</strong> – the IP to add to the record in addition to the metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a comma separated string representing the kafka record</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record">
+<span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the DTO based on a kafka record</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> – the kafka record</p></li>
+<li><p><strong>ip</strong> – the host ip</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager.query_host_manager">
+<span id="csle-collector-host-manager-query-host-manager-module"></span><h2>csle_collector.host_manager.query_host_manager module<a class="headerlink" href="#module-csle_collector.host_manager.query_host_manager" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.host_manager.query_host_manager.get_host_metrics">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">get_host_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#get_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.get_host_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Queries the Host manager for the data of the Host metrics from given timestamps</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>failed_auth_last_ts</strong> – the timtestamp to parse failed login from</p></li>
+<li><p><strong>login_last_ts</strong> – the timtestamp to parse the last login from</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an HostMetricsDTO with host metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.host_manager.query_host_manager.get_host_monitor_status">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">get_host_monitor_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#get_host_monitor_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.get_host_monitor_status" title="Permalink to this definition"></a></dt>
+<dd><p>Queries the Host manager for the status of the Host monitor thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an HostMonitorDTO describing the status of the Host monitor thread</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.host_manager.query_host_manager.start_host_monitor">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">start_host_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#start_host_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.start_host_monitor" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the Host manager to start the Host monitor thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kafka_ip</strong> – the ip of the Kafka server</p></li>
+<li><p><strong>kafka_port</strong> – the port of the Kafka server</p></li>
+<li><p><strong>time_step_len_seconds</strong> – the length of one time-step</p></li>
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an HostMonitorDTO describing the status of the Host monitor thread</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_collector.host_manager.query_host_manager.stop_host_monitor">
+<span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">stop_host_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">host_manager_pb2.HostMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#stop_host_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.stop_host_monitor" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to the Host manager to stop the Host monitor thread</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an HostMonitorDTO describing the status of the Host monitor thread</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager.successful_login">
+<span id="csle-collector-host-manager-successful-login-module"></span><h2>csle_collector.host_manager.successful_login module<a class="headerlink" href="#module-csle_collector.host_manager.successful_login" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.host_manager.successful_login.SuccessfulLogin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.successful_login.</span></span><span class="sig-name descname"><span class="pre">SuccessfulLogin</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/successful_login.html#SuccessfulLogin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.successful_login.SuccessfulLogin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DTO Class representing a parsed successful login event from a server in the emulation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.successful_login.SuccessfulLogin.parse_from_str">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_attempt_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/successful_login.html#SuccessfulLogin.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.successful_login.SuccessfulLogin.parse_from_str" title="Permalink to this definition"></a></dt>
+<dd><p>Parses a login event from a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>login_attempt_str</strong> – the string to parse</p></li>
+<li><p><strong>year</strong> – the current year</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the parsed login event</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.host_manager">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.host_manager" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_collector.elk_manager.html" class="btn btn-neutral float-left" title="csle_collector.elk_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_collector.kafka_manager.html" class="btn btn-neutral float-right" title="csle_collector.kafka_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

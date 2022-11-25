@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_stopping_game.util.stopping_game_util &mdash; gym-csle-stopping-game 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> gym-csle-stopping-game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.constants.html">gym_csle_stopping_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.dao.html">gym_csle_stopping_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.envs.html">gym_csle_stopping_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.util.html">gym_csle_stopping_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-csle-stopping-game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_stopping_game.util.stopping_game_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_stopping_game.util.stopping_game_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">betabinom</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.emulation_statistics</span> <span class="kn">import</span> <span class="n">EmulationStatistics</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.observation_space_config</span> <span class="kn">import</span> <span class="n">ObservationSpaceConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.joint_action_space_config</span> <span class="kn">import</span> <span class="n">JointActionSpaceConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.state_space_config</span> <span class="kn">import</span> <span class="n">StateSpaceConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_config</span> <span class="kn">import</span> <span class="n">StoppingGameConfig</span>
+
+
+<div class="viewcode-block" id="StoppingGameUtil"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil">[docs]</a><span class="k">class</span> <span class="nc">StoppingGameUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions for the StoppingGame Environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StoppingGameUtil.b1"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.b1">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">b1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the initial belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.state_space"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.state_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">state_space</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.defender_actions"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.defender_actions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">defender_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the action space of the defender</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.attacker_actions"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.attacker_actions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attacker_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the action space of the attacker</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.observation_space"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the observation space of size n</span>
+
+<span class="sd">        :param n: the maximum observation</span>
+<span class="sd">        :return: O</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.reward_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reward_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reward_tensor</span><span class="p">(</span><span class="n">R_SLA</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R_INT</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R_COST</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R_ST</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param R_SLA: the R_SLA constant</span>
+<span class="sd">        :param R_INT: the R_INT constant</span>
+<span class="sd">        :param R_COST: the R_COST constant</span>
+<span class="sd">        :param R_ST: the R_ST constant</span>
+<span class="sd">        :return: a |L|x|A1|x|A2|x|S| tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R_l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">L</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="c1"># Defender continues</span>
+                <span class="p">[</span>
+                    <span class="c1"># Attacker continues</span>
+                    <span class="p">[</span><span class="n">R_SLA</span><span class="p">,</span> <span class="n">R_SLA</span> <span class="o">+</span> <span class="n">R_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="c1"># Attacker stops</span>
+                    <span class="p">[</span><span class="n">R_SLA</span><span class="p">,</span> <span class="n">R_SLA</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="p">],</span>
+                <span class="c1"># Defender stops</span>
+                <span class="p">[</span>
+                    <span class="c1"># Attacker continues</span>
+                    <span class="p">[</span><span class="n">R_COST</span> <span class="o">/</span> <span class="n">l</span><span class="p">,</span> <span class="n">R_ST</span> <span class="o">/</span> <span class="n">l</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="c1"># Attacker stops</span>
+                    <span class="p">[</span><span class="n">R_COST</span> <span class="o">/</span> <span class="n">l</span><span class="p">,</span> <span class="n">R_SLA</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="p">]</span>
+            <span class="p">]</span>
+            <span class="n">R_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R_l</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.transition_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.transition_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">transition_tensor</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param L: the maximum number of stop actions</span>
+<span class="sd">        :return: a |L|x|A1|x|A2||S|^2 tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">T_l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">L</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">T</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="c1"># Defender continues</span>
+                    <span class="p">[</span>
+                        <span class="c1"># Attacker continues</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">],</span>
+                        <span class="c1"># Attacker stops</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">]</span>
+                    <span class="p">],</span>
+
+                    <span class="c1"># Defender stops</span>
+                    <span class="p">[</span>
+                        <span class="c1"># Attacker continues</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">],</span>
+                        <span class="c1"># Attacker stops</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># No Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">]</span>
+                    <span class="p">]</span>
+                <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">T</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="c1"># Defender continues</span>
+                    <span class="p">[</span>
+                        <span class="c1"># Attacker continues</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">],</span>
+                        <span class="c1"># Attacker stops</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">]</span>
+                    <span class="p">],</span>
+
+                    <span class="c1"># Defender stops</span>
+                    <span class="p">[</span>
+                        <span class="c1"># Attacker continues</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">],</span>
+                        <span class="c1"># Attacker stops</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                        <span class="p">]</span>
+                    <span class="p">]</span>
+                <span class="p">]</span>
+            <span class="n">T_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_l</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">T</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.observation_tensor_from_emulation_statistics"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_tensor_from_emulation_statistics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">observation_tensor_from_emulation_statistics</span><span class="p">(</span><span class="n">emulation_statistic</span><span class="p">:</span> <span class="n">EmulationStatistics</span><span class="p">,</span>
+                                                     <span class="n">observation_space_defender</span><span class="p">:</span> <span class="n">ObservationSpaceConfig</span><span class="p">,</span>
+                                                     <span class="n">joint_action_space</span><span class="p">:</span> <span class="n">JointActionSpaceConfig</span><span class="p">,</span>
+                                                     <span class="n">state_space</span><span class="p">:</span> <span class="n">StateSpaceConfig</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an observation tensor based on measured emulation statistics</span>
+
+<span class="sd">        :param emulation_statistic: the measured statistics</span>
+<span class="sd">        :param observation_space_defender: the observation space of the defender</span>
+<span class="sd">        :param joint_action_space: the joint action space</span>
+<span class="sd">        :param state_space: the state space</span>
+<span class="sd">        :return: a |A1|x|A2|x|S|x|O| tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">intrusion_severe_alerts_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">intrusion_warning_alerts_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">intrusion_login_attempts_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">severe_alert_obs</span> <span class="ow">in</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">component_observations</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">][</span><span class="n">severe_alert_obs</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">intrusion_severe_alerts_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">warning_alert_obs</span> <span class="ow">in</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">component_observations</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">][</span><span class="n">warning_alert_obs</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">intrusion_warning_alerts_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">login_attempt_obs</span> <span class="ow">in</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">component_observations</span><span class="p">[</span><span class="s2">&quot;login_attempts&quot;</span><span class="p">]:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;login_attempts&quot;</span><span class="p">][</span><span class="n">login_attempt_obs</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">intrusion_login_attempts_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+
+        <span class="n">no_intrusion_severe_alerts_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">no_intrusion_warning_alerts_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">no_intrusion_login_attempts_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;no_intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">severe_alert_obs</span> <span class="ow">in</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">component_observations</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;no_intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">][</span><span class="n">severe_alert_obs</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">no_intrusion_severe_alerts_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">warning_alert_obs</span> <span class="ow">in</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">component_observations</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;no_intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">][</span><span class="n">warning_alert_obs</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">no_intrusion_warning_alerts_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">login_attempt_obs</span> <span class="ow">in</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">component_observations</span><span class="p">[</span><span class="s2">&quot;login_attempts&quot;</span><span class="p">]:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="s2">&quot;no_intrusion&quot;</span><span class="p">][</span><span class="s2">&quot;login_attempts&quot;</span><span class="p">][</span><span class="n">login_attempt_obs</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">no_intrusion_login_attempts_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+
+        <span class="n">component_observation_tensors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">observation_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">severe_alerts_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">warning_alerts_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">login_attempts_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">joint_action_space</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
+            <span class="n">a1_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">severe_alerts_a1_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">warning_alerts_a1_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">login_attempts_a1_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">joint_action_space</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
+                <span class="n">a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">severe_alerts_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">warning_alerts_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">login_attempts_a2_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_space</span><span class="o">.</span><span class="n">states</span><span class="p">)):</span>
+                    <span class="n">s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">severe_alerts_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">warning_alerts_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">login_attempts_s_o_dist</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observation_space_defender</span><span class="o">.</span><span class="n">observations</span><span class="p">)):</span>
+                        <span class="n">obs_vector</span> <span class="o">=</span> <span class="n">observation_space_defender</span><span class="o">.</span><span class="n">observation_id_to_observation_id_vector</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">severe_alerts_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_intrusion_severe_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="n">warning_alerts_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_intrusion_warning_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="n">login_attempts_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_intrusion_login_attempts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">no_intrusion_severe_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span>
+                                 <span class="n">no_intrusion_warning_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span>
+                                 <span class="n">no_intrusion_login_attempts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">severe_alerts_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intrusion_severe_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="n">warning_alerts_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intrusion_warning_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="n">login_attempts_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intrusion_login_attempts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">intrusion_severe_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span>
+                                 <span class="n">intrusion_warning_alerts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span>
+                                 <span class="n">intrusion_login_attempts_probabilities</span><span class="p">[</span><span class="n">obs_vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+                        <span class="n">s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_o_dist</span><span class="p">)</span>
+                    <span class="n">severe_alerts_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">severe_alerts_s_o_dist</span><span class="p">)</span>
+                    <span class="n">warning_alerts_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning_alerts_a2_s_o_dist</span><span class="p">)</span>
+                    <span class="n">login_attempts_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">login_attempts_a2_s_o_dist</span><span class="p">)</span>
+                <span class="n">a1_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a2_s_o_dist</span><span class="p">)</span>
+                <span class="n">severe_alerts_a1_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">severe_alerts_a2_s_o_dist</span><span class="p">)</span>
+                <span class="n">warning_alerts_a1_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning_alerts_a2_s_o_dist</span><span class="p">)</span>
+                <span class="n">login_attempts_a1_a2_s_o_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">login_attempts_a2_s_o_dist</span><span class="p">)</span>
+            <span class="n">observation_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_a2_s_o_dist</span><span class="p">)</span>
+            <span class="n">severe_alerts_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">severe_alerts_a1_a2_s_o_dist</span><span class="p">)</span>
+            <span class="n">warning_alerts_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning_alerts_a1_a2_s_o_dist</span><span class="p">)</span>
+            <span class="n">login_attempts_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">login_attempts_a1_a2_s_o_dist</span><span class="p">)</span>
+        <span class="n">component_observation_tensors</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">severe_alerts_tensor</span>
+        <span class="n">component_observation_tensors</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">warning_alerts_tensor</span>
+        <span class="n">component_observation_tensors</span><span class="p">[</span><span class="s2">&quot;login_attempts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">login_attempts_tensor</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">observation_tensor</span><span class="p">),</span> <span class="n">component_observation_tensors</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.observation_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">observation_tensor</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a |A1|x|A2|x|S|x|O| tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">intrusion_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">no_intrusion_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">terminal_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">terminal_dist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">intrusion_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">no_intrusion_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">intrusion_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intrusion_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">no_intrusion_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_intrusion_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span>
+                    <span class="p">[</span>
+                        <span class="n">no_intrusion_dist</span><span class="p">,</span>
+                        <span class="n">intrusion_dist</span><span class="p">,</span>
+                        <span class="n">terminal_dist</span>
+                    <span class="p">],</span>
+                    <span class="p">[</span>
+                        <span class="n">no_intrusion_dist</span><span class="p">,</span>
+                        <span class="n">intrusion_dist</span><span class="p">,</span>
+                        <span class="n">terminal_dist</span>
+                    <span class="p">],</span>
+                <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="p">[</span>
+                        <span class="n">no_intrusion_dist</span><span class="p">,</span>
+                        <span class="n">intrusion_dist</span><span class="p">,</span>
+                        <span class="n">terminal_dist</span>
+                    <span class="p">],</span>
+                    <span class="p">[</span>
+                        <span class="n">no_intrusion_dist</span><span class="p">,</span>
+                        <span class="n">intrusion_dist</span><span class="p">,</span>
+                        <span class="n">terminal_dist</span>
+                    <span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Z</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.sample_next_state"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_state">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_next_state</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the next state</span>
+
+<span class="sd">        :param T: the transition operator</span>
+<span class="sd">        :param s: the currrent state</span>
+<span class="sd">        :param a1: the defender action</span>
+<span class="sd">        :param a2: the attacker action</span>
+<span class="sd">        :param S: the state space</span>
+<span class="sd">        :param l: the number of stops remaining</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state_probs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+            <span class="n">state_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">])</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)),</span> <span class="n">p</span><span class="o">=</span><span class="n">state_probs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s_prime</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.sample_initial_state"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_initial_state">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the initial state</span>
+
+<span class="sd">        :param b1: the initial belief</span>
+<span class="sd">        :return: s1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">b1</span><span class="p">)),</span> <span class="n">p</span><span class="o">=</span><span class="n">b1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s1</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.sample_next_observation"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_observation">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the next observation</span>
+
+<span class="sd">        :param s_prime: the new state</span>
+<span class="sd">        :param O: the observation space</span>
+<span class="sd">        :return: o</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">observation_probs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">O</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">observation_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">observation_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">observation_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">])</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)),</span> <span class="n">p</span><span class="o">=</span><span class="n">observation_probs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">o</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.bayes_filter"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.bayes_filter">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bayes_filter</span><span class="p">(</span><span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A Bayesian filter to compute the belief of player 1</span>
+<span class="sd">        of being in s_prime when observing o after taking action a in belief b given that the opponent follows</span>
+<span class="sd">        strategy pi2</span>
+
+<span class="sd">        :param s_prime: the state to compute the belief of</span>
+<span class="sd">        :param o: the observation</span>
+<span class="sd">        :param a1: the action of player 1</span>
+<span class="sd">        :param b: the current belief point</span>
+<span class="sd">        :param pi2: the policy of player 2</span>
+<span class="sd">        :param l: stops remaining</span>
+<span class="sd">        :return: b_prime(s_prime)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">l</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">s_prime_1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+                    <span class="n">prob_1</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_1</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
+                    <span class="n">norm</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">prob_1</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">l</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime_1</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">l</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span>
+        <span class="n">b_prime_s_prime</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="n">norm</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;b_prime_s_prime &gt;= 1: </span><span class="si">{</span><span class="n">b_prime_s_prime</span><span class="si">}</span><span class="s2">, a1:</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, s_prime:</span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2">, l:</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, pi2:</span><span class="si">{</span><span class="n">pi2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">s_prime</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">o</span> <span class="o">!=</span> <span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.01</span>
+        <span class="k">return</span> <span class="n">b_prime_s_prime</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.p_o_given_b_a1_a2"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.p_o_given_b_a1_a2">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">p_o_given_b_a1_a2</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes P[o|a,b]</span>
+
+<span class="sd">        :param o: the observation</span>
+<span class="sd">        :param b: the belief point</span>
+<span class="sd">        :param a1: the action of player 1</span>
+<span class="sd">        :param a2: the action of player 2</span>
+<span class="sd">        :param config: the game config</span>
+<span class="sd">        :return: the probability of observing o when taking action a in belief point b</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+                <span class="n">prob</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">prob</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.next_belief"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.next_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">next_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                    <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the next belief using a Bayesian filter</span>
+
+<span class="sd">        :param o: the latest observation</span>
+<span class="sd">        :param a1: the latest action of player 1</span>
+<span class="sd">        :param b: the current belief</span>
+<span class="sd">        :param pi2: the policy of player 2</span>
+<span class="sd">        :param config: the game config</span>
+<span class="sd">        :param l: stops remaining</span>
+<span class="sd">        :param a2: the attacker action (for debugging, should be consistent with pi2)</span>
+<span class="sd">        :param s: the true state (for debugging)</span>
+<span class="sd">        :return: the new belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+            <span class="n">b_prime</span><span class="p">[</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">bayes_filter</span><span class="p">(</span><span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span>
+                                                             <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error, b_prime:</span><span class="si">{</span><span class="n">b_prime</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, a1:</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, b:</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">, pi2:</span><span class="si">{</span><span class="n">pi2</span><span class="si">}</span><span class="s2">, &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;a2: </span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">, s:</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">b_prime</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.sample_attacker_action"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_attacker_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the attacker action</span>
+
+<span class="sd">        :param pi2: the attacker action</span>
+<span class="sd">        :param s: the game state</span>
+<span class="sd">        :return: a2 (the attacker action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">])),</span> <span class="n">p</span><span class="o">=</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">a2</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

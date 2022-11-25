@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_type</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_id</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionId</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_outcome</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionOutcome</span>
+
+
+<div class="viewcode-block" id="EmulationDefenderStoppingActions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderStoppingActions</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class implementing stopping actions for the defender</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EmulationDefenderStoppingActions.STOP"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.STOP">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">STOP</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationDefenderAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reports a detected intrusion and stops</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">STOP</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">alt_cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Report Intrusion&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="n">EmulationDefenderActionType</span><span class="o">.</span><span class="n">STOP</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Reports an ongoing intrusion to the infrastructure and stops&quot;</span><span class="p">,</span>
+                                       <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="p">[],</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationDefenderActionOutcome</span><span class="o">.</span><span class="n">GAME_END</span><span class="p">,</span> <span class="n">alt_cmds</span><span class="o">=</span><span class="n">alt_cmd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationDefenderStoppingActions.CONTINUE"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.CONTINUE">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationDefenderAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A &quot;continue&quot; action, the defender chooses to not make any action</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">CONTINUE</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">alt_cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Continue&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationDefenderActionType</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A &#39;continue&#39; action, the defender chooses to not make any action&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationDefenderActionOutcome</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">,</span> <span class="n">alt_cmds</span><span class="o">=</span><span class="n">alt_cmd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationDefenderStoppingActions.RESET_USERS"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.RESET_USERS">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">RESET_USERS</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationDefenderAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A non terminal stop action, the defender resets all user accounts, which means that password vulnerabilities</span>
+<span class="sd">        are mitigated.</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">RESET_USERS</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">alt_cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Reset Users&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationDefenderActionType</span><span class="o">.</span><span class="n">ADD_DEFENSIVE_MECHANISM</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A non terminal stop action the defender resets all user accounts, which means that &quot;</span>
+                  <span class="s2">&quot;password vulnerabilities are mitigated&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationDefenderActionOutcome</span><span class="o">.</span><span class="n">ADD_DEFENSIVE_MECHANISM</span><span class="p">,</span> <span class="n">alt_cmds</span><span class="o">=</span><span class="n">alt_cmd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationDefenderStoppingActions.ENABLE_DPI"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.ENABLE_DPI">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ENABLE_DPI</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationDefenderAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A non terminal stop action, the defender enables DPI by starting the IDS</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">ENABLE_DPI</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">alt_cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Enable DPI&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="n">EmulationDefenderActionType</span><span class="o">.</span><span class="n">ADD_DEFENSIVE_MECHANISM</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A non terminal stop action, the defender enables DPI by starting the IDS&quot;</span><span class="p">,</span>
+                                       <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="p">[],</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationDefenderActionOutcome</span><span class="o">.</span><span class="n">ADD_DEFENSIVE_MECHANISM</span><span class="p">,</span>
+                                       <span class="n">alt_cmds</span><span class="o">=</span><span class="n">alt_cmd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationDefenderStoppingActions.BLACKLIST_IPS"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.BLACKLIST_IPS">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">BLACKLIST_IPS</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationDefenderAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A non terminal stop action, the defender blacklists all IPs that generate IDS alerts that exceed a threshold,</span>
+<span class="sd">        the blacklist is implemented using the firewall.</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">BLACKLIST_IPS</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">alt_cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Blacklist IPs&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">EmulationDefenderActionType</span><span class="o">.</span><span class="n">ADD_DEFENSIVE_MECHANISM</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A non terminal stop action, the defender blacklists all IPs that generate &quot;</span>
+                  <span class="s2">&quot;IDS alerts that exceed a threshold, the blacklist is implemented using the firewall.&quot;</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="p">[],</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationDefenderActionOutcome</span><span class="o">.</span><span class="n">ADD_DEFENSIVE_MECHANISM</span><span class="p">,</span>
+            <span class="n">alt_cmds</span><span class="o">=</span><span class="n">alt_cmd</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

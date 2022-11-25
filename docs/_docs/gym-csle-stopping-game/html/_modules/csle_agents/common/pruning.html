@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.common.pruning &mdash; csle-agents 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.common.pruning</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.common.pruning</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pulp</span>
+
+
+<div class="viewcode-block" id="check_duplicate"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.check_duplicate">[docs]</a><span class="k">def</span> <span class="nf">check_duplicate</span><span class="p">(</span><span class="n">alpha_set</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check whether alpha vector av is already in set a</span>
+
+<span class="sd">    :param alpha_set: the set of alpha vectors</span>
+<span class="sd">    :param alpha: the vector to check</span>
+<span class="sd">    :return: true or false</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">alpha_i</span> <span class="ow">in</span> <span class="n">alpha_set</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">alpha_i</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="prune_lower_bound"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.prune_lower_bound">[docs]</a><span class="k">def</span> <span class="nf">prune_lower_bound</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lark&#39;s filtering algorithm to prune the lower bound, (Cassandra, Littman, Zhang, 1997)</span>
+
+<span class="sd">    :param lower_bound: the current lower bound</span>
+<span class="sd">    :param S: the set of states</span>
+<span class="sd">    :return: the pruned lower bound</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># dirty set</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">)):</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="c1"># clean set</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+        <span class="n">max_alpha_val_s</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">max_alpha_vec_s</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">alpha_vec</span> <span class="ow">in</span> <span class="n">F</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alpha_vec</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_alpha_val_s</span><span class="p">:</span>
+                <span class="n">max_alpha_val_s</span> <span class="o">=</span> <span class="n">alpha_vec</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+                <span class="n">max_alpha_vec_s</span> <span class="o">=</span> <span class="n">alpha_vec</span>
+        <span class="k">if</span> <span class="n">max_alpha_vec_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Q.update({max_alpha_vec_s})</span>
+            <span class="n">Q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">max_alpha_vec_s</span><span class="p">)))</span>
+            <span class="n">F</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">max_alpha_vec_s</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">F</span><span class="p">:</span>
+        <span class="n">alpha_vec</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>  <span class="c1"># just to get a reference</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">check_dominance_lp</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">F</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_alpha_val</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="n">max_alpha_vec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">F</span><span class="p">:</span>
+                <span class="n">phi_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">phi_vec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_alpha_val</span><span class="p">:</span>
+                    <span class="n">max_alpha_val</span> <span class="o">=</span> <span class="n">phi_vec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span>
+                    <span class="n">max_alpha_vec</span> <span class="o">=</span> <span class="n">phi_vec</span>
+            <span class="n">Q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">max_alpha_vec</span><span class="p">)</span>
+            <span class="n">F</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">max_alpha_vec</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">Q</span></div>
+
+
+<div class="viewcode-block" id="check_dominance_lp"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.check_dominance_lp">[docs]</a><span class="k">def</span> <span class="nf">check_dominance_lp</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses LP to check whether a given alpha vector is dominated or not (Cassandra, Littman, Zhang, 1997)</span>
+
+<span class="sd">    :param alpha_vec: the alpha vector to check</span>
+<span class="sd">    :param Q: the set of vectors to check dominance against</span>
+<span class="sd">    :return: None if dominated, otherwise return the vector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">pulp</span><span class="o">.</span><span class="n">LpProblem</span><span class="p">(</span><span class="s2">&quot;AlphaDominance&quot;</span><span class="p">,</span> <span class="n">pulp</span><span class="o">.</span><span class="n">LpMaximize</span><span class="p">)</span>
+
+    <span class="c1"># --- Decision Variables ----</span>
+
+    <span class="c1"># x</span>
+    <span class="n">x_vars</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)):</span>
+        <span class="n">x_var_i</span> <span class="o">=</span> <span class="n">pulp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">(</span><span class="s2">&quot;x_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">lowBound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upBound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">pulp</span><span class="o">.</span><span class="n">LpContinuous</span><span class="p">)</span>
+        <span class="n">x_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_var_i</span><span class="p">)</span>
+
+    <span class="c1"># delta</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">pulp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="n">lowBound</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upBound</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">pulp</span><span class="o">.</span><span class="n">LpContinuous</span><span class="p">)</span>
+
+    <span class="c1"># --- Objective Function ----</span>
+    <span class="n">problem</span> <span class="o">+=</span> <span class="n">delta</span><span class="p">,</span> <span class="s2">&quot;maximize delta&quot;</span>
+
+    <span class="c1"># --- The constraints ---</span>
+
+    <span class="c1"># x sum to 1</span>
+    <span class="n">x_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_vars</span><span class="p">)):</span>
+        <span class="n">x_sum</span> <span class="o">+=</span> <span class="n">x_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">problem</span> <span class="o">+=</span> <span class="n">x_sum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;XSumWeights&quot;</span>
+
+    <span class="c1"># alpha constraints</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha_vec_prime</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Q</span><span class="p">):</span>
+        <span class="n">x_dot_alpha_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">x_dot_alpha_prime_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)):</span>
+            <span class="n">x_dot_alpha_sum</span> <span class="o">+=</span> <span class="n">x_vars</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">alpha_vec</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">x_dot_alpha_prime_sum</span> <span class="o">+=</span> <span class="n">x_vars</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">alpha_vec_prime</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">problem</span> <span class="o">+=</span> <span class="n">x_dot_alpha_sum</span> <span class="o">&gt;=</span> <span class="n">delta</span> <span class="o">+</span> <span class="n">x_dot_alpha_prime_sum</span><span class="p">,</span> <span class="s2">&quot;alpha_constraint _&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Solve</span>
+    <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">pulp</span><span class="o">.</span><span class="n">PULP_CBC_CMD</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="c1"># Obtain solution</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">varValue</span>
+    <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">alpha_vec</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

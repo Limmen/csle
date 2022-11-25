@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.controllers.vulnerabilities_controller &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.controllers.vulnerabilities_controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.controllers.vulnerabilities_controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.emulation_util</span> <span class="kn">import</span> <span class="n">EmulationUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.vulnerability_type</span> <span class="kn">import</span> <span class="n">VulnType</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+
+<div class="viewcode-block" id="VulnerabilitiesController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.vulnerabilities_controller.VulnerabilitiesController">[docs]</a><span class="k">class</span> <span class="nc">VulnerabilitiesController</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class managing vulnerabilities in the emulation environments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VulnerabilitiesController.create_vulns"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.vulnerabilities_controller.VulnerabilitiesController.create_vulns">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_vulns</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates vulnerabilities in an emulation environment according to a specified vulnerabilities configuration</span>
+
+<span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">vuln_config</span><span class="o">.</span><span class="n">node_vulnerability_configs</span>
+        <span class="k">for</span> <span class="n">vuln</span> <span class="ow">in</span> <span class="n">vulnerabilities</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating vulnerability on ip: </span><span class="si">{</span><span class="n">vuln</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">, type: </span><span class="si">{</span><span class="n">vuln</span><span class="o">.</span><span class="n">vuln_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">vuln</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+
+            <span class="c1"># Update sudoers file</span>
+            <span class="k">if</span> <span class="n">vuln</span><span class="o">.</span><span class="n">vuln_type</span> <span class="o">==</span> <span class="n">VulnType</span><span class="o">.</span><span class="n">PRIVILEGE_ESCALATION</span><span class="p">:</span>
+
+                <span class="c1"># Restore/Backup sudoers file</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sudo cp /etc/sudoers.bak /etc/sudoers&quot;</span>
+                <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">vuln</span><span class="o">.</span><span class="n">ip</span><span class="p">))</span>
+
+                <span class="c1"># Install sudoers vulnerability</span>
+                <span class="k">if</span> <span class="n">vuln</span><span class="o">.</span><span class="n">cve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">vuln</span><span class="o">.</span><span class="n">cve</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">CVE_2010_0426</span><span class="p">:</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sudo su root -c </span><span class="se">\&quot;</span><span class="s2">echo &#39;</span><span class="si">{}</span><span class="s2"> ALL=NOPASSWD: sudoedit /etc/fstab&#39; &gt;&gt; /etc/sudoers</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+                <span class="k">elif</span> <span class="n">vuln</span><span class="o">.</span><span class="n">cve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">vuln</span><span class="o">.</span><span class="n">cve</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">CVE_2015_5602</span><span class="p">:</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sudo su root -c </span><span class="se">\&quot;</span><span class="s2">echo &#39;</span><span class="si">{}</span><span class="s2"> ALL=NOPASSWD: sudoedit /home/*/*/esc.txt&#39; &gt;&gt; /etc/sudoers</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;CVE not recognized:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vuln</span><span class="o">.</span><span class="n">cve</span><span class="p">))</span>
+
+                <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">vuln</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+                    <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                                            <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">vuln</span><span class="o">.</span><span class="n">ip</span><span class="p">))</span>
+                    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sudo chmod 440 /etc/sudoers&quot;</span>
+                    <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                                            <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">vuln</span><span class="o">.</span><span class="n">ip</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

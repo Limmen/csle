@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_system_identification.job_controllers.data_collection_job_manager &mdash; csle-system-identification 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-system-identification
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.base.html">csle_system_identification.base package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.constants.html">csle_system_identification.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.empirical.html">csle_system_identification.empirical package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.gp.html">csle_system_identification.gp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-system-identification</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_system_identification.job_controllers.data_collection_job_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_system_identification.job_controllers.data_collection_job_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.data_collection_job_config</span> <span class="kn">import</span> <span class="n">DataCollectionJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_common.controllers.container_controller</span> <span class="kn">import</span> <span class="n">ContainerController</span>
+<span class="kn">from</span> <span class="nn">csle_system_identification.emulator</span> <span class="kn">import</span> <span class="n">Emulator</span>
+
+
+<div class="viewcode-block" id="DataCollectionJobManager"><a class="viewcode-back" href="../../../csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager">[docs]</a><span class="k">class</span> <span class="nc">DataCollectionJobManager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that manages data collection jobs in CSLE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataCollectionJobManager.run_data_collection_job"><a class="viewcode-back" href="../../../csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.run_data_collection_job">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">run_data_collection_job</span><span class="p">(</span><span class="n">job_config</span><span class="p">:</span> <span class="n">DataCollectionJobConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a given data collection job</span>
+
+<span class="sd">        :param job_config: the configuration of the job</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">emulation_env_config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_by_name</span><span class="p">(</span><span class="s2">&quot;csle-level9-001&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">is_emulation_running</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+        <span class="n">em_statistic</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_statistic</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">emulation_statistic_id</span><span class="p">)</span>
+        <span class="n">Emulator</span><span class="o">.</span><span class="n">run_action_sequences</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">attacker_sequence</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">attacker_sequence</span><span class="p">,</span>
+            <span class="n">defender_sequence</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">defender_sequence</span><span class="p">,</span> <span class="n">repeat_times</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">repeat_times</span><span class="p">,</span>
+            <span class="n">sleep_time</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">descr</span><span class="p">,</span> <span class="n">emulation_statistics</span><span class="o">=</span><span class="n">em_statistic</span><span class="p">,</span> <span class="n">data_collection_job</span><span class="o">=</span><span class="n">job_config</span><span class="p">,</span>
+            <span class="n">save_emulation_traces_every</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">save_emulation_traces_every</span><span class="p">,</span>
+            <span class="n">emulation_traces_to_save_with_data_collection_job</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollectionJobManager.start_data_collection_job_in_background"><a class="viewcode-back" href="../../../csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.start_data_collection_job_in_background">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">start_data_collection_job_in_background</span><span class="p">(</span><span class="n">data_collection_job</span><span class="p">:</span> <span class="n">DataCollectionJobConfig</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts a system identification job with a given configuration in the background</span>
+
+<span class="sd">        :param data_collection_job: the job configuration</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">START_SYSTEM_IDENTIFICATION_JOB</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

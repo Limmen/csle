@@ -1,0 +1,25 @@
+---
+---
+[
+{% for section in site.data.docs %}
+  {% for item in section.docs %}
+    {% assign item_url = item | prepend:"/docs/" | append:"/" %}
+    {% assign p = site.docs | where:"url", item_url | first %}
+    {
+      "title": "{{ p.title }}",
+      "url": "{{ p.url | prepend: site.baseurl }}"
+
+    },
+  {% endfor %}
+{% endfor %}
+
+  {% for post in site.docs %}
+    {% unless post.title contains '.' %}
+      {
+      "title": "{{ post.title | truncatewords: 1, '' }}",
+      "url": "{{ post.url | prepend: site.baseurl }}"
+      }
+    {% unless forloop.last %},{% endunless %}
+    {% endunless %}
+  {% endfor %}
+]

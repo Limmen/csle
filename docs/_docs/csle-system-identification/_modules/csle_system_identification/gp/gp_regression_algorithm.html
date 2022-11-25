@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_system_identification.gp.gp_regression_algorithm &mdash; csle-system-identification 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-system-identification
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.base.html">csle_system_identification.base package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.constants.html">csle_system_identification.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.empirical.html">csle_system_identification.empirical package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.gp.html">csle_system_identification.gp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-system-identification</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_system_identification.gp.gp_regression_algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_system_identification.gp.gp_regression_algorithm</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">gpytorch</span>
+<span class="kn">from</span> <span class="nn">csle_system_identification.base.base_system_identification_algorithm</span> <span class="kn">import</span> <span class="n">BaseSystemIdentificationAlgorithm</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.emulation_statistics</span> <span class="kn">import</span> <span class="n">EmulationStatistics</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.system_identification_config</span> <span class="kn">import</span> <span class="n">SystemIdentificationConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.gp_system_model</span> <span class="kn">import</span> <span class="n">GPSystemModel</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.gp_conditional</span> <span class="kn">import</span> <span class="n">GPConditional</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.system_identification_job_config</span> <span class="kn">import</span> <span class="n">SystemIdentificationJobConfig</span>
+<span class="kn">import</span> <span class="nn">csle_system_identification.constants.constants</span> <span class="k">as</span> <span class="nn">system_identification_constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_system_identification.gp.gp_regression_model_with_gauissan_noise</span> <span class="kn">import</span> <span class="n">GPRegressionModelWithGaussianNoise</span>
+
+
+<div class="viewcode-block" id="GPRegressionAlgorithm"><a class="viewcode-back" href="../../../csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">GPRegressionAlgorithm</span><span class="p">(</span><span class="n">BaseSystemIdentificationAlgorithm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that implements the system identification procedure using EM</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">emulation_statistics</span><span class="p">:</span> <span class="n">EmulationStatistics</span><span class="p">,</span>
+                 <span class="n">system_identification_config</span><span class="p">:</span> <span class="n">SystemIdentificationConfig</span><span class="p">,</span>
+                 <span class="n">system_identification_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SystemIdentificationJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the algorithm</span>
+
+<span class="sd">        :param emulation_env_config: the configuration of the emulation environment</span>
+<span class="sd">        :param emulation_statistics: the statistics to fit</span>
+<span class="sd">        :param system_identification_config: configuration of EM</span>
+<span class="sd">        :param system_identification_job: system identification job config (optional)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GPRegressionAlgorithm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">emulation_statistics</span><span class="o">=</span><span class="n">emulation_statistics</span><span class="p">,</span>
+            <span class="n">system_identification_config</span><span class="o">=</span><span class="n">system_identification_config</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="o">=</span> <span class="n">system_identification_job</span>
+
+<div class="viewcode-block" id="GPRegressionAlgorithm.fit"><a class="viewcode-back" href="../../../csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GPSystemModel</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fits a Gaussian Process for each conditional and metric using the GP regression algorithm</span>
+
+<span class="sd">        :return: the fitted model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Setup system identification job</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+        <span class="n">descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;System identification through Gaussian Process Regression, &quot;</span> \
+                <span class="sa">f</span><span class="s2">&quot;emulation:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, statistic id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="o">=</span> <span class="n">SystemIdentificationJobConfig</span><span class="p">(</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">emulation_statistics_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">system_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">system_identification_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span>
+            <span class="p">)</span>
+            <span class="n">system_identification_job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_system_identification_job</span><span class="p">(</span>
+                <span class="n">system_identification_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">system_identification_job_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">pid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">system_model</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_system_identification_job</span><span class="p">(</span><span class="n">system_identification_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="p">,</span>
+                                                             <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="c1"># Run the GP regression algorithm for each conditional and metric</span>
+        <span class="n">conditionals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">CONDITIONAL_DISTRIBUTIONS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">METRICS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting execution of the Gaussian Process regression algorithm. &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;Emulation env name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;emulation_statistic_id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;conditionals: </span><span class="si">{</span><span class="n">conditionals</span><span class="si">}</span><span class="s2">, metrics: </span><span class="si">{</span><span class="n">metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">gp_conditionals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conditionals</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="n">conditional</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">max_val</span><span class="p">:</span>
+                        <span class="n">max_val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="n">sample_space</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_val</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">compute_descriptive_statistics_and_distributions</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conditionals</span><span class="p">):</span>
+            <span class="n">gp_conditionals_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
+                <span class="n">observed_x</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">observed_y</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">conditionals_probs</span><span class="p">[</span><span class="n">conditional</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">observed_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="n">observed_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>
+
+                <span class="n">observed_x_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">observed_x</span><span class="p">)</span>
+                <span class="n">observed_y_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">observed_y</span><span class="p">)</span>
+
+                <span class="c1"># initialize likelihood and model, the Gaussian likelihood assumes observed data points</span>
+                <span class="c1"># have zero mean gaussian noise</span>
+                <span class="n">likelihood</span> <span class="o">=</span> <span class="n">gpytorch</span><span class="o">.</span><span class="n">likelihoods</span><span class="o">.</span><span class="n">GaussianLikelihood</span><span class="p">()</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">GPRegressionModelWithGaussianNoise</span><span class="p">(</span><span class="n">observed_x_tensor</span><span class="p">,</span> <span class="n">observed_y_tensor</span><span class="p">,</span> <span class="n">likelihood</span><span class="p">)</span>
+
+                <span class="c1"># get into train mode</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+                <span class="n">likelihood</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+                <span class="c1"># Includes GaussianLikelihood parameters</span>
+                <span class="n">lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                    <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">GAUSSIAN_PROCESS_REGRESSION</span><span class="o">.</span><span class="n">LEARNING_RATE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+
+                <span class="c1"># &quot;Loss&quot; for GPs - the marginal log likelihood</span>
+                <span class="n">mll</span> <span class="o">=</span> <span class="n">gpytorch</span><span class="o">.</span><span class="n">mlls</span><span class="o">.</span><span class="n">ExactMarginalLogLikelihood</span><span class="p">(</span><span class="n">likelihood</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+                <span class="n">training_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                    <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">GAUSSIAN_PROCESS_REGRESSION</span><span class="o">.</span><span class="n">TRAINING_ITERATIONS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+
+                <span class="c1"># Find optimal model hyperparameters by minimizing the negative marignal likelihood loss</span>
+                <span class="c1"># through gradient descent.</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">training_iter</span><span class="p">):</span>
+                    <span class="c1"># Zero gradients from previous iteration</span>
+                    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                    <span class="c1"># Output from model</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">observed_x_tensor</span><span class="p">)</span>
+                    <span class="c1"># Calc loss and backprop gradients</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">mll</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">observed_y_tensor</span><span class="p">)</span>
+                    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+                    <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;[GP-Regression] iter:</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">training_iter</span><span class="si">}</span><span class="s2">, loss:</span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;learned lengthscale param: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">covar_module</span><span class="o">.</span><span class="n">base_kernel</span><span class="o">.</span><span class="n">lengthscale</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;learned likehood noise: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">likelihood</span><span class="o">.</span><span class="n">noise</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># Gradient descent step</span>
+                    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+                <span class="n">gp_conditionals_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GPConditional</span><span class="p">(</span>
+                    <span class="n">conditional_name</span><span class="o">=</span><span class="n">conditional</span><span class="p">,</span> <span class="n">metric_name</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">sample_space</span><span class="o">=</span><span class="n">sample_space</span><span class="p">,</span>
+                    <span class="n">observed_x</span><span class="o">=</span><span class="n">observed_x</span><span class="p">,</span> <span class="n">observed_y</span><span class="o">=</span><span class="n">observed_y</span><span class="p">,</span>
+                    <span class="n">scale_parameter</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">covar_module</span><span class="o">.</span><span class="n">base_kernel</span><span class="o">.</span><span class="n">lengthscale</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                    <span class="n">noise_parameter</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">likelihood</span><span class="o">.</span><span class="n">noise</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="p">))</span>
+            <span class="n">gp_conditionals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp_conditionals_metrics</span><span class="p">)</span>
+
+        <span class="n">model_descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Model fitted through GP regression, &quot;</span> \
+                      <span class="sa">f</span><span class="s2">&quot;emulation:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, statistic id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">GPSystemModel</span><span class="p">(</span>
+            <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">emulation_statistic_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">conditional_metric_distributions</span><span class="o">=</span><span class="n">gp_conditionals</span><span class="p">,</span> <span class="n">descr</span><span class="o">=</span><span class="n">model_descr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">system_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_system_identification_job</span><span class="p">(</span><span class="n">system_identification_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="p">,</span>
+                                                         <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Execution of the Gaussian process algorithm complete.&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;Emulation env name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;emulation_statistic_id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;conditionals: </span><span class="si">{</span><span class="n">conditionals</span><span class="si">}</span><span class="s2">, metrics: </span><span class="si">{</span><span class="n">metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="GPRegressionAlgorithm.hparam_names"><a class="viewcode-back" href="../../../csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the names of the necessary hyperparameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">CONDITIONAL_DISTRIBUTIONS</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">METRICS</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">GAUSSIAN_PROCESS_REGRESSION</span><span class="o">.</span><span class="n">LEARNING_RATE</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">GAUSSIAN_PROCESS_REGRESSION</span><span class="o">.</span><span class="n">TRAINING_ITERATIONS</span>
+        <span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

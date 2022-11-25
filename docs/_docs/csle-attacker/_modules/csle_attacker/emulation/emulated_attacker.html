@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_attacker.emulation.emulated_attacker &mdash; csle-attacker 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-attacker
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_attacker.emulation.html">csle_attacker.emulation package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-attacker</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_attacker.emulation.emulated_attacker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_attacker.emulation.emulated_attacker</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_type</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionId</span>
+<span class="kn">from</span> <span class="nn">csle_attacker.emulation.recon_middleware</span> <span class="kn">import</span> <span class="n">ReconMiddleware</span>
+<span class="kn">from</span> <span class="nn">csle_attacker.emulation.exploit_middleware</span> <span class="kn">import</span> <span class="n">ExploitMiddleware</span>
+<span class="kn">from</span> <span class="nn">csle_attacker.emulation.attacker_stopping_middleware</span> <span class="kn">import</span> <span class="n">AttackerStoppingMiddleware</span>
+<span class="kn">from</span> <span class="nn">csle_attacker.emulation.post_exploit_middleware</span> <span class="kn">import</span> <span class="n">PostExploitMiddleware</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.env_dynamics_util</span> <span class="kn">import</span> <span class="n">EnvDynamicsUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+
+
+<div class="viewcode-block" id="EmulatedAttacker"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker">[docs]</a><span class="k">class</span> <span class="nc">EmulatedAttacker</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an emulated attacker agent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EmulatedAttacker.attacker_transition"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_transition">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attacker_transition</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">attacker_action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements the transition operator T: (s,a) -&gt; s&#39;</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param attacker_action: the attacker action</span>
+<span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">:</span>
+            <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">cache_attacker_action</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">EmulatedAttacker</span><span class="o">.</span><span class="n">attacker_recon_action</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span> \
+                <span class="ow">or</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">PRIVILEGE_ESCALATION</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">cache_attacker_action</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">EmulatedAttacker</span><span class="o">.</span><span class="n">attacker_exploit_action</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">POST_EXPLOIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EmulatedAttacker</span><span class="o">.</span><span class="n">attacker_post_exploit_action</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">STOP</span> \
+                <span class="ow">or</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EmulatedAttacker</span><span class="o">.</span><span class="n">attacker_stopping_action</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Action type not recognized&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulatedAttacker.attacker_recon_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_recon_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attacker_recon_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements the transition of a reconnaissance action</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param a: the action</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_tcp_syn_stealth_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">PING_SCAN_HOST</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">PING_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_ping_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">UDP_PORT_SCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">UDP_PORT_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_udp_port_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_tcp_con_stealth_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_FIN_SCAN_HOST</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_FIN_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_tcp_fin_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_NULL_SCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_NULL_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_tcp_null_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_tcp_xmas_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_os_detection_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">VULSCAN_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">VULSCAN_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_vulscan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NMAP_VULNERS_HOST</span>  \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NMAP_VULNERS_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_nmap_vulners</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NIKTO_WEB_HOST_SCAN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_nikto_web_host_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MASSCAN_HOST_SCAN</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MASSCAN_ALL_SCAN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_masscan_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIREWALK_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIREWALK_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_firewalk_scan</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_ENUM_HOST</span>  \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_ENUM_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_http_enum</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_GREP_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_GREP_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_http_grep</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FINGER_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FINGER_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ReconMiddleware</span><span class="o">.</span><span class="n">execute_finger</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Recon action id:</span><span class="si">{}</span><span class="s2">,name:</span><span class="si">{}</span><span class="s2"> not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EmulatedAttacker.attacker_exploit_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_exploit_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attacker_exploit_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements transition of an exploit action</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param a: the action</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_telnet_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_ssh_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_ftp_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_cassandra_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_irc_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_mongo_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_mysql_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_smtp_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_HOST</span> \
+                <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_postgres_same_user_dictionary</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SAMBACRY_EXPLOIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_sambacry</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SHELLSHOCK_EXPLOIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_shellshock</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">DVWA_SQL_INJECTION</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_dvwa_sql_injection</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2015_3306_EXPLOIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_cve_2015_3306_exploit</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2015_1427_EXPLOIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_cve_2015_1427_exploit</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2016_10033_EXPLOIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_cve_2016_10033_exploit</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2010_0426_PRIV_ESC</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_cve_2010_0426_exploit</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CVE_2015_5602_PRIV_ESC</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExploitMiddleware</span><span class="o">.</span><span class="n">execute_cve_2015_5602_exploit</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Exploit action id:</span><span class="si">{}</span><span class="s2">,name:</span><span class="si">{}</span><span class="s2"> not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EmulatedAttacker.attacker_post_exploit_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_post_exploit_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attacker_post_exploit_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements the transition of a post-exploit action</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param a: the action</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NETWORK_SERVICE_LOGIN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PostExploitMiddleware</span><span class="o">.</span><span class="n">execute_service_login</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIND_FLAG</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PostExploitMiddleware</span><span class="o">.</span><span class="n">execute_bash_find_flag</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">INSTALL_TOOLS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PostExploitMiddleware</span><span class="o">.</span><span class="n">execute_install_tools</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_BACKDOOR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PostExploitMiddleware</span><span class="o">.</span><span class="n">execute_ssh_backdoor</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Post-expoit action id:</span><span class="si">{}</span><span class="s2">,name:</span><span class="si">{}</span><span class="s2"> not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EmulatedAttacker.attacker_stopping_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_stopping_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">attacker_stopping_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements transition of a stopping action of the attacker</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param a: the action</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">STOP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AttackerStoppingMiddleware</span><span class="o">.</span><span class="n">stop_intrusion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AttackerStoppingMiddleware</span><span class="o">.</span><span class="n">continue_intrusion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Stopping action id:</span><span class="si">{}</span><span class="s2">,name:</span><span class="si">{}</span><span class="s2"> not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

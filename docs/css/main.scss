@@ -1,0 +1,173 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+// Import partials from `sass_dir` (defaults to `_sass`)}
+
+@import url("https://fonts.googleapis.com/css?family=Cabin");
+
+@import
+  {% if site.bootwatch %}
+    "bootswatch/{{site.bootwatch | downcase}}/variables",
+  {% endif %}
+
+  "bootstrap",
+
+  {% if site.bootwatch %}
+    "bootswatch/{{site.bootwatch | downcase}}/bootswatch",
+  {% endif %}
+
+  "syntax-highlighting",
+  "typeahead"
+;
+
+
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  padding-top: $navbar-height + $navbar-margin-bottom;
+  margin-bottom: 46px;
+  font-family: 'Cabin', sans-serif;
+}
+
+.navbar-brand{
+  img{
+    margin: -$navbar-padding-vertical 0;
+    height: $navbar-height;
+    padding: 10px 0;
+  }
+}
+
+
+.header-container {
+  background-color: black;
+  background: url('../img/bg.jpg') no-repeat 50% 0;
+  color: #fff;
+
+  h1 {
+    color: #fff;
+  }
+  // background-attachment: fixed;
+  background-size: cover;
+  background-position: center 36%;
+  margin-top: -37px;
+}
+.navbar-container {
+  font-size: 16px;
+}
+.page-content {
+  padding-bottom: 20px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  padding-top: 6px;
+  background-color: $gray-lighter;
+  color: $gray-dark;
+}
+
+.post-list-container {
+  li a.active {
+    font-weight: bold;
+  }
+}
+*[id]:before {
+  display: block;
+  content: " ";
+  margin-top: -75px;
+  height: 75px;
+  visibility: hidden;
+}
+.navbar-form .has-feedback .form-control-feedback{
+  top:10px
+}
+
+#search-box {
+  width: 400px;
+}
+
+.bg-white {
+  background: white;
+}
+
+
+//Tabs on home page should have same height
+#installation pre {
+  min-height: 130px;
+}
+
+#usage pre {
+  min-height: 730px;
+}
+
+
+.indexPageContainer {
+  margin-top:-180px;
+}
+
+.logoIndex {
+  margin-top: -60px;
+}
+
+.RlLogo {
+  margin-top: 0px;
+}
+
+.RlText {
+  margin-top:40px;
+}
+
+.emulationLogo {
+  margin-top: -22px;
+}
+
+.emulationText {
+  margin-top:0px;
+}
+
+.onlineLearningLogo {
+  margin-top: -22px;
+}
+
+.learningText {
+  margin-top:0px;
+}
+
+.kthLogo {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cdisLogo {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footerLogos {
+  margin-top: -13px;
+  text-align: center;
+}
+
+.copyRightText {
+  margin-top: -13px;
+}
+
+.FeaturesRow {
+  margin-bottom: 40px;
+}
+
+.publicationsContent {
+  margin-bottom:50px
+}
+
+.docsNav {
+  margin-bottom: 50px;
+}

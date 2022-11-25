@@ -7,6 +7,17 @@ Install the `flake8` linter:
 python -m pip install flake8
 ```
 
+Install ruby and its bundler to generate the documentation page:
+```bash
+sudo apt-get install ruby ruby-dev
+sudo gem install bundler
+```
+
+Install Sphinx to automatically generate API documentation from docstrings: 
+```bash
+pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
 ## Static code analysis
 
 ### Python: 
@@ -25,6 +36,17 @@ To automatically fix linting errors, use the command:
 ```bash
 cd management-system/csle-mgmt-webapp/; npm run lint:fix
 ```
+
+## Generate API Documentation
+
+To generate the Python API documentation, run:
+```bash
+simulation-system/python/generate_docs.sh
+```
+
+## Tests
+
+## Continuous Integration
 
 ## Lines of code
 

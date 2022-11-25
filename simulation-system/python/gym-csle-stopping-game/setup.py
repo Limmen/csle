@@ -2,10 +2,7 @@ from setuptools import setup
 
 setup(name='gym_csle_stopping_game',
       version='0.0.1',
-      install_requires=['gym', 'pyglet', 'numpy', 'torch', 'docker', 'paramiko', 'stable_baselines3', 'scp',
-                        'random_username', 'Sphinx', 'sphinxcontrib-napoleon',
-                        'sphinx-rtd-theme', 'csle-common', 'pyperclip', 'psycopg', 'click', 'csle-attacker',
-                        'csle-defender', 'csle-collector'],
+      install_requires=['csle-common', 'csle-attacker', 'csle-defender', 'csle-collector'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='CSLE is a platform for evaluating and developing reinforcement learning agents for '

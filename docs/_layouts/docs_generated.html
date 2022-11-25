@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+          {% include docs_nav.html %}
+        </div>
+
+        <div class="col-md-8">
+            <div id="markdown-content-container">{{ content }}</div>
+            <p class="text-center">
+              <br />
+              Generated using <a href="https://github.com/Kotlin/dokka">Dokka.</a>
+            </p>
+            <hr>
+            {% include section_nav.html %}
+        </div>
+
+    </div>
+</div>

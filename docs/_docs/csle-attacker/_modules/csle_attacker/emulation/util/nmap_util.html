@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_attacker.emulation.util.nmap_util &mdash; csle-attacker 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-attacker
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_attacker.emulation.html">csle_attacker.emulation package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-attacker</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_attacker.emulation.util.nmap_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_attacker.emulation.util.nmap_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.env_dynamics_util</span> <span class="kn">import</span> <span class="n">EnvDynamicsUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerMachineObservationState</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_scan_result</span> <span class="kn">import</span> <span class="n">NmapScanResult</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_host_result</span> <span class="kn">import</span> <span class="n">NmapHostResult</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_port_status</span> <span class="kn">import</span> <span class="n">NmapPortStatus</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_host_status</span> <span class="kn">import</span> <span class="n">NmapHostStatus</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_port</span> <span class="kn">import</span> <span class="n">NmapPort</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_addr_type</span> <span class="kn">import</span> <span class="n">NmapAddrType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.transport_protocol</span> <span class="kn">import</span> <span class="n">TransportProtocol</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_os</span> <span class="kn">import</span> <span class="n">NmapOs</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_vuln</span> <span class="kn">import</span> <span class="n">NmapVuln</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_brute_credentials</span> <span class="kn">import</span> <span class="n">NmapBruteCredentials</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_hop</span> <span class="kn">import</span> <span class="n">NmapHop</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_trace</span> <span class="kn">import</span> <span class="n">NmapTrace</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_http_enum</span> <span class="kn">import</span> <span class="n">NmapHttpEnum</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_http_grep</span> <span class="kn">import</span> <span class="n">NmapHttpGrep</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_vulscan</span> <span class="kn">import</span> <span class="n">NmapVulscan</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.emulation_util</span> <span class="kn">import</span> <span class="n">EmulationUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.connection_util</span> <span class="kn">import</span> <span class="n">ConnectionUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+
+<div class="viewcode-block" id="NmapUtil"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil">[docs]</a><span class="k">class</span> <span class="nc">NmapUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class containing utility functions for the nmap-related functionality to the emulation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NmapUtil.parse_nmap_scan"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil.parse_nmap_scan">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_nmap_scan</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses an XML file containing the result of an nmap scan</span>
+
+<span class="sd">        :param file_name: name of the file to parse</span>
+<span class="sd">        :param emulation_env_config: environment config</span>
+<span class="sd">        :return: the parsed xml file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_hacker_connection</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">dir</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="nb">dir</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">RESULTS_DIR</span>
+
+        <span class="n">sftp_client</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">open_sftp</span><span class="p">()</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">remote_file</span> <span class="o">=</span> <span class="n">sftp_client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">xml_tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">remote_file</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">xml_data</span> <span class="o">=</span> <span class="n">xml_tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xml_data</span></div>
+
+<div class="viewcode-block" id="NmapUtil.parse_nmap_scan_xml"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil.parse_nmap_scan_xml">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_nmap_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapScanResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses an XML Tree into a DTO</span>
+
+<span class="sd">        :param xml_data: the xml tree to parse</span>
+<span class="sd">        :param ips: ips of the source of the scan</span>
+<span class="sd">        :param action: the action of the scan</span>
+<span class="sd">        :return: parsed nmap scan result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hosts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HOST</span><span class="p">:</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_host_xml</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">hosts</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_merge_nmap_hosts</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">hosts</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">NmapScanResult</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="n">hosts</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_host_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapHostResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a host-element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the host element</span>
+<span class="sd">        :param action: action of the scan</span>
+<span class="sd">        :return: parsed nmap host result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ip_addr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mac_addr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">hostnames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ports</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">os</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">os_matches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">NmapHostStatus</span><span class="o">.</span><span class="n">UP</span>
+        <span class="n">trace</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ADDRESS</span><span class="p">:</span>
+                <span class="n">addr</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_address_xml</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="n">NmapAddrType</span><span class="o">.</span><span class="n">MAC</span><span class="p">:</span>
+                    <span class="n">mac_addr</span> <span class="o">=</span> <span class="n">addr</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ip_addr</span> <span class="o">=</span> <span class="n">addr</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HOSTNAMES</span><span class="p">:</span>
+                <span class="n">hostnames</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_hostnames_xml</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">PORTS</span><span class="p">:</span>
+                <span class="n">ports</span><span class="p">,</span> <span class="n">vulnerabilities</span><span class="p">,</span> <span class="n">credentials</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_ports_xml</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OS</span><span class="p">:</span>
+                <span class="n">os_matches</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_os_xml</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                <span class="n">os</span> <span class="o">=</span> <span class="n">NmapOs</span><span class="o">.</span><span class="n">get_best_match</span><span class="p">(</span><span class="n">os_matches</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TRACE</span><span class="p">:</span>
+                <span class="n">trace</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_trace_xml</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+        <span class="n">nmap_host_result</span> <span class="o">=</span> <span class="n">NmapHostResult</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="p">[</span><span class="n">ip_addr</span><span class="p">],</span> <span class="n">mac_addr</span><span class="o">=</span><span class="n">mac_addr</span><span class="p">,</span>
+                                          <span class="n">hostnames</span><span class="o">=</span><span class="n">hostnames</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span> <span class="n">os</span><span class="o">=</span><span class="n">os</span><span class="p">,</span> <span class="n">os_matches</span><span class="o">=</span><span class="n">os_matches</span><span class="p">,</span>
+                                          <span class="n">vulnerabilities</span><span class="o">=</span><span class="n">vulnerabilities</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="n">trace</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nmap_host_result</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_status_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapPortStatus</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a status element in the xml tree</span>
+
+<span class="sd">        :param xml_data: the status XML element</span>
+<span class="sd">        :return: parsed Nmap Port-Status DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">DOWN</span>
+        <span class="n">status_val</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">status_val</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">STATUS_UP</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">UP</span>
+        <span class="k">return</span> <span class="n">status</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_address_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NmapAddrType</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a address element in the xml tree</span>
+
+<span class="sd">        :param xml_data: the address XML element</span>
+<span class="sd">        :return: (address, addresstype)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="n">NmapAddrType</span><span class="o">.</span><span class="n">IP</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
+        <span class="n">addrtype_val</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ADDR_TYPE</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">IP</span> <span class="ow">in</span> <span class="n">addrtype_val</span><span class="p">:</span>
+            <span class="nb">type</span> <span class="o">=</span> <span class="n">NmapAddrType</span><span class="o">.</span><span class="n">IP</span>
+        <span class="k">elif</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">MAC</span> <span class="ow">in</span> <span class="n">addrtype_val</span><span class="p">:</span>
+            <span class="nb">type</span> <span class="o">=</span> <span class="n">NmapAddrType</span><span class="o">.</span><span class="n">MAC</span>
+        <span class="k">return</span> <span class="n">addr</span><span class="p">,</span> <span class="nb">type</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_hostnames_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a hostnames element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the hostnames XML element</span>
+<span class="sd">        :return: a list of hostnames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hostnames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HOSTNAME</span><span class="p">:</span>
+                <span class="n">hostnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">NAME</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">hostnames</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_ports_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapPort</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">],</span>
+                                                                                  <span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a ports XML element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the ports XML element</span>
+<span class="sd">        :param action: action of the scan</span>
+<span class="sd">        :return: (List NmapPort, List NmapVuln, ListNmapBruteCredentials)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ports</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">http_enum</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">http_grep</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">vulscan</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">PORT</span><span class="p">:</span>
+                <span class="n">port_status</span> <span class="o">=</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">DOWN</span>
+                <span class="n">protocol</span> <span class="o">=</span> <span class="n">TransportProtocol</span><span class="o">.</span><span class="n">_from_str</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">])</span>
+                <span class="n">port_id</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">PORT_ID</span><span class="p">]</span>
+                <span class="n">service_name</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">UNKNOWN</span>
+                <span class="n">service_version</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">service_fp</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">for</span> <span class="n">child_2</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+                    <span class="k">if</span> <span class="n">child_2</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">STATE</span><span class="p">:</span>
+                        <span class="n">port_status</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_port_status_xml</span><span class="p">(</span><span class="n">child_2</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">child_2</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">SERVICE</span><span class="p">:</span>
+                        <span class="n">service_name</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_service_name_xml</span><span class="p">(</span><span class="n">child_2</span><span class="p">)</span>
+                        <span class="n">service_version</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_service_version_xml</span><span class="p">(</span><span class="n">child_2</span><span class="p">)</span>
+                        <span class="n">service_fp</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_service_fp_xml</span><span class="p">(</span><span class="n">child_2</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">child_2</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">SCRIPT</span><span class="p">:</span>
+                        <span class="n">result</span><span class="p">,</span> <span class="n">brute_vuln</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_script</span><span class="p">(</span><span class="n">child_2</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port_id</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span>
+                                                                         <span class="n">service</span><span class="o">=</span><span class="n">service_name</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">NmapVuln</span><span class="p">):</span>
+                                <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="n">result</span>
+                            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> \
+                                    <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">NmapBruteCredentials</span><span class="p">):</span>
+                                <span class="n">credentials</span> <span class="o">=</span> <span class="n">result</span>
+                                <span class="k">if</span> <span class="n">brute_vuln</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">vulnerabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brute_vuln</span><span class="p">)</span>
+                            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">NmapHttpEnum</span><span class="p">):</span>
+                                <span class="n">http_enum</span> <span class="o">=</span> <span class="n">result</span>
+                            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">NmapHttpGrep</span><span class="p">):</span>
+                                <span class="n">http_grep</span> <span class="o">=</span> <span class="n">result</span>
+                            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">NmapVulscan</span><span class="p">):</span>
+                                <span class="n">vulscan</span> <span class="o">=</span> <span class="n">result</span>
+                <span class="k">if</span> <span class="n">port_status</span> <span class="o">==</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">UP</span><span class="p">:</span>
+                    <span class="n">port</span> <span class="o">=</span> <span class="n">NmapPort</span><span class="p">(</span><span class="n">port_id</span><span class="o">=</span><span class="n">port_id</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">port_status</span><span class="p">,</span> <span class="n">service_name</span><span class="o">=</span><span class="n">service_name</span><span class="p">,</span>
+                                    <span class="n">http_enum</span><span class="o">=</span><span class="n">http_enum</span><span class="p">,</span> <span class="n">http_grep</span><span class="o">=</span><span class="n">http_grep</span><span class="p">,</span> <span class="n">vulscan</span><span class="o">=</span><span class="n">vulscan</span><span class="p">,</span>
+                                    <span class="n">service_version</span><span class="o">=</span><span class="n">service_version</span><span class="p">,</span> <span class="n">service_fp</span><span class="o">=</span><span class="n">service_fp</span><span class="p">)</span>
+                    <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ports</span><span class="p">,</span> <span class="n">vulnerabilities</span><span class="p">,</span> <span class="n">credentials</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_service_name_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML service name element</span>
+
+<span class="sd">        :param xml_data: the XML service element</span>
+<span class="sd">        :return: the name of the service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_service_version_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML service element</span>
+
+<span class="sd">        :param xml_data: the XML service element</span>
+<span class="sd">        :return: the version of the service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">VERSION</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">VERSION</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">version</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_service_fp_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML service element</span>
+
+<span class="sd">        :param xml_data: the XML service element</span>
+<span class="sd">        :return: the fingerprint of the service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">servicefp</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">SERVICEFP</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">servicefp</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">SERVICEFP</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">servicefp</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_port_status_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapPortStatus</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML port status element</span>
+
+<span class="sd">        :param xml_data: the XML port status element</span>
+<span class="sd">        :return: the parsed port status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">port_status</span> <span class="o">=</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">DOWN</span>
+        <span class="k">if</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OPEN_STATE</span><span class="p">:</span>
+            <span class="n">port_status</span> <span class="o">=</span> <span class="n">NmapPortStatus</span><span class="o">.</span><span class="n">UP</span>
+        <span class="k">return</span> <span class="n">port_status</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_os_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapOs</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses NMAP OS XML element</span>
+
+<span class="sd">        :param xml_data: the XML OS element</span>
+<span class="sd">        :return: Parsed NmapOS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">os_matches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OS_MATCH</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+                <span class="n">accuracy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">])</span>
+                <span class="n">t_acc_cmp</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">vendor</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">osfamily</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">for</span> <span class="n">c2</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+                    <span class="k">if</span> <span class="n">c2</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OS_CLASS</span><span class="p">:</span>
+                        <span class="n">t_acc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">t_acc</span> <span class="o">&gt;</span> <span class="n">t_acc_cmp</span><span class="p">:</span>
+                            <span class="n">vendor</span> <span class="o">=</span> <span class="n">c2</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">VENDOR</span><span class="p">]</span>
+                            <span class="n">osfamily</span> <span class="o">=</span> <span class="n">c2</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OS_FAMILY</span><span class="p">]</span>
+                            <span class="n">t_acc_cmp</span> <span class="o">=</span> <span class="n">t_acc</span>
+
+                <span class="n">os_match</span> <span class="o">=</span> <span class="n">NmapOs</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">vendor</span><span class="o">=</span><span class="n">vendor</span><span class="p">,</span> <span class="n">osfamily</span><span class="o">=</span><span class="n">osfamily</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+                <span class="n">os_matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os_match</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">os_matches</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_table_vuln</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapVuln</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a Table XML element with vulnerabilities</span>
+
+<span class="sd">        :param xml_data: the XML table element</span>
+<span class="sd">        :param port: the port element parent</span>
+<span class="sd">        :param protocol: the protocol of the parent</span>
+<span class="sd">        :param service: the service running on the port</span>
+<span class="sd">        :return: parsed Nmap vulnerability</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cvss</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">VULNERABILITIES</span><span class="o">.</span><span class="n">default_cvss</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ELEM</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">CVSS</span><span class="p">:</span>
+                        <span class="n">cvss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span><span class="p">:</span>
+                        <span class="nb">id</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">vuln</span> <span class="o">=</span> <span class="n">NmapVuln</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">cvss</span><span class="o">=</span><span class="n">cvss</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">service</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vuln</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_script</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">],</span>
+                                                                           <span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">],</span>
+                                                                           <span class="n">NmapHttpEnum</span><span class="p">,</span> <span class="n">NmapHttpGrep</span><span class="p">,</span>
+                                                                           <span class="n">NmapVulscan</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML script element</span>
+
+<span class="sd">        :param xml_data: the XML script element</span>
+<span class="sd">        :param port: the port of the parent element</span>
+<span class="sd">        :param protocol: the protocol of the parent element</span>
+<span class="sd">        :param service: the service running on the port</span>
+<span class="sd">        :param action: action of the scan</span>
+<span class="sd">        :return: a list of parsed nmap vulnerabilities or a list of parsed credentials and maybe a vuln</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">VULNERS_SCRIPT_ID</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_vulners</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">service</span><span class="p">),</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span><span class="p">]</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">BRUTE_SCRIPTS</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_brute</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">service</span><span class="p">,</span>
+                                                  <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HTTP_ENUM_SCRIPT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_http_enum_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">),</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HTTP_GREP_SCRIPT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_http_grep_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">),</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ID</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">VULSCAN_SCRIPT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_http_vulscan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">),</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_vulners</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML result from a vulners scan</span>
+
+<span class="sd">        :param xml_data: the XML script element</span>
+<span class="sd">        :param port: the port of the parent element</span>
+<span class="sd">        :param protocol: the protocol of the parent element</span>
+<span class="sd">        :param service: the service running on the port</span>
+<span class="sd">        :return: a list of parsed nmap vulnerabilities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TABLE</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c_2</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">iter</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="k">if</span> <span class="n">c_2</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TABLE</span><span class="p">:</span>
+                        <span class="n">vuln</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_table_vuln</span><span class="p">(</span><span class="n">c_2</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">service</span><span class="p">)</span>
+                        <span class="n">vulnerabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vuln</span><span class="p">)</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">vulnerabilities</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_brute</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">],</span> <span class="n">NmapVuln</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a XML result from a brute force dictionary scan</span>
+
+<span class="sd">        :param xml_data: the XML script element</span>
+<span class="sd">        :param port: the port of the parent element</span>
+<span class="sd">        :param protocol: the protocol of the parent element</span>
+<span class="sd">        :param service: the service running on the port</span>
+<span class="sd">        :return: a list of found credentials, vulnerability</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TABLE</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ACCOUNTS</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">c_2</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">iter</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]:</span>
+                            <span class="k">if</span> <span class="n">c_2</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TABLE</span><span class="p">:</span>
+                                <span class="n">cred</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_table_cred</span><span class="p">(</span><span class="n">c_2</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span>
+                                                                       <span class="n">service</span><span class="o">=</span><span class="n">service</span><span class="p">)</span>
+                                <span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cred</span><span class="p">)</span>
+                        <span class="k">break</span>
+        <span class="n">vulnerability</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">vuln_name</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">exploit_get_vuln_name</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+            <span class="n">service_name</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">exploit_get_service_name</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+            <span class="n">credentials_1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_obs</span><span class="p">(),</span> <span class="n">credentials</span><span class="p">))</span>
+            <span class="n">vulnerability</span> <span class="o">=</span> <span class="n">NmapVuln</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">vuln_name</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span>
+                                     <span class="n">cvss</span><span class="o">=</span><span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">exploit_get_vuln_cvss</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">action</span><span class="p">),</span>
+                                     <span class="n">service</span><span class="o">=</span><span class="n">service_name</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">credentials_1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">vulnerability</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_table_cred</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapBruteCredentials</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a Table XML element with credentials</span>
+
+<span class="sd">        :param xml_data: the XML table element</span>
+<span class="sd">        :param port: the port element parent</span>
+<span class="sd">        :param protocol: the protocol of the parent</span>
+<span class="sd">        :param service: the service running on the port</span>
+<span class="sd">        :return: parsed Nmap credentials</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">pw</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">ELEM</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">USERNAME</span><span class="p">:</span>
+                        <span class="n">username</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">PASSWORD</span><span class="p">:</span>
+                        <span class="n">pw</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+                    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">STATE</span><span class="p">:</span>
+                        <span class="n">state</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">NmapBruteCredentials</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">pw</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span><span class="p">,</span>
+                                           <span class="n">service</span><span class="o">=</span><span class="n">service</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">credentials</span>
+
+<div class="viewcode-block" id="NmapUtil.merge_nmap_scan_result_with_state"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil.merge_nmap_scan_result_with_state">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_nmap_scan_result_with_state</span><span class="p">(</span><span class="n">scan_result</span><span class="p">:</span> <span class="n">NmapScanResult</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span>
+                                          <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges a NMAP scan result with an existing observation state</span>
+
+<span class="sd">        :param scan_result: the scan result</span>
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param a: the action just executed</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">new_m_obs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">scan_result</span><span class="o">.</span><span class="n">hosts</span><span class="p">:</span>
+            <span class="n">m_obs</span> <span class="o">=</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="o">.</span><span class="n">from_nmap_result</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            <span class="c1"># m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)</span>
+            <span class="n">new_m_obs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m_obs</span><span class="p">)</span>
+
+        <span class="n">attacker_machine_observations</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">merge_new_obs_with_old</span><span class="p">(</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">,</span> <span class="n">new_m_obs</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="n">attacker_machine_observations</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">sort_machines</span><span class="p">()</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">sort_machines</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">s_prime</span></div>
+
+<div class="viewcode-block" id="NmapUtil.nmap_scan_action_helper"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil.nmap_scan_action_helper">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">nmap_scan_action_helper</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
+                                <span class="n">masscan</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function for executing a NMAP scan action on the emulation. Implements caching.</span>
+
+<span class="sd">        :param s: the current env state</span>
+<span class="sd">        :param a: the NMAP action to execute</span>
+<span class="sd">        :param masscan: whether it is a masscan or not</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If cache miss, then execute cmd</span>
+        <span class="n">cmds</span><span class="p">,</span> <span class="n">file_names</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">nmap_cmds</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">masscan</span><span class="p">:</span>
+            <span class="n">cmds</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">masscan_cmds</span><span class="p">()</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="n">cmds</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_hacker_connection</span><span class="p">())</span>
+        <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">results</span><span class="p">)))</span>
+
+        <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">log_measured_action_time</span><span class="p">(</span><span class="n">total_time</span><span class="o">=</span><span class="n">total_time</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
+                                               <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+
+        <span class="c1"># Read results</span>
+        <span class="n">scan_result</span> <span class="o">=</span> <span class="n">NmapScanResult</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="p">[],</span> <span class="n">ips</span><span class="o">=</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">NUM_RETRIES</span><span class="p">):</span>
+                <span class="n">xml_data</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">parse_nmap_scan</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
+                                                    <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+                <span class="n">scan_result_new</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">parse_nmap_scan_xml</span><span class="p">(</span>
+                    <span class="n">xml_data</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scan_result</span><span class="o">.</span><span class="n">reachable</span><span class="p">)</span>
+                <span class="n">scan_result</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">merge_nmap_scan_results</span><span class="p">(</span><span class="n">scan_result</span><span class="p">,</span> <span class="n">scan_result_new</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">nmap_pivot_scan_action_helper</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">partial_result</span><span class="o">=</span><span class="n">scan_result</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_merge_nmap_hosts</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="n">NmapHostResult</span><span class="p">,</span> <span class="n">hosts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapHostResult</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapHostResult</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merge nmap host results</span>
+
+<span class="sd">        :param host: a host to merge with an existing list of hosts</span>
+<span class="sd">        :param hosts: the list of hosts to merge with the new host</span>
+<span class="sd">        :return: the merged list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hosts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">host</span><span class="o">.</span><span class="n">ips</span><span class="p">):</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">host</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">))</span>
+                <span class="n">h</span><span class="o">.</span><span class="n">vulnerabilities</span> <span class="o">=</span> <span class="n">vulnerabilities</span>
+                <span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">host</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
+                <span class="n">h</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="n">ports</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="n">hosts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hosts</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_trace_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapTrace</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a trace XML element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the trace XML element</span>
+<span class="sd">        :return: NmapTrace</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hops</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HOP</span><span class="p">:</span>
+                <span class="n">hop</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_hop_xml</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                <span class="n">hops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hop</span><span class="p">)</span>
+        <span class="n">nmap_trace</span> <span class="o">=</span> <span class="n">NmapTrace</span><span class="p">(</span><span class="n">hops</span><span class="o">=</span><span class="n">hops</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nmap_trace</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_hop_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapHop</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a hop XML element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the hop XML element</span>
+<span class="sd">        :return: NmapHop</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ttl</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">rtt</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">IPADDR</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">IPADDR</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">RTT</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">rtt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">RTT</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TTL</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">ttl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">TTL</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HOST</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">HOST</span><span class="p">]</span>
+        <span class="n">nmap_hop</span> <span class="o">=</span> <span class="n">NmapHop</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="n">ttl</span><span class="p">,</span> <span class="n">ipaddr</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">rtt</span><span class="o">=</span><span class="n">rtt</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nmap_hop</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_http_enum_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapHttpEnum</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a http enum XML element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the http enum XML element</span>
+<span class="sd">        :return: HttpEnum</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OUTPUT</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">]</span>
+        <span class="n">nmap_http_enum</span> <span class="o">=</span> <span class="n">NmapHttpEnum</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nmap_http_enum</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_http_grep_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapHttpGrep</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a http grep XML element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the http grep XML element</span>
+<span class="sd">        :return: NmapHttpGrep</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OUTPUT</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">]</span>
+        <span class="n">nmap_http_grep</span> <span class="o">=</span> <span class="n">NmapHttpGrep</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nmap_http_grep</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_http_vulscan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapVulscan</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a vulscan XML element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the vulscan XML element</span>
+<span class="sd">        :return: NmapVulScan</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OUTPUT</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP_XML</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">]</span>
+        <span class="n">nmap_vulscan</span> <span class="o">=</span> <span class="n">NmapVulscan</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nmap_vulscan</span>
+
+<div class="viewcode-block" id="NmapUtil.merge_nmap_scan_results"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil.merge_nmap_scan_results">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_nmap_scan_results</span><span class="p">(</span><span class="n">scan_result_1</span><span class="p">:</span> <span class="n">NmapScanResult</span><span class="p">,</span> <span class="n">scan_result_2</span><span class="p">:</span> <span class="n">NmapScanResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NmapScanResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges two nmap scan results</span>
+
+<span class="sd">        :param scan_result_1: the first result to merge</span>
+<span class="sd">        :param scan_result_2: the second result to merge</span>
+<span class="sd">        :return: the merged result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_hosts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">scan_result_2</span><span class="o">.</span><span class="n">hosts</span><span class="p">:</span>
+            <span class="n">new_host</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">h2</span> <span class="ow">in</span> <span class="n">scan_result_1</span><span class="o">.</span><span class="n">hosts</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">ips</span><span class="p">):</span>
+                    <span class="n">new_host</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">new_host</span><span class="p">:</span>
+                <span class="n">new_hosts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">scan_result_1</span><span class="o">.</span><span class="n">hosts</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">h2</span> <span class="ow">in</span> <span class="n">scan_result_2</span><span class="o">.</span><span class="n">hosts</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">ips</span><span class="p">):</span>
+                    <span class="n">h</span><span class="o">.</span><span class="n">hostnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">hostnames</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">hostnames</span><span class="p">)))</span>
+                    <span class="n">h</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
+                    <span class="n">h</span><span class="o">.</span><span class="n">vulnerabilities</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">))</span>
+                    <span class="n">h</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">credentials</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">h2</span><span class="o">.</span><span class="n">credentials</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">os</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">h</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="n">h2</span><span class="o">.</span><span class="n">os</span>
+                    <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">trace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">h</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">h2</span><span class="o">.</span><span class="n">trace</span>
+
+        <span class="n">scan_result_1</span><span class="o">.</span><span class="n">hosts</span> <span class="o">=</span> <span class="n">scan_result_1</span><span class="o">.</span><span class="n">hosts</span> <span class="o">+</span> <span class="n">new_hosts</span>
+        <span class="n">scan_result_1</span><span class="o">.</span><span class="n">reachable</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">scan_result_1</span><span class="o">.</span><span class="n">reachable</span> <span class="o">+</span> <span class="n">scan_result_2</span><span class="o">.</span><span class="n">reachable</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">scan_result_1</span></div>
+
+<div class="viewcode-block" id="NmapUtil.nmap_pivot_scan_action_helper"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.NmapUtil.nmap_pivot_scan_action_helper">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">nmap_pivot_scan_action_helper</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
+                                      <span class="n">partial_result</span><span class="p">:</span> <span class="n">NmapScanResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs an NMAP pivot scan, utilizing many compromised hosts</span>
+
+<span class="sd">        :param s: the curretn state</span>
+<span class="sd">        :param a: the attacker scan action</span>
+<span class="sd">        :param partial_result: the initial result before pivoting</span>
+<span class="sd">        :return: the new state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">merged_scan_result</span> <span class="o">=</span> <span class="n">partial_result</span>
+        <span class="n">total_results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">machine</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">machine</span><span class="o">.</span><span class="n">logged_in</span> <span class="ow">and</span> <span class="n">machine</span><span class="o">.</span><span class="n">tools_installed</span> <span class="ow">and</span> <span class="n">machine</span><span class="o">.</span><span class="n">backdoor_installed</span><span class="p">:</span>
+                <span class="n">thread</span> <span class="o">=</span> <span class="n">PivotNMAPScanThread</span><span class="p">(</span><span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">threads</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">merged_scan_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">threads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scan_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">total_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">threads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scan_result</span><span class="p">)</span>
+                <span class="n">merged_scan_result</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">merge_nmap_scan_results</span><span class="p">(</span><span class="n">scan_result_1</span><span class="o">=</span><span class="n">merged_scan_result</span><span class="p">,</span>
+                                                                      <span class="n">scan_result_2</span><span class="o">=</span><span class="n">threads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scan_result</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="n">merged_scan_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">total_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">threads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scan_result</span><span class="p">)</span>
+                <span class="n">merged_scan_result</span> <span class="o">=</span> <span class="n">threads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scan_result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">merge_nmap_scan_result_with_state</span><span class="p">(</span><span class="n">scan_result</span><span class="o">=</span><span class="n">merged_scan_result</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">new_machines_obs_1</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">reachable</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span>
+        <span class="n">reachable</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">router_ip</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">machine</span> <span class="ow">in</span> <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">machine</span><span class="o">.</span><span class="n">logged_in</span> <span class="ow">and</span> <span class="n">machine</span><span class="o">.</span><span class="n">tools_installed</span> <span class="ow">and</span> <span class="n">machine</span><span class="o">.</span><span class="n">backdoor_installed</span><span class="p">:</span>
+                <span class="n">reachable</span> <span class="o">=</span> <span class="n">reachable</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">reachable</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">machine</span> <span class="ow">in</span> <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">machine</span><span class="o">.</span><span class="n">logged_in</span> <span class="ow">and</span> <span class="n">machine</span><span class="o">.</span><span class="n">tools_installed</span><span class="p">:</span>
+                <span class="n">machine</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">ssh_backdoor_tried_flags</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">m_obs</span><span class="o">=</span><span class="n">machine</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">machine</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">reachable</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">machine</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">exploit_tried_flags</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">m_obs</span><span class="o">=</span><span class="n">machine</span><span class="p">)</span>
+
+            <span class="n">valid_ips</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">machine</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">valid_ips</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">valid_ips</span><span class="p">:</span>
+                <span class="n">new_machines_obs_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">machine</span><span class="p">)</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="n">new_machines_obs_1</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">sort_machines</span><span class="p">()</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">sort_machines</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">s_prime</span></div></div>
+
+
+<div class="viewcode-block" id="PivotNMAPScanThread"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.PivotNMAPScanThread">[docs]</a><span class="k">class</span> <span class="nc">PivotNMAPScanThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
+                 <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scan_result</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PivotNMAPScanThread.run"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nmap_util.PivotNMAPScanThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ssh_connections_alive</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">LS</span><span class="p">],</span> <span class="n">conn</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
+                <span class="n">ssh_connections_alive</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an error connecting to </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">new_conn</span> <span class="o">=</span> <span class="n">ConnectionUtil</span><span class="o">.</span><span class="n">reconnect_ssh</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="n">ssh_connections_alive</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_conn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ssh_connections</span> <span class="o">=</span> <span class="n">ssh_connections_alive</span>
+        <span class="n">ssh_connections_sorted_by_root</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH_BACKDOOR</span><span class="o">.</span><span class="n">BACKDOOR_PREFIX</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+                           <span class="n">x</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ssh_connections_sorted_by_root</span><span class="p">:</span>
+            <span class="n">cwd</span> <span class="o">=</span> <span class="s2">&quot;/home/&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+            <span class="n">cmds</span><span class="p">,</span> <span class="n">file_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">nmap_cmds</span><span class="p">(</span><span class="n">machine_ips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">c2</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">NUM_RETRIES</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="n">cmds</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">c2</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;exception execution commands for ip:</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;username: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">, conn: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;transport: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="si">}</span><span class="s2">, active: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">is_active</span><span class="p">()</span><span class="si">}</span><span class="s2">,&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">c2</span> <span class="o">=</span> <span class="n">ConnectionUtil</span><span class="o">.</span><span class="n">reconnect_ssh</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">SLEEP_RETRY</span><span class="p">)</span>
+            <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">results</span><span class="p">)))</span>
+            <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">log_measured_action_time</span><span class="p">(</span>
+                <span class="n">total_time</span><span class="o">=</span><span class="n">total_time</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+
+            <span class="c1"># Read result</span>
+            <span class="n">scan_result</span> <span class="o">=</span> <span class="n">NmapScanResult</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="p">[],</span> <span class="n">ips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">NUM_RETRIES</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">xml_data</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">parse_nmap_scan</span><span class="p">(</span>
+                            <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                            <span class="n">conn</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
+                        <span class="n">new_scan_result</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">parse_nmap_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ips</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+                        <span class="n">scan_result</span> <span class="o">=</span> <span class="n">NmapUtil</span><span class="o">.</span><span class="n">merge_nmap_scan_results</span><span class="p">(</span><span class="n">scan_result_1</span><span class="o">=</span><span class="n">scan_result</span><span class="p">,</span>
+                                                                       <span class="n">scan_result_2</span><span class="o">=</span><span class="n">new_scan_result</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">reachable</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scan_result</span><span class="o">.</span><span class="n">reachable</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;There was an exception parsing the file:</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2"> on ip:</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">, error:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">SLEEP_RETRY</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scan_result</span> <span class="o">=</span> <span class="n">scan_result</span>
+            <span class="k">break</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

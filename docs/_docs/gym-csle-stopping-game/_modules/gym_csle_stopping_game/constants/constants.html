@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_stopping_game.constants.constants &mdash; gym-csle-stopping-game 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> gym-csle-stopping-game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.constants.html">gym_csle_stopping_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.dao.html">gym_csle_stopping_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.envs.html">gym_csle_stopping_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_stopping_game.util.html">gym_csle_stopping_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-csle-stopping-game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_stopping_game.constants.constants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_stopping_game.constants.constants</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Constants for gym-csle-stopping-game</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="STATIC_DEFENDER_STRATEGIES"><a class="viewcode-back" href="../../../gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_DEFENDER_STRATEGIES">[docs]</a><span class="k">class</span> <span class="nc">STATIC_DEFENDER_STRATEGIES</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants representing static defender strategies</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span></div>
+
+
+<div class="viewcode-block" id="STATIC_ATTACKER_STRATEGIES"><a class="viewcode-back" href="../../../gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_ATTACKER_STRATEGIES">[docs]</a><span class="k">class</span> <span class="nc">STATIC_ATTACKER_STRATEGIES</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants representing static attacker strategies</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span></div>
+
+
+<div class="viewcode-block" id="ENV_METRICS"><a class="viewcode-back" href="../../../gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS">[docs]</a><span class="k">class</span> <span class="nc">ENV_METRICS</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants representing environment metrics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">INTRUSION_LENGTH</span> <span class="o">=</span> <span class="s2">&quot;intrusion_length&quot;</span>
+    <span class="n">INTRUSION_START</span> <span class="o">=</span> <span class="s2">&quot;intrusion_start&quot;</span>
+    <span class="n">WEIGHTED_INTRUSION_PREDICTION_DISTANCE</span> <span class="o">=</span> <span class="s2">&quot;weighted_intrusion_prediction_distance&quot;</span>
+    <span class="n">START_POINT_CORRECT</span> <span class="o">=</span> <span class="s2">&quot;start_point_correct&quot;</span>
+    <span class="n">INTRUSION_END</span> <span class="o">=</span> <span class="s2">&quot;intrusion_end&quot;</span>
+    <span class="n">RETURN</span> <span class="o">=</span> <span class="s2">&quot;R&quot;</span>
+    <span class="n">TIME_HORIZON</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+    <span class="n">STOP</span> <span class="o">=</span> <span class="s2">&quot;stop&quot;</span>
+    <span class="n">STOPS_REMAINING</span> <span class="o">=</span> <span class="s2">&quot;l&quot;</span>
+    <span class="n">STATE</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+    <span class="n">DEFENDER_ACTION</span> <span class="o">=</span> <span class="s2">&quot;a1&quot;</span>
+    <span class="n">ATTACKER_ACTION</span> <span class="o">=</span> <span class="s2">&quot;a2&quot;</span>
+    <span class="n">OBSERVATION</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
+    <span class="n">TIME_STEP</span> <span class="o">=</span> <span class="s2">&quot;t&quot;</span>
+    <span class="n">AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_defender_baseline_stop_on_first_alert_return&quot;</span>
+    <span class="n">AVERAGE_UPPER_BOUND_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_upper_bound_return&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

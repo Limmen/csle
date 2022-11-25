@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.docker_stats_manager.docker_stats_util &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.docker_stats_manager.docker_stats_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.docker_stats_manager.docker_stats_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.docker_stats</span> <span class="kn">import</span> <span class="n">DockerStats</span>
+<span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.docker_stats_manager_pb2</span> <span class="kn">import</span> <span class="n">DockerStatsMonitorDTO</span>
+
+
+<div class="viewcode-block" id="DockerStatsUtil"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil">[docs]</a><span class="k">class</span> <span class="nc">DockerStatsUtil</span><span class="p">:</span>
+
+<div class="viewcode-block" id="DockerStatsUtil.calculate_cpu_percent"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_cpu_percent">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_cpu_percent</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the CPU utilization percentage</span>
+
+<span class="sd">        :param stats_dict: the stats dict from the Docker API</span>
+<span class="sd">        :return: the CPU percentage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cpu_percent</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cpu_usage</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_USAGE</span><span class="p">]</span>
+        <span class="n">precpu_usage</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PRECPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_USAGE</span><span class="p">]</span>
+        <span class="n">cpu_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cpu_usage</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PERCPU_USAGE</span><span class="p">])</span>
+        <span class="n">cpu_delta</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cpu_usage</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TOTAL_USAGE</span><span class="p">])</span> <span class="o">-</span>
+                     <span class="nb">float</span><span class="p">(</span><span class="n">precpu_usage</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TOTAL_USAGE</span><span class="p">]))</span>
+        <span class="n">system_delta</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">SYSTEM_CPU_USAGE</span><span class="p">])</span> <span class="o">-</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PRECPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">SYSTEM_CPU_USAGE</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">system_delta</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">cpu_delta</span> <span class="o">/</span> <span class="n">system_delta</span> <span class="o">*</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">cpu_count</span>
+        <span class="k">return</span> <span class="n">cpu_percent</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.calculate_cpu_percent2"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_cpu_percent2">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_cpu_percent2</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">previous_cpu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">previous_system</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">any</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the CPU utilization percentage when precpu is broken in later versions of Docker</span>
+
+<span class="sd">        :param stats_dict: the stats dict from the Docker API</span>
+<span class="sd">        :param previous_cpu: previous cpu percentage</span>
+<span class="sd">        :param previous_system: previous system percentage</span>
+<span class="sd">        :return: the CPU percentage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cpu_percent</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cpu_usage</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_USAGE</span><span class="p">]</span>
+        <span class="n">cpu_total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cpu_usage</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TOTAL_USAGE</span><span class="p">])</span>
+        <span class="n">cpu_delta</span> <span class="o">=</span> <span class="n">cpu_total</span> <span class="o">-</span> <span class="n">previous_cpu</span>
+        <span class="n">cpu_system</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">SYSTEM_CPU_USAGE</span><span class="p">])</span>
+        <span class="n">system_delta</span> <span class="o">=</span> <span class="n">cpu_system</span> <span class="o">-</span> <span class="n">previous_system</span>
+        <span class="n">online_cpus</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">ONLINE_CPUS</span> <span class="ow">in</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">]:</span>
+            <span class="n">online_cpus</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">ONLINE_CPUS</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_USAGE</span> <span class="ow">in</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PERCPU_USAGE</span> <span class="ow">in</span>
+                        <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_USAGE</span><span class="p">]):</span>
+                    <span class="n">cpu_usage</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_USAGE</span><span class="p">]</span>
+                    <span class="n">online_cpus</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cpu_usage</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PERCPU_USAGE</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">system_delta</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">cpu_percent</span> <span class="o">=</span> <span class="p">(</span><span class="n">cpu_delta</span> <span class="o">/</span> <span class="n">system_delta</span><span class="p">)</span> <span class="o">*</span> <span class="n">online_cpus</span> <span class="o">*</span> <span class="mf">100.0</span>
+        <span class="k">return</span> <span class="n">cpu_percent</span><span class="p">,</span> <span class="n">cpu_system</span><span class="p">,</span> <span class="n">cpu_total</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.calculate_blkio_mb"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_blkio_mb">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_blkio_mb</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param stats_dict: the stats dict from the Docker API</span>
+<span class="sd">        :return: (read_mb, wrote_mb)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bytes_stats</span> <span class="o">=</span> <span class="n">DockerStatsUtil</span><span class="o">.</span><span class="n">graceful_chain_get</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLKIO_STATS</span><span class="p">,</span>
+                                                         <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">IO_SERVICE_BYTES_RECURSIVE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bytes_stats</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">bytes_stats</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">OP</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">READ</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">+=</span> <span class="n">s</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">VALUE</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">s</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">OP</span><span class="p">]</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">WRITE</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">+=</span> <span class="n">s</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">VALUE</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">w</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.calculate_network_mb"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_network_mb">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_network_mb</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param stats_dict: the stats dict from the Docker API</span>
+<span class="sd">        :return: (received_mb, transceived_mb)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">networks</span> <span class="o">=</span> <span class="n">DockerStatsUtil</span><span class="o">.</span><span class="n">graceful_chain_get</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NETWORKS</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">networks</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">if_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">networks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">RX_BYTES</span><span class="p">]</span>
+            <span class="n">t</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TX_BYTES</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.graceful_chain_get"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.graceful_chain_get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">graceful_chain_get</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wrapper to handle errors</span>
+
+<span class="sd">        :param stats_dict: stats dict to handle</span>
+<span class="sd">        :param args: extra arguments</span>
+<span class="sd">        :param default: default return in case of errors</span>
+<span class="sd">        :return: default or parsed value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">stats_dict</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">default</span>
+        <span class="k">return</span> <span class="n">t</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.parse_stats"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.parse_stats">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_stats</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DockerStats</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a stats dict into a DockerStats object</span>
+
+<span class="sd">        :param stats_dict: the dict to parse</span>
+<span class="sd">        :param container: the container that the stats concerns</span>
+<span class="sd">        :return: the parsed DockerStats object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cpu_total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cpu_system</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">blk_read</span><span class="p">,</span> <span class="n">blk_write</span> <span class="o">=</span> <span class="n">DockerStatsUtil</span><span class="o">.</span><span class="n">calculate_blkio_mb</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">)</span>
+        <span class="n">net_r</span><span class="p">,</span> <span class="n">net_w</span> <span class="o">=</span> <span class="n">DockerStatsUtil</span><span class="o">.</span><span class="n">calculate_network_mb</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">)</span>
+        <span class="n">mem_current</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEMORY_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">USAGE</span><span class="p">]</span>
+        <span class="n">mem_current</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mem_current</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">mem_total</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEMORY_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">LIMIT</span><span class="p">]</span>
+        <span class="n">mem_total</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mem_total</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cpu_percent</span><span class="p">,</span> <span class="n">cpu_system</span><span class="p">,</span> <span class="n">cpu_total</span> <span class="o">=</span> <span class="n">DockerStatsUtil</span><span class="o">.</span><span class="n">calculate_cpu_percent2</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">,</span> <span class="n">cpu_total</span><span class="p">,</span>
+                                                                                        <span class="n">cpu_system</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">DockerStatsUtil</span><span class="o">.</span><span class="n">calculate_cpu_percent</span><span class="p">(</span><span class="n">stats_dict</span><span class="p">)</span>
+
+        <span class="n">parsed_stats_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PIDS</span><span class="p">:</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PIDS_STATS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CURRENT</span><span class="p">],</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span> <span class="n">stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">READ</span><span class="o">.</span><span class="n">lower</span><span class="p">()],</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_PERCENT</span><span class="p">:</span> <span class="n">cpu_percent</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_CURRENT</span><span class="p">:</span> <span class="n">mem_current</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_TOTAL</span><span class="p">:</span> <span class="n">mem_total</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_PERCENT</span><span class="p">:</span> <span class="p">(</span><span class="n">mem_current</span> <span class="o">/</span> <span class="n">mem_total</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLK_READ</span><span class="p">:</span> <span class="n">blk_read</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLK_WRITE</span><span class="p">:</span> <span class="n">blk_write</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NET_RX</span><span class="p">:</span> <span class="n">net_r</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NET_TX</span><span class="p">:</span> <span class="n">net_w</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CONTAINER_NAME</span><span class="p">:</span> <span class="n">container</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">DockerStats</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">parsed_stats_dict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.docker_stats_monitor_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">docker_stats_monitor_dto_to_dict</span><span class="p">(</span><span class="n">docker_stats_monitor_dto</span><span class="p">:</span> <span class="n">DockerStatsMonitorDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a docker_stats_monitor_dto to a dict</span>
+
+<span class="sd">        :param docker_stats_monitor_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_monitors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">num_monitors</span>
+        <span class="n">emulations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">emulations</span><span class="p">:</span>
+            <span class="n">emulations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">em</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">emulations</span>
+        <span class="n">executions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">exec</span> <span class="ow">in</span> <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">emulation_executions</span><span class="p">:</span>
+            <span class="n">executions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">exec</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_executions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">executions</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.docker_stats_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">docker_stats_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">DockerStatsMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a DockerStatsMonitorDTO to a DTO</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">docker_stats_monitor_dto</span> <span class="o">=</span> <span class="n">DockerStatsMonitorDTO</span><span class="p">()</span>
+        <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">num_monitors</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_monitors&quot;</span><span class="p">]</span>
+        <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">emulations</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulations&quot;</span><span class="p">]</span>
+        <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">emulation_executions</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_executions&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">docker_stats_monitor_dto</span></div>
+
+<div class="viewcode-block" id="DockerStatsUtil.docker_stats_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">docker_stats_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">DockerStatsMonitorDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty DockerStatsMonitorDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">docker_stats_monitor_dto</span> <span class="o">=</span> <span class="n">DockerStatsMonitorDTO</span><span class="p">()</span>
+        <span class="n">docker_stats_monitor_dto</span><span class="o">.</span><span class="n">num_monitors</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">docker_stats_monitor_dto</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

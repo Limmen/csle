@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_ryu.monitor package &mdash; csle-ryu 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="csle_ryu.dao package" href="csle_ryu.dao.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-ryu
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.constants.html">csle_ryu.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.controllers.html">csle_ryu.controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.dao.html">csle_ryu.dao package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">csle_ryu.monitor package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.monitor.flow_and_port_stats_monitor">csle_ryu.monitor.flow_and_port_stats_monitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.monitor">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-ryu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_ryu.monitor package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_ryu.monitor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-ryu-monitor-package">
+<h1>csle_ryu.monitor package<a class="headerlink" href="#csle-ryu-monitor-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_ryu.monitor.flow_and_port_stats_monitor">
+<span id="csle-ryu-monitor-flow-and-port-stats-monitor-module"></span><h2>csle_ryu.monitor.flow_and_port_stats_monitor module<a class="headerlink" href="#module-csle_ryu.monitor.flow_and_port_stats_monitor" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.</span></span><span class="sig-name descname"><span class="pre">FlowAndPortStatsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#FlowAndPortStatsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ryu.base.app_manager.RyuApp</span></code></p>
+<p>Contains general functionality to monitor of flow and port statistics</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor.OFP_VERSIONS">
+<span class="sig-name descname"><span class="pre">OFP_VERSIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[4]</span></em><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor.OFP_VERSIONS" title="Permalink to this definition"></a></dt>
+<dd><p>A list of supported OpenFlow versions for this RyuApp.
+The default is all versions supported by the framework.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OFP_VERSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="n">ofproto_v1_0</span><span class="o">.</span><span class="n">OFP_VERSION</span><span class="p">,</span>
+                <span class="n">ofproto_v1_2</span><span class="o">.</span><span class="n">OFP_VERSION</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>If multiple Ryu applications are loaded in the system,
+the intersection of their OFP_VERSIONS is used.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.</span></span><span class="sig-name descname"><span class="pre">NorthBoundRestAPIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#NorthBoundRestAPIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ryu.app.wsgi.ControllerBase</span></code></p>
+<p>Controller class for the Northbound REST API that accepts HTTP requests.</p>
+<p>Example requests:</p>
+<p>curl -X GET <a class="reference external" href="http://15.12.252.3:8080/cslenorthboundapi/producer/status">http://15.12.252.3:8080/cslenorthboundapi/producer/status</a>
+curl -X PUT -d ‘{“bootstrap.servers”: “15.12.253.253”, “time_step_len_seconds”: 30}’
+<a class="reference external" href="http://15.12.252.3:8080/cslenorthboundapi/producer/start">http://15.12.252.3:8080/cslenorthboundapi/producer/start</a>
+curl -X POST <a class="reference external" href="http://15.12.252.3:8080/cslenorthboundapi/producer/stop">http://15.12.252.3:8080/cslenorthboundapi/producer/stop</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.producer_status">
+<span class="sig-name descname"><span class="pre">producer_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#NorthBoundRestAPIController.producer_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.producer_status" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the status of the Kafka producer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>req</strong> – the REST API request</p></li>
+<li><p><strong>kwargs</strong> – the WSGI arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the REST API response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.start_producer">
+<span class="sig-name descname"><span class="pre">start_producer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#NorthBoundRestAPIController.start_producer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.start_producer" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Kafka producer that sends flow and port statistics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>req</strong> – the REST API request</p></li>
+<li><p><strong>kwargs</strong> – WSGI arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the REST API response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.stop_producer">
+<span class="sig-name descname"><span class="pre">stop_producer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#NorthBoundRestAPIController.stop_producer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.stop_producer" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Kafka producer that sends flow and port statistics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>req</strong> – the REST API request</p></li>
+<li><p><strong>kwargs</strong> – WSGI arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The REST response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_ryu.monitor">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.monitor" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_ryu.dao.html" class="btn btn-neutral float-left" title="csle_ryu.dao package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

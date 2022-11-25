@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_attacker.emulation.util.nikto_util &mdash; csle-attacker 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-attacker
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_attacker.emulation.html">csle_attacker.emulation package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-attacker</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_attacker.emulation.util.nikto_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_attacker.emulation.util.nikto_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.env_dynamics_util</span> <span class="kn">import</span> <span class="n">EnvDynamicsUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerMachineObservationState</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nikto_scan_result</span> \
+    <span class="kn">import</span> <span class="nn">NiktoScanResult</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nikto_vuln</span> <span class="kn">import</span> <span class="n">NiktoVuln</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.emulation_util</span> <span class="kn">import</span> <span class="n">EmulationUtil</span>
+<span class="kn">from</span> <span class="nn">csle_attacker.emulation.util.nmap_util</span> <span class="kn">import</span> <span class="n">NmapUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+
+<div class="viewcode-block" id="NiktoUtil"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil">[docs]</a><span class="k">class</span> <span class="nc">NiktoUtil</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class containing utility functions for the nikto-related functionality to the emulation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NiktoUtil.parse_nikto_scan"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_nikto_scan</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses an XML file containing the result of an nikt scan</span>
+
+<span class="sd">        :param file_name: name of the file to parse</span>
+<span class="sd">        :param emulation_env_config: environment config</span>
+<span class="sd">        :return: the parsed xml file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sftp_client</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_hacker_connection</span><span class="p">()</span><span class="o">.</span><span class="n">open_sftp</span><span class="p">()</span>
+        <span class="n">remote_file</span> <span class="o">=</span> <span class="n">sftp_client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">RESULTS_DIR</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">xml_tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">remote_file</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">xml_data</span> <span class="o">=</span> <span class="n">xml_tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xml_data</span></div>
+
+<div class="viewcode-block" id="NiktoUtil.nikto_scan_action_helper"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.nikto_scan_action_helper">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">nikto_scan_action_helper</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function for executing a NIKTO web scan action on the emulation. Implements caching.</span>
+
+<span class="sd">        :param s: the current env state</span>
+<span class="sd">        :param a: the Nikto action to execute</span>
+<span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :return: s&#39;, reward, done</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmds</span><span class="p">,</span> <span class="n">file_names</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">nikto_cmds</span><span class="p">()</span>
+        <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span>
+            <span class="n">cmds</span><span class="o">=</span><span class="n">cmds</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_hacker_connection</span><span class="p">())</span>
+        <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">log_measured_action_time</span><span class="p">(</span><span class="n">total_time</span><span class="o">=</span><span class="n">total_time</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
+                                               <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+
+        <span class="c1"># Read result</span>
+        <span class="n">scan_result</span> <span class="o">=</span> <span class="n">NiktoScanResult</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vulnerabilities</span><span class="o">=</span><span class="p">[],</span> <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">sitename</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">NUM_RETRIES</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">xml_data</span> <span class="o">=</span> <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">parse_nikto_scan</span><span class="p">(</span>
+                        <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
+                    <span class="n">scan_result</span> <span class="o">=</span> <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">parse_nikto_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">merge_nikto_scan_result_with_state</span><span class="p">(</span>
+                        <span class="n">scan_result</span><span class="o">=</span><span class="n">scan_result</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;There was an error parsing the Nikto scan output: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="k">return</span> <span class="n">s_prime</span></div>
+
+<div class="viewcode-block" id="NiktoUtil.merge_nikto_scan_result_with_state"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.merge_nikto_scan_result_with_state">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_nikto_scan_result_with_state</span><span class="p">(</span><span class="n">scan_result</span><span class="p">:</span> <span class="n">NiktoScanResult</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span>
+                                           <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges a Nikto scan result with an existing observation state</span>
+
+<span class="sd">        :param scan_result: the scan result</span>
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param a: the action just executed</span>
+<span class="sd">        :return: s&#39;, reward, done</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m_obs</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">scan_result</span><span class="o">.</span><span class="n">ip</span><span class="p">:</span>
+                <span class="n">m_obs</span> <span class="o">=</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">vuln</span> <span class="ow">in</span> <span class="n">scan_result</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">:</span>
+            <span class="n">vuln_obs</span> <span class="o">=</span> <span class="n">vuln</span><span class="o">.</span><span class="n">to_obs</span><span class="p">()</span>
+            <span class="n">m_obs</span><span class="o">.</span><span class="n">osvdb_vulns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vuln_obs</span><span class="p">)</span>
+
+        <span class="n">attacker_machine_observations</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">merge_new_obs_with_old</span><span class="p">(</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">,</span> <span class="p">[</span><span class="n">m_obs</span><span class="p">],</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="n">attacker_machine_observations</span>
+
+        <span class="k">return</span> <span class="n">s_prime</span></div>
+
+<div class="viewcode-block" id="NiktoUtil.parse_nikto_scan_xml"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan_xml">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_nikto_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoScanResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses an XML Tree with Nikto Scan Result into a Nikto Scan DTO</span>
+
+<span class="sd">        :param xml_data: the xml tree of Nikto Scan Result to parse</span>
+<span class="sd">        :return: parsed nikto scan result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">SCANDETAILS</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">_parse_nikto_scandetails</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">ITEM</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">_parse_nikto_scandetails</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">NIKTOSCAN</span><span class="p">:</span>
+                <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">parse_nikto_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nikto_scandetails</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoScanResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a host-element in the XML tree</span>
+
+<span class="sd">        :param xml_data: the host element</span>
+<span class="sd">        :return: parsed nikto scan result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">targetport</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">TARGETPORT</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">targetport</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">TARGETPORT</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">TARGETIP</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">target_ip</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">TARGETIP</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">ITEM</span><span class="p">:</span>
+                <span class="n">vuln</span> <span class="o">=</span> <span class="n">NiktoUtil</span><span class="o">.</span><span class="n">_parse_nikto_item</span><span class="p">(</span><span class="n">NmapUtil</span><span class="o">.</span><span class="n">_parse_nmap_status_xml</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+                <span class="n">vulnerabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vuln</span><span class="p">)</span>
+        <span class="n">nikto_scan_result</span> <span class="o">=</span> <span class="n">NiktoScanResult</span><span class="p">(</span><span class="n">vulnerabilities</span><span class="o">=</span><span class="n">vulnerabilities</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">targetport</span><span class="p">,</span>
+                                            <span class="n">ip</span><span class="o">=</span><span class="n">target_ip</span><span class="p">,</span> <span class="n">sitename</span><span class="o">=</span><span class="n">target_ip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nikto_scan_result</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nikto_item</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoVuln</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a item in the XML tree of a Nikto scan</span>
+
+<span class="sd">        :param xml_data: the item element</span>
+<span class="sd">        :return: parsed nikto vuln</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">osvdb_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">iplink</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">namelink</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">METHOD</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">METHOD</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">OSVDB_ID</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">OSVDB_ID</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">ITEM_ID</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">ITEM_ID</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">iter</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">DESCR</span><span class="p">:</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">URI</span><span class="p">:</span>
+                <span class="n">uri</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">NAMELINK</span><span class="p">:</span>
+                <span class="n">namelink</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+            <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">IPLINK</span><span class="p">:</span>
+                <span class="n">iplink</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="n">nikto_vuln</span> <span class="o">=</span> <span class="n">NiktoVuln</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">osvdb_id</span><span class="o">=</span><span class="n">osvdb_id</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">iplink</span><span class="o">=</span><span class="n">iplink</span><span class="p">,</span> <span class="n">namelink</span><span class="o">=</span><span class="n">namelink</span><span class="p">,</span>
+                               <span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">nikto_vuln</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

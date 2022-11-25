@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions &mdash; csle-common 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.agents.html">csle_common.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_type</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionType</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionId</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionOutcome</span>
+
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerNMAPActions</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class containing Attacker NMAP actions in the emulation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">TCP_SYN_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a TCP SYN scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_SYN_STEALTH_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sS -p- &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TCP SYN (Stealth) Scan&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A stealthy and fast TCP SYN scan to detect open TCP ports on the subnet&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.PING_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.PING_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">PING_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a Ping scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ip of the machine or subnet to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">PING_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">PING_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sP &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ping Scan&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A host discovery scan, it is quick because it only checks of hosts &quot;</span>
+                                             <span class="s2">&quot;are up with Ping, without scanning the ports.&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.UDP_PORT_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.UDP_PORT_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">UDP_PORT_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a UDP port scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">UDP_PORT_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">UDP_PORT_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sU -p- &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;UDP Port Scan&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span>
+                                       <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">TCP_CON_NON_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a TCP CON (non-stealthy) scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_CON_NON_STEALTH_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sT -p- &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TCP Connection (Non-Stealth) Scan&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet&quot;</span><span class="p">,</span>
+            <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+            <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_FIN_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_FIN_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">TCP_FIN_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a TCP FIN scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_FIN_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_FIN_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sF -p- &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FIN Scan&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A special type of TCP port scan using FIN, can avoid IDS and firewalls that block SYN scans&quot;</span><span class="p">,</span>
+            <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+            <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_NULL_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_NULL_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">TCP_NULL_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a TCP Null scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_NULL_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_NULL_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sN -p- &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Null Scan&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A special type of TCP port scan using Null, can avoid IDS and firewalls that block SYN scans&quot;</span><span class="p">,</span>
+            <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span> <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">TCP_XMAS_TREE_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a TCP XMAS TREE scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TCP_XMAS_TREE_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sX -p- &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Xmas Tree Scan&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A special type of TCP port scan using XMas Tree, &quot;</span>
+                                             <span class="s2">&quot;can avoid IDS and firewalls that block SYN scans&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.OS_DETECTION_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.OS_DETECTION_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">OS_DETECTION_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a OS detection scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">OS_DETECTION_SCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -O --osscan-guess --max-os-tries 1 &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;OS detection scan&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;OS detection/guess scan&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.VULSCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.VULSCAN">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">VULSCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a vulnerability scan using the VULSCAN script</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">VULSCAN_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">VULSCAN_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sV --script=vulscan/vulscan.nse &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;vulscan.nse vulnerability scanner&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Uses a vulcan.nse script to turn NMAP into a vulnerability scanner&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.NMAP_VULNERS"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.NMAP_VULNERS">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">NMAP_VULNERS</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a vulnerability scan using the Vulners script</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ip of the machine or subnet to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NMAP_VULNERS_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">NMAP_VULNERS_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap -sV --script vulners.nse &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmap_vulners vulnerability scanner&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Uses vulners.nse script to turn NMAP into a vulnerability scanner&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">TELNET_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against telnet</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">telnet_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">TELNET_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">TELNET_SAME_USER_PASS_DICTIONARY_ALL</span>
+            <span class="n">telnet_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">TELNET_BRUTE_SUBNET</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">telnet_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Telnet dictionary attack for username=pw&quot;</span><span class="p">,</span>
+            <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                  <span class="s2">&quot;for Telnet where username=password&quot;</span><span class="p">,</span>
+            <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+            <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">TELNET_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+            <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">SSH_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against ssh</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ip of the machine or subnet to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ssh_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SSH_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SSH_SAME_USER_PASS_DICTIONARY_ALL</span>
+            <span class="n">ssh_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SSH_BRUTE_SUBNET</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">ssh_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SSH dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for SSH where username=password&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">SSH_DICT_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">FTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against ftp</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ip of the machine or subnet to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ftp_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">FTP_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FTP_SAME_USER_PASS_DICTIONARY_ALL</span>
+            <span class="n">ftp_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">FTP_BRUTE_SUBNET</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">ftp_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FTP dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for FTP where username=password&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">FTP_DICT_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">CASSANDRA_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against cassandra</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cassandra_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">CASSANDRA_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL</span>
+            <span class="n">cassandra_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">CASSANDRA_BRUTE_SUBNET</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">cassandra_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cassandra dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for Cassandra where username=password&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">CASSANDRA_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">IRC_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against irc</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">irc_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">IRC_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">IRC_SAME_USER_PASS_DICTIONARY_ALL</span>
+            <span class="n">irc_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">IRC_BRUTE_SUBNET</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">irc_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;IRC dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for IRC where username=password&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">IRC_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">MONGO_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against mongo</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mongo_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">MONGO_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MONGO_SAME_USER_PASS_DICTIONARY_ALL</span>
+            <span class="n">mongo_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">MONGO_BRUTE_SUBNET</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">mongo_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MongoDB dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for MongoDB where username=password&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">MONGO_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">MYSQL_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against mysql</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ip of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mysql_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">MYSQL_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">mysql_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">MYSQL_BRUTE_SUBNET</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">MYSQL_SAME_USER_PASS_DICTIONARY_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">mysql_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MySQL dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for MySQL where username=password&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">MYSQL_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">SMTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against smtp</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">smtp_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SMTP_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">smtp_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SMTP_BRUTE_SUBNET</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">SMTP_SAME_USER_PASS_DICTIONARY_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">smtp_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SMTP dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for SMTP where username=password&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">SMTP_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">POSTGRES_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a dictionary attack trying combinations with same user+pw against postgres</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">postgres_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">POSTGRES_BRUTE_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">postgres_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">POSTGRES_BRUTE_SUBNET</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">POSTGRES_SAME_USER_PASS_DICTIONARY_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">postgres_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Postgres dictionary attack for username=pw&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;A dictionary attack that tries common passwords and usernames &quot;</span>
+                                             <span class="s2">&quot;for Postgres where username=password&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">SHELL_ACCESS</span><span class="p">,</span>
+                                       <span class="n">vulnerability</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">POSTGRES_DICTS_SAME_USER_PASS</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.FIREWALK"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.FIREWALK">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">FIREWALK</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a firewalk scan to try to identify and bypass firewalls</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">firewalk_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">FIREWALK_HOST</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIREWALK_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">firewalk_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">FIREWALK_HOST</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FIREWALK_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">firewalk_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Firewalk scan&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Tries to discover firewall rules using an IP TTL expiration technique &quot;</span>
+                                             <span class="s2">&quot;known as firewalking.&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.HTTP_ENUM"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.HTTP_ENUM">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">HTTP_ENUM</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a HTTP enumeration scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">http_enum_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">HTTP_ENUM</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_ENUM_HOST</span>
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">http_enum_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">HTTP_ENUM</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_ENUM_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">http_enum_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;HTTP Enum&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Enumerates directories used by popular web applications and servers.&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.HTTP_GREP"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.HTTP_GREP">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">HTTP_GREP</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a HTTP grep scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">http_grep_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">HTTP_GREP</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_GREP_HOST</span>
+
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">http_grep_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">HTTP_GREP</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">HTTP_GREP_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">http_grep_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;HTTP Grep&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Spiders a website and attempts to match all pages and urls &quot;</span>
+                                             <span class="s2">&quot;to find ips and emails.&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerNMAPActions.FINGER"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.FINGER">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">FINGER</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a fingerprint scan</span>
+
+<span class="sd">        :param index: index of the machine to apply the action to</span>
+<span class="sd">        :param ips: ips of the machines or subnets to apply the action to</span>
+<span class="sd">        :return: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">finger_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">FINGER</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FINGER_HOST</span>
+
+        <span class="k">if</span> <span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">finger_args</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">FINGER</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">FINGER_ALL</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sudo nmap &quot;</span> <span class="o">+</span> <span class="n">finger_args</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SPEED_ARGS</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Finger&quot;</span><span class="p">,</span>
+                                       <span class="n">cmds</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">EmulationAttackerActionType</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                                       <span class="n">descr</span><span class="o">=</span><span class="s2">&quot;Attempts to retrieve a list of usernames using the finger service.&quot;</span><span class="p">,</span>
+                                       <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">EmulationAttackerActionOutcome</span><span class="o">.</span><span class="n">INFORMATION_GATHERING</span><span class="p">,</span>
+                                       <span class="n">backdoor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

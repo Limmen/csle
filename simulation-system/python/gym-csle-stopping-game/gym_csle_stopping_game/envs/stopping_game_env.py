@@ -437,12 +437,8 @@ class StoppingGameEnv(BaseEnv):
 
     def render(self, mode: str = 'human'):
         """
-        Renders the environment
-        Supported rendering modes:
-          -human: render to the current display or terminal and return nothing. Usually for human consumption.
-          -rgb_array: Return an numpy.ndarray with shape (x, y, 3),
-                      representing RGB values for an x-by-y pixel image, suitable
-                      for turning into a video.
+        Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array
+
         :param mode: the rendering mode
         :return: True (if human mode) otherwise an rgb array
         """
