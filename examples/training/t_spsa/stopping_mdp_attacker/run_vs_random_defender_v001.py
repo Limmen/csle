@@ -40,7 +40,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.T_SPSA.THETA1: HParam(value=[-4]*(3*2), name=agents_constants.T_SPSA.THETA1,
+            agents_constants.T_SPSA.THETA1: HParam(value=[-4] * (3 * 2), name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),

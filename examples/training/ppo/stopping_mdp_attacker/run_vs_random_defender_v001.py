@@ -25,9 +25,9 @@ if __name__ == '__main__':
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=4096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
                 descr="number of steps in the environment for doing rollouts between policy updates"),
-            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(value=1,
-                                                              name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
-                                                              descr="the nunmber of parallel environments for training"),
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
+                value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.BATCH_SIZE: HParam(
                 value=64, name=agents_constants.COMMON.BATCH_SIZE, descr="batch size for updates"),
             agents_constants.COMMON.LEARNING_RATE: HParam(
@@ -59,11 +59,11 @@ if __name__ == '__main__':
                 value=int(1000000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
-                                 descr="training iterations between evaluations"),
+                                                       descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
-                                 descr="the batch size for evaluation"),
+                                                            descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                            descr="how frequently to save the model"),
+                                                       descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
 
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                     experiment_config=experiment_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

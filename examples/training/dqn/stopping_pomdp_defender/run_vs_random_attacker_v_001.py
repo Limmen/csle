@@ -34,13 +34,13 @@ if __name__ == '__main__':
             agents_constants.DQN.MAX_GRAD_NORM: HParam(
                 value=0.5, name=agents_constants.DQN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(500000),  name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(500000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                 value=100, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
                 descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1000, name=agents_constants.COMMON.EVAL_EVERY,
-                                 descr="training iterations between evaluations"),
+                                                       descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=20, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=100000, name=agents_constants.COMMON.SAVE_EVERY,
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     )
     # simulation_env_config.simulation_env_input_config
     agent = DQNAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                     experiment_config=experiment_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

@@ -7,7 +7,6 @@ from csle_system_identification.gp.gp_regression_algorithm \
     import GPRegressionAlgorithm
 import csle_system_identification.constants.constants as system_identification_constants
 
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     emulation_statistic = MetastoreFacade.get_emulation_statistic(id=10)
@@ -35,8 +34,8 @@ if __name__ == '__main__':
                 descr="training iterations to learn hparams of the GP")
         }
     )
-    algorithm = GPRegressionAlgorithm(emulation_env_config=emulation_env_config,
-                                   emulation_statistics=emulation_statistic,
-                                   system_identification_config=system_identifcation_config)
+    algorithm = GPRegressionAlgorithm(
+        emulation_env_config=emulation_env_config, emulation_statistics=emulation_statistic,
+        system_identification_config=system_identifcation_config)
     system_model = algorithm.fit()
     MetastoreFacade.save_gp_system_model(gp_system_model=system_model)

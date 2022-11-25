@@ -7,7 +7,6 @@ from csle_system_identification.expectation_maximization.expectation_maximizatio
     import ExpectationMaximizationAlgorithm
 import csle_system_identification.constants.constants as system_identification_constants
 
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     emulation_statistic = MetastoreFacade.get_emulation_statistic(id=10)
@@ -22,9 +21,8 @@ if __name__ == '__main__':
                 name=system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
                 descr="the conditional distributions to estimate"),
             system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL: HParam(
-                value=[2,3],
-                name=system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,
-                descr="the number of mixtures per conditional distributions to estimate with EM"),
+                value=[2, 3], descr="the number of mixtures per conditional distributions to estimate with EM",
+                name=system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL),
             system_identification_constants.SYSTEM_IDENTIFICATION.METRICS: HParam(
                 value=["alerts_weighted_by_priority"],
                 name=system_identification_constants.SYSTEM_IDENTIFICATION.METRICS,

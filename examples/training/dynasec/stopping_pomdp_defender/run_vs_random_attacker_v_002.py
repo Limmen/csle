@@ -126,7 +126,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor gamma"),
-            agents_constants.T_SPSA.THETA1: HParam(value=[2,0,-2], name=agents_constants.T_SPSA.THETA1,
+            agents_constants.T_SPSA.THETA1: HParam(value=[2, 0, -2], name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
             agents_constants.T_SPSA.N: HParam(value=30, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
@@ -197,7 +197,7 @@ if __name__ == '__main__':
                 name=system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
                 descr="the conditional distributions to estimate"),
             system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL: HParam(
-                value=[1,2],
+                value=[1, 2],
                 name=system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,
                 descr="the number of mixtures per conditional distributions to estimate with EM"),
             system_identification_constants.SYSTEM_IDENTIFICATION.METRICS: HParam(
@@ -213,7 +213,7 @@ if __name__ == '__main__':
         lookup_table=[
             [0.6, 0.4],
             [1, 0],
-            [1,0]
+            [1, 0]
         ],
         agent_type=AgentType.RANDOM, avg_R=-1)
     attacker_sequence = expert_attacker_sequence(wait_steps=0,
@@ -224,7 +224,7 @@ if __name__ == '__main__':
         R_INT=-10, R_COST=-30, R_SLA=0, R_ST=20, L=3))
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 10000)))
     agent = DynaSecAgent(emulation_executions=emulation_executions, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config, attacker_sequence=attacker_sequence,
+                         experiment_config=experiment_config, attacker_sequence=attacker_sequence,
                          defender_sequence=defender_sequence, system_identification_config=system_identifcation_config)
     experiment_execution = agent.train()
     # MetastoreFacade.save_experiment_execution(experiment_execution)

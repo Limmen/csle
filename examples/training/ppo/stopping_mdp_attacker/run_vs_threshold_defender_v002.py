@@ -60,11 +60,11 @@ if __name__ == '__main__':
                 value=int(1000000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=5, name=agents_constants.COMMON.EVAL_EVERY,
-                                 descr="training iterations between evaluations"),
+                                                       descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
-                                 descr="the batch size for evaluation"),
+                                                            descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                            descr="how frequently to save the model"),
+                                                       descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
         simulation_name=simulation_env_config.name,
         L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
-        states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
+        states=simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
         experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
         theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
                MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
 
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                     experiment_config=experiment_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

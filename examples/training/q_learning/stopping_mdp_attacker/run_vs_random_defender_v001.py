@@ -1,4 +1,3 @@
-import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -27,8 +26,8 @@ if __name__ == '__main__':
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1,
-                                                            name=agents_constants.COMMON.EVAL_EVERY,
-                                                            descr="how frequently to run evaluation"),
+                                                       name=agents_constants.COMMON.EVAL_EVERY,
+                                                       descr="how frequently to run evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -57,7 +56,7 @@ if __name__ == '__main__':
     )
 
     agent = QLearningAgent(simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config, save_to_metastore=True)
+                           experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

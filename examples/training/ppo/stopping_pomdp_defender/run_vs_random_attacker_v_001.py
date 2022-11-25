@@ -34,8 +34,8 @@ if __name__ == '__main__':
                                                    name=agents_constants.COMMON.DEVICE,
                                                    descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(value=1,
-                                                   name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
-                                                   descr="the nunmber of parallel environments for training"),
+                                                              name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                                                              descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
             agents_constants.PPO.GAE_LAMBDA: HParam(
@@ -56,10 +56,10 @@ if __name__ == '__main__':
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(150000),  name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(150000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
-                                 descr="training iterations between evaluations"),
+                                                       descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
@@ -85,12 +85,12 @@ if __name__ == '__main__':
         lookup_table=[
             [0.8, 0.2],
             [1, 0],
-            [1,0]
+            [1, 0]
         ],
         agent_type=AgentType.RANDOM, avg_R=-1)
     # simulation_env_config.simulation_env_input_config
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                     experiment_config=experiment_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

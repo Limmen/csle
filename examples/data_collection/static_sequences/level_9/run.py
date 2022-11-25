@@ -87,7 +87,7 @@ def run() -> None:
     # em_statistic = MetastoreFacade.get_emulation_statistic(id=3)
     em_statistic = None
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
-                                  defender_sequence=defender_sequence, repeat_times= 5000,
+                                  defender_sequence=defender_sequence, repeat_times=5000,
                                   sleep_time=emulation_env_config.kafka_config.time_step_len_seconds,
                                   descr="Intrusion data collected against novice attacker",
                                   save_emulation_traces_every=1,

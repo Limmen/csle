@@ -14,16 +14,16 @@ def game_matrix() -> np.ndarray:
     :return: the game matrix for a 2-player matrix game
     """
     return np.array([
-        [3,3,1,4],
-        [2,5,6,3],
-        [1,0,7,0],
+        [3, 3, 1, 4],
+        [2, 5, 6, 3],
+        [1, 0, 7, 0],
     ])
 
 
 if __name__ == '__main__':
     A = game_matrix()
-    p1_prior = [1,1,1]
-    p2_prior = [1,1,1,1]
+    p1_prior = [1, 1, 1]
+    p2_prior = [1, 1, 1, 1]
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}fp_test",
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         player_type=PlayerType.SELF_PLAY, player_idx=1
     )
     agent = FictitiousPlayAgent(simulation_env_config=simulation_env_config,
-                                  experiment_config=experiment_config, save_to_metastore=True)
+                                experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

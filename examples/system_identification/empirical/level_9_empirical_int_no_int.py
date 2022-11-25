@@ -7,7 +7,6 @@ from csle_system_identification.empirical.empirical_algorithm \
     import EmpiricalAlgorithm
 import csle_system_identification.constants.constants as system_identification_constants
 
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     emulation_statistic = MetastoreFacade.get_emulation_statistic(id=10)

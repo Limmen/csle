@@ -8,22 +8,22 @@ from csle_agents.agents.reinforce.reinforce_agent import ReinforceAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}reinforce_test", title="REINFORCE test",
-        random_seeds=[399, 98912,999,555],
+        random_seeds=[399, 98912, 999, 555],
         agent_type=AgentType.REINFORCE,
         log_every=1,
         hparams={
             agents_constants.REINFORCE.N: HParam(value=50, name=agents_constants.REINFORCE.N,
-                                              descr="the number of training iterations"),
+                                                 descr="the number of training iterations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.RANDOM_SEARCH.THETA1: HParam(value=[-3,-3,-3], name=agents_constants.RANDOM_SEARCH.THETA1,
-                                                   descr="initial thresholds"),
+            agents_constants.RANDOM_SEARCH.THETA1: HParam(value=[-3, -3, -3],
+                                                          name=agents_constants.RANDOM_SEARCH.THETA1,
+                                                          descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -50,8 +50,8 @@ if __name__ == '__main__':
                                                    name=agents_constants.COMMON.DEVICE,
                                                    descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.OPTIMIZER: HParam(value=agents_constants.COMMON.ADAM,
-                                                   name=agents_constants.COMMON.OPTIMIZER,
-                                                   descr="the optimizer to use for training"),
+                                                      name=agents_constants.COMMON.OPTIMIZER,
+                                                      descr="the optimizer to use for training"),
             agents_constants.COMMON.LEARNING_RATE_EXP_DECAY: HParam(
                 value=False, name=agents_constants.COMMON.LEARNING_RATE_EXP_DECAY,
                 descr="whether or not to use learning rate decay"),
@@ -71,7 +71,7 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = ReinforceAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                           experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
     experiment_execution = agent.train()

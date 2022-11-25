@@ -8,13 +8,12 @@ from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
-        random_seeds=[399, 98912,999,555],
+        random_seeds=[399, 98912, 999, 555],
         agent_type=AgentType.T_SPSA,
         log_every=1,
         hparams={

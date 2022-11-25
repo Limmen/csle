@@ -14,9 +14,9 @@ def game_matrix() -> np.ndarray:
     :return: the game matrix for a 2-player matrix game
     """
     return np.array([
-        [3,3,1,4],
-        [2,5,6,3],
-        [1,0,7,0],
+        [3, 3, 1, 4],
+        [2, 5, 6, 3],
+        [1, 0, 7, 0],
     ])
 
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
         player_type=PlayerType.SELF_PLAY, player_idx=1
     )
     agent = LinearProgrammingNormalFormGameAgent(simulation_env_config=simulation_env_config,
-                                  experiment_config=experiment_config, save_to_metastore=True)
+                                                 experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

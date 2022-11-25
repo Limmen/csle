@@ -12,10 +12,11 @@ def test_env():
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
     config = simulation_env_config.simulation_env_input_config
     env = gym.make(simulation_env_config.gym_env_name, config=config)
-    tspsa_policy = MultiThresholdStoppingPolicy(theta = [0.9, 0.7, 0.5], simulation_name=simulation_env_config.name,
+    tspsa_policy = MultiThresholdStoppingPolicy(theta=[0.9, 0.7, 0.5], simulation_name=simulation_env_config.name,
                                                 states=simulation_env_config.state_space_config.states, L=3,
                                                 player_type=PlayerType.DEFENDER,
-                                                actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+                                                actions=simulation_env_config.joint_action_space_config.action_spaces[
+                                                    0].actions,
                                                 experiment_config=None, avg_R=-1, agent_type=AgentType.NONE)
 
     StoppingGamePomdpDefenderEnv.emulation_evaluation(

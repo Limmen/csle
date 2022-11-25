@@ -9,11 +9,12 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent import HSVIOSPOSGAgent
 import csle_agents.constants.constants as agents_constants
 
+
 def states() -> Tuple[np.ndarray, dict]:
     """
     :return: the set of states and a lookup dict
     """
-    return np.array([0,1]), {0: "NO_INTRUSION", 1: "INTRUSION", 2:"TERMINAL"}
+    return np.array([0, 1]), {0: "NO_INTRUSION", 1: "INTRUSION", 2: "TERMINAL"}
 
 
 def player_1_actions() -> Tuple[np.ndarray, dict]:
@@ -73,10 +74,10 @@ def reward_tensor() -> np.ndarray:
     """
     :return: return a |A1|x|A2|x|S| tensor
     """
-    R_ST=20.0
+    R_ST = 20.0
     R_SLA = 5.0
-    R_COST=-5.0
-    R_INT=-10.0
+    R_COST = -5.0
+    R_INT = -10.0
     R = np.array(
         [
             [
@@ -96,12 +97,12 @@ def transition_tensor() -> np.ndarray:
     """
     :return: a |A1|x|A2||S|^2 tensor
     """
-    p=0.01
+    p = 0.01
     return np.array(
         [
             [
                 [
-                    [1-p, p],
+                    [1 - p, p],
                     [0, 1]
                 ],
                 [
@@ -127,7 +128,7 @@ def initial_belief() -> np.ndarray:
     """
     :return: the initial belief point
     """
-    return np.array([1,0])
+    return np.array([1, 0])
 
 
 if __name__ == '__main__':
@@ -207,7 +208,7 @@ if __name__ == '__main__':
         player_type=PlayerType.SELF_PLAY, player_idx=1
     )
     agent = HSVIOSPOSGAgent(simulation_env_config=simulation_env_config,
-                                  experiment_config=experiment_config, save_to_metastore=True)
+                            experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

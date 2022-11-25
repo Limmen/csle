@@ -22,8 +22,6 @@ from csle_common.dao.system_identification.system_model_type import SystemModelT
 from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
 import csle_system_identification.constants.constants as system_identification_constants
 
-
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
@@ -73,7 +71,7 @@ if __name__ == '__main__':
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(150000),  name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(150000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
@@ -123,14 +121,14 @@ if __name__ == '__main__':
         lookup_table=[
             [0.8, 0.2],
             [1, 0],
-            [1,0]
+            [1, 0]
         ],
         agent_type=AgentType.RANDOM, avg_R=-1)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-10, R_COST=-10, R_SLA=0, R_ST=20, L=3))
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 6000)))
     agent = DynaSecTestAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                             experiment_config=experiment_config)
     experiment_execution = agent.train()
     # MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():

@@ -1,4 +1,3 @@
-import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -7,7 +6,6 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.shapley_iteration.shapley_iteration_agent import ShapleyIterationAgent
 import csle_agents.constants.constants as agents_constants
-from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")

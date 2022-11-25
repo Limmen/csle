@@ -5,7 +5,6 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 import csle_agents.constants.constants as agents_constants
 
@@ -41,7 +40,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.T_SPSA.THETA1: HParam(value=[-1]*(3*2), name=agents_constants.T_SPSA.THETA1,
+            agents_constants.T_SPSA.THETA1: HParam(value=[-1] * (3 * 2), name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -64,7 +63,7 @@ if __name__ == '__main__':
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
         simulation_name=simulation_env_config.name,
         L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
-        states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
+        states=simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
         experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
         theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
                MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),

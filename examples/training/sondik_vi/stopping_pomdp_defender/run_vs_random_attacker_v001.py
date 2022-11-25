@@ -17,9 +17,10 @@ def reduce_T(T, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob
         for j in range(T.shape[2]):
             for k in range(T.shape[3]):
                 if j == 0:
-                    reduced_T[i][j][k] = T[i][0][j][k]*(1-intrusion_start_prob) + T[i][1][j][k]*intrusion_start_prob
+                    reduced_T[i][j][k] = T[i][0][j][k] * (1 - intrusion_start_prob) + T[i][1][j][
+                        k] * intrusion_start_prob
                 else:
-                    reduced_T[i][j][k] = T[i][0][j][k]*(1-intrusion_stop_prob) + T[i][1][j][k]*intrusion_stop_prob
+                    reduced_T[i][j][k] = T[i][0][j][k] * (1 - intrusion_stop_prob) + T[i][1][j][k] * intrusion_stop_prob
     return reduced_T
 
 
@@ -28,18 +29,21 @@ def reduce_R(R, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob
     for i in range(R.shape[0]):
         for j in range(R.shape[2]):
             if j == 0:
-                reduced_R[i][j] = R[i][0][j]*(1-intrusion_start_prob) + R[i][1][j]*intrusion_start_prob
+                reduced_R[i][j] = R[i][0][j] * (1 - intrusion_start_prob) + R[i][1][j] * intrusion_start_prob
             else:
-                reduced_R[i][j] = R[i][0][j]*(1-intrusion_stop_prob) + R[i][1][j]*intrusion_stop_prob
+                reduced_R[i][j] = R[i][0][j] * (1 - intrusion_stop_prob) + R[i][1][j] * intrusion_stop_prob
     return reduced_R
+
 
 def reduce_Z(Z, strategy):
     reduced_Z = np.zeros((Z.shape[0], Z.shape[2], Z.shape[3]))
     for i in range(Z.shape[0]):
         for j in range(Z.shape[2]):
             for k in range(Z.shape[3]):
-                reduced_Z[i][j][k] = Z[i][0][j][k]*strategy.probability(i, 0) + Z[i][1][j][k]*strategy.probability(i, 1)
+                reduced_Z[i][j][k] = Z[i][0][j][k] * strategy.probability(i, 0) + Z[i][1][j][k] * strategy.probability(
+                    i, 1)
     return reduced_Z
+
 
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
@@ -77,8 +81,7 @@ if __name__ == '__main__':
     state_space = simulation_env_config.state_space_config.states_ids()
     action_space = simulation_env_config.joint_action_space_config.action_spaces[0].actions_ids()
     # observation_space = simulation_env_config.joint_observation_space_config.observation_spaces[0].observation_ids()
-    observation_space = list(range(0,num_observations+1))
-
+    observation_space = list(range(0, num_observations + 1))
 
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}sondik_vi_test",
@@ -90,8 +93,8 @@ if __name__ == '__main__':
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1,
-                                                            name=agents_constants.COMMON.EVAL_EVERY,
-                                                            descr="how frequently to run evaluation"),
+                                                       name=agents_constants.COMMON.EVAL_EVERY,
+                                                       descr="how frequently to run evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -110,7 +113,7 @@ if __name__ == '__main__':
                 value=list(R.tolist()), name=agents_constants.VI.REWARD_TENSOR,
                 descr="the reward tensor"),
             agents_constants.SONDIK_VI.INITIAL_BELIEF: HParam(
-                value=[1,0,0], name=agents_constants.SONDIK_VI.INITIAL_BELIEF,
+                value=[1, 0, 0], name=agents_constants.SONDIK_VI.INITIAL_BELIEF,
                 descr="the initial belief"),
             agents_constants.SONDIK_VI.ACTION_SPACE: HParam(
                 value=action_space, name=agents_constants.SONDIK_VI.ACTION_SPACE,

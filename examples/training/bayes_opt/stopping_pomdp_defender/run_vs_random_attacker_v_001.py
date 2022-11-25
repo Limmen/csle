@@ -8,18 +8,17 @@ from csle_agents.agents.bayes_opt.bayes_opt_agent import BayesOptAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
-
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
-        random_seeds=[399, 98912,999,555],
+        random_seeds=[399, 98912, 999, 555],
         agent_type=AgentType.BAYESIAN_OPTIMIZATION,
         log_every=1,
         hparams={
             agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=50, name=agents_constants.T_SPSA.N,
-                                              descr="the number of training iterations"),
+                                                             descr="the number of training iterations"),
             agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
@@ -53,14 +52,14 @@ if __name__ == '__main__':
                 name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI,
                 descr="kappa parameter for the xi utility function"),
             agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
-                value=[(-3,3)],
+                value=[(-3, 3)],
                 name=agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
                 descr="parameter bounds")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                          experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-10, R_SLA=0, R_ST=0, L=1))
     simulation_env_config.simulation_env_input_config.stopping_game_config.L = 1

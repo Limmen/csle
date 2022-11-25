@@ -12,11 +12,11 @@ if __name__ == '__main__':
     url = "-"
     date_added = datetime.datetime.now()
     citation = "not defined"
-    num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, num_traces, schema, num_traces_per_file, \
-    num_attributes_per_time_step, added_by, columns = \
+    (num_files, dir_size_uncompressed_gb, size_compressed_gb, file_format, num_traces, schema, num_traces_per_file,
+     num_attributes_per_time_step, added_by, columns) = \
         ExportUtil.extract_emulation_traces_dataset_metadata(dir_path=dir_path, zip_file_path=zip_file_path)
     if len(columns.split(",")) > 5:
-        columns = ",".join(columns.split(",")[0:5]) + f"... and {len(columns.split(','))-5} more columns"
+        columns = ",".join(columns.split(",")[0:5]) + f"... and {len(columns.split(',')) - 5} more columns"
     dataset = TracesDataset(name=name, description=descr, file_path=zip_file_path, url=url, date_added=date_added,
                             num_traces=num_traces, num_attributes_per_time_step=num_attributes_per_time_step,
                             size_in_gb=dir_size_uncompressed_gb, compressed_size_in_gb=size_compressed_gb,

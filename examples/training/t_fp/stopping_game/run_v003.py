@@ -11,13 +11,18 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from sklearn.mixture import GaussianMixture
 from scipy.stats import norm
 
+
 def get_obs_tensor():
     model = MetastoreFacade.get_emulation_statistic(id=1)
     model.compute_descriptive_statistics_and_distributions()
-    intrusion_counts = model.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL]["alerts_weighted_by_priority"]
-    no_intrusion_counts = model.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["alerts_weighted_by_priority"]
-    intrusion_probs = model.conditionals_probs[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL]["alerts_weighted_by_priority"]
-    no_intrusion_probs = model.conditionals_probs[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["alerts_weighted_by_priority"]
+    intrusion_counts = model.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
+        "alerts_weighted_by_priority"]
+    no_intrusion_counts = model.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
+        "alerts_weighted_by_priority"]
+    intrusion_probs = model.conditionals_probs[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
+        "alerts_weighted_by_priority"]
+    no_intrusion_probs = model.conditionals_probs[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
+        "alerts_weighted_by_priority"]
     X_intrusion = []
     X_intrusion_prob = []
     for val, count in intrusion_counts.items():
@@ -45,32 +50,34 @@ def get_obs_tensor():
     X_no_intrusion = np.array(X_no_intrusion)
     X_no_intrusion_prob = np.array(X_no_intrusion_prob)
 
-    gmm_intrusion = GaussianMixture(n_components = 3).fit(X_intrusion)
-    gmm_no_intrusion = GaussianMixture(n_components = 2).fit(X_no_intrusion)
+    gmm_intrusion = GaussianMixture(n_components=3).fit(X_intrusion)
+    gmm_no_intrusion = GaussianMixture(n_components=2).fit(X_no_intrusion)
     gmm_intrusion_probs = []
     gmm_no_intrusion_probs = []
     zero_prob_intrusion = 0
     zero_prob_no_intrusion = 0
-    for i in range(-8000,1):
+    for i in range(-8000, 1):
         for weight, mean, covar in zip(gmm_intrusion.weights_, gmm_intrusion.means_, gmm_intrusion.covariances_):
-            zero_prob_intrusion += weight*norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
-        for weight, mean, covar in zip(gmm_no_intrusion.weights_, gmm_no_intrusion.means_, gmm_no_intrusion.covariances_):
-            zero_prob_no_intrusion += weight*norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
+            zero_prob_intrusion += weight * norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
+        for weight, mean, covar in zip(gmm_no_intrusion.weights_, gmm_no_intrusion.means_,
+                                       gmm_no_intrusion.covariances_):
+            zero_prob_no_intrusion += weight * norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
     gmm_intrusion_probs.append(zero_prob_intrusion)
     gmm_no_intrusion_probs.append(zero_prob_no_intrusion)
 
-    for i in range(1,12000):
+    for i in range(1, 12000):
         prob_intrusion = 0
         prob_no_intrusion = 0
         for weight, mean, covar in zip(gmm_intrusion.weights_, gmm_intrusion.means_, gmm_intrusion.covariances_):
-            prob_intrusion += weight*norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
-        for weight, mean, covar in zip(gmm_no_intrusion.weights_, gmm_no_intrusion.means_,gmm_no_intrusion.covariances_):
-            prob_no_intrusion += weight*norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
+            prob_intrusion += weight * norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
+        for weight, mean, covar in zip(gmm_no_intrusion.weights_, gmm_no_intrusion.means_,
+                                       gmm_no_intrusion.covariances_):
+            prob_no_intrusion += weight * norm.pdf(i, mean, np.sqrt(covar)).ravel()[0]
         gmm_intrusion_probs.append(prob_intrusion)
         gmm_no_intrusion_probs.append(prob_no_intrusion)
     O = list(range(0, 12000))
-    print(round(sum(gmm_intrusion_probs),3))
-    print(round(sum(gmm_no_intrusion_probs),3))
+    print(round(sum(gmm_intrusion_probs), 3))
+    print(round(sum(gmm_no_intrusion_probs), 3))
     terminal_dist = np.zeros(len(gmm_intrusion_probs))
     terminal_dist[-1] = 1
     Z = np.array(
@@ -102,7 +109,6 @@ def get_obs_tensor():
         ]
     )
     return Z, np.array(O)
-
 
 
 if __name__ == '__main__':
@@ -171,12 +177,14 @@ if __name__ == '__main__':
                      defender_simulation_env_config=defender_simulation_env_config,
                      attacker_simulation_env_config=attacker_simulation_env_config,
                      experiment_config=experiment_config)
-    attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
-    defender_simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
-    defender_simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5,0.5,0])
-    attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5,0.5,0])
+    attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(
+        StoppingGameUtil.reward_tensor(
+            R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
+    defender_simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(
+        StoppingGameUtil.reward_tensor(
+            R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
+    defender_simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5, 0.5, 0])
+    attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5, 0.5, 0])
     Z, O = get_obs_tensor()
     attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.Z = Z
     attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.O = O
