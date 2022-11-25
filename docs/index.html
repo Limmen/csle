@@ -11,65 +11,99 @@ layout: default
         </div>
     </div>
 
+    <div class="container indexPageContainer">
 
-    <div id="exTab2" class="container indexPageContainer">
+        <h2 class="display text-left">What is CSLE?</h2>
+        <p>
+            CSLE is a framework for evaluating and developing reinforcement learning agents for
+            control problems in cyber security. It can be considered as a cyber range specifically designed for
+            reinforcement learning agents. Everything from network emulation, to simulation and implementation
+            of network commands have been co-designed to provide an environment where it is possible to train and
+            evaluate reinforcement learning agents on practical problems in cyber security.
+        </p>
 
-        <h2 class="display text-left">Installation</h2>
+        <hr>
+        <h2 class="display text-left">Why CSLE?</h2>
+        <p>
+            An organization’s security strategy has traditionally been defined, implemented, and updated by domain
+            experts.
+            Although this approach can provide basic security for an organization’s communication and computing
+            infrastructure,
+            a growing concern is that infrastructure update cycles become shorter and attacks increase in
+            sophistication.
+            Consequently, the security requirements become increasingly difficult to meet. To address this challenge,
+            significant efforts have
+            started to automate security frameworks and the process of obtaining effective security policies.
+        </p>
+        <p>
+            Reinforcement learning has emerged as a promising approach to approximate optimal control
+            strategies in non-trivial scenarios, and fundamental breakthroughs demonstrated by systems like AlphaGo
+            and OpenAI Five have inspired us and other researchers to study reinforcement learning with the goal
+            to automate security functions. While several encouraging results have been obtained following this
+            approach, key challenges remain.
+            The main challenge is to narrow the gap between the environment where strategies are evaluated and
+            a scenario playing out in a real system. Most of the results obtained so far are limited to abstract
+            simulation environments and it is not clear how the results transfer to practical infrastructures. To
+            address this
+            challenge, we developed CSLE, which is a framework that allows using reinforcement learning to optimize
+            security
+            policies based on real system data and allows to evaluate learned strategies in practical IT
+            infrastructures.
+        </p>
+        <p>
+            Recently, several efforts have started to build similar frameworks as CSLE with the goal to automate
+            network security functions through reinforcement learning (see
+            <a href="https://github.com/Limmen/awesome-rl-for-cybersecurity">survey</a>). Most notably, there is
+            <a href="https://github.com/microsoft/CyberBattleSim">CyberBattleSim</a> by Microsoft,
+            <a href="https://github.com/cage-challenge/CybORG">CyBorg</a> by
+            the Australian department of defence, <a href="https://github.com/dstl/YAWNING-TITAN">Yawning Titan</a> by
+            the UK Defence Science and Technology Laboratory (DSTL), and
+            <a href="https://arxiv.org/pdf/2103.07583.pdf">FARLAND</a>
+            developed at USA's National Security Agency (NSA). Some of these frameworks only include
+            simulation components and some of them include both simulation and emulation components.
+
+            In contrast to these frameworks, CSLE is fully open-source,
+            includes both a simulation component and an emulation component,
+            and has demonstrated the capabilitiy to learn near-optimal defender strategies on specific use cases
+            (see <a href="publications">publications</a>).
+        </p>
+        <hr>
+
+        <h2 class="display text-left">Installation & Usage</h2>
+
         <p>
             CSLE is available for download on <a href="https://github.com/Limmen/csle">Github</a>
             The python APIs are available on <a href="https://pypi.org/project/csle-collector/">PyPi</a>
             and can be installed using Pip. The Docker containers are available on
-            <a href="https://pypi.org/project/csle-collector/"> Docker hub </a> and can be installed using the
-            Docker command-line tool. The management system can be installed using the local files in the Git
-            repository.
+            <a href="https://pypi.org/project/csle-collector/"> Docker hub </a>.
+            Detailed installation instructions can be found in the <a href="/docs/">documentation.</a>
         </p>
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="#1" data-toggle="tab">Pip</a>
-            </li>
-            <li><a href="#2" data-toggle="tab">Docker</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="installation">
-            <div class="tab-pane active" id="1">
-                {% highlight bash %}
-                pip install csle-collector \
-                csle-common \
-                csle-attacker \
-                csle-defender \
-                gym-csle-stopping-game \
-                csle-system-identification \
-                csle-agents \
-                csle-ryu \
-                csle-rest-api
-                {% endhighlight %}
-            </div>
-            <div class="tab-pane" id="2">
-                {% highlight bash %}
-                TODO
-                {% endhighlight %}
-            </div>
 
-        </div>
+        <p>
+            Five example usages of CSLE are shown below: (1) emulation of an IT infrastructure;
+            (2) emulation of a network intrusion; (3) collection of system traces;
+            (4) learning of a system model based on system traces;
+            (5) learning of a security policy through reinforcement learning and simulation;
+            and (6), emulation management and monitoring.
+        </p>
 
-
-        <hr>
-        <h2 class="display text-left">Usage</h2>
-        <p>The example below demonstrates.. </p>
         <p>You can find additional examples in the <a href="/docs/">documentation </a> and a video demonstration is
             available on <a href="https://www.youtube.com/watch?v=18P7MjPKNDg&t=1s">Youtube</a>.</p>
+
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#4" data-toggle="tab">Emulate a network environment</a>
+                <a href="#4" data-toggle="tab">Emulate an IT infrastructure</a>
             </li>
-            <li><a href="#5" data-toggle="tab">Emulate a network attack</a>
+            <li><a href="#5" data-toggle="tab">Emulate a network intrusion</a>
             </li>
-            <li><a href="#6" data-toggle="tab">Learn a system model</a>
+            <li><a href="#6" data-toggle="tab">Collect system traces</a>
             </li>
-            <li><a href="#7" data-toggle="tab">Learn a security policy</a>
+            <li><a href="#7" data-toggle="tab">Learn a system model</a>
+            </li>
+            <li><a href="#8" data-toggle="tab">Learn a security policy</a>
             </li>
             <li>
-                <a href="#8" data-toggle="tab">Manage emulations & learning processes</a>
+                <a href="#9" data-toggle="tab">Manage emulations & learning processes</a>
             </li>
         </ul>
         <div id="usage" class="tab-content ">
@@ -87,10 +121,16 @@ layout: default
             <div class="tab-pane" id="6">
                 {% highlight java %}
                 System.out.println(i);
-                    {% endhighlight %}
+                {% endhighlight %}
             </div>
 
             <div class="tab-pane" id="7">
+                {% highlight java %}
+                System.out.println(i);
+                {% endhighlight %}
+            </div>
+
+            <div class="tab-pane" id="8">
                 {% highlight python %}
                 import csle_common.constants.constants as constants
                 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -110,37 +150,7 @@ layout: default
                 random_seeds = [399, 98912,999,555],
                 agent_type = AgentType.T_SPSA,
                 log_every = 1,
-                hparams = {
-                agents_constants.T_SPSA.N: HParam(value=200, name=agents_constants.T_SPSA.N,
-                descr="the number of training iterations"),
-                agents_constants.T_SPSA.c: HParam(value=10, name=agents_constants.T_SPSA.c,
-                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-                agents_constants.T_SPSA.a: HParam(value=1, name=agents_constants.T_SPSA.a,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-                agents_constants.T_SPSA.A: HParam(value=100, name=agents_constants.T_SPSA.A,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-                agents_constants.T_SPSA.LAMBDA: HParam(value=0.602, name=agents_constants.T_SPSA.LAMBDA,
-                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-                agents_constants.T_SPSA.EPSILON: HParam(value=0.101, name=agents_constants.T_SPSA.EPSILON,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-                agents_constants.T_SPSA.L: HParam(value=3, name="L", descr="the number of stop actions"),
-                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
-                descr="number of iterations to evaluate theta"),
-                agents_constants.T_SPSA.THETA1: HParam(value=[-4,-4,-4], name=agents_constants.T_SPSA.THETA1,
-                descr="initial thresholds"),
-                agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
-                descr="how frequently to save the model"),
-                agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(value=0.95,
-                name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                descr="confidence interval"),
-                agents_constants.COMMON.MAX_ENV_STEPS: HParam(value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                descr="maximum number of steps in the environment"),
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(value=1,
-                name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
-                descr="the batch size of the gradient estimator"),
-                agents_constants.COMMON.RUNNING_AVERAGE: HParam(value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
-                descr="the number of samples to include when computing the running avg")
-                },
+                hparams = {..},
                 player_type=PlayerType.DEFENDER, player_idx=0)
                 agent = TSPSAAgent(emulation_env_config=emulation_env_config,
                 simulation_env_config=simulation_env_config,
@@ -155,55 +165,56 @@ layout: default
                 {% endhighlight %}
             </div>
 
-            <div class="tab-pane" id="8">
+            <div class="tab-pane" id="9">
                 TODO
             </div>
         </div>
+
     </div>
 
+    <!--    <div id="exTab2" class="container indexPageContainer">-->
+
+    <!--        <h2 class="display text-left">Installation</h2>-->
+    <!--        <ul class="nav nav-tabs">-->
+    <!--            <li class="active">-->
+    <!--                <a href="#1" data-toggle="tab">Pip</a>-->
+    <!--            </li>-->
+    <!--            <li><a href="#2" data-toggle="tab">Docker</a>-->
+    <!--            </li>-->
+    <!--        </ul>-->
+    <!--        <div class="tab-content" id="installation">-->
+    <!--            <div class="tab-pane active" id="1">-->
+    <!--                {% highlight bash %}-->
+    <!--                pip install csle-collector \-->
+    <!--                csle-common \-->
+    <!--                csle-attacker \-->
+    <!--                csle-defender \-->
+    <!--                gym-csle-stopping-game \-->
+    <!--                csle-system-identification \-->
+    <!--                csle-agents \-->
+    <!--                csle-ryu \-->
+    <!--                csle-rest-api-->
+    <!--                {% endhighlight %}-->
+    <!--            </div>-->
+    <!--            <div class="tab-pane" id="2">-->
+    <!--                {% highlight bash %}-->
+    <!--                TODO-->
+    <!--                {% endhighlight %}-->
+    <!--            </div>-->
+
+    <!--        </div>-->
+
+
+    <!--        <hr>-->
+    <!--        <h2 class="display text-left">Usage</h2>-->
+    <!--        <p>The example below demonstrates.. </p>-->
+    <!--        <p>You can find additional examples in the <a href="/docs/">documentation </a> and a video demonstration is-->
+    <!--            available on <a href="https://www.youtube.com/watch?v=18P7MjPKNDg&t=1s">Youtube</a>.</p>-->
+    <!--    </div>-->
+    <!--    <hr> -->
 
     <hr>
-    <div class="container">
 
-        <h2 class="display text-left">Why CSLE?</h2>
-        <p>
-            An organization’s security strategy has traditionally been defined, implemented, and updated by domain experts.
-            Although this approach can provide basic security for an organization’s communication and computing infrastructure,
-            a growing concern is that infrastructure update cycles become shorter and attacks increase in sophistication.
-            Consequently, the security requirements become increasingly difficult to meet. To address this challenge, significant efforts have
-            started to automate security frameworks and the process of obtaining effective security policies.
-        </p>
-        <p>
-            Reinforcement learning has emerged as a promising approach to approximate optimal control
-            strategies in non-trivial scenarios, and fundamental breakthroughs demonstrated by systems like AlphaGo
-            and OpenAI Five have inspired us and other researchers to study reinforcement learning with the goal
-            to automate security functions. While several encouraging results have been obtained following this
-            approach, key challenges remain.
-            The main challenge is to narrow the gap between the environment where strategies are evaluated and
-            a scenario playing out in a real system. Most of the results obtained so far are limited to abstract
-            simulation environments and it is not clear how the results transfer to practical infrastructures. To address this
-            challenge, we developed CSLE, which is a framework that allows using reinforcement learning to optimize security
-            policies based on real system data and allows to evaluate learned strategies in practical IT infrastructures.
-        </p>
-        <p>
-            Recently, several efforts have started to build similar frameworks as CSLE with the goal to automate
-            network security functions through reinforcement learning (see
-            <a href="https://github.com/Limmen/awesome-rl-for-cybersecurity">survey</a>). Most notably, there is
-            <a href="https://github.com/microsoft/CyberBattleSim">CyberBattleSim</a> by Microsoft,
-            <a href="https://github.com/cage-challenge/CybORG">CyBorg</a> by
-            the Australian department of defence, <a href="https://github.com/dstl/YAWNING-TITAN">Yawning Titan</a> by
-            the UK Defence Science and Technology Laboratory (DSTL), and
-            <a href="https://arxiv.org/pdf/2103.07583.pdf">FARLAND</a>
-            developed at USA's National Security Agency (NSA). Some of these frameworks only include
-            simulation components and some of them include both simulation and emulation components.
-
-            In contrast to these frameworks, CSLE includes both a simulation component and an emulation component,
-            and has demonstrated the capabilitiy to learn near-optimal defender strategies on specific use cases
-            (see <a href="publications">publications</a>).
-        </p>
-    </div>
-
-    <hr>
     <div class="row FeaturesRow">
         <div class="col-sm-4">
             <h1 class="text-center">
