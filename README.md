@@ -31,7 +31,7 @@ It is based on Linux containers and can be used to collect traces and to evaluat
 ### **Simulation System**
 
 CSLE includes a simulation system for executing reinforcement learning algorithms 
-and simulating Markov decision processes and Markov games. It is built in Python and can easily be integrated 
+and simulating Markov decision processes and Markov games. It is built in Python and can be integrated 
 with standard machine learning libraries.
 
 ### **Management System**
