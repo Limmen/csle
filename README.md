@@ -25,23 +25,27 @@ is possible to train and evaluate reinforcement learning agents on practical pro
 
 ### **Emulation System**
 
-TODO
+CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations.   
+The emulation system executes on a cluster of machines that runs a virtualization layer provided by Docker containers
+and virtual links. It implements network isolation and traffic shaping on the containers using network namespaces and
+the NetEm module in the Linux kernel. Resource constraints of the containers, e.g., CPU and memory constraints, 
+are enforced using cgroups. The emulation system can be used to collect traces and to evaluate security policies.
 
 ### **Simulation System**
 
-TODO
+CSLE includes a simulation system for executing reinforcement learning algorithms 
+and simulating Markov decision processes and Markov games. It is built in Python and can easily be integrated 
+with standard machine learning libraries.
 
 ### **Management System**
 
-TODO
+CSLE includes a system for managing emulations and simulations. It allows a) to start/stop emulations/simulations; 
+b) real-time monitoring of emulation and simulation processes; and c), shell access to components of emulations.
 
 ## Documentation
 
-Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/) 
+Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). 
 
-## Demonstrations
-
-- [System Demo 14/4 2022](http://www.youtube.com/watch?v=18P7MjPKNDg)
 
 ## Author & Maintainer
 
