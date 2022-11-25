@@ -102,7 +102,7 @@ running commands can read and write to this directory.
     - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
       ```bash
        cd simulation-system/python/csle-collector/
-       pip install -e .
+       pip install -e . 
        cd ../../../
       ```
 
@@ -116,7 +116,7 @@ running commands can read and write to this directory.
     - Install `csle-attacker` (see ([README](simulation-system/csle-attacker/README.md)) for more information)
       ```bash
       cd simulation-system/python/csle-attacker/
-      pip install -e .
+      pip install -e . 
       cd ../../../
       ```
 

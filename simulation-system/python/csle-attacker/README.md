@@ -6,7 +6,7 @@ These attacks are used to evaluate defender policies and to collect data.
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.8+
 - `csle-common`
 
 ## API documentation

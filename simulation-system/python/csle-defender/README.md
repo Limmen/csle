@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.8+
 - `csle-common`
 
 ## API documentation

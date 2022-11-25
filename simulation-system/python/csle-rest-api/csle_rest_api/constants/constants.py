@@ -102,7 +102,7 @@ class MGMT_WEBAPP:
     USERS_RESOURCE = "users"
     LOGS_RESOURCE = "logs"
     CONFIG_RESOURCE = "config"
-    VERSION_RESOURCE = "config"
+    VERSION_RESOURCE = "version"
     DQN_POLICIES_RESOURCE = "dqn-policies"
     FNN_W_SOFTMAX_POLICIES_RESOURCE = "fnn-w-softmax-policies"
     TRACES_RESOURCE = "traces"

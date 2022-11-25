@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import './Header.css';
 import {NavLink, useLocation} from "react-router-dom";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import CsleSmallLogo from './CsleSmallLogo.png'
+import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 import {
     ABOUT_PAGE_RESOURCE,
     CONTAINER_TERMINAL_PAGE_RESOURCE,
@@ -26,13 +28,18 @@ import {
     USER_ADMIN_PAGE_RESOURCE,
     REGISTER_PAGE_RESOURCE,
     LOGIN_PAGE_RESOURCE,
-    DOWNLOADS_PAGE_RESOURCE
+    DOWNLOADS_PAGE_RESOURCE,
+    VERSION_RESOURCE,
+    HTTP_PREFIX, HTTP_REST_GET
 } from "../../Common/constants";
 
 /**
  * The header component that is present on every page
  */
 const Header = (props) => {
+    const [version, setVersion] = useState("0.0.1");
+    const ip = serverIp
+    const port = serverPort
     const location = useLocation();
     const managementDropdownRoutes = [`/${SIMULATIONS_PAGE_RESOURCE}`, `/${EMULATIONS_PAGE_RESOURCE}`,
         `/${MONITORING_PAGE_RESOURCE}`, `/${TRACES_PAGE_RESOURCE}`,
@@ -43,6 +50,30 @@ const Header = (props) => {
         `/${HOST_TERMINAL_PAGE_RESOURCE}`, `/${CONTAINER_TERMINAL_PAGE_RESOURCE}`]
     const adminDropdownRoutes = [`/${USER_ADMIN_PAGE_RESOURCE}`, `/${SYSTEM_ADMIN_PAGE_RESOURCE}`,
         `/${LOGS_ADMIN_PAGE_RESOURCE}`]
+
+
+    const fetchVersion = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${VERSION_RESOURCE}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                return res.json()
+            })
+            .then(response => {
+                setVersion(response.version)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    useEffect(() => {
+        fetchVersion()
+    }, [fetchVersion]);
 
     const AdministrationDropDown = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
@@ -248,6 +279,7 @@ const Header = (props) => {
                         <img src={CsleSmallLogo} alt="CSLE logo" className="img-fluid csleLogo" height="190px"
                              width="130px" />
                     </h1>
+                    <span className="csleVersion">Version: {version}</span>
 
                     <ul className="nav nav-tabs justify-content-center navtabsheader navbar-expand">
                         <li className="nav-item navtabheader">

@@ -57,3 +57,10 @@
     margin-top:-13px;
     position:absolute;
 }
+
+.csleVersion {
+    position:absolute;
+    left: 15px;
+    top:0;
+    font-size: 13px;
+}

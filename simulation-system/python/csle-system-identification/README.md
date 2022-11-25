@@ -5,7 +5,7 @@ from emulated infrastructures.
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.8+
 - `csle-common`
 - `csle-collector`
 - `csle-attacker`

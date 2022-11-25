@@ -165,7 +165,7 @@ A REST API for the CSLE management platform.
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.8+
 - `flask` (for HTTP server)
 - `csle-common`
 - `csle-agents`

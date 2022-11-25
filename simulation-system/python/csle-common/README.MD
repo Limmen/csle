@@ -5,7 +5,7 @@ CSLE.
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.8+
 - `gym` (for creating RL environments)
 - `pyglet` (OpenGL 3D graphics)
 - `numpy` (for scientific computing)

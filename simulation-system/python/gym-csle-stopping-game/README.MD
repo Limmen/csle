@@ -4,7 +4,7 @@ TODO
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.8+
 - `csle-common`
 - `csle-attacker`
 - `csle-csle-defender`
