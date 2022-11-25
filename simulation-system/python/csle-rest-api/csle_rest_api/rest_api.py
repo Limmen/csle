@@ -57,6 +57,7 @@ from csle_rest_api.resources.traces_datasets.routes import traces_datasets_bp
 from csle_rest_api.resources.statistics_datasets.routes import statistics_datasets_bp
 from csle_rest_api.resources.users.routes import users_bp
 from csle_rest_api.resources.config.routes import config_bp
+from csle_rest_api.resources.version.routes import version_bp
 from csle_rest_api.resources.logs.routes import logs_bp
 from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
 import csle_rest_api.constants.constants as api_constants
@@ -235,6 +236,9 @@ def create_app(static_folder: str):
     app.register_blueprint(config_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}")
+    app.register_blueprint(version_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.VERSION_RESOURCE}")
     app.register_blueprint(logs_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")

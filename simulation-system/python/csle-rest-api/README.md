@@ -137,6 +137,7 @@ A REST API for the CSLE management platform.
 | `/logs/kafka?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`               | Get logs of a specific Kafka server                            | `POST`                                  |
 | `/logs/elk-stack?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`           | Get logs of a specific ELK stack                               | `POST`                                  |
 | `/config?token=<valid_token>`                                                                         | Get/Update system configuration                                | `GET`,`PUT`                             |
+| `/version`                                                                                            | Get the version of CSLE management system                      | `GET`,`PUT`                             |
 | `/about-page`                                                                                         | Get the about page                                             | `GET`                                   |
 | `/login-page`                                                                                         | Get the login page                                             | `GET`                                   |
 | `/register-page`                                                                                      | Get the register page                                          | `GET`                                   |
