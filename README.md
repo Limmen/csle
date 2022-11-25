@@ -25,11 +25,8 @@ is possible to train and evaluate reinforcement learning agents on practical pro
 
 ### **Emulation System**
 
-CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations.   
-The emulation system executes on a cluster of machines that runs a virtualization layer provided by Docker containers
-and virtual links. It implements network isolation and traffic shaping on the containers using network namespaces and
-the NetEm module in the Linux kernel. Resource constraints of the containers, e.g., CPU and memory constraints, 
-are enforced using cgroups. The emulation system can be used to collect traces and to evaluate security policies.
+CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations. 
+The emulation system can be used to collect traces and to evaluate security policies.
 
 ### **Simulation System**
 
