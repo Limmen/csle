@@ -103,7 +103,7 @@ class KafkaController:
 
             if not kafka_dto.running:
                 # Open a gRPC session
-                Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
+                Logger.__call__().get_logger().info("Kafka server is not running, starting it.")
 
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
                 time.sleep(20)

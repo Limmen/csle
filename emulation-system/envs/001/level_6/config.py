@@ -4099,7 +4099,7 @@ def default_users_config(network_id: int) -> UsersConfig:
             User(username="agent", pw="agent", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21", users=[
-            User(username="admin", pw=f"admin31151x", root=True),
+            User(username="admin", pw="admin31151x", root=True),
             User(username="test", pw="qwerty", root=True),
             User(username="oracle", pw="abc123", root=False)
         ]),

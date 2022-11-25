@@ -276,7 +276,7 @@ class PIAgent(BaseAgent):
             for a in range(0, num_actions):
                 for s_prime in range(0, num_states):
                     action_values[a] += P[a][s][s_prime] * (R[a][s] + gamma * v[s_prime])
-            if(max(action_values) == 0.0):
+            if max(action_values) == 0.0:
                 pi_prime[s, np.argmax(pi[s])] = 1
             else:
                 best_action = np.argmax(action_values)

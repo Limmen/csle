@@ -307,7 +307,7 @@ class ConnectionUtil:
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
                 cmd="sudo -l", conn=connection_setup_dto.target_connections[i])
             root = False
-            if not "may not run sudo".format(connection_setup_dto.credentials[i].username) in errdata.decode("utf-8") \
+            if f"{connection_setup_dto.credentials[i].username} may not run sudo" not in errdata.decode("utf-8") \
                     and ("(ALL) NOPASSWD: ALL" in outdata.decode("utf-8") or
                          "(ALL : ALL) ALL" in outdata.decode("utf-8")):
                 root = True
@@ -412,7 +412,7 @@ class ConnectionUtil:
             connection_setup_dto.target_connections[i].write("sudo -l\n".encode())
             response = connection_setup_dto.target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
             root = False
-            if not "may not run sudo".format(connection_setup_dto.credentials[i].username) in response.decode("utf-8") \
+            if f"{connection_setup_dto.credentials[i].username} may not run sudo" not in response.decode("utf-8") \
                     and ("(ALL) NOPASSWD: ALL" in response.decode("utf-8") or
                          "(ALL : ALL) ALL" in response.decode("utf-8")):
                 root = True

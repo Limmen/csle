@@ -247,7 +247,7 @@ class ExportUtil:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         emulation_statistic = MetastoreFacade.get_emulation_statistic(id=statistics_id)
-        file_name = f"statistics.json"
+        file_name = "statistics.json"
         Logger.__call__().get_logger().info(f"Exporting statistics with id {statistics_id} to file: {file_name}")
         emulation_statistic.compute_descriptive_statistics_and_distributions()
         num_measurements = emulation_statistic.num_measurements

@@ -111,7 +111,7 @@ def list_csle_gym_envs() -> None:
     import gym
     import csle_common.constants.constants as constants
 
-    click.secho(f"Registered OpenAI gym environments:", fg="magenta", bold=True)
+    click.secho("Registered OpenAI gym environments:", fg="magenta", bold=True)
     for env in gym.envs.registry.all():
         if constants.CSLE.NAME in env.id:
             click.secho(f"{env.id}", bold=False)
@@ -206,7 +206,7 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                     click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
                 else:
                     click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
-                click.secho(f"Topics:", bold=True)
+                click.secho("Topics:", bold=True)
                 for topic in kafka_dto.topics:
                     click.secho(f"{topic}", bold=False)
         if stats:
@@ -446,7 +446,7 @@ def clean_emulation_statistics() -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     import csle_common.constants.constants as constants
 
-    click.secho(f"Deleting all emulation statistics from the metastore", bold=False)
+    click.secho("Deleting all emulation statistics from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_STATISTICS_TABLE)
 
 
@@ -458,7 +458,7 @@ def clean_emulation_executions() -> None:
     """
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
-    click.secho(f"Stopping and cleaning all emulation executions", bold=False)
+    click.secho("Stopping and cleaning all emulation executions", bold=False)
     EmulationEnvController.clean_all_executions()
 
 
@@ -470,7 +470,7 @@ def stop_emulation_executions() -> None:
     """
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
-    click.secho(f"Stopping all emulation executions", bold=False)
+    click.secho("Stopping all emulation executions", bold=False)
     EmulationEnvController.stop_all_executions()
 
 
@@ -483,7 +483,7 @@ def clean_emulation_traces() -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     import csle_common.constants.constants as constants
 
-    click.secho(f"Deleting all emulation traces from the metastore", bold=False)
+    click.secho("Deleting all emulation traces from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_TRACES_TABLE)
 
 
@@ -496,7 +496,7 @@ def clean_simulation_traces() -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     import csle_common.constants.constants as constants
 
-    click.secho(f"Deleting all simulation traces from the metastore", bold=False)
+    click.secho("Deleting all simulation traces from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.SIMULATION_TRACES_TABLE)
 
 
@@ -959,28 +959,28 @@ def install(entity: str) -> None:
     from csle_common.controllers.installation_controller import InstallationController
 
     if entity == "emulations":
-        click.secho(f"Installing emulations in the metastore", bold=False)
+        click.secho("Installing emulations in the metastore", bold=False)
         InstallationController.install_all_emulations()
     elif entity == "simulations":
-        click.secho(f"Installing simulations in the metastore", bold=False)
+        click.secho("Installing simulations in the metastore", bold=False)
         InstallationController.install_all_simulations()
     elif entity == "derived_images":
-        click.secho(f"Installing derived Docker images", bold=False)
+        click.secho("Installing derived Docker images", bold=False)
         InstallationController.install_derived_images()
     elif entity == "base_images":
-        click.secho(f"Installing base Docker images", bold=False)
+        click.secho("Installing base Docker images", bold=False)
         InstallationController.install_base_images()
     elif entity == "metastore":
-        click.secho(f"Installing metastore", bold=False)
+        click.secho("Installing metastore", bold=False)
         InstallationController.install_metastore()
     elif entity == "all":
-        click.secho(f"Installing base Docker images", bold=False)
+        click.secho("Installing base Docker images", bold=False)
         InstallationController.install_base_images()
-        click.secho(f"Installing derived Docker images", bold=False)
+        click.secho("Installing derived Docker images", bold=False)
         InstallationController.install_derived_images()
-        click.secho(f"Installing emulations in the metastore", bold=False)
+        click.secho("Installing emulations in the metastore", bold=False)
         InstallationController.install_all_emulations()
-        click.secho(f"Installing simulations in the metastore", bold=False)
+        click.secho("Installing simulations in the metastore", bold=False)
         InstallationController.install_all_simulations()
     else:
         click.secho(f"Installing {entity}", bold=False)
@@ -1022,30 +1022,30 @@ def uninstall(entity: str) -> None:
     from csle_common.controllers.installation_controller import InstallationController
 
     if entity == "emulations":
-        click.secho(f"Uninstalling emulations in the metastore", bold=False)
+        click.secho("Uninstalling emulations in the metastore", bold=False)
         InstallationController.uninstall_all_emulations()
     elif entity == "simulations":
-        click.secho(f"Uninstalling simulations in the metastore", bold=False)
+        click.secho("Uninstalling simulations in the metastore", bold=False)
         InstallationController.uninstall_all_simulations()
     elif entity == "derived_images":
-        click.secho(f"Uninstalling derived Docker images", bold=False)
+        click.secho("Uninstalling derived Docker images", bold=False)
         InstallationController.uninstall_derived_images()
     elif entity == "base_images":
-        click.secho(f"Uninstalling base Docker images", bold=False)
+        click.secho("Uninstalling base Docker images", bold=False)
         InstallationController.uninstall_base_images()
     elif entity == "metastore":
-        click.secho(f"Uninstalling metastore", bold=False)
+        click.secho("Uninstalling metastore", bold=False)
         InstallationController.uninstall_metastore()
     elif entity == "all":
-        click.secho(f"Uninstalling simulations in the metastore", bold=False)
+        click.secho("Uninstalling simulations in the metastore", bold=False)
         InstallationController.uninstall_all_simulations()
-        click.secho(f"Uninstalling emulations in the metastore", bold=False)
+        click.secho("Uninstalling emulations in the metastore", bold=False)
         InstallationController.uninstall_all_emulations()
-        click.secho(f"Uninstalling derived Docker images", bold=False)
+        click.secho("Uninstalling derived Docker images", bold=False)
         InstallationController.uninstall_derived_images()
-        click.secho(f"Uninstalling base Docker images", bold=False)
+        click.secho("Uninstalling base Docker images", bold=False)
         InstallationController.uninstall_base_images()
-        click.secho(f"Uninstalling metastore", bold=False)
+        click.secho("Uninstalling metastore", bold=False)
         InstallationController.uninstall_metastore()
     else:
         click.secho(f"Uninstalling {entity}", bold=False)
@@ -1623,17 +1623,17 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
     import csle_common.constants.constants as constants
 
     click.secho(f"Emulation name: {emulation_env_config.name}", fg="yellow", bold=True)
-    click.secho(f"Containers:", fg="yellow", bold=True)
+    click.secho("Containers:", fg="yellow", bold=True)
     for c in emulation_env_config.containers_config.containers:
         click.secho(f"{c.name} {','.join(c.get_ips())}", bold=False)
-    click.secho(f"Admin login:", fg="yellow", bold=True)
+    click.secho("Admin login:", fg="yellow", bold=True)
     click.secho(f"Username:{constants.CSLE_ADMIN.SSH_USER}", bold=False)
     click.secho(f"Password:{constants.CSLE_ADMIN.SSH_PW}", bold=False)
-    click.secho(f"Vulnerabilities:", fg="yellow", bold=True)
+    click.secho("Vulnerabilities:", fg="yellow", bold=True)
     for vuln in emulation_env_config.vuln_config.node_vulnerability_configs:
         click.secho(f"{vuln.vuln_type} {vuln.ip}", bold=False)
         click.secho(f"{type(vuln.vuln_type)}", bold=False)
-    click.secho(f"Resource constraints:", fg="yellow", bold=True)
+    click.secho("Resource constraints:", fg="yellow", bold=True)
     if emulation_env_config.resources_config is not None:
         for rc in emulation_env_config.resources_config.node_resources_configurations:
             network_bandwidth = ""
@@ -1646,20 +1646,20 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
                 network_bandwidth = network_bandwidth + f"{interface} {bandwidth}Mbit/s"
             click.secho(f"{rc.container_name}: CPUs:{rc.num_cpus}, memory: {rc.available_memory_gb}GB, "
                         f"network:{network_bandwidth}", bold=False)
-    click.secho(f"Flags:", fg="yellow", bold=True)
+    click.secho("Flags:", fg="yellow", bold=True)
     for flag in emulation_env_config.flags_config.node_flag_configs:
         click.secho(f"{flag.flags[0][0]} {flag.ip}", bold=False)
-    click.secho(f"Users:", fg="yellow", bold=True)
+    click.secho("Users:", fg="yellow", bold=True)
     for user in emulation_env_config.users_config.users_configs:
         users = ",".join(list(map(lambda x: x[0], user.users)))
         click.secho(f"{users} {user.ip}", bold=False)
-    click.secho(f"Kafka configuration:", fg="yellow", bold=True)
+    click.secho("Kafka configuration:", fg="yellow", bold=True)
     click.secho(f"{emulation_env_config.kafka_config.container.name} "
                 f"{','.join(emulation_env_config.kafka_config.container.get_ips())}", bold=False)
     click.secho(f"{emulation_env_config.kafka_config.resources.container_name}: "
                 f"CPUs:{emulation_env_config.kafka_config.resources.num_cpus}, "
                 f"memory: {emulation_env_config.kafka_config.resources.available_memory_gb}GB", bold=False)
-    click.secho(f"ELK configuration:", fg="yellow", bold=True)
+    click.secho("ELK configuration:", fg="yellow", bold=True)
     click.secho(f"{emulation_env_config.elk_config.container.name} "
                 f"{','.join(emulation_env_config.elk_config.container.get_ips())}", bold=False)
     click.secho(f"{emulation_env_config.elk_config.resources.container_name}: "
@@ -1676,7 +1676,7 @@ def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:
     """
 
     click.secho(f"Simulation name: {simulation_config.name}", fg="yellow", bold=True)
-    click.secho(f"Description:", fg="yellow", bold=True)
+    click.secho("Description:", fg="yellow", bold=True)
     click.secho(simulation_config.descr)
     click.secho(f"Gym env name: {simulation_config.gym_env_name}", fg="yellow", bold=True)
     click.secho(f"Num players: {len(simulation_config.players_config.player_configs)}", fg="yellow", bold=True)

@@ -272,7 +272,7 @@ class EmulationEnvController:
         """
         steps = 2
         current_step = 1
-        Logger.__call__().get_logger().info(f"-- Configuring the kafka container --")
+        Logger.__call__().get_logger().info("-- Configuring the kafka container --")
 
         Logger.__call__().get_logger().info(
             f"-- Kafka configuration step {current_step}/{steps}: Restarting the Kafka server --")

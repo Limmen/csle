@@ -89,7 +89,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :param context: the gRPC context
         :return: a clients DTO with the state of the kafka server
         """
-        logging.info(f"Starting kafka")
+        logging.info("Starting kafka")
         os.system(constants.KAFKA.KAFKA_START)
         kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=True, topics=[])
         return kafka_dto

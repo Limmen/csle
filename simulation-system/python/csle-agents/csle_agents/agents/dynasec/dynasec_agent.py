@@ -322,7 +322,7 @@ class EmulationMonitorThread(threading.Thread):
 
         :return: None
         """
-        Logger.__call__().get_logger().info(f"[DynaSec] starting emulation monitor thread")
+        Logger.__call__().get_logger().info("[DynaSec] starting emulation monitor thread")
         while self.running:
             time.sleep(self.sleep_time_minutes)
             metrics = ReadEmulationStatisticsUtil.read_all(emulation_env_config=self.emulation_env_config,
@@ -369,7 +369,7 @@ class EmulationStatisticsThread(threading.Thread):
 
         :return: None
         """
-        Logger.__call__().get_logger().info(f"[DynaSec] starting emulation statistics aggeregation thread")
+        Logger.__call__().get_logger().info("[DynaSec] starting emulation statistics aggeregation thread")
         while self.running:
             time.sleep(self.sleep_time)
             for dcp in self.data_collector_processes:
@@ -576,7 +576,7 @@ class PolicyEvaluationThread(threading.Thread):
 
         :return: None
         """
-        Logger.__call__().get_logger().info(f"[DynaSec] starting the policy evaluation thread")
+        Logger.__call__().get_logger().info("[DynaSec] starting the policy evaluation thread")
         evaluation_traces = []
         while self.running:
             time.sleep(self.sleep_time)
@@ -993,7 +993,7 @@ class DynaSecAgent(BaseAgent):
             emulation_env_config=self.emulation_executions[0].emulation_env_config, sleep_time=sleep_time,
             periodic=True)
         sys_id_process.system_model = initial_system_model
-        Logger.__call__().get_logger().info(f"[DynaSec] starting system identification process")
+        Logger.__call__().get_logger().info("[DynaSec] starting system identification process")
         sys_id_process.start()
 
         # Start policy optimization process

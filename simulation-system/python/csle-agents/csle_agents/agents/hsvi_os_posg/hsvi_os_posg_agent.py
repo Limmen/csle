@@ -174,7 +174,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         b0 = self.experiment_config.hparams[agents_constants.HSVI_OS_POSG.INITIAL_BELIEF].value
         epsilon = self.experiment_config.hparams[agents_constants.HSVI_OS_POSG.EPSILON].value
         prune_frequency = self.experiment_config.hparams[agents_constants.HSVI_OS_POSG.PRUNE_FREQUENCY].value
-        Logger.__call__().get_logger().info(f"Starting the HSVI algorithm of OS-POSGs")
+        Logger.__call__().get_logger().info("Starting the HSVI algorithm of OS-POSGs")
         alpha_vectors, widths, excesses = self.hsvi(
             O=np.array(O), Z=np.array(Z), R=np.array(R), T=np.array(T), A1=np.array(A1), A2=np.array(A2),
             S=np.array(S), gamma=discount_factor, b0=np.array(b0),

@@ -148,7 +148,7 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)
         self.docker_stats_monitor_threads = []
-        logging.info(f"Setting up DockerStatsManager")
+        logging.info("Setting up DockerStatsManager")
 
     def getDockerStatsMonitorStatus(
             self, request: csle_collector.docker_stats_manager.docker_stats_manager_pb2.GetDockerStatsMonitorStatusMsg,

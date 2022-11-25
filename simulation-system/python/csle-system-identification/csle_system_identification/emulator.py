@@ -162,7 +162,7 @@ class Emulator:
                 MetastoreFacade.save_emulation_trace(emulation_trace)
             emulation_traces.append(emulation_trace)
 
-        logger.info(f"All sequences completed, saving traces and emulation statistics")
+        logger.info("All sequences completed, saving traces and emulation statistics")
         sys.stdout.flush()
         if save:
             EmulationTrace.save_traces_to_disk(traces_save_dir=save_dir, traces=emulation_traces)

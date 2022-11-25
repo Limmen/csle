@@ -1147,7 +1147,7 @@ class MetastoreFacade:
         :param multi_threshold_stopping_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing a multi-threshold stopping policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing a multi-threshold stopping policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1160,7 +1160,7 @@ class MetastoreFacade:
                                                               multi_threshold_stopping_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"Multi-threshold policy saved successfully")
+                Logger.__call__().get_logger().debug("Multi-threshold policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1233,7 +1233,7 @@ class MetastoreFacade:
         :param training_job: the training job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a training job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a training job in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1247,7 +1247,7 @@ class MetastoreFacade:
                              training_job.emulation_env_name, training_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"Training job saved successfully")
+                Logger.__call__().get_logger().debug("Training job saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1324,7 +1324,7 @@ class MetastoreFacade:
         :param data_collection_job: the data collection job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a data collection job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a data collection job in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1339,7 +1339,7 @@ class MetastoreFacade:
                                                                   data_collection_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"Data collection job saved successfully")
+                Logger.__call__().get_logger().debug("Data collection job saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1544,7 +1544,7 @@ class MetastoreFacade:
         :param ppo_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing PPO policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing PPO policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1556,7 +1556,7 @@ class MetastoreFacade:
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, ppo_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"PPO policy saved successfully")
+                Logger.__call__().get_logger().debug("PPO policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1635,7 +1635,7 @@ class MetastoreFacade:
         :param system_identification_job: the system identification job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a system identification job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a system identification job in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1650,7 +1650,7 @@ class MetastoreFacade:
                                                                   system_identification_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"System identification job saved successfully")
+                Logger.__call__().get_logger().debug("System identification job saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1776,7 +1776,7 @@ class MetastoreFacade:
         :param gaussian_mixture_system_model: the gaussian mixture system model job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a gaussian mixture system model job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a gaussian mixture system model job in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1792,7 +1792,7 @@ class MetastoreFacade:
                              gaussian_mixture_system_model.emulation_statistic_id))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"Gaussian mixture model saved successfully")
+                Logger.__call__().get_logger().debug("Gaussian mixture model saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1933,7 +1933,7 @@ class MetastoreFacade:
         :param tabular_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing Tabular policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing Tabular policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1945,7 +1945,7 @@ class MetastoreFacade:
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, tabular_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"Tabular policy saved successfully")
+                Logger.__call__().get_logger().debug("Tabular policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2038,7 +2038,7 @@ class MetastoreFacade:
         :param alpha_vec_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing AlphaVec policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing AlphaVec policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2050,7 +2050,7 @@ class MetastoreFacade:
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, alpha_vec_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"AlphaVec policy saved successfully")
+                Logger.__call__().get_logger().debug("AlphaVec policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2143,7 +2143,7 @@ class MetastoreFacade:
         :param dqn_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing DQN policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing DQN policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2155,7 +2155,7 @@ class MetastoreFacade:
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, dqn_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"DQN policy saved successfully")
+                Logger.__call__().get_logger().debug("DQN policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2251,7 +2251,7 @@ class MetastoreFacade:
         :param fnn_w_softmax_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing FNN with softmax policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing FNN with softmax policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2263,7 +2263,7 @@ class MetastoreFacade:
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, fnn_w_softmax_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"FNN with softmax policy saved successfully")
+                Logger.__call__().get_logger().debug("FNN with softmax policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2356,7 +2356,7 @@ class MetastoreFacade:
         :param vector_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing vector policy in the metastore")
+        Logger.__call__().get_logger().debug("Installing vector policy in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2368,7 +2368,7 @@ class MetastoreFacade:
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, vector_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"vector policy saved successfully")
+                Logger.__call__().get_logger().debug("vector policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2500,7 +2500,7 @@ class MetastoreFacade:
         :param emulation_execution: the policy to save
         :return: None
         """
-        Logger.__call__().get_logger().debug(f"Installing emulation execution in the metastore")
+        Logger.__call__().get_logger().debug("Installing emulation execution in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2514,7 +2514,7 @@ class MetastoreFacade:
                                                      emulation_execution.emulation_name,
                                                      emulation_execution_str))
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"emulation execution saved successfully")
+                Logger.__call__().get_logger().debug("emulation execution saved successfully")
                 return None
 
     @staticmethod
@@ -2592,7 +2592,7 @@ class MetastoreFacade:
         :param empirical_system_model: the empirical system model job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a empirical system model job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a empirical system model job in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2607,7 +2607,7 @@ class MetastoreFacade:
                                                                   empirical_system_model.emulation_statistic_id))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"empirical system model saved successfully")
+                Logger.__call__().get_logger().debug("empirical system model saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2729,7 +2729,7 @@ class MetastoreFacade:
         :param gp_system_model: the gp system model job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a gp system model job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a gp system model job in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2743,7 +2743,7 @@ class MetastoreFacade:
                                                                   gp_system_model.emulation_statistic_id))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"gp system model saved successfully")
+                Logger.__call__().get_logger().debug("gp system model saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -2866,7 +2866,7 @@ class MetastoreFacade:
         :param management_user: the management user to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a management user in the metastore")
+        Logger.__call__().get_logger().debug("Saving a management user in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2880,7 +2880,7 @@ class MetastoreFacade:
                              management_user.admin, management_user.salt))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"management user saved successfully")
+                Logger.__call__().get_logger().debug("management user saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -3007,7 +3007,7 @@ class MetastoreFacade:
         :return: token of the created record
         """
         ts = time.time()
-        Logger.__call__().get_logger().debug(f"Saving a session token in the metastore")
+        Logger.__call__().get_logger().debug("Saving a session token in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -3019,7 +3019,7 @@ class MetastoreFacade:
                             (session_token.token, ts, session_token.username))
                 token_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"session token saved successfully")
+                Logger.__call__().get_logger().debug("session token saved successfully")
                 return token_of_new_row
 
     @staticmethod
@@ -3192,7 +3192,7 @@ class MetastoreFacade:
         :param traces_dataset: the traces dataset to save
         :return: idg of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a traces dataset in the metastore")
+        Logger.__call__().get_logger().debug("Saving a traces dataset in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -3215,7 +3215,7 @@ class MetastoreFacade:
                              traces_dataset.added_by, traces_dataset.columns))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"traces dataset saved successfully")
+                Logger.__call__().get_logger().debug("traces dataset saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -3376,7 +3376,7 @@ class MetastoreFacade:
         :param statistics_dataset: the statistics dataset to save
         :return: idg of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a statistics dataset in the metastore")
+        Logger.__call__().get_logger().debug("Saving a statistics dataset in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -3397,7 +3397,7 @@ class MetastoreFacade:
                              statistics_dataset.num_conditions))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"statistics dataset saved successfully")
+                Logger.__call__().get_logger().debug("statistics dataset saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -3451,5 +3451,5 @@ class MetastoreFacade:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} WHERE id = %s",
                             (statistics_dataset.id,))
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"Statistics dataset with "
+                Logger.__call__().get_logger().debug("Statistics dataset with "
                                                      f"id {statistics_dataset.id} deleted successfully")

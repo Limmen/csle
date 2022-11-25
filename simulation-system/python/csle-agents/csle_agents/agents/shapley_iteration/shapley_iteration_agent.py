@@ -166,7 +166,7 @@ class ShapleyIterationAgent(BaseAgent):
         S = self.experiment_config.hparams[agents_constants.SHAPLEY_ITERATION.STATE_SPACE].value
         N = self.experiment_config.hparams[agents_constants.SHAPLEY_ITERATION.N].value
         delta = self.experiment_config.hparams[agents_constants.SHAPLEY_ITERATION.DELTA].value
-        Logger.__call__().get_logger().info(f"Starting the shapley iteration algorithm")
+        Logger.__call__().get_logger().info("Starting the shapley iteration algorithm")
         V, maximin_strategies, minimax_strategies, auxillary_games, deltas = self.si(
             S=np.array(S), A1=np.array(A1), A2=np.array(A2), R=np.array(R), T=np.array(T), gamma=discount_factor,
             max_iterations=N, delta_threshold=delta)

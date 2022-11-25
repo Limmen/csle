@@ -41,7 +41,7 @@ class HostMonitorThread(threading.Thread):
             constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
         self.running = True
-        logging.info(f"HostMonitor thread started successfully")
+        logging.info("HostMonitor thread started successfully")
 
     def run(self) -> None:
         """
@@ -110,7 +110,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                      ip=self.ip, hostname=self.hostname,
                                                      time_step_len_seconds=request.time_step_len_seconds)
         self.host_monitor_thread.start()
-        logging.info(f"Started the HostMonitor thread")
+        logging.info("Started the HostMonitor thread")
         return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=True)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,

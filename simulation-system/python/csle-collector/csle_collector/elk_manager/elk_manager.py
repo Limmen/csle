@@ -93,7 +93,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Starting ELK")
+        logging.info("Starting ELK")
         os.system(constants.ELK.ELK_START)
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=True, kibanaRunning=True,
                                                                     logstashRunning=True)
@@ -108,7 +108,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Starting Elasticsearch")
+        logging.info("Starting Elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_START)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=True, kibanaRunning=kibana_running,
@@ -124,7 +124,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Starting Kibana")
+        logging.info("Starting Kibana")
         os.system(constants.ELK.KIBANA_START)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
@@ -141,7 +141,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Starting Logstash")
+        logging.info("Starting Logstash")
         os.system(constants.ELK.LOGSTASH_START)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
@@ -158,7 +158,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Stops Elasticsearch")
+        logging.info("Stops Elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_STOP)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=False, kibanaRunning=kibana_running,
@@ -174,7 +174,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Stops Kibana")
+        logging.info("Stops Kibana")
         os.system(constants.ELK.KIBANA_STOP)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
@@ -191,7 +191,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param context: the gRPC context
         :return: an ElkDTO with the state of the ELK server
         """
-        logging.info(f"Stopping Logstash")
+        logging.info("Stopping Logstash")
         os.system(constants.ELK.LOGSTASH_STOP)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
