@@ -30,10 +30,14 @@ def node_exporter():
 
     running = ManagementSystemController.is_node_exporter_running()
     port = constants.COMMANDS.NODE_EXPORTER_PORT
+    node_exporter_ip = "localhost"
+    if constants.CONFIG_FILE.PARSED_CONFIG is not None:
+        node_exporter_ip = constants.CONFIG_FILE.PARSED_CONFIG.metastore_ip
+        port = constants.CONFIG_FILE.PARSED_CONFIG.node_exporter_port
     node_exporter_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
         api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
-        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://localhost:{port}/"
+        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{node_exporter_ip}:{port}/"
     }
     response = jsonify(node_exporter_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

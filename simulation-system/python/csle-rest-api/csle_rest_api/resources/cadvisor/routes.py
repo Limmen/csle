@@ -35,10 +35,14 @@ def cadvisor():
         else:
             ManagementSystemController.start_cadvisor()
             running = True
+    cadvisor_ip = "localhost"
+    if constants.CONFIG_FILE.PARSED_CONFIG is not None:
+        cadvisor_ip = constants.CONFIG_FILE.PARSED_CONFIG.metastore_ip
+        port = constants.CONFIG_FILE.PARSED_CONFIG.cadvisor_port
     cadvisor_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
         api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
-        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://localhost:{port}/"
+        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{cadvisor_ip}:{port}/"
     }
     response = jsonify(cadvisor_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

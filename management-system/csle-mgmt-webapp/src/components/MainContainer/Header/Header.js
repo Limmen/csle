@@ -334,7 +334,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderTracesTooltip}>
-                                    <NavLink className="dropdown-item" to={TRAINING_PAGE_RESOURCE}>
+                                    <NavLink className="dropdown-item" to={TRACES_PAGE_RESOURCE}>
                                         Traces
                                     </NavLink>
                                 </OverlayTrigger>

@@ -120,7 +120,7 @@ const Traces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

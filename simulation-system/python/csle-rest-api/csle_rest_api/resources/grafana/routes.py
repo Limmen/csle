@@ -36,10 +36,14 @@ def grafana():
         else:
             ManagementSystemController.start_grafana()
             running = True
+    grafana_ip = "localhost"
+    if constants.CONFIG_FILE.PARSED_CONFIG is not None:
+        grafana_ip = constants.CONFIG_FILE.PARSED_CONFIG.metastore_ip
+        port = constants.CONFIG_FILE.PARSED_CONFIG.grafana_port
     grafana_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
         api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
-        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://localhost:{port}/"
+        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{grafana_ip}:{port}/"
     }
     response = jsonify(grafana_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

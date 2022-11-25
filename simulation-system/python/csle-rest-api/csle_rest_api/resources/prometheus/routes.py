@@ -36,10 +36,14 @@ def prometheus():
         else:
             ManagementSystemController.start_prometheus()
             running = True
+    prometheus_ip = "localhost"
+    if constants.CONFIG_FILE.PARSED_CONFIG is not None:
+        prometheus_ip = constants.CONFIG_FILE.PARSED_CONFIG.metastore_ip
+        port = constants.CONFIG_FILE.PARSED_CONFIG.prometheus_port
     prometheus_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
         api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
-        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://localhost:{port}/"
+        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{prometheus_ip}:{port}/"
     }
     response = jsonify(prometheus_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
