@@ -75,77 +75,18 @@ layout: default
         <div id="usage" class="tab-content ">
             <div class="tab-pane active" id="4">
                 {% highlight java %}
-                // Just a bit of code, how bad could it be?
-                int i=1;
-                while (true) {
                 System.out.println(i);
-                if (i > 99) break;
-                i++;
-                }
                 {% endhighlight %}
             </div>
             <div class="tab-pane" id="5">
                 {% highlight java %}
-                // As it turns out, very.
-                AST ast = AST.newAST(AST.JLS8);
-                Block block = ast.newBlock();
-                VariableDeclarationFragment fragment = ast.newVariableDeclarationFragment();
-                fragment.setName(ast.newSimpleName("i"));
-                fragment.setInitializer(ast.newNumberLiteral("1"));
-                VariableDeclarationStatement statement = ast.newVariableDeclarationStatement(fragment);
-                statement.setType(ast.newPrimitiveType(PrimitiveType.INT));
-                block.statements().add(statement);
-                WhileStatement whileStatement = ast.newWhileStatement();
-                whileStatement.setExpression(ast.newBooleanLiteral(true));
-                Block whileBody = ast.newBlock();
-                MethodInvocation methodInvocation = ast.newMethodInvocation();
-                methodInvocation.setName(ast.newSimpleName("println"));
-                methodInvocation.setExpression(ast.newName("System.out"));
-                methodInvocation
-                .arguments()
-                .add(ast.newSimpleName("i"));
-                whileBody
-                .statements()
-                .add(ast.newExpressionStatement(methodInvocation));
-                IfStatement ifStatement = ast.newIfStatement();
-                InfixExpression infixExpression = ast.newInfixExpression();
-                infixExpression.setLeftOperand(ast.newSimpleName("i"));
-                infixExpression.setOperator(Operator.GREATER);
-                infixExpression.setRightOperand(ast.newNumberLiteral("99"));
-                ifStatement.setExpression(infixExpression);
-                ifStatement.setThenStatement(ast.newBreakStatement());
-                whileBody
-                .statements()
-                .add(ifStatement);
-                PostfixExpression postfixExpression = ast.newPostfixExpression();
-                postfixExpression.setOperator(PostfixExpression.Operator.INCREMENT);
-                postfixExpression.setOperand(ast.newSimpleName("i"));
-                whileBody
-                .statements()
-                .add(ast.newExpressionStatement(postfixExpression));
-                whileStatement.setBody(whileBody);
-                block.statements().add(whileStatement);
+                System.out.println(i);
                 {% endhighlight %}
             </div>
 
             <div class="tab-pane" id="6">
                 {% highlight java %}
-                // That's certainly better!
-                FluentStatement variableDeclaration = stmnt(decl("int",1));
-                FluentStatement methodInvocation = stmnt(invocation(name("System.out"),
-                new ArrayList
-                <FluentType>(),
-                    "println",
-                    n("i")));
-                    FluentBlock whileBody = block(methodInvocation,
-                    if_(infix(">")
-                    .left(n("i"))
-                    .right(i(99))).then(break_()),
-                    stmnt(postfix("++").operand(n("i"))));
-                    block(variableDeclaration,
-                    while_(b(true))
-                    .do_(whileBody))
-                    .build();
+                System.out.println(i);
                     {% endhighlight %}
             </div>
 
