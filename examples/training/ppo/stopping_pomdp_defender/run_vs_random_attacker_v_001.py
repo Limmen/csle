@@ -33,9 +33,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.DEVICE: HParam(value="cpu",
                                                    name=agents_constants.COMMON.DEVICE,
                                                    descr="the device to train on (cpu or cuda:x)"),
-            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(value=1,
-                                                              name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
-                                                              descr="the nunmber of parallel environments for training"),
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
+                value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
             agents_constants.PPO.GAE_LAMBDA: HParam(
