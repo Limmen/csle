@@ -35,18 +35,9 @@ TODO
 
 TODO
 
-## Installation
-
-Installation instructions are available at [Installation](Installation.md)
-
-## Usage
-
-Usage examples are available at [Usage](Usage.md)
-
 ## Documentation
 
-- API Documentation: TODO
-- System Documentation: TODO
+Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/) 
 
 ## Demonstrations
 
@@ -63,10 +54,6 @@ Kim Hammar <kimham@kth.se>
 Creative Commons
 
 (C) 2020-2022, Kim Hammar
-
-## Publications
-
-For a list of publications and citation information see: [Publications](Publications.md)
 
 ## See also
 
