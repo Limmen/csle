@@ -33,7 +33,6 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :return: the list of attacker actions
     """
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    # intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:5]
 
     intrusion_seq = [
         EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
@@ -42,48 +41,6 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
         EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
         EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks)
     ]
-
-    # intrusion_seq = [
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
-    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
-    # ]
-
-    # intrusion_seq = [
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
-    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
-    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    # ]
-
-    # intrusion_seq = [
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
-    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
-    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-    # ]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -104,18 +61,6 @@ if __name__ == '__main__':
     emulation_executions = [
         MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-001")
     ]
-    # emulation_executions = [
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=16, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=17, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=18, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=19, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=20, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=21, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=22, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=23, emulation_name="csle-level4-001"),
-    #     MetastoreFacade.get_emulation_execution(ip_first_octet=24, emulation_name="csle-level4-001")
-    # ]
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dynasec_test", title="DynaSec test",
@@ -227,6 +172,3 @@ if __name__ == '__main__':
                          experiment_config=experiment_config, attacker_sequence=attacker_sequence,
                          defender_sequence=defender_sequence, system_identification_config=system_identifcation_config)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
