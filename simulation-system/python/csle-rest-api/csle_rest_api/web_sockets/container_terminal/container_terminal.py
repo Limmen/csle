@@ -16,10 +16,16 @@ def get_container_terminal_bp(app):
     :return: the blue print
     """
 
-    def ssh_connect() -> paramiko.SSHClient:
+    def ssh_connect(ip: str) -> paramiko.SSHClient:
+        """
+        Sets up an SSH connection to a given IP using the CSLE admin account
+
+        :param ip: the IP to connect to
+        :return: the created ssh connection
+        """
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        conn.connect("15.9.2.2", username="csle_admin", password="csle@admin-pw_191")
+        conn.connect(ip, username=constants.CSLE_ADMIN.SSH_USER, password=constants.CSLE_ADMIN.SSH_PW)
         conn.get_transport().set_keepalive(5)
         return conn
 
@@ -79,17 +85,21 @@ def get_container_terminal_bp(app):
 
         :return: None
         """
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
+        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
         if authorized is not None or (constants.CONFIG_FILE.PARSED_CONFIG is None):
             raise ConnectionRefusedError()
-
-        term = u'xterm'
-        ssh_conn = ssh_connect()
-        ssh_channel = ssh_conn.invoke_shell(term=term)
-        ssh_channel.setblocking(0)
-        app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL] = ssh_channel
-        app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION] = ssh_conn
-        socketio.start_background_task(target=read_and_forward_container_terminal_output)
+        ip_str = request.args.get(api_constants.MGMT_WEBAPP.IP_QUERY_PARAM)
+        if ip_str is not None:
+            ip = ip_str.replace("-", ".")
+            term = u'xterm'
+            ssh_conn = ssh_connect(ip=ip)
+            ssh_channel = ssh_conn.invoke_shell(term=term)
+            ssh_channel.setblocking(0)
+            app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL] = ssh_channel
+            app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION] = ssh_conn
+            socketio.start_background_task(target=read_and_forward_container_terminal_output)
+        else:
+            ConnectionRefusedError()
 
     container_terminal_bp = Blueprint(api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE, __name__)
     return container_terminal_bp

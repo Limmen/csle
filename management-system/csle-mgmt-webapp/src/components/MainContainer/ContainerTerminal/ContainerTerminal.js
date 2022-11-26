@@ -29,7 +29,13 @@ import {
     WS_CONTAINER_TERMINAL_NAMESPACE,
     WS_CONTAINER_TERMINAL_OUTPUT_MSG,
     WS_RESIZE_MSG,
-    HTTP_PREFIX, EMULATION_EXECUTIONS_RESOURCE, EMULATION_QUERY_PARAM, HTTP_REST_GET, IDS_QUERY_PARAM, INFO_SUBRESOURCE
+    HTTP_PREFIX,
+    EMULATION_EXECUTIONS_RESOURCE,
+    EMULATION_QUERY_PARAM,
+    HTTP_REST_GET,
+    IDS_QUERY_PARAM,
+    INFO_SUBRESOURCE,
+    IP_QUERY_PARAM
 } from "../../Common/constants";
 import getIps from "../../Common/getIps";
 
@@ -98,9 +104,15 @@ const ContainerTerminal = (props) => {
             .catch(error => console.log("error:" + error))
     }, [ip, port, navigate, alert, props.sessionData.token, setSessionData]);
 
-    const renderRefreshTooltip = (props) => (
+    const renderRefreshExecutionsTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload data about emulations from the backend
+            Reload data about emulation executions from the backend
+        </Tooltip>
+    );
+
+    const renderRefreshContainersTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload data about running containers from the backend.
         </Tooltip>
     );
 
@@ -114,10 +126,21 @@ const ContainerTerminal = (props) => {
 
     const updateRunningContainer = (runningContainer) => {
         setSelectedRunningContainer(runningContainer)
-        // setupConnection()
+        destroyTerminal()
     }
 
-    const refresh = () => {
+    const destroyTerminal = () => {
+        if (socketState !== null) {
+            socketState.disconnect()
+            setSocketState(null)
+        }
+        term.dispose()
+        document.getElementById('sshTerminal').innerHTML = "";
+        document.getElementById("status").innerHTML="";
+    }
+
+    const refreshExecutions = () => {
+        destroyTerminal()
         setLoading(true)
         setLoadingSelectedEmulationExecution(true)
         setLoadingSelectedEmulationExecutionInfo(true)
@@ -126,8 +149,16 @@ const ContainerTerminal = (props) => {
         fetchEmulationExecutionIds()
     }
 
+    const refreshContainers = () => {
+        destroyTerminal()
+        setLoadingSelectedEmulationExecutionInfo(true)
+        setSelectedEmulationExecutionInfo(null)
+        fetchExecutionInfo(selectedEmulationExecutionId)
+    }
+
     const searchFilter = (executionIdObj, searchVal) => {
-        return (searchVal === "" || executionIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+        return (searchVal === "" || executionIdObj.label.toString().toLowerCase().indexOf(
+            searchVal.toLowerCase()) !== -1)
     }
 
     const searchChange = (event) => {
@@ -135,7 +166,11 @@ const ContainerTerminal = (props) => {
         const filteredEIds = emulationExecutionIds.filter(executionIdObj => {
             return searchFilter(executionIdObj, searchVal)
         });
+        const filteredCIds = runningContainerIds.filter(containerIdObj => {
+            return searchFilter(containerIdObj, searchVal)
+        });
         setFilteredEmulationExecutionIds(filteredEIds)
+        setFilteredRunningContainerIds(filteredCIds)
     }
 
     const searchHandler = useDebouncedCallback(
@@ -169,18 +204,17 @@ const ContainerTerminal = (props) => {
                     return
                 }
                 setSelectedEmulationExecutionInfo(response)
-                const runningContainerIds = response.running_containers.map((id_obj, index) => {
+                const rContainerIds = response.running_containers.map((id_obj, index) => {
                     return {
                         value: id_obj,
                         label: id_obj.full_name_str
                     }
                 })
                 setLoadingSelectedEmulationExecutionInfo(false)
-                setRunningContainerIds(runningContainerIds)
-                setFilteredRunningContainerIds(runningContainerIds)
-                if (runningContainerIds.length > 0) {
-                    setSelectedRunningContainer(runningContainerIds[0])
-                    // setupConnection()
+                setRunningContainerIds(rContainerIds)
+                setFilteredRunningContainerIds(rContainerIds)
+                if (rContainerIds.length > 0) {
+                    setSelectedRunningContainer(rContainerIds[0])
                 }
             })
             .catch(error => console.log("error:" + error)),
@@ -193,10 +227,7 @@ const ContainerTerminal = (props) => {
     );
 
     const refreshTerminal = () => {
-        if (socketState !== null) {
-            socketState.disconnect()
-        }
-        window.location.reload(false);
+        destroyTerminal()
     }
 
     const InfoModal = (props) => {
@@ -214,9 +245,11 @@ const ContainerTerminal = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        The terminal to the container is setup as follows. The browser communicated with the backend
-                        over a websocket. The backend opens an SSH tunnel to the container and then pipes the input and
-                        outputs from the SSH tunnel to the websocket.
+                        The terminal allows executing arbitrary commands inside the given container.
+                        It can for example be used to restart services or to setup new user accounts.
+
+                        The browser communicates with the backend over a websocket, which in turn communicates with the
+                        container over an SSH tunnel, whose' output is piped through the websocket.
                     </p>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
@@ -275,10 +308,8 @@ const ContainerTerminal = (props) => {
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchSelectedExecution,
         fetchExecutionInfo]);
 
-    const setupConnection = () => {
-        console.log("setup connection")
+    const setupConnection = (containerIp) => {
         term.open(document.getElementById('sshTerminal'));
-        console.log("OPENED term")
         fitAddon.fit();
         term.resize(15, 40);
         fitAddon.fit();
@@ -288,7 +319,7 @@ const ContainerTerminal = (props) => {
                 {input: data, token: props.sessionData.token});
         });
         const socket = io.connect(`${ip}:${port}/${WS_CONTAINER_TERMINAL_NAMESPACE}?${TOKEN_QUERY_PARAM}` +
-            `=${props.sessionData.token}`, {'forceNew': true});
+            `=${props.sessionData.token}&${IP_QUERY_PARAM}=${containerIp.replaceAll('.', '-')}`, {'forceNew': true});
         setSocketState(socket)
         const status = document.getElementById("status");
 
@@ -340,7 +371,7 @@ const ContainerTerminal = (props) => {
 
     const startShellTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Setup terminal
+            Connect and setup terminal
         </Tooltip>)
     }
 
@@ -351,7 +382,7 @@ const ContainerTerminal = (props) => {
             overlay={startShellTooltip}
         >
             <Button variant="secondary" className="startButton" size="sm"
-                    onClick={() =>  setupConnection()}>
+                    onClick={() =>  setupConnection(props.ip)}>
                 Connect to {props.ip}
                 <i className="fa fa-terminal startStopIcon startStopIcon2" aria-hidden="true"/>
             </Button>
@@ -398,9 +429,9 @@ const ContainerTerminal = (props) => {
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshTooltip}
+                        overlay={renderRefreshExecutionsTooltip}
                     >
-                        <Button variant="button" onClick={refresh}>
+                        <Button variant="button" onClick={refreshExecutions}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -419,14 +450,14 @@ const ContainerTerminal = (props) => {
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshTooltip}
+                        overlay={renderRefreshExecutionsTooltip}
                     >
-                        <Button variant="button" onClick={refresh}>
+                        <Button variant="button" onClick={refreshExecutions}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
 
-                    Selected emulation execution:
+                    Execution:
                     <div className="conditionalDist inline-block selectEmulation">
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -453,9 +484,9 @@ const ContainerTerminal = (props) => {
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshTooltip}
+                        overlay={renderRefreshContainersTooltip}
                     >
-                        <Button variant="button" onClick={refresh}>
+                        <Button variant="button" onClick={refreshContainers}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -464,20 +495,19 @@ const ContainerTerminal = (props) => {
             return (
                 <div>
                     <div className="row">
-                        <div className="col-sm-7">
                             <h4 className="text-center inline-block emulationsHeader">
                                 <div>
                                     <OverlayTrigger
                                         placement="right"
                                         delay={{show: 0, hide: 0}}
-                                        overlay={renderRefreshTooltip}
+                                        overlay={renderRefreshContainersTooltip}
                                     >
-                                        <Button variant="button" onClick={refresh}>
+                                        <Button variant="button" onClick={refreshContainers}>
                                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                                         </Button>
                                     </OverlayTrigger>
 
-                                    Selected container:
+                                    Container:
                                     <div className="conditionalDist inline-block selectEmulation">
                                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                                             <Select
@@ -492,26 +522,6 @@ const ContainerTerminal = (props) => {
                                     </div>
                                 </div>
                             </h4>
-                        </div>
-                        <div className="col-sm-3">
-                            <Form className="searchForm">
-                                <InputGroup className="mb-3 searchGroup">
-                                    <InputGroup.Text id="basic-addon1" className="searchIcon">
-                                        <i className="fa fa-search" aria-hidden="true"/>
-                                    </InputGroup.Text>
-                                    <FormControl
-                                        size="lg"
-                                        className="searchBar"
-                                        placeholder="Search"
-                                        aria-label="Search"
-                                        aria-describedby="basic-addon1"
-                                        onChange={searchHandler}
-                                    />
-                                </InputGroup>
-                            </Form>
-                        </div>
-                        <div className="col-sm-1">
-                        </div>
                     </div>
                     <TerminalConnect selectedRunningContainer={props.selectedRunningContainer}
                                      socketState={socketState}/>
@@ -564,12 +574,24 @@ const ContainerTerminal = (props) => {
                 Container Terminals
             </h3>
             <div className="row">
-                <div className="col-sm-7">
+                <div className="col-sm-4">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectEmulationExecutionIdDropdownOrSpinner
                             loading={loading} emulationExecutionIds={filteredEmulationExecutionIds}
                             selectedEmulationExecutionId={selectedEmulationExecutionId}
                         />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <h4 className="text-center inline-block emulationsHeader">
+                    <SelectedExecutionView loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}
+                                           loadingSelectedEmulationExecutionInfo={loadingSelectedEmulationExecutionInfo}
+                                           selectedEmulationExecution={selectedEmulationExecution}
+                                           info={selectedEmulationExecutionInfo}
+                                           sessionData={props.sessionData}
+                                           runningContainerIds={filteredRunningContainerIds}
+                                           selectedRunningContainer={selectedRunningContainer}
+                    />
                     </h4>
                 </div>
                 <div className="col-sm-3">
@@ -592,17 +614,9 @@ const ContainerTerminal = (props) => {
                 <div className="col-sm-1">
                 </div>
             </div>
-            <SelectedExecutionView loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}
-                                   loadingSelectedEmulationExecutionInfo={loadingSelectedEmulationExecutionInfo}
-                                   selectedEmulationExecution={selectedEmulationExecution}
-                                   info={selectedEmulationExecutionInfo}
-                                   sessionData={props.sessionData}
-                                   runningContainerIds={runningContainerIds}
-                                   selectedRunningContainer={selectedRunningContainer}
-            />
             <div className="row">
                 <div className="col-sm-1">
-                    <span id="status">connecting...</span>
+                    <span id="status"></span>
                 </div>
                 <div className="col-sm-10">
                     <div id="sshTerminal" className="sshTerminal2">
