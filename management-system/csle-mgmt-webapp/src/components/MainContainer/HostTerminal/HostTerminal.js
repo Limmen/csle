@@ -7,6 +7,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Button from 'react-bootstrap/Button'
 import io from 'socket.io-client';
+import Modal from 'react-bootstrap/Modal'
 import {FitAddon} from 'xterm-addon-fit';
 import {WebLinksAddon} from 'xterm-addon-web-links';
 import {SearchAddon} from 'xterm-addon-search';
@@ -26,6 +27,7 @@ const HostTerminal = (props) => {
     const [socketState, setSocketState] = useState(null);
     const ip = serverIp
     const port = serverPort
+    const [showInfoModal, setShowInfoModal] = useState(false);
     const term = new Terminal({
         cursorBlink: true,
         macOptionIsMeta: true,
@@ -48,10 +50,18 @@ const HostTerminal = (props) => {
     );
 
     const refresh = () => {
+        destroyTerminal()
+        window.location.reload(false);
+    }
+
+    const destroyTerminal = () => {
         if (socketState !== null) {
             socketState.disconnect()
+            setSocketState(null)
         }
-        window.location.reload(false);
+        term.dispose()
+        document.getElementById('sshTerminal').innerHTML = "";
+        document.getElementById("status").innerHTML="";
     }
 
     const setupConnection = () => {
@@ -113,6 +123,42 @@ const HostTerminal = (props) => {
         setupConnection()
     }, []);
 
+
+    const InfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Host Terminal
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        The terminal allows executing arbitrary commands on the host of the management system.
+                        It can for example be used to restart management services.
+
+                        The browser communicates with the backend over a websocket, which executes the commands in
+                        a pseudo-terminal bash session.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about the terminal.
+        </Tooltip>
+    );
+
     return (
         <div className="Terminal">
             <h3 className="managementTitle">
@@ -132,6 +178,15 @@ const HostTerminal = (props) => {
                 </div>
                 <div className="col-sm-10">
                     <span>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}>
+                        <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                            <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                         Host: {serverIp}, Status: <span id="status">connecting...</span>
                     </span>
                     <div id="sshTerminal" className="sshTerminal2">
