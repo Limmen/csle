@@ -26,7 +26,8 @@ class Config:
                  docker_stats_manager_port: int, docker_stats_manager_max_workers: int,
                  docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
                  prometheus_log_file: str, prometheus_config_file: str, default_log_dir: str,
-                 cluster_config: ClusterConfig, node_exporter_log_file: str):
+                 cluster_config: ClusterConfig, node_exporter_log_file: str,
+                 allow_registration: bool, allow_host_shell: bool):
         """
         Initializes the DTO
 
@@ -69,7 +70,9 @@ class Config:
         :param prometheus_config_file: the the config file of prometheus
         :param default_log_dir: the default log directory for CSLE applications
         :param cluster_config: the cluster configuration of the CSLE deployment
-        :param node_exporter_log_file: th file to save the logs of the node_exporter
+        :param node_exporter_log_file: the file to save the logs of the node_exporter
+        :param allow_registration: boolean flag indicating whether user registration should be allowed
+        :param allow_host_shell: boolean flag indicating whether host-terminal emulation should be enabled.
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
@@ -110,6 +113,8 @@ class Config:
         self.default_log_dir = default_log_dir
         self.cluster_config = cluster_config
         self.node_exporter_log_file = node_exporter_log_file
+        self.allow_registration = allow_registration
+        self.allow_host_shell = allow_host_shell
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -155,6 +160,8 @@ class Config:
         d["default_log_dir"] = self.default_log_dir
         d["cluster_config"] = self.cluster_config.to_dict()
         d["node_exporter_log_file"] = self.node_exporter_log_file
+        d["allow_registration"] = self.allow_registration
+        d["allow_host_shell"] = self.allow_host_shell
         return d
 
     def to_param_dict(self) -> Dict[str, Any]:
@@ -428,6 +435,20 @@ class Config:
                 "param": "node_exporter_log_file",
                 "value": self.node_exporter_log_file
             }
+        ),
+        d["parameters"].append(
+            {
+                "id": 40,
+                "param": "allow_registration",
+                "value": self.allow_registration
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 41,
+                "param": "allow_host_shell",
+                "value": self.allow_host_shell
+            }
         )
         d["cluster_config"] = self.cluster_config.to_dict()
         return d
@@ -477,7 +498,9 @@ class Config:
                      prometheus_config_file=d["prometheus_config_file"],
                      default_log_dir=d["default_log_dir"],
                      cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
-                     node_exporter_log_file=d["node_exporter_log_file"])
+                     node_exporter_log_file=d["node_exporter_log_file"],
+                     allow_registration=d["allow_registration"],
+                     allow_host_shell=d["allow_host_shell"])
         return dto
 
     @staticmethod
@@ -530,7 +553,9 @@ class Config:
                      prometheus_config_file=d["prometheus_config_file"],
                      default_log_dir=d["default_log_dir"],
                      cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
-                     node_exporter_log_file=d["node_exporter_log_file"])
+                     node_exporter_log_file=d["node_exporter_log_file"],
+                     allow_registration=d["allow_registration"],
+                     allow_host_shell=d["allow_host_shell"])
         return dto
 
     def __str__(self) -> str:
@@ -569,7 +594,8 @@ class Config:
                f"prometheus_config_file: {self.prometheus_config_file}, " \
                f"default_log_dir: {self.default_log_dir}, " \
                f"cluster_config: {self.cluster_config}," \
-               f"node_exporter_log_file: {self.node_exporter_log_file}"
+               f"node_exporter_log_file: {self.node_exporter_log_file}," \
+               f"allow_registration: {self.allow_registration}, allow_host_shell: {self.allow_host_shell}"
 
     def to_json_str(self) -> str:
         """

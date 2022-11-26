@@ -44,5 +44,7 @@
         "master": true
       }
     ]
-  }
+  },
+  "allow_registration": true,
+  "allow_host_shell": true
 }
