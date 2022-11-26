@@ -1,5 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, createRef, useCallback, useEffect} from 'react';
 import './EmulationTracesComponent.css';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
+import Accordion from 'react-bootstrap/Accordion';
+import Modal from 'react-bootstrap/Modal'
+import Tooltip from 'react-bootstrap/Tooltip';
+import Button from 'react-bootstrap/Button'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Select from 'react-select'
 import EmulationTrace from "./EmulationTrace/EmulationTrace";
 import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
@@ -355,6 +365,12 @@ const EmulationTracesComponent = (props) => {
         }
     }
 
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about how emulation traces are collected
+        </Tooltip>
+    );
+
     const SelectEmulationTraceOrSpinner = (props) => {
         if (!props.loadingEmulationTraces && props.emulationTracesIds.length === 0) {
             return (
@@ -493,7 +509,7 @@ const EmulationTracesComponent = (props) => {
 
     return (
         <div>
-            <div className="row emulationTracesHeader">
+            <div className="row tracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
 
