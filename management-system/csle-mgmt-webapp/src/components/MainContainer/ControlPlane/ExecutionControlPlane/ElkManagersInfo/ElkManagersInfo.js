@@ -33,7 +33,7 @@ const ElkManagersInfo = (props) => {
     const KibanaButton = (props) => {
         return (
             <OverlayTrigger
-                placement="right"
+                placement="top"
                 delay={{show: 0, hide: 0}}
                 overlay={renderKibanaTooltip}
             >

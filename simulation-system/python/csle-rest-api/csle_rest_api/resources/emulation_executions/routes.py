@@ -128,9 +128,15 @@ def emulation_execution_info(execution_id: int):
         local_port = api_constants.MGMT_WEBAPP.KIBANA_TUNNEL_BASE_PORT + execution.ip_first_octet
         if execution.emulation_env_config.elk_config.container.get_ips()[0] \
                 not in api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT:
-            EmulationEnvController.create_kibana_tunnel(execution=execution,
-                                                        tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                                                        local_port=local_port)
+            try:
+                EmulationEnvController.create_kibana_tunnel(execution=execution,
+                                                            tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                                                            local_port=local_port)
+            except Exception:
+                local_port = local_port + 100
+                EmulationEnvController.create_kibana_tunnel(execution=execution,
+                                                            tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                                                            local_port=local_port)
         else:
             tunnel_thread_dict = api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
                 execution.emulation_env_config.elk_config.container.get_ips()[0]]

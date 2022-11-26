@@ -84,7 +84,7 @@ const SpinnerOrButton = (props) => {
         if (props.running) {
             return (
                 <OverlayTrigger
-                    placement="right"
+                    placement="top"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStopTooltip}
                 >

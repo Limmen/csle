@@ -3,12 +3,14 @@ import './ShellButton.css';
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import {useNavigate} from "react-router-dom";
+import {CONTAINER_TERMINAL_PAGE_RESOURCE, LOGIN_PAGE_RESOURCE} from "../../../../Common/constants";
 
 /**
  * Component representing the button to create a new SSH shell to a container on the page /control-plane page
  */
 const ShellButton = (props) => {
-    console.log(props.ip)
+    const navigate = useNavigate();
 
     const renderShellTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -16,14 +18,19 @@ const ShellButton = (props) => {
         </Tooltip>)
     }
 
+    const openShell = (ip, executionId, emulation) => {
+        navigate(`/${CONTAINER_TERMINAL_PAGE_RESOURCE}`,
+            {state: {ip: ip, executionId: executionId, emulation: emulation}});
+    }
+
     return (
         <OverlayTrigger
-            placement="right"
+            placement="top"
             delay={{show: 0, hide: 0}}
             overlay={renderShellTooltip}
         >
             <Button variant="secondary" className="startButton" size="sm"
-                    onClick={() => props.getLogs(props.name)}>
+                    onClick={() => openShell(props.ip, props.executionId, props.emulation)}>
                 <i className="fa fa-terminal startStopIcon" aria-hidden="true"/>
             </Button>
         </OverlayTrigger>

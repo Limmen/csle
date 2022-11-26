@@ -83,6 +83,8 @@ const ContainersInfo = (props) => {
                                                 `${CONTAINER_SUBRESOURCE}-${container.full_name_str}`)}
                                             name={container.full_name_str}
                                             ip={getIps(container.ips_and_networks)[0]}
+                                            executionId={props.executionId}
+                                            emulation={props.emulation}
                                         />
                                     </td>
                                 </tr>

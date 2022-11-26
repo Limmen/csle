@@ -18,6 +18,7 @@ import {FitAddon} from 'xterm-addon-fit';
 import {WebLinksAddon} from 'xterm-addon-web-links';
 import {SearchAddon} from 'xterm-addon-search';
 import {useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {useAlert} from "react-alert";
 import {
     LOGIN_PAGE_RESOURCE,
@@ -73,6 +74,7 @@ const ContainerTerminal = (props) => {
     const navigate = useNavigate();
     const alert = useAlert();
     const setSessionData = props.setSessionData
+    const location = useLocation()
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
@@ -214,7 +216,19 @@ const ContainerTerminal = (props) => {
                 setRunningContainerIds(rContainerIds)
                 setFilteredRunningContainerIds(rContainerIds)
                 if (rContainerIds.length > 0) {
-                    setSelectedRunningContainer(rContainerIds[0])
+                    var match = false
+                    if(location.state.ip !== null) {
+                        for (let i = 0; i < rContainerIds.length; i++) {
+                            if(getIps(rContainerIds[i].value.ips_and_networks).includes(location.state.ip)) {
+                                match = true
+                                setSelectedRunningContainer(rContainerIds[i])
+                            }
+                        }
+                    }
+                    location.state.ip = null
+                    if(!match) {
+                        setSelectedRunningContainer(rContainerIds[0])
+                    }
                 }
             })
             .catch(error => console.log("error:" + error)),
@@ -293,9 +307,25 @@ const ContainerTerminal = (props) => {
                 setFilteredEmulationExecutionIds(emulationExecutionIds)
                 setLoading(false)
                 if (emulationExecutionIds.length > 0) {
-                    setSelectedEmulationExecutionId(emulationExecutionIds[0])
-                    fetchSelectedExecution(emulationExecutionIds[0])
-                    fetchExecutionInfo(emulationExecutionIds[0])
+                    var match = false
+                    var selectedExId = emulationExecutionIds[0]
+                    if(location.state.executionId !== null && location.state.emulation !== null) {
+                        for (let i = 0; i < emulationExecutionIds.length; i++) {
+                            if(emulationExecutionIds[i].value.id === location.state.executionId &&
+                                emulationExecutionIds[i].value.emulation === location.state.emulation) {
+                                match = true
+                                setSelectedEmulationExecutionId(emulationExecutionIds[i])
+                                selectedExId = emulationExecutionIds[i]
+                            }
+                        }
+                    }
+                    location.state.executionId = null
+                    location.state.emulation = null
+                    if(!match) {
+                        setSelectedEmulationExecutionId(emulationExecutionIds[0])
+                    }
+                    fetchSelectedExecution(selectedExId)
+                    fetchExecutionInfo(selectedExId)
                     setLoadingSelectedEmulationExecution(true)
                     setLoadingSelectedEmulationExecutionInfo(true)
                 } else {

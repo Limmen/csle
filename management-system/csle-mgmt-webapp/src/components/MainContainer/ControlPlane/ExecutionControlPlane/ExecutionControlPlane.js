@@ -246,6 +246,8 @@ const ExecutionControlPlane = (props) => {
                     stoppedContainers={stoppedContainers}
                     getLogs={getLogs}
                     startOrStop={startOrStop}
+                    executionId={props.execution.ip_first_octet}
+                    emulation={props.execution.emulation_name}
                 />
 
                 <ActiveNetworksInfo
