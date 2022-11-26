@@ -51,3 +51,37 @@ def config():
         response = jsonify(config.to_param_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@config_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}",
+                 methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def registration_allowed():
+    """
+    The /config/registration-allowed resource.
+
+    :return: The CSLE configuration
+    """
+    allow_registration = False
+    if constants.CONFIG_FILE.PARSED_CONFIG is not None and constants.CONFIG_FILE.PARSED_CONFIG.allow_registration:
+        allow_registration = True
+    response_dict = {}
+    response_dict[api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_PROPERTY] = allow_registration
+    response = jsonify(response_dict)
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@config_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.HOST_TERMINAL_ALLOWED_SUBRESOURCE}",
+                 methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def host_terminal_allowed():
+    """
+    The /config/host-terminal-allowed resource.
+
+    :return: The CSLE configuration
+    """
+    allow_host_terminal = False
+    if constants.CONFIG_FILE.PARSED_CONFIG is not None and constants.CONFIG_FILE.PARSED_CONFIG.allow_host_shell:
+        allow_host_terminal = True
+    response_dict = {}
+    response_dict[api_constants.MGMT_WEBAPP.HOST_TERMINAL_ALLOWED_PROPERTY] = allow_host_terminal
+    response = jsonify(response_dict)
+    return response, constants.HTTPS.OK_STATUS_CODE

@@ -30,7 +30,8 @@ import {
     LOGIN_PAGE_RESOURCE,
     DOWNLOADS_PAGE_RESOURCE,
     VERSION_RESOURCE,
-    HTTP_PREFIX, HTTP_REST_GET
+    HTTP_PREFIX, HTTP_REST_GET, CONFIG_RESOURCE, TOKEN_QUERY_PARAM, HOST_TERMINAL_ALLOWED_SUBRESOURCE,
+    HOST_TERMINAL_ALLOWED_PROPERTY, REGISTRATION_ALLOWED_SUBRESOURCE, REGISTRATION_ALLOWED_PROPERTY
 } from "../../Common/constants";
 
 /**
@@ -38,6 +39,8 @@ import {
  */
 const Header = (props) => {
     const [version, setVersion] = useState("0.0.1");
+    const [registerAllowed, setRegisterAllowed] = useState(false);
+    const [hostTerminalAllowed, setHostTerminalAllowed] = useState(false);
     const ip = serverIp
     const port = serverPort
     const location = useLocation();
@@ -69,11 +72,56 @@ const Header = (props) => {
                 setVersion(response.version)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port]);
+
+    const fetchRegistrationAllowed = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}/${REGISTRATION_ALLOWED_SUBRESOURCE}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                return res.json()
+            })
+            .then(response => {
+                if(response !== null && response !== undefined) {
+                    setRegisterAllowed(response[REGISTRATION_ALLOWED_PROPERTY])
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, [ip, port]);
+
+
+    const fetchHostTerminalAllowed = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}/${HOST_TERMINAL_ALLOWED_SUBRESOURCE}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                return res.json()
+            })
+            .then(response => {
+                if(response !== null && response !== undefined) {
+                    setHostTerminalAllowed(response[HOST_TERMINAL_ALLOWED_PROPERTY])
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, [ip, port]);
 
     useEffect(() => {
         fetchVersion()
-    }, [fetchVersion]);
+        fetchRegistrationAllowed()
+        fetchHostTerminalAllowed()
+    }, [fetchVersion, fetchRegistrationAllowed, fetchHostTerminalAllowed]);
 
     const AdministrationDropDown = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
@@ -128,7 +176,8 @@ const Header = (props) => {
     }
 
     const HostTerminalPageLinkOrEmpty = (props) => {
-        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin
+            && props.hostTerminalAllowed) {
             return (
                 <OverlayTrigger
                     placement="right"
@@ -138,6 +187,42 @@ const Header = (props) => {
                         Host Terminal
                     </NavLink>
                 </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+    const ContainerTerminalPageLinkOrEmpty = (props) => {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="right"
+                    delay={{show: 0, hide: 0}}
+                    overlay={props.renderContainerTerminalTooltip}>
+                    <NavLink className="dropdown-item" to={CONTAINER_TERMINAL_PAGE_RESOURCE}>
+                        Container Terminal
+                    </NavLink>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+    const RegisterPageOrEmpty = (props) => {
+        if (props.registerAllowed) {
+            return (
+                <li className="nav-item navtabheader">
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={props.renderRegisterTooltip}>
+                        <NavLink className="nav-link navtablabel largeFont" to={REGISTER_PAGE_RESOURCE}>
+                            Register
+                        </NavLink>
+                    </OverlayTrigger>
+                </li>
             )
         } else {
             return (<></>)
@@ -299,16 +384,8 @@ const Header = (props) => {
                     <span className="csleVersion">Version: {version}</span>
 
                     <ul className="nav nav-tabs justify-content-center navtabsheader navbar-expand">
-                        <li className="nav-item navtabheader">
-                            <OverlayTrigger
-                                placement="top"
-                                delay={{show: 0, hide: 0}}
-                                overlay={renderRegisterTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={REGISTER_PAGE_RESOURCE}>
-                                    Register
-                                </NavLink>
-                            </OverlayTrigger>
-                        </li>
+                        <RegisterPageOrEmpty renderRegisterTooltip={renderRegisterTooltip}
+                                             registerAllowed={registerAllowed}/>
                         <li className="nav-item navtabheader">
                             <OverlayTrigger
                                 placement="top"
@@ -461,15 +538,13 @@ const Header = (props) => {
                                 </OverlayTrigger>
                                 <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}
                                                              sessionData={props.sessionData}
+                                                             hostTerminalAllowed={hostTerminalAllowed}
                                 />
-                                <OverlayTrigger
-                                    placement="right"
-                                    delay={{show: 0, hide: 0}}
-                                    overlay={renderContainerTerminalTooltip}>
-                                    <NavLink className="dropdown-item" to={CONTAINER_TERMINAL_PAGE_RESOURCE}>
-                                        Container Terminal
-                                    </NavLink>
-                                </OverlayTrigger>
+                                <ContainerTerminalPageLinkOrEmpty
+                                    renderContainerTerminalTooltip={renderContainerTerminalTooltip}
+                                    sessionData={props.sessionData}
+                                />
+
                             </div>
                         </li>
                         <AdministrationDropDown sessionData={props.sessionData} setSessionData={props.setSessionData}/>

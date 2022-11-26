@@ -137,7 +137,9 @@ A REST API for the CSLE management platform.
 | `/logs/kafka?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`               | Get logs of a specific Kafka server                            | `POST`                                  |
 | `/logs/elk-stack?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`           | Get logs of a specific ELK stack                               | `POST`                                  |
 | `/config?token=<valid_token>`                                                                         | Get/Update system configuration                                | `GET`,`PUT`                             |
-| `/version`                                                                                            | Get the version of CSLE management system                      | `GET`,`PUT`                             |
+| `/config/host-terminal-allowed`                                                                       | Get host terminal policy                                       | `GET                                    |
+| `/config/registration-allowed`                                                                        | Get registration policy                                        | `GET                                    |
+| `/version`                                                                                            | Get the version of CSLE management system                      | `GET`                                   |
 | `/about-page`                                                                                         | Get the about page                                             | `GET`                                   |
 | `/login-page`                                                                                         | Get the login page                                             | `GET`                                   |
 | `/register-page`                                                                                      | Get the register page                                          | `GET`                                   |
@@ -162,7 +164,6 @@ A REST API for the CSLE management platform.
 | `/container-terminal-page`                                                                            | Get the container-terminal page                                | `GET`                                   |
 | `/host-terminal?token=<valid_token>`                                                                  | Web socket API for host terminal emulation                     | `Websockets`                            |
 
-
 ## Requirements
 
 - Python 3.8+
@@ -182,21 +183,28 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-rest-api](https://limmen.dev/csle/docs/csle-rest-api)
+The latest documentation is available
+at [https://limmen.dev/csle/docs/csle-rest-api](https://limmen.dev/csle/docs/csle-rest-api)
 
 ### Generate API Documentation
 
 First make sure that the `CSLE_HOME` environment variable is set:
+
 ```bash
 echo $CSLE_HOME
 ```
+
 Then generate the documentation with the commands:
+
 ```bash
 cd docs
 sphinx-apidoc -f -o source/ ../csle_rest_api/
 make html
 ```
-To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
+
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML
+files to the documentation folder:
+
 ```bash
 cp -r build/html ../../../../docs/_docs/csle-rest-api
 ```
