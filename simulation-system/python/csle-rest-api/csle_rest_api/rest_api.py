@@ -245,8 +245,8 @@ def create_app(static_folder: str):
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
     web_sockets_host_terminal_bp = get_host_terminal_bp(app)
     app.register_blueprint(web_sockets_host_terminal_bp)
-    # web_sockets_container_terminal_bp = get_container_terminal_bp(app)
-    # app.register_blueprint(web_sockets_container_terminal_bp)
+    web_sockets_container_terminal_bp = get_container_terminal_bp(app)
+    app.register_blueprint(web_sockets_container_terminal_bp)
 
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def root():

@@ -70,6 +70,8 @@ const HostTerminal = (props) => {
         const status = document.getElementById("status");
 
         socket.on(WS_HOST_TERMINAL_OUTPUT_MSG, function (data) {
+            console.log("Receive data, host: ")
+            console.log(data)
             term.write(data.output);
         });
 

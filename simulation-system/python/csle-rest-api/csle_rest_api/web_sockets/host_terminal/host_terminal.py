@@ -96,12 +96,10 @@ def get_host_terminal_bp(app):
 
         :return: None
         """
-        print("HELLO???")
         authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
         if authorized is not None or (constants.CONFIG_FILE.PARSED_CONFIG is None
                                       or not constants.CONFIG_FILE.PARSED_CONFIG.allow_host_shell):
             raise ConnectionRefusedError()
-        print("Authorized")
         if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID]:
             return
         (child_pid, fd) = pty.fork()

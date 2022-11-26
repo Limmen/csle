@@ -59,7 +59,8 @@ def get_container_terminal_bp(app):
             data_ready = ssh_channel.recv_ready()
             if data_ready:
                 print("data ready")
-                output = ssh_channel.recv(max_read_bytes)
+                output = ssh_channel.recv(max_read_bytes).decode(errors="ignore")
+                print(f"read data:{output}")
                 socketio.emit(api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_OUTPUT_MSG,
                               {api_constants.MGMT_WEBAPP.OUTPUT_PROPERTY: output},
                               namespace=f"{constants.COMMANDS.SLASH_DELIM}"
@@ -75,7 +76,10 @@ def get_container_terminal_bp(app):
         :param data: the input data to write
         :return: None
         """
-        print("terminal input")
+        cmd = data[api_constants.MGMT_WEBAPP.INPUT_PROPERTY].encode()
+        ssh_channel = app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL]
+        print(f"terminal input: {cmd}")
+        ssh_channel.send(cmd)
         # if app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_FD]:
         #     os.write(app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_FD],
         #              data[api_constants.MGMT_WEBAPP.INPUT_PROPERTY].encode())

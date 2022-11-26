@@ -16,7 +16,7 @@ import {
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM, WS_CONNECT_ERROR,
     WS_CONNECT_MSG, WS_DISCONNECT_MSG, WS_CONTAINER_TERMINAL_INPUT_MSG,
-    WS_CONTAINER_TERMINAL_NAMESPACE, WS_CONTAINER_TERMINAL_OUTPUT_MSG, WS_RESIZE_MSG
+    WS_CONTAINER_TERMINAL_NAMESPACE, WS_CONTAINER_TERMINAL_OUTPUT_MSG, WS_RESIZE_MSG, WS_HOST_TERMINAL_NAMESPACE
 } from "../../Common/constants";
 
 /**
@@ -64,12 +64,14 @@ const ContainerTerminal = (props) => {
             socket.emit(WS_CONTAINER_TERMINAL_INPUT_MSG,
                 {input: data, token: props.sessionData.token});
         });
-        const socket = io.connect(`${ip}:${port}/${WS_CONTAINER_TERMINAL_NAMESPACE}` +
-            +`?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`);
+        const socket = io.connect(`${ip}:${port}/${WS_CONTAINER_TERMINAL_NAMESPACE}?${TOKEN_QUERY_PARAM}` +
+            `=${props.sessionData.token}`);
         setSocketState(socket)
         const status = document.getElementById("status");
 
         socket.on(WS_CONTAINER_TERMINAL_OUTPUT_MSG, function (data) {
+            console.log("Receive data, container: ")
+            console.log(data)
             term.write(data.output);
         });
 
