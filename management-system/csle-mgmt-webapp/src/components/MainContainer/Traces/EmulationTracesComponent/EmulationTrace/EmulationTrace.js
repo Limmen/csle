@@ -7,7 +7,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import './EmulationTrace.css';
 import Collapse from 'react-bootstrap/Collapse'
-import getIpString from "../../../Common/getIpString";
+import getIpString from "../../../../Common/getIpString";
 
 /**
  * Component representing the /emulation-traces/id resource

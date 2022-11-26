@@ -1,57 +1,37 @@
-import React, {useState, useEffect, useCallback, createRef} from 'react';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-import Spinner from 'react-bootstrap/Spinner'
-import Button from 'react-bootstrap/Button'
-import Accordion from 'react-bootstrap/Accordion';
-import Modal from 'react-bootstrap/Modal'
-import SimulationTrace from "./SimulationTrace/SimulationTrace";
-import TraceImg from './TracesLoop.png'
-import MarkovImg from './../Simulations/Markov.png'
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
-import Form from 'react-bootstrap/Form'
-import Select from 'react-select'
-import './Traces.css';
-import {useDebouncedCallback} from 'use-debounce';
-import {confirmAlert} from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
-import { useNavigate } from "react-router-dom";
-import { useAlert } from "react-alert";
-import serverIp from "../../Common/serverIp";
-import serverPort from "../../Common/serverPort";
+import React, {useState} from 'react';
+import './EmulationTracesComponent.css';
+import EmulationTrace from "./EmulationTrace/EmulationTrace";
+import serverIp from "../../../Common/serverIp";
+import serverPort from "../../../Common/serverPort";
 import {
     HTTP_PREFIX, HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
-    SIMULATION_TRACES_RESOURCE,
     TOKEN_QUERY_PARAM,
+    EMULATION_TRACES_RESOURCE,
     IDS_QUERY_PARAM
-} from "../../Common/constants";
-
+} from "../../../Common/constants";
 
 /**
- * Component representing the /traces-page
+ * Component representing emulation traces on the page /traces-page
  */
-const Traces = (props) => {
-    const [showSimulationTracesInfoModal, setShowSimulationTracesInfoModal] = useState(false);
-    const [selectedSimulationTraceId, setSelectedSimulationTraceId] = useState(null);
-    const [selectedSimulationTrace, setSelectedSimulationTrace] = useState(null);
-    const [simulationTracesIds, setSimulationTracesIds] = useState([]);
-    const [loadingSelectedSimulationTrace, setLoadingSelectedSimulationTrace] = useState(true);
-    const [loadingSimulationTraces, setLoadingSimulationTraces] = useState(true);
-    const [filteredSimulationTracesIds, setFilteredSimulationTracesIds] = useState([]);
+const EmulationTracesComponent = (props) => {
+    const [showEmulationTracesInfoModal, setShowEmulationTracesInfoModal] = useState(false);
+    const [selectedEmulationTraceId, setSelectedEmulationTraceId] = useState(null);
+    const [selectedEmulationTrace, setSelectedEmulationTrace] = useState(null);
+    const [emulationTracesIds, setEmulationTracesIds] = useState([]);
+    const [loadingEmulationTraces, setLoadingEmulationTraces] = useState(true);
+    const [loadingSelectedEmulationTrace, setLoadingSelectedEmulationTrace] = useState(true);
+    const [filteredEmulationTracesIds, setFilteredEmulationTracesIds] = useState([]);
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
-    const wrapper = createRef();
-
-    const fetchSimulationTrace = useCallback((trace_id) => {
+    const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}/${trace_id.value}`
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}/${trace_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -73,15 +53,15 @@ const Traces = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedSimulationTrace(response)
-                setLoadingSelectedSimulationTrace(false)
+                setSelectedEmulationTrace(response)
+                setLoadingSelectedEmulationTrace(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const fetchSimulationTracesIds = useCallback(() => {
+    const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -103,70 +83,29 @@ const Traces = (props) => {
                 if(response === null) {
                     return
                 }
-                const simulationTracesIds = response.map((id_obj, index) => {
+                const emulationTracesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
+                        label: `ID: ${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
-                setSimulationTracesIds(simulationTracesIds)
-                setFilteredSimulationTracesIds(simulationTracesIds)
-                setLoadingSimulationTraces(false)
-                if (simulationTracesIds.length > 0) {
-                    setSelectedSimulationTraceId(simulationTracesIds[0])
-                    fetchSimulationTrace(simulationTracesIds[0])
-                    setLoadingSelectedSimulationTrace(true)
+                setEmulationTracesIds(emulationTracesIds)
+                setFilteredEmulationTracesIds(emulationTracesIds)
+                setLoadingEmulationTraces(false)
+                if (emulationTracesIds.length > 0) {
+                    setSelectedEmulationTraceId(emulationTracesIds[0])
+                    fetchEmulationTrace(emulationTracesIds[0])
+                    setLoadingSelectedEmulationTrace(true)
                 } else {
-                    setLoadingSelectedSimulationTrace(false)
+                    setLoadingSelectedEmulationTrace(false)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchSimulationTrace, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, fetchEmulationTrace, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    useEffect(() => {
-        setLoadingSimulationTraces(true)
-        fetchSimulationTracesIds()
-    }, [fetchSimulationTracesIds]);
-
-    const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
+    const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}/${simulation_trace_id}`
-                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_DELETE,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                fetchSimulationTracesIds()
-            })
-            .catch(error => console.log("error:" + error))
-    }, [fetchSimulationTracesIds, ip, navigate, port, alert, props.sessionData.token, setSessionData]);
-
-    const removeSimulationTrace = (simulationTrace) => {
-        setLoadingSimulationTraces(true)
-        setLoadingSelectedSimulationTrace(true)
-        removeSimulationTraceRequest(simulationTrace.id)
-        setSelectedSimulationTrace(null)
-    }
-
-    const removeAllSimulationTracesRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}`
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}/${emulation_trace_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -188,26 +127,68 @@ const Traces = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchSimulationTracesIds()
+                fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchSimulationTracesIds, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, fetchEmulationTracesIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const removeAllSimulationTraces = () => {
-        setLoadingSimulationTraces(true)
-        setLoadingSelectedSimulationTrace(true)
-        removeAllSimulationTracesRequest()
-        setSelectedSimulationTrace(null)
+    const removeAllEmulationTracesRequest = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_DELETE,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                fetchEmulationTracesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, [fetchEmulationTracesIds, ip, navigate, port, alert, props.sessionData.token, setSessionData]);
+
+    const removeEmulationTrace = (emulationTrace) => {
+        setLoadingEmulationTraces(true)
+        setLoadingSelectedEmulationTrace(true)
+        removeEmulationTraceRequest(emulationTrace.id)
+        setSelectedEmulationTrace(null)
     }
 
-    const removeAllSimulationTracesConfirm = () => {
+    const refreshEmulationTraces = () => {
+        setLoadingEmulationTraces(true)
+        setLoadingSelectedEmulationTrace(true)
+        fetchEmulationTracesIds()
+    }
+
+    const removeAllEmulationTraces = () => {
+        setLoadingEmulationTraces(true)
+        setLoadingSelectedEmulationTrace(true)
+        removeAllEmulationTracesRequest()
+        setSelectedEmulationTrace(null)
+    }
+
+    const removeAllEmulationTracesConfirm = () => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete all simulation traces? this action cannot be undone',
+            message: 'Are you sure you want to delete all emulation traces? this action cannot be undone',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAllSimulationTraces()
+                    onClick: () => removeAllEmulationTraces()
                 },
                 {
                     label: 'No'
@@ -224,11 +205,11 @@ const Traces = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all simulation traces? this action cannot be undone
+                                    Are you sure you want to delete all emulation traces? this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAllSimulationTraces()
+                                                    removeAllEmulationTraces()
                                                     onClose()
                                                 }}
                                         >
@@ -248,15 +229,15 @@ const Traces = (props) => {
         })
     }
 
-    const removeSimulationTraceConfirm = (trace) => {
+    const removeEmulationTraceConfirm = (trace) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the simulation trace with ID: ' + trace.id +
+            message: 'Are you sure you want to delete the emulation trace with ID: ' + trace.id +
                 "? this action cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeSimulationTrace(trace)
+                    onClick: () => removeEmulationTrace(trace)
                 },
                 {
                     label: 'No'
@@ -273,12 +254,12 @@ const Traces = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the simulation trace with ID {trace.id}?
+                                    Are you sure you want to delete the emulation trace with ID {trace.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeSimulationTrace(trace)
+                                                    removeEmulationTrace(trace)
                                                     onClose()
                                                 }}
                                         >
@@ -298,79 +279,66 @@ const Traces = (props) => {
         })
     }
 
-    const refreshSimulationTraces = () => {
-        setLoadingSimulationTraces(true)
-        setLoadingSelectedSimulationTrace(true)
-        fetchSimulationTracesIds()
+    const renderRefreshEmulationTracesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload emulation traces from the backend
+        </Tooltip>
+    );
+
+    const renderRemoveAllEmulationTracesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all emulation traces
+        </Tooltip>
+    );
+
+    const searchEmulationTracesFilter = (emulationTraceIdLabel, searchVal) => {
+        return (searchVal === "" || emulationTraceIdLabel.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const renderRemoveAllSimulationTracesTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all simulation traces
-        </Tooltip>
-    );
-
-    const renderInfoTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about how traces are collected
-        </Tooltip>
-    );
-
-    const renderRefreshSimulationTracesTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload simulation traces from the backend
-        </Tooltip>
-    );
-
-    const searchSimulationTracesFilter = (simulationTraceIdObj, searchVal) => {
-        return (searchVal === "" || simulationTraceIdObj.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
-    }
-
-    const searchSimulationTracesChange = (event) => {
+    const searchEmulationTracesChange = (event) => {
         var searchVal = event.target.value
-        const filteredSimTracesIds = simulationTracesIds.filter(simTraceId => {
-            return searchSimulationTracesFilter(simTraceId, searchVal)
+        const filteredEmTracesIds = emulationTracesIds.filter(emulationTraceId => {
+            return searchEmulationTracesFilter(emulationTraceId.label, searchVal)
         });
-        setFilteredSimulationTracesIds(filteredSimTracesIds)
-
-        var selectedSimulationTraceRemoved = false
-        if (!loadingSelectedSimulationTrace && filteredSimTracesIds.length > 0) {
-            for (let i = 0; i < filteredSimTracesIds.length; i++) {
-                if (selectedSimulationTrace !== null && selectedSimulationTrace !== undefined &&
-                    selectedSimulationTrace.id === filteredSimTracesIds[i].value) {
-                    selectedSimulationTraceRemoved = true
+        setFilteredEmulationTracesIds(filteredEmTracesIds)
+        var selectedEmulationTraceRemoved = false
+        if (!loadingSelectedEmulationTrace && filteredEmTracesIds.length > 0) {
+            for (let i = 0; i < filteredEmTracesIds.length; i++) {
+                if (selectedEmulationTrace !== null && selectedEmulationTrace !== undefined &&
+                    selectedEmulationTrace.id === filteredEmTracesIds[i].value) {
+                    selectedEmulationTraceRemoved = true
                 }
             }
-            if (!selectedSimulationTraceRemoved) {
-                setSelectedSimulationTraceId(filteredSimTracesIds[0])
-                fetchSimulationTrace(filteredSimTracesIds[0])
-                setLoadingSelectedSimulationTrace(true)
+            if (!selectedEmulationTraceRemoved) {
+                setSelectedEmulationTraceId(filteredEmTracesIds[0])
+                fetchEmulationTrace(filteredEmTracesIds[0])
+                setLoadingSelectedEmulationTrace(true)
             }
         }
     }
 
-    const searchSimulationTracesHandler = useDebouncedCallback(
+    const searchEmulationTracesHandler = useDebouncedCallback(
         (event) => {
-            searchSimulationTracesChange(event)
+            searchEmulationTracesChange(event)
         },
         350
     );
 
-    const updateSelectedSimulationTraceId = (selectedId) => {
-        setSelectedSimulationTraceId(selectedId)
-        fetchSimulationTrace(selectedId)
-        setLoadingSelectedSimulationTrace(true)
+    const updateSelectedEmulationTraceId = (selectedId) => {
+        setSelectedEmulationTraceId(selectedId)
+        fetchEmulationTrace(selectedId)
+        setLoadingSelectedEmulationTrace(true)
     }
 
-    const DeleteAllSimulationTracesOrEmpty = (props) => {
+    const DeleteAllEmulationTracesOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllSimulationTracesTooltip}
+                    overlay={renderRemoveAllEmulationTracesTooltip}
                 >
-                    <Button variant="danger" onClick={removeAllSimulationTracesConfirm} size="sm">
+                    <Button variant="danger" onClick={removeAllEmulationTracesConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -380,52 +348,52 @@ const Traces = (props) => {
         }
     }
 
-    const SelectSimulationTraceOrSpinner = (props) => {
-        if (!props.loadingSimulationTraces && props.simulationTracesIds.length === 0) {
+    const SelectEmulationTraceOrSpinner = (props) => {
+        if (!props.loadingEmulationTraces && props.emulationTracesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No simulation traces are available</span>
-                </div>
-            )
-        }
-        if (props.loadingSimulationTraces) {
-            return (
-                <Spinner animation="border" role="status" className="dropdownSpinner">
-                    <span className="visually-hidden"></span>
+                    <span className="emptyText">No emulation traces are available</span>
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshSimulationTracesTooltip}
+                        overlay={renderRefreshEmulationTracesTooltip}
                     >
-                        <Button variant="button" onClick={refreshSimulationTraces}>
+                        <Button variant="button" onClick={refreshEmulationTraces}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loadingEmulationTraces) {
+            return (
+                <Spinner animation="border" role="status" className="dropdownSpinner">
+                    <span className="visually-hidden"></span>
                 </Spinner>)
         } else {
             return (
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected simulation trace:
+                            Selected emulation trace:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedSimulationTraceId}
-                                defaultValue={props.selectedSimulationTraceId}
-                                options={props.simulationTracesIds}
-                                onChange={updateSelectedSimulationTraceId}
-                                placeholder="Select simulation trace"
+                                value={props.selectedEmulationTraceId}
+                                defaultValue={props.selectedEmulationTraceId}
+                                options={props.emulationTracesIds}
+                                onChange={updateSelectedEmulationTraceId}
+                                placeholder="Select emulation trace"
                             />
                         </div>
                     </div>
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshSimulationTracesTooltip}
+                        overlay={renderRefreshEmulationTracesTooltip}
                     >
-                        <Button variant="button" onClick={refreshSimulationTraces}>
+                        <Button variant="button" onClick={refreshEmulationTraces}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -435,19 +403,20 @@ const Traces = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowSimulationTracesInfoModal(true)}>
+                        <Button className="infoButton5" variant="button" onClick={() => setShowEmulationTracesInfoModal(true)}>
                             <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <SimulationTracesInfoModal show={showSimulationTracesInfoModal} onHide={() => setShowSimulationTracesInfoModal(false)}/>
-
-                    <DeleteAllSimulationTracesOrEmpty sessionData={props.sessionData}/>
+                    <EmulationTracesInfoModal
+                        show={showEmulationTracesInfoModal}
+                        onHide={() => setShowEmulationTracesInfoModal(false)}/>
+                    <DeleteAllEmulationTracesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
-    const SimulationTracesInfoModal = (props) => {
+    const EmulationTracesInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -462,12 +431,12 @@ const Traces = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        Simulation traces are collected from the simulation system. At every time-step of the
-                        simulation,
-                        the simulated observations, player actions, rewards, states, and beliefs are recorded.
+                        Emulation traces are collected from the emulation system. At every time-step of an emulation
+                        episode, observations, actions, rewards, states and beliefs are measured or computed based on
+                        data from the emulation.
                     </p>
                     <div className="text-center">
-                        <img src={MarkovImg} alt="Traces" className="img-fluid"/>
+                        <img src={TraceImg} alt="Traces" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
@@ -477,33 +446,32 @@ const Traces = (props) => {
         );
     }
 
-    const SimulationTraceAccordion = (props) => {
-        if (props.loadingSelectedSimulationTrace || props.selectedSimulationTrace === null || props.selectedSimulationTrace === undefined) {
-            if (props.loadingSelectedSimulationTrace) {
+    const EmulationTraceAccordion = (props) => {
+        if (props.loadingSelectedEmulationTrace || props.selectedEmulationTrace === null || props.selectedEmulationTrace === undefined) {
+            if (props.loadingSelectedEmulationTrace) {
                 return (
                     <h3>
-                        <span className="spinnerLabel"> Fetching simulation trace... </span>
-                        <Spinner animation="border" role="status" className="spinnerLabel">
+                        <span className="spinnerLabel"> Fetching emulation trace... </span>
+                        <Spinner animation="border" role="status">
                             <span className="visually-hidden"></span>
                         </Spinner>
-                    </h3>
-                )
+                    </h3>)
             } else {
                 return (
-                    <p>
-                    </p>)
+                    <p></p>
+                )
             }
         } else {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Configuration of selected simulation trace:
+                        Configuration of selected emulation trace:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <SimulationTrace simulationTrace={props.selectedSimulationTrace}
-                                         wrapper={wrapper} key={props.selectedSimulationTrace.id}
-                                         removeSimulationTrace={removeSimulationTraceConfirm}
-                                         sessionData={props.sessionData}
+                        <EmulationTrace emulationTrace={props.selectedEmulationTrace}
+                                        wrapper={wrapper} key={props.selectedEmulationTrace.id}
+                                        removeEmulationTrace={removeEmulationTraceConfirm}
+                                        sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -511,23 +479,28 @@ const Traces = (props) => {
         }
     }
 
+    useEffect(() => {
+        setLoadingEmulationTraces(true)
+        fetchEmulationTracesIds()
+    }, [fetchEmulationTracesIds]);
+
     return (
-        <div className="Traces">
-            <h3 className="managementTitle"> Traces </h3>
-            <div className="row simulationTracesHeader">
+        <div>
+            <div className="row emulationTracesHeader">
                 <div className="col-sm-7">
-                    <h4 className="text-center inline-block">
-                        <SelectSimulationTraceOrSpinner loadingSimulationTraces={loadingSimulationTraces}
-                                                        simulationTracesIds={filteredSimulationTracesIds}
-                                                        selectedSimulationTraceId={selectedSimulationTraceId}
-                                                        sessionData={props.sessionData}
+                    <h4 className="text-center inline-block emulationsHeader">
+
+                        <SelectEmulationTraceOrSpinner loadingEmulationTraces={loadingEmulationTraces}
+                                                       emulationTracesIds={filteredEmulationTracesIds}
+                                                       selectedEmulationTraceId={selectedEmulationTraceId}
+                                                       sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
                 <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
-                            <InputGroup.Text id="simulationTracesInput" className="searchIcon">
+                            <InputGroup.Text id="emulationTracesInput" className="searchIcon">
                                 <i className="fa fa-search" aria-hidden="true"/>
                             </InputGroup.Text>
                             <FormControl
@@ -535,8 +508,8 @@ const Traces = (props) => {
                                 className="searchBar"
                                 placeholder="Search"
                                 aria-label="Search"
-                                aria-describedby="simulationTracesInput"
-                                onChange={searchSimulationTracesHandler}
+                                aria-describedby="emulationTracesInput"
+                                onChange={searchEmulationTracesHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -544,14 +517,14 @@ const Traces = (props) => {
                 <div className="col-sm-2">
                 </div>
             </div>
-            <SimulationTraceAccordion selectedSimulationTrace={selectedSimulationTrace}
-                                      loadingSelectedSimulationTrace={loadingSelectedSimulationTrace}
-                                      sessionData={props.sessionData}
+            <EmulationTraceAccordion selectedEmulationTrace={selectedEmulationTrace}
+                                     loadingSelectedEmulationTrace={loadingSelectedEmulationTrace}
+                                     sessionData={props.sessionData}
             />
         </div>
-    );
+    )
 }
 
-Traces.propTypes = {};
-Traces.defaultProps = {};
-export default Traces;
+EmulationTracesComponent.propTypes = {};
+EmulationTracesComponent.defaultProps = {};
+export default EmulationTracesComponent;

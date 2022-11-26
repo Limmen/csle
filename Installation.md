@@ -179,7 +179,7 @@ running commands can read and write to this directory.
       ```bash
       cd csle-cli
       pip install -e .
-      cd ../../../
+      cd ../../
       ```
     - Setup auto-completion in BASH by generating the following file:
       ```bash
