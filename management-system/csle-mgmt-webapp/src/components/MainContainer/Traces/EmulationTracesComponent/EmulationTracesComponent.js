@@ -1,8 +1,14 @@
 import React, {useState} from 'react';
 import './EmulationTracesComponent.css';
 import EmulationTrace from "./EmulationTrace/EmulationTrace";
+import {useDebouncedCallback} from 'use-debounce';
+import {confirmAlert} from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
+import TraceImg from './TracesLoop.png'
 import {
     HTTP_PREFIX, HTTP_REST_DELETE,
     HTTP_REST_GET,
@@ -28,6 +34,7 @@ const EmulationTracesComponent = (props) => {
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
+    const wrapper = createRef();
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(

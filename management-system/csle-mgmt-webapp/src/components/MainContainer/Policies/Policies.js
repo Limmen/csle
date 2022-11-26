@@ -45,13 +45,12 @@ const Policies = (props) => {
         }
     ]
     const [selectedPolicyType, setSelectedPolicyType] = useState(policyTypes[3]);
-    const setSessionData = props.setSessionData
 
     const updatedSelectedPolicyType = (selectedPolicyType) => {
         setSelectedPolicyType(selectedPolicyType)
     }
 
-    const SelectedPolicyComponent = (props) => {
+    const SelectedPolicyTypeComponent = (props) => {
         if(props.selectedPolicyType.value === 0) {
             return (<MultiThresholdPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
@@ -91,12 +90,12 @@ const Policies = (props) => {
                         defaultValue={selectedPolicyType}
                         options={policyTypes}
                         onChange={updatedSelectedPolicyType}
-                        placeholder="Select policy"
+                        placeholder="Select policy type"
                     />
                 </div>
             </div>
-            <SelectedPolicyComponent selectedPolicyType={selectedPolicyType} sessionData={props.sessionData}
-                                     setSessionData={setSessionData}/>
+            <SelectedPolicyTypeComponent selectedPolicyType={selectedPolicyType} sessionData={props.sessionData}
+                                     setSessionData={props.setSessionData}/>
         </div>
     );
 }
