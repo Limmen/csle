@@ -1,5 +1,3 @@
-
-
 class MGMT_WEBAPP:
     """
     Constants related to the management webapp

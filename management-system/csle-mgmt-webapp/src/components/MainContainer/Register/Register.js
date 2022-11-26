@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom";
 import './Register.css';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    HTTP_PREFIX,
+    LOGIN_PAGE_RESOURCE,
+    USERS_RESOURCE,
+    CREATE_SUBRESOURCE,
+    HTTP_REST_POST
+} from "../../Common/constants";
 
 /**
  * The component representing the /register-page
@@ -23,9 +29,9 @@ const Register = () => {
 
     const createUser = useCallback((userConfiguration) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/users/create',
+            `${HTTP_PREFIX}${ip}:${port}/${USERS_RESOURCE}/${CREATE_SUBRESOURCE}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),

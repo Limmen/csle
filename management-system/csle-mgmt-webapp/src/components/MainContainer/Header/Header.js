@@ -127,6 +127,23 @@ const Header = (props) => {
         }
     }
 
+    const HostTerminalPageLinkOrEmpty = (props) => {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="right"
+                    delay={{show: 0, hide: 0}}
+                    overlay={props.renderHostTerminalTooltip}>
+                    <NavLink className="dropdown-item" to={HOST_TERMINAL_PAGE_RESOURCE}>
+                        Host Terminal
+                    </NavLink>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     const renderManagementTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Management and operation of the environment
@@ -442,14 +459,9 @@ const Header = (props) => {
                                         Control Plane
                                     </NavLink>
                                 </OverlayTrigger>
-                                <OverlayTrigger
-                                    placement="right"
-                                    delay={{show: 0, hide: 0}}
-                                    overlay={renderHostTerminalTooltip}>
-                                    <NavLink className="dropdown-item" to={HOST_TERMINAL_PAGE_RESOURCE}>
-                                        Host Terminal
-                                    </NavLink>
-                                </OverlayTrigger>
+                                <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}
+                                                             sessionData={props.sessionData}
+                                />
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{show: 0, hide: 0}}

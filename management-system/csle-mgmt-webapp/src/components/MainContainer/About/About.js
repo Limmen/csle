@@ -31,8 +31,8 @@ const About = () => {
                         The emulation system is based on Docker and the telemetry system is based on gRPC,
                         the Elastic stack and Kafka.
                         The code and the documentation is freely available under the CC BY-SA 4.0 license.
-                        The code is available <a href="https://github.com/Limmen/csle">here</a> and the documentation is available
-                        <a href="https://limmen.dev/csle/">here</a>.
+                        The code is available <a href="https://github.com/Limmen/csle">here</a> and the documentation
+                        is available <a href="https://limmen.dev/csle/">here</a>.
                     </p>
                 </div>
                 <div className="col-sm-2"></div>
