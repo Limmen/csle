@@ -1,5 +1,5 @@
 import React, {useState, useCallback, createRef, useEffect} from 'react';
-import './TabularPolicyComponent.css';
+import './FnnWSoftmaxPolicies.css';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -10,12 +10,12 @@ import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal'
 import Tooltip from 'react-bootstrap/Tooltip';
 import Button from 'react-bootstrap/Button'
+import FnnWSoftmaxPolicy from "./FnnWSoftmaxPolicy/FnnWSoftmaxPolicy";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import NeuralNetworkPolicies from './../NeuralNetworkPolicies.png'
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
-import TabularPolicyImg from './TabularPolicyImg.png'
-import TabularPolicy from "./TabularPolicy/TabularPolicy";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
@@ -26,20 +26,20 @@ import {
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
     IDS_QUERY_PARAM,
-    TABULAR_POLICIES_RESOURCE
+    FNN_W_SOFTMAX_POLICIES_RESOURCE
 } from "../../../Common/constants";
 
 /**
- * Component representing a Tabular policy
+ * Component representing a feed-forward neural network with softmax policy
  */
-const TabularPolicyComponent = (props) => {
-    const [showTabularPoliciesInfoModal, setShowTabularPoliciesInfoModal] = useState(false);
-    const [tabularPoliciesIds, setTabularPoliciesIds] = useState([]);
-    const [selectedTabularPolicy, setSelectedTabularPolicy] = useState(null);
-    const [selectedTabularPolicyId, setSelectedTabularPolicyId] = useState(null);
-    const [loadingTabularPolicy, setLoadingTabularPolicy] = useState(true);
-    const [filteredTabulaPoliciesIds, setFilteredTabularPoliciesIds] = useState([]);
-    const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
+const FnnWSoftmaxPolicies = (props) => {
+    const [showFNNPoliciesInfoModal, setShowFNNPoliciesInfoModal] = useState(false);
+    const [fnnWSoftmaxPoliciesIds, setFnnWSoftmaxPoliciesIds] = useState([]);
+    const [selectedFnnWSoftmaxPolicy, setSelectedFnnWSoftmaxPolicy] = useState(null);
+    const [selectedFnnWSoftmaxPolicyId, setSelectedFnnWSoftmaxPolicyId] = useState(null);
+    const [loadingFnnWSoftmaxPolicy, setLoadingFnnWSoftmaxPolicy] = useState(true);
+    const [filteredFnnWSoftmaxPoliciesIds, setFilteredFnnWSoftmaxPoliciesIds] = useState([]);
+    const [loadingFnnWSoftmaxPolicies, setLoadingFnnWSoftmaxPolicies] = useState(true);
 
     const ip = serverIp
     const port = serverPort
@@ -48,10 +48,10 @@ const TabularPolicyComponent = (props) => {
     const navigate = useNavigate();
     const wrapper = createRef();
 
-    const fetchTabularPolicy = useCallback((tabular_policy_id) => {
+    const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
-                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -73,15 +73,15 @@ const TabularPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedTabularPolicy(response)
-                setLoadingTabularPolicy(false)
+                setSelectedFnnWSoftmaxPolicy(response)
+                setLoadingFnnWSoftmaxPolicy(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const fetchTabularPoliciesIds = useCallback(() => {
+    const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -103,32 +103,31 @@ const TabularPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                const tabularPoliciesIds = response.map((id_obj, index) => {
+                const fnnWSoftmaxPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
                         label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
-                setTabularPoliciesIds(tabularPoliciesIds)
-                setFilteredTabularPoliciesIds(tabularPoliciesIds)
-                setLoadingTabularPolicies(false)
-                if (tabularPoliciesIds.length > 0) {
-                    setSelectedTabularPolicyId(tabularPoliciesIds[0])
-                    fetchTabularPolicy(tabularPoliciesIds[0])
-                    setLoadingTabularPolicy(true)
+                setFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
+                setFilteredFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
+                setLoadingFnnWSoftmaxPolicies(false)
+                if (fnnWSoftmaxPoliciesIds.length > 0) {
+                    setSelectedFnnWSoftmaxPolicyId(fnnWSoftmaxPoliciesIds[0])
+                    fetchFnnWSoftmaxPolicy(fnnWSoftmaxPoliciesIds[0])
+                    setLoadingFnnWSoftmaxPolicy(true)
                 } else {
-                    setLoadingTabularPolicy(false)
-                    setSelectedTabularPolicy(null)
+                    setLoadingFnnWSoftmaxPolicy(false)
+                    setSelectedFnnWSoftmaxPolicy(null)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTabularPolicy]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchFnnWSoftmaxPolicy]);
 
-
-    const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
+    const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
                 headers: new Headers({
@@ -149,15 +148,15 @@ const TabularPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchTabularPoliciesIds()
+                fetchFnnWSoftmaxPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchTabularPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchFnnWSoftmaxPoliciesIds]);
 
-    const removeAllTabularPoliciesRequest = useCallback(() => {
+    const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
                 headers: new Headers({
@@ -178,24 +177,24 @@ const TabularPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchTabularPoliciesIds()
+                fetchFnnWSoftmaxPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchTabularPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchFnnWSoftmaxPoliciesIds]);
 
-    const removeTabularPolicy = (tabularPolicy) => {
-        setLoadingTabularPolicies(true)
-        removeTabularPoliciesRequest(tabularPolicy.id)
+    const removeFnnWSoftmaxPolicy = (fnnWSoftmaxPolicy) => {
+        setLoadingFnnWSoftmaxPolicies(true)
+        removeFnnWSoftmaxPoliciesRequest(fnnWSoftmaxPolicy.id)
     }
 
-    const removeAllTabularPoliciesConfirm = () => {
+    const removeAllFnnWSoftmaxPoliciesConfirm = () => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete all Tabular policies? this action cannot be undone',
+            message: 'Are you sure you want to delete all FNN-with-softmax policies? this action cannot be undone',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAllTabularPolicies()
+                    onClick: () => removeAllFnnWSoftmaxPolicies()
                 },
                 {
                     label: 'No'
@@ -212,11 +211,12 @@ const TabularPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all tabular policies? this action cannot be undone
+                                    Are you sure you want to delete all FNN-with-softmax policies?
+                                    this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAllTabularPolicies()
+                                                    removeAllFnnWSoftmaxPolicies()
                                                     onClose()
                                                 }}
                                         >
@@ -236,15 +236,15 @@ const TabularPolicyComponent = (props) => {
         })
     }
 
-    const removeTabularPolicyConfirm = (tabularPolicy) => {
+    const removeFnnWSoftmaxPolicyConfirm = (fnnWSoftmaxPolicy) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the tabular policy with ID: ' + tabularPolicy.id +
+            message: 'Are you sure you want to delete the FNN-with-softmax policy with ID: ' + fnnWSoftmaxPolicy.id +
                 "? this action cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeTabularPolicy(tabularPolicy)
+                    onClick: () => removeFnnWSoftmaxPolicy(fnnWSoftmaxPolicy)
                 },
                 {
                     label: 'No'
@@ -261,12 +261,13 @@ const TabularPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the tabular policy with ID {tabularPolicy.id}?
+                                    Are you sure you want to delete the FNN-with-softmax policy with
+                                    ID {fnnWSoftmaxPolicy.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeTabularPolicy(tabularPolicy)
+                                                    removeFnnWSoftmaxPolicy(fnnWSoftmaxPolicy)
                                                     onClose()
                                                 }}
                                         >
@@ -286,35 +287,29 @@ const TabularPolicyComponent = (props) => {
         })
     }
 
-    const removeAllTabularPolicies = () => {
-        setLoadingTabularPolicies(true)
-        removeAllTabularPoliciesRequest()
+    const removeAllFnnWSoftmaxPolicies = () => {
+        setLoadingFnnWSoftmaxPolicies(true)
+        removeAllFnnWSoftmaxPoliciesRequest()
     }
 
-    const refreshTabularPolicies = () => {
-        setLoadingTabularPolicies(true)
-        fetchTabularPoliciesIds()
+    const refreshFnnWSoftmaxPolicies = () => {
+        setLoadingFnnWSoftmaxPolicies(true)
+        fetchFnnWSoftmaxPoliciesIds()
     }
 
-    const renderInfoTooltip = (props) => (
+    const renderRemoveAllFnnWSoftmaxPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about learned tabular policies.
+            Remove all Feed-forward neural network with softmax output policies.
         </Tooltip>
     );
 
-    const renderRemoveAllTabularPoliciesTooltip = (props) => (
+    const renderFnnWSoftmaxRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all Tabular policies.
+            Reload feed-forward neural network policies with softmax outputs from the backend
         </Tooltip>
     );
 
-    const renderTabularRefreshTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload Tabular policies from the backend
-        </Tooltip>
-    );
-
-    const TabularPoliciesInfoModal = (props) => {
+    const FNNPoliciesInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -324,17 +319,17 @@ const TabularPolicyComponent = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        Tabular policies.
+                        FNN Policies
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        Tabular policies are produced by tabular reinforcement learning algorithms such as
-                        Q-learning, Sarsa, and TD-learning. A tabular policy consists of a table of mappings between
-                        states and actions.
+                        Feed-forward neural network policies are neural networks where the input to the network
+                        is either a state or an observation and the output is either an action or a distribution
+                        over actions.
                     </p>
                     <div className="text-center">
-                        <img src={TabularPolicyImg} alt="tabular" className="img-fluid"/>
+                        <img src={NeuralNetworkPolicies} alt="threshold policy" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
@@ -344,21 +339,15 @@ const TabularPolicyComponent = (props) => {
         );
     }
 
-    const updateSelectedTabularPolicyId = (selectedId) => {
-        setSelectedTabularPolicyId(selectedId)
-        fetchTabularPolicy(selectedId)
-        setLoadingTabularPolicy(true)
-    }
-
-    const DeleteAllTabularPoliciesOrEmpty = (props) => {
+    const DeleteAllFNNWSoftmaxPoliciesOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllTabularPoliciesTooltip}
+                    overlay={renderRemoveAllFnnWSoftmaxPoliciesTooltip}
                 >
-                    <Button variant="danger" onClick={removeAllTabularPoliciesConfirm} size="sm">
+                    <Button variant="danger" onClick={removeAllFnnWSoftmaxPoliciesConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -368,24 +357,24 @@ const TabularPolicyComponent = (props) => {
         }
     }
 
-    const SelectTabularPolicyOrSpinner = (props) => {
-        if (!props.loadingTabularPolicies && props.tabularPoliciesIds.length === 0) {
+    const SelectFnnWSoftmaxPolicyOrSpinner = (props) => {
+        if (!props.loadingFnnWSoftmaxPolicies && props.fnnWSoftmaxPoliciesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No Tabular policies are available</span>
+                    <span className="emptyText">No feed-forward neural network policies are available</span>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderTabularRefreshTooltip}
+                        overlay={renderFnnWSoftmaxRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshTabularPolicies}>
+                        <Button variant="button" onClick={refreshFnnWSoftmaxPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </div>
             )
         }
-        if (props.loadingTabularPolicies) {
+        if (props.loadingFnnWSoftmaxPolicies) {
             return (
                 <div>
                     <span className="spinnerLabel"> Fetching policies... </span>
@@ -398,15 +387,15 @@ const TabularPolicyComponent = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected tabular policy:
+                            Selected feed-forward neural network policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedTabularPolicyId}
-                                defaultValue={props.selectedTabularPolicyId}
-                                options={props.tabularPoliciesIds}
-                                onChange={updateSelectedTabularPolicyId}
+                                value={props.selectedFnnWSoftmaxPolicyId}
+                                defaultValue={props.selectedFnnWSoftmaxPolicyId}
+                                options={props.fnnWSoftmaxPoliciesIds}
+                                onChange={updateSelectedFnnWSoftmaxPolicyId}
                                 placeholder="Select policy"
                             />
                         </div>
@@ -415,9 +404,9 @@ const TabularPolicyComponent = (props) => {
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderTabularRefreshTooltip}
+                        overlay={renderFnnWSoftmaxRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshTabularPolicies}>
+                        <Button variant="button" onClick={refreshFnnWSoftmaxPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -427,23 +416,21 @@ const TabularPolicyComponent = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowTabularPoliciesInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowFNNPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <TabularPoliciesInfoModal
-                        show={showTabularPoliciesInfoModal}
-                        onHide={() => setShowTabularPoliciesInfoModal(false)}/>
+                    <FNNPoliciesInfoModal show={showFNNPoliciesInfoModal} onHide={() => setShowFNNPoliciesInfoModal(false)}/>
 
-                    <DeleteAllTabularPoliciesOrEmpty sessionData={props.sessionData}/>
+                    <DeleteAllFNNWSoftmaxPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
-    const TabularPolicyAccordion = (props) => {
-        if (props.loadingTabularPolicy || props.selectedTabularPolicy === null || props.selectedTabularPolicy === undefined) {
-            if (props.loadingTabularPolicy) {
+    const FnnWSoftmaxPolicyAccordion = (props) => {
+        if (props.loadingFnnWSoftmaxPolicy || props.selectedFnnWSoftmaxPolicy === null || props.selectedFnnWSoftmaxPolicy === undefined) {
+            if (props.loadingFnnWSoftmaxPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -460,12 +447,13 @@ const TabularPolicyComponent = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Configuration of the selected tabular policy:
+                        Configuration of the selected feed-forward neural network policy:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
-                                       removeTabularPolicy={removeTabularPolicyConfirm}
-                                       sessionData={props.sessionData}
+                        <FnnWSoftmaxPolicy policy={props.selectedFnnWSoftmaxPolicy} wrapper={wrapper}
+                                           key={props.selectedFnnWSoftmaxPolicy.id}
+                                           removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicyConfirm}
+                                           sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -473,72 +461,84 @@ const TabularPolicyComponent = (props) => {
         }
     }
 
-    const searchTabularPoliciesFilter = (tabularPolicyId, searchVal) => {
-        return (searchVal === "" || tabularPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    const searchFnnWSoftmaxPoliciesFilter = (fnnWSoftmaxPolicyId, searchVal) => {
+        return (searchVal === "" || fnnWSoftmaxPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const searchTabularPolicyChange = (event) => {
+    const searchFnnWSoftmaxPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = tabularPoliciesIds.filter(policy => {
-            return searchTabularPoliciesFilter(policy, searchVal)
+        const fPoliciesIds = fnnWSoftmaxPoliciesIds.filter(policy => {
+            return searchFnnWSoftmaxPoliciesFilter(policy, searchVal)
         });
-        setFilteredTabularPoliciesIds(fPoliciesIds)
+        setFilteredFnnWSoftmaxPoliciesIds(fPoliciesIds)
 
         var selectedPolicyRemoved = false
-        if (!loadingTabularPolicy && fPoliciesIds.length > 0) {
+        if (!loadingFnnWSoftmaxPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if (selectedTabularPolicy !== null && selectedTabularPolicy !== undefined &&
-                    selectedTabularPolicy.id === fPoliciesIds[i].value) {
+                if (selectedFnnWSoftmaxPolicy !== null && selectedFnnWSoftmaxPolicy !== undefined &&
+                    selectedFnnWSoftmaxPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
             if (!selectedPolicyRemoved) {
-                setSelectedTabularPolicyId(fPoliciesIds[0])
-                fetchTabularPolicy(fPoliciesIds[0])
-                setLoadingTabularPolicy(true)
+                setSelectedFnnWSoftmaxPolicyId(fPoliciesIds[0])
+                fetchFnnWSoftmaxPolicy(fPoliciesIds[0])
+                setLoadingFnnWSoftmaxPolicy(true)
             }
         } else {
-            setSelectedTabularPolicy(null)
+            setSelectedFnnWSoftmaxPolicy(null)
         }
     }
 
-    const searchTabularPoliciesHandler = useDebouncedCallback(
+    const searchFnnWSoftmaxPoliciesHandler = useDebouncedCallback(
         (event) => {
-            searchTabularPolicyChange(event)
+            searchFnnWSoftmaxPolicyChange(event)
         },
         350
     );
 
+    const updateSelectedFnnWSoftmaxPolicyId = (selectedId) => {
+        setSelectedFnnWSoftmaxPolicyId(selectedId)
+        fetchFnnWSoftmaxPolicy(selectedId)
+        setLoadingFnnWSoftmaxPolicy(true)
+    }
+
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about learned feed-forward neural network with softmax policies.
+        </Tooltip>
+    );
+
     useEffect(() => {
-        setLoadingTabularPolicies(true)
-        fetchTabularPoliciesIds()
-    }, [fetchTabularPoliciesIds]);
+        setLoadingFnnWSoftmaxPolicies(true)
+        fetchFnnWSoftmaxPoliciesIds()
+    }, [fetchFnnWSoftmaxPoliciesIds]);
 
     return (
         <div>
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectTabularPolicyOrSpinner loadingTabularPolicies={loadingTabularPolicies}
-                                                      tabularPoliciesIds={filteredTabulaPoliciesIds}
-                                                      selectedTabularPolicyId={selectedTabularPolicyId}
-                                                      sessionData={props.sessionData}
+                        <SelectFnnWSoftmaxPolicyOrSpinner loadingFnnWSoftmaxPolicies={loadingFnnWSoftmaxPolicies}
+                                                          fnnWSoftmaxPoliciesIds={filteredFnnWSoftmaxPoliciesIds}
+                                                          selectedFnnWSoftmaxPolicyId={selectedFnnWSoftmaxPolicyId}
+                                                          sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
                 <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
-                            <InputGroup.Text id="tabularPoliciesSearchField" className="searchIcon">
+                            <InputGroup.Text id="fnnWSoftmaxPoliciesSearchField" className="searchIcon">
                                 <i className="fa fa-search" aria-hidden="true"/>
                             </InputGroup.Text>
                             <FormControl
                                 size="lg"
                                 className="searchBar"
                                 placeholder="Search"
-                                aria-label="tabularPoliciesSearchLabel"
-                                aria-describedby="tabularPoliciesSearchField"
-                                onChange={searchTabularPoliciesHandler}
+                                aria-label="fnnWSoftmaxPoliciesSearchLabel"
+                                aria-describedby="fnnWSoftmaxPoliciesSearchField"
+                                onChange={searchFnnWSoftmaxPoliciesHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -547,13 +547,13 @@ const TabularPolicyComponent = (props) => {
                 </div>
             </div>
 
-            <TabularPolicyAccordion loadingTabularPolicy={loadingTabularPolicy}
-                                    selectedTabularPolicy={selectedTabularPolicy}
-                                    sessionData={props.sessionData}/>
+            <FnnWSoftmaxPolicyAccordion loadingFnnWSoftmaxPolicy={loadingFnnWSoftmaxPolicy}
+                                        selectedFnnWSoftmaxPolicy={selectedFnnWSoftmaxPolicy}
+                                        sessionData={props.sessionData}/>
         </div>
     )
 }
 
-TabularPolicyComponent.propTypes = {};
-TabularPolicyComponent.defaultProps = {};
-export default TabularPolicyComponent;
+FnnWSoftmaxPolicies.propTypes = {};
+FnnWSoftmaxPolicies.defaultProps = {};
+export default FnnWSoftmaxPolicies;

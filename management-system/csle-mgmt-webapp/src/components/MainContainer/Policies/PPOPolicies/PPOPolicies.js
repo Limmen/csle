@@ -1,5 +1,5 @@
 import React, {useState, useCallback, createRef, useEffect} from 'react';
-import './PPOPolicyComponent.css';
+import './PPOPolicies.css';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -32,7 +32,7 @@ import {
 /**
  * Component representing a PPO policy
  */
-const PPOPolicyComponent = (props) => {
+const PPOPolicies = (props) => {
     const [showPPOPoliciesInfoModal, setShowPPOPoliciesInfoModal] = useState(false);
     const [ppoPoliciesIds, setPpoPoliciesIds] = useState([]);
     const [selectedPpoPolicy, setSelectedPpoPolicy] = useState(null);
@@ -549,6 +549,6 @@ const PPOPolicyComponent = (props) => {
     )
 }
 
-PPOPolicyComponent.propTypes = {};
-PPOPolicyComponent.defaultProps = {};
-export default PPOPolicyComponent;
+PPOPolicies.propTypes = {};
+PPOPolicies.defaultProps = {};
+export default PPOPolicies;

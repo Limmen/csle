@@ -2,13 +2,13 @@ import React, {useState} from 'react';
 import './Policies.css';
 import Select from 'react-select'
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import AlphaVecPolicyComponent from "./AlphaVecPolicyComponent/AlphaVecPolicyComponent";
-import DQNPolicyComponent from "./DQNPolicyComponent/DQNPolicyComponent";
-import PPOPolicyComponent from "./PPOPolicyComponent/PPOPolicyComponent";
-import MultiThresholdPolicyComponent from "./MultiThresholdPolicyComponent/MultiThresholdPolicyComponent";
-import VectorPolicyComponent from "./VectorPolicyComponent/VectorPolicyComponent";
-import FnnWSoftmaxPolicyComponent from "./FnnWSoftmaxPolicyComponent/FnnWSoftmaxPolicyComponent";
-import TabularPolicyComponent from "./TabularPolicyComponent/TabularPolicyComponent";
+import AlphaVecPolicies from "./AlphaVecPolicies/AlphaVecPolicies";
+import DQNPolicyComponent from "./DQNPolicies/DQNPolicies";
+import PPOPolicies from "./PPOPolicies/PPOPolicies";
+import MultiThresholdPolicyComponent from "./MultiThresholdPolicies/MultiThresholdPolicies";
+import VectorPolicies from "./VectorPolicies/VectorPolicies";
+import FnnWSoftmaxPolicies from "./FnnWSoftmaxPolicies/FnnWSoftmaxPolicies";
+import TabularPolicies from "./TabularPolicies/TabularPolicies";
 
 /**
  * Component representing the /policies page
@@ -55,22 +55,22 @@ const Policies = (props) => {
             return (<MultiThresholdPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
         if(props.selectedPolicyType.value === 1) {
-            return (<AlphaVecPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+            return (<AlphaVecPolicies sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
         if(props.selectedPolicyType.value === 2) {
             return (<DQNPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
         if(props.selectedPolicyType.value === 3) {
-            return (<PPOPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+            return (<PPOPolicies sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
         if(props.selectedPolicyType.value === 4) {
-            return (<VectorPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+            return (<VectorPolicies sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
         if(props.selectedPolicyType.value === 5) {
-            return (<FnnWSoftmaxPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+            return (<FnnWSoftmaxPolicies sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
         if(props.selectedPolicyType.value === 6) {
-            return (<TabularPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+            return (<TabularPolicies sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
 
     }

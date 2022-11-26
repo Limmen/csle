@@ -1,5 +1,5 @@
-import React, {useState, useCallback, createRef, useEffect} from 'react';
-import './MultiThresholdPolicyComponent.css';
+import React, {useState, useCallback, useEffect, createRef} from 'react';
+import './AlphaVecPolicies.css';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -7,9 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 import Accordion from 'react-bootstrap/Accordion';
-import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import Modal from 'react-bootstrap/Modal'
-import ThresholdPolicyImg from './ThresholdPolicy.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -19,28 +17,29 @@ import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
+import PWLCValueFun from './PWLCValueFun.png'
 import {
+    ALPHA_VEC_POLICIES_RESOURCE,
     HTTP_PREFIX,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
-    IDS_QUERY_PARAM,
-    MULTI_THRESHOLD_POLICIES_RESOURCE,
+    IDS_QUERY_PARAM
 } from "../../../Common/constants";
 
 /**
- * Component representing a Multi threshold policy
+ * Component representing an alphavector policy
  */
-const MultiThesholdPolicyComponent = (props) => {
-    const [showMultiThresholdPoliciesInfoModal, setShowMultiThresholdPoliciesInfoModal] = useState(false);
-    const [multiThresholdPoliciesIds, setMultiThresholdPoliciesIds] = useState([]);
-    const [filteredMultiThresholdPoliciesIds, setFilteredMultiThresholdPoliciesIds] = useState([]);
-    const [selectedMultiThresholdPolicy, setSelectedMultiThresholdPolicy] = useState(null);
-    const [selectedMultiThresholdPolicyId, setSelectedMultiThresholdPolicyId] = useState(null);
-    const [loadingMultiThresholdPolicy, setLoadingMultiThresholdPolicy] = useState(true);
-    const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
-
+const AlphaVecPolicies = (props) => {
+    const [showAlphaVectorPoliciesInfoModal, setShowAlphaVectorPoliciesInfoModal] = useState(false);
+    const [alphaVecPoliciesIds, setAlphaVecPoliciesIds] = useState([]);
+    const [selectedAlphaVecPolicy, setSelectedAlphaVecPolicy] = useState(null);
+    const [selectedAlphaVecPolicyId, setSelectedALphaVecPolicyId] = useState(null);
+    const [loadingAlphaVecPolicy, setLoadingAlphaVecPolicy] = useState(true);
+    const [filteredAlphaVecPoliciesIds, setFilteredAlphaVecPoliciesIds] = useState([]);
+    const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
     const ip = serverIp
     const port = serverPort
     const setSessionData = props.setSessionData
@@ -48,14 +47,15 @@ const MultiThesholdPolicyComponent = (props) => {
     const navigate = useNavigate();
     const wrapper = createRef();
 
-    const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
+    const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
-                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
+                    Accept:
+                        "application/vnd.github.cloak-preview"
                 })
             }
         )
@@ -72,15 +72,15 @@ const MultiThesholdPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedMultiThresholdPolicy(response)
-                setLoadingMultiThresholdPolicy(false)
+                setSelectedAlphaVecPolicy(response)
+                setLoadingAlphaVecPolicy(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const fetchMultiThresholdPoliciesIds = useCallback(() => {
+    const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -102,30 +102,30 @@ const MultiThesholdPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                const multiThresholdPoliciesIds = response.map((id_obj, index) => {
+                const alphavecPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
                         label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
-                setMultiThresholdPoliciesIds(multiThresholdPoliciesIds)
-                setFilteredMultiThresholdPoliciesIds(multiThresholdPoliciesIds)
-                setLoadingMultiThresholdPolicies(false)
-                if (multiThresholdPoliciesIds.length > 0) {
-                    setSelectedMultiThresholdPolicyId(multiThresholdPoliciesIds[0])
-                    fetchMultiThresholdPolicy(multiThresholdPoliciesIds[0])
-                    setLoadingMultiThresholdPolicy(true)
+                setAlphaVecPoliciesIds(alphavecPoliciesIds)
+                setFilteredAlphaVecPoliciesIds(alphavecPoliciesIds)
+                setLoadingAlphaVecPolicies(false)
+                if (alphavecPoliciesIds.length > 0) {
+                    setSelectedALphaVecPolicyId(alphavecPoliciesIds[0])
+                    fetchAlphaVecPolicy(alphavecPoliciesIds[0])
+                    setLoadingAlphaVecPolicy(true)
                 } else {
-                    setLoadingMultiThresholdPolicy(false)
-                    setSelectedMultiThresholdPolicy(null)
+                    setLoadingAlphaVecPolicy(false)
+                    setSelectedAlphaVecPolicy(null)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchMultiThresholdPolicy]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchAlphaVecPolicy]);
 
-    const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
+    const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id}`
+            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -147,14 +147,14 @@ const MultiThesholdPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchMultiThresholdPoliciesIds()
+                fetchAlphaVecPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchMultiThresholdPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchAlphaVecPoliciesIds]);
 
-    const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
+    const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}`
+            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -176,29 +176,30 @@ const MultiThesholdPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchMultiThresholdPoliciesIds()
+                fetchAlphaVecPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchMultiThresholdPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchAlphaVecPoliciesIds]);
 
-    const removeMultiThresholdPolicy = (multiThresholdPolicy) => {
-        setLoadingMultiThresholdPolicies(true)
-        removeMultiThresholdPoliciesRequest(multiThresholdPolicy.id)
+    const removeAlphaVecPolicy = (alphaVecPolicy) => {
+        setLoadingAlphaVecPolicies(true)
+        removeAlphaVecPoliciesRequest(alphaVecPolicy.id)
     }
 
-    const removeAllMultiThresholdPolicies = () => {
-        setLoadingMultiThresholdPolicies(true)
-        removeAllMultiThresholdPoliciesRequest()
-    }
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about the alpha vector policies.
+        </Tooltip>
+    );
 
-    const removeAllMultiThresholdPoliciesConfirm = () => {
+    const removeAllAlphaVecPoliciesConfirm = () => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete all multi-threshold policies? this action cannot be undone',
+            message: 'Are you sure you want to delete all alpha-vector policies? this action cannot be undone',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAllMultiThresholdPolicies()
+                    onClick: () => removeAllAlphaVecPolicies()
                 },
                 {
                     label: 'No'
@@ -215,12 +216,12 @@ const MultiThesholdPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all multi-threshold policies?
+                                    Are you sure you want to delete all alpha-vector policies?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAllMultiThresholdPolicies()
+                                                    removeAllAlphaVecPolicies()
                                                     onClose()
                                                 }}
                                         >
@@ -240,15 +241,15 @@ const MultiThesholdPolicyComponent = (props) => {
         })
     }
 
-    const removeMultiThresholdPolicyConfirm = (multiThresholdPolicy) => {
+    const removeAlphaVecPolicyConfirm = (alphaVecPolicy) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the multi-threshold policy with ID: ' + multiThresholdPolicy.id +
+            message: 'Are you sure you want to delete the alpha-vector policy with ID: ' + alphaVecPolicy.id +
                 "? this action cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeMultiThresholdPolicy(multiThresholdPolicy)
+                    onClick: () => removeAlphaVecPolicy(alphaVecPolicy)
                 },
                 {
                     label: 'No'
@@ -265,13 +266,12 @@ const MultiThesholdPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the multi-threshold policy
-                                    with ID {multiThresholdPolicy.id}?
+                                    Are you sure you want to delete the alpha-vector policy with ID {alphaVecPolicy.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeMultiThresholdPolicy(multiThresholdPolicy)
+                                                    removeAlphaVecPolicy(alphaVecPolicy)
                                                     onClose()
                                                 }}
                                         >
@@ -291,68 +291,44 @@ const MultiThesholdPolicyComponent = (props) => {
         })
     }
 
-    const refreshMultiThresholdPolicies = () => {
-        setLoadingMultiThresholdPolicies(true)
-        fetchMultiThresholdPoliciesIds()
+    const removeAllAlphaVecPolicies = () => {
+        setLoadingAlphaVecPolicies(true)
+        removeAllAlphaVecPoliciesRequest()
     }
 
-    const renderMultiThresholdPoliciesRefreshTooltip = (props) => (
+    const refreshAlphaVecPolicies = () => {
+        setLoadingAlphaVecPolicies(true)
+        fetchAlphaVecPoliciesIds()
+    }
+
+    const renderRemoveAllAlphaVecPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload multi-threshold policies from the backend
+            Remove all Alpha-Vector policies.
         </Tooltip>
     );
 
-    const renderRemoveAllMultiThresholdPoliciesTooltip = (props) => (
+    const renderAlphaVecRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all multi-threshold policies.
+            Reload Alpha-Vector policies from the backend
         </Tooltip>
     );
 
-    const MultiThresholdPoliciesInfoModal = (props) => {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        Multi-Threshold Policies
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p className="modalText">
-                        A threshold policy is a polic parameterized by a set of thresholds that determine when
-                        to take different actions. The thresholds can be based on the state of an MDP if the state is observed
-                        or based on a belief state of a POMDP if the state is not observed.
-                    </p>
-                    <div className="text-center">
-                        <img src={ThresholdPolicyImg} alt="threshold policy" className="img-fluid"/>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer className="modalFooter">
-                    <Button onClick={props.onHide} size="sm">Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
+    const updateSelectedAlphaVecPolicyId = (selectedId) => {
+        setSelectedALphaVecPolicyId(selectedId)
+        fetchAlphaVecPolicy(selectedId)
+        setLoadingAlphaVecPolicy(true)
     }
 
-    const updateSelectedMultiThresholdPolicyId = (selectedId) => {
-        setSelectedMultiThresholdPolicyId(selectedId)
-        fetchMultiThresholdPolicy(selectedId)
-        setLoadingMultiThresholdPolicy(true)
-    }
 
-    const DeleteAllMultiThresholdPoliciesOrEmpty = (props) => {
+    const DeleteAllAlphaVecPoliciesOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
+                    overlay={renderRemoveAllAlphaVecPoliciesTooltip}
                 >
-                    <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm} size="sm">
+                    <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -362,24 +338,24 @@ const MultiThesholdPolicyComponent = (props) => {
         }
     }
 
-    const SelectMultiThresholdPolicyOrSpinner = (props) => {
-        if (!props.loadingMultiThresholdPolicies && props.multiThresholdPoliciesIds.length === 0) {
+    const SelectAlphaVecPolicyOrSpinner = (props) => {
+        if (!props.loadingAlphaVecPolicies && props.alphaVecPoliciesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No multi-threshold policies are available</span>
+                    <span className="emptyText">No alpha-vector policies are available</span>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderMultiThresholdPoliciesRefreshTooltip}
+                        overlay={renderAlphaVecRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshMultiThresholdPolicies}>
+                        <Button variant="button" onClick={refreshAlphaVecPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </div>
             )
         }
-        if (props.loadingMultiThresholdPolicies) {
+        if (props.loadingAlphaVecPolicies) {
             return (
                 <div>
                     <span className="spinnerLabel"> Fetching policies... </span>
@@ -392,25 +368,26 @@ const MultiThesholdPolicyComponent = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected multi-threshold policy:
+                            Selected alpha-vector policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedMultiThresholdPolicyId}
-                                defaultValue={props.selectedMultiThresholdPolicyId}
-                                options={props.multiThresholdPoliciesIds}
-                                onChange={updateSelectedMultiThresholdPolicyId}
+                                value={props.selectedAlphaVecPolicyId}
+                                defaultValue={props.selectedAlphaVecPolicyId}
+                                options={props.alphaVecPoliciesIds}
+                                onChange={updateSelectedAlphaVecPolicyId}
                                 placeholder="Select policy"
                             />
                         </div>
                     </div>
+
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderMultiThresholdPoliciesRefreshTooltip}
+                        overlay={renderAlphaVecRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshMultiThresholdPolicies}>
+                        <Button variant="button" onClick={refreshAlphaVecPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -420,22 +397,51 @@ const MultiThesholdPolicyComponent = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowMultiThresholdPoliciesInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowAlphaVectorPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <MultiThresholdPoliciesInfoModal show={showMultiThresholdPoliciesInfoModal} onHide={() => setShowMultiThresholdPoliciesInfoModal(false)}/>
+                    <AlphaVectorPoliciesInfoModal show={showAlphaVectorPoliciesInfoModal}
+                                                  onHide={() => setShowAlphaVectorPoliciesInfoModal(false)}/>
 
-                    <DeleteAllMultiThresholdPoliciesOrEmpty sessionData={props.sessionData}/>
+                    <DeleteAllAlphaVecPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
-    const MultiThresholdPolicyAccordion = (props) => {
-        if (props.loadingMultiThresholdPolicy || props.selectedMultiThresholdPolicy === null ||
-            props.selectedMultiThresholdPolicy === undefined) {
-            if (props.loadingMultiThresholdPolicy) {
+    const AlphaVectorPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Alpha-vector policies.
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Alpha-vector policies are greedy policies with respect to piece-wise linear and convex value functions
+                        for POMDPs.
+                    </p>
+                    <div className="text-center">
+                        <img src={PWLCValueFun} alt="piece-wise linar and convex value function" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const AlphaVecPolicyAccordion = (props) => {
+        if (props.loadingAlphaVecPolicy || props.selectedAlphaVecPolicy === null || props.selectedAlphaVecPolicy === undefined) {
+            if (props.loadingAlphaVecPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -452,13 +458,13 @@ const MultiThesholdPolicyComponent = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Configuration of the selected multi-threshold policy:
+                        Configuration of the selected alpha-vector policy:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <MultiThresholdPolicy policy={selectedMultiThresholdPolicy} wrapper={wrapper}
-                                              key={selectedMultiThresholdPolicy.id}
-                                              removeMultiThresholdPolicy={removeMultiThresholdPolicyConfirm}
-                                              sessionData={props.sessionData}
+                        <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
+                                        key={selectedAlphaVecPolicy.id}
+                                        removeAlphaVecPolicy={removeAlphaVecPolicyConfirm}
+                                        sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -466,79 +472,72 @@ const MultiThesholdPolicyComponent = (props) => {
         }
     }
 
-    const searchMultiThresholdPoliciesFilter = (multiThresholdPolicyId, searchVal) => {
-        return (searchVal === "" || multiThresholdPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    const searchAlphaVecPoliciesFilter = (alphaVecPolicyId, searchVal) => {
+        return (searchVal === "" || alphaVecPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const searchMultiThresholdPolicyChange = (event) => {
+    const searchAlphaVecPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = multiThresholdPoliciesIds.filter(policyId => {
-            return searchMultiThresholdPoliciesFilter(policyId, searchVal)
+        const fPoliciesIds = alphaVecPoliciesIds.filter(policy => {
+            return searchAlphaVecPoliciesFilter(policy, searchVal)
         });
-        setFilteredMultiThresholdPoliciesIds(fPoliciesIds)
+        setFilteredAlphaVecPoliciesIds(fPoliciesIds)
 
         var selectedPolicyRemoved = false
-        if (!loadingMultiThresholdPolicy && fPoliciesIds.length > 0) {
+        if (!loadingAlphaVecPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if (selectedMultiThresholdPolicy !== null && selectedMultiThresholdPolicy !== undefined &&
-                    selectedMultiThresholdPolicy.id === fPoliciesIds[i].value) {
+                if (selectedAlphaVecPolicy !== null && selectedAlphaVecPolicy !== undefined &&
+                    selectedAlphaVecPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
             if (!selectedPolicyRemoved) {
-                setSelectedMultiThresholdPolicyId(fPoliciesIds[0])
-                fetchMultiThresholdPolicy(fPoliciesIds[0])
-                setLoadingMultiThresholdPolicy(true)
+                setSelectedALphaVecPolicyId(fPoliciesIds[0])
+                fetchAlphaVecPolicy(fPoliciesIds[0])
+                setLoadingAlphaVecPolicy(true)
             }
         } else {
-            setSelectedMultiThresholdPolicy(null)
+            setSelectedAlphaVecPolicy(null)
         }
     }
 
-    const searchMultiThresholdPoliciesHandler = useDebouncedCallback(
+    const searchAlphaVecPoliciesHandler = useDebouncedCallback(
         (event) => {
-            searchMultiThresholdPolicyChange(event)
+            searchAlphaVecPolicyChange(event)
         },
         350
     );
 
-    const renderInfoTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about learned Multi-threshold policies.
-        </Tooltip>
-    );
-
     useEffect(() => {
-        setLoadingMultiThresholdPolicies(true)
-        fetchMultiThresholdPoliciesIds()
-    }, [fetchMultiThresholdPoliciesIds]);
+        setLoadingAlphaVecPolicies(true)
+        fetchAlphaVecPoliciesIds()
+    }, [fetchAlphaVecPoliciesIds]);
 
     return (
         <div>
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectMultiThresholdPolicyOrSpinner
-                            loadingMultiThresholdPolicies={loadingMultiThresholdPolicies}
-                            multiThresholdPoliciesIds={filteredMultiThresholdPoliciesIds}
-                            selectedMultiThresholdPolicyId={selectedMultiThresholdPolicyId}
-                            sessionData={props.sessionData}
+                        <SelectAlphaVecPolicyOrSpinner loadingAlphaVecPolicies={loadingAlphaVecPolicies}
+                                                       alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
+                                                       selectedAlphaVecPolicyId={selectedAlphaVecPolicyId}
+                                                       sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
                 <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
-                            <InputGroup.Text id="tSpsaPoliciesSearchField" className="searchIcon">
+                            <InputGroup.Text id="alphaVecPoliciesSearchField" className="searchIcon">
                                 <i className="fa fa-search" aria-hidden="true"/>
                             </InputGroup.Text>
                             <FormControl
                                 size="lg"
                                 className="searchBar"
                                 placeholder="Search"
-                                aria-label="tSpsaPoliciesSearchLabel"
-                                aria-describedby="tSpsaPoliciesSearchField"
-                                onChange={searchMultiThresholdPoliciesHandler}
+                                aria-label="alphaVecPoliciesSearchLabel"
+                                aria-describedby="alphaVecPoliciesSearchField"
+                                onChange={searchAlphaVecPoliciesHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -546,14 +545,15 @@ const MultiThesholdPolicyComponent = (props) => {
                 <div className="col-sm-2">
                 </div>
             </div>
-            <MultiThresholdPolicyAccordion loadingMultiThresholdPolicy={loadingMultiThresholdPolicy}
-                                           selectedMultiThresholdPolicy={selectedMultiThresholdPolicy}
-                                           sessionData={props.sessionData}
+
+            <AlphaVecPolicyAccordion loadingAlphaVecPolicy={loadingAlphaVecPolicy}
+                                     selectedAlphaVecPolicy={selectedAlphaVecPolicy}
+                                     sessionData={props.sessionData}
             />
         </div>
     )
 }
 
-MultiThesholdPolicyComponent.propTypes = {};
-MultiThesholdPolicyComponent.defaultProps = {};
-export default MultiThesholdPolicyComponent;
+AlphaVecPolicies.propTypes = {};
+AlphaVecPolicies.defaultProps = {};
+export default AlphaVecPolicies;

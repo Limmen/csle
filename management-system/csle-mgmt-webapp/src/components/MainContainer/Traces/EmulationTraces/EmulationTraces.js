@@ -1,5 +1,5 @@
 import React, {useState, createRef, useCallback, useEffect} from 'react';
-import './EmulationTracesComponent.css';
+import './EmulationTraces.css';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';

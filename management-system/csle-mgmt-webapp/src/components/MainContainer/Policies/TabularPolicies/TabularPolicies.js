@@ -1,5 +1,5 @@
 import React, {useState, useCallback, createRef, useEffect} from 'react';
-import './DQNPolicyComponent.css';
+import './TabularPolicies.css';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -11,34 +11,35 @@ import Modal from 'react-bootstrap/Modal'
 import Tooltip from 'react-bootstrap/Tooltip';
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import NeuralNetworkPolicies from './../NeuralNetworkPolicies.png'
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
+import TabularPolicyImg from './TabularPolicyImg.png'
+import TabularPolicy from "./TabularPolicy/TabularPolicy";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-import DQNPolicy from "./DQNPolicy/DQNPolicy";
 import {
     HTTP_PREFIX,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
-    IDS_QUERY_PARAM, DQN_POLICIES_RESOURCE
+    IDS_QUERY_PARAM,
+    TABULAR_POLICIES_RESOURCE
 } from "../../../Common/constants";
 
 /**
- * Component representing a DQN policy
+ * Component representing a Tabular policy
  */
-const DQNPolicyComponent = (props) => {
-    const [showDQNPoliciesInfoModal, setShowDQNPoliciesInfoModal] = useState(false);
-    const [dqnPoliciesIds, setDQNPoliciesIds] = useState([]);
-    const [selectedDQNPolicy, setSelectedDQNPolicy] = useState(null);
-    const [selectedDQNPolicyId, setSelectedDQNPolicyId] = useState(null);
-    const [loadingDQNPolicy, setLoadingDQNPolicy] = useState(true);
-    const [filteredDQNPoliciesIds, setFilteredDQNPoliciesIds] = useState([]);
-    const [loadingDQNPolicies, setLoadingDQNPolicies] = useState(true);
+const TabularPolicies = (props) => {
+    const [showTabularPoliciesInfoModal, setShowTabularPoliciesInfoModal] = useState(false);
+    const [tabularPoliciesIds, setTabularPoliciesIds] = useState([]);
+    const [selectedTabularPolicy, setSelectedTabularPolicy] = useState(null);
+    const [selectedTabularPolicyId, setSelectedTabularPolicyId] = useState(null);
+    const [loadingTabularPolicy, setLoadingTabularPolicy] = useState(true);
+    const [filteredTabulaPoliciesIds, setFilteredTabularPoliciesIds] = useState([]);
+    const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
 
     const ip = serverIp
     const port = serverPort
@@ -47,10 +48,10 @@ const DQNPolicyComponent = (props) => {
     const navigate = useNavigate();
     const wrapper = createRef();
 
-    const fetchDQNPolicy = useCallback((dqn_policy_id) => {
+    const fetchTabularPolicy = useCallback((tabular_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            (`${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -72,15 +73,15 @@ const DQNPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedDQNPolicy(response)
-                setLoadingDQNPolicy(false)
+                setSelectedTabularPolicy(response)
+                setLoadingTabularPolicy(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const fetchDQNPoliciesIds = useCallback(() => {
+    const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -102,31 +103,31 @@ const DQNPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                const dqnPoliciesIds = response.map((id_obj, index) => {
+                const tabularPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
                         label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
-                setDQNPoliciesIds(dqnPoliciesIds)
-                setFilteredDQNPoliciesIds(dqnPoliciesIds)
-                setLoadingDQNPolicies(false)
-                if (dqnPoliciesIds.length > 0) {
-                    setSelectedDQNPolicyId(dqnPoliciesIds[0])
-                    fetchDQNPolicy(dqnPoliciesIds[0])
-                    setLoadingDQNPolicy(true)
+                setTabularPoliciesIds(tabularPoliciesIds)
+                setFilteredTabularPoliciesIds(tabularPoliciesIds)
+                setLoadingTabularPolicies(false)
+                if (tabularPoliciesIds.length > 0) {
+                    setSelectedTabularPolicyId(tabularPoliciesIds[0])
+                    fetchTabularPolicy(tabularPoliciesIds[0])
+                    setLoadingTabularPolicy(true)
                 } else {
-                    setLoadingDQNPolicy(false)
-                    setSelectedDQNPolicy(null)
+                    setLoadingTabularPolicy(false)
+                    setSelectedTabularPolicy(null)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchDQNPolicy, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTabularPolicy]);
 
 
-    const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
+    const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id}`
+            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -148,19 +149,53 @@ const DQNPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchDQNPoliciesIds()
+                fetchTabularPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchDQNPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchTabularPoliciesIds]);
 
-    const removeAllDQNPoliciesConfirm = () => {
+    const removeAllTabularPoliciesRequest = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_DELETE,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                fetchTabularPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchTabularPoliciesIds]);
+
+    const removeTabularPolicy = (tabularPolicy) => {
+        setLoadingTabularPolicies(true)
+        removeTabularPoliciesRequest(tabularPolicy.id)
+    }
+
+    const removeAllTabularPoliciesConfirm = () => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete all DQN policies? this action cannot be undone',
+            message: 'Are you sure you want to delete all Tabular policies? this action cannot be undone',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAllDQNPolicies()
+                    onClick: () => removeAllTabularPolicies()
                 },
                 {
                     label: 'No'
@@ -177,11 +212,11 @@ const DQNPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all DQN policies? this action cannot be undone
+                                    Are you sure you want to delete all tabular policies? this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAllDQNPolicies()
+                                                    removeAllTabularPolicies()
                                                     onClose()
                                                 }}
                                         >
@@ -201,15 +236,15 @@ const DQNPolicyComponent = (props) => {
         })
     }
 
-    const removeDQNPolicyConfirm = (dqnPolicy) => {
+    const removeTabularPolicyConfirm = (tabularPolicy) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the DQN policy with ID: ' + dqnPolicy.id +
+            message: 'Are you sure you want to delete the tabular policy with ID: ' + tabularPolicy.id +
                 "? this action cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeDQNPolicy(dqnPolicy)
+                    onClick: () => removeTabularPolicy(tabularPolicy)
                 },
                 {
                     label: 'No'
@@ -226,12 +261,12 @@ const DQNPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the DQN policy with ID {dqnPolicy.id}?
+                                    Are you sure you want to delete the tabular policy with ID {tabularPolicy.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeDQNPolicy(dqnPolicy)
+                                                    removeTabularPolicy(tabularPolicy)
                                                     onClose()
                                                 }}
                                         >
@@ -251,63 +286,35 @@ const DQNPolicyComponent = (props) => {
         })
     }
 
-    const removeAllDQNPoliciesRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_DELETE,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                fetchDQNPoliciesIds()
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchDQNPoliciesIds]);
-
-    const removeDQNPolicy = (dqnPolicy) => {
-        setLoadingDQNPolicies(true)
-        removeDQNPoliciesRequest(dqnPolicy.id)
+    const removeAllTabularPolicies = () => {
+        setLoadingTabularPolicies(true)
+        removeAllTabularPoliciesRequest()
     }
 
-    const removeAllDQNPolicies = () => {
-        setLoadingDQNPolicies(true)
-        removeAllDQNPoliciesRequest()
+    const refreshTabularPolicies = () => {
+        setLoadingTabularPolicies(true)
+        fetchTabularPoliciesIds()
     }
 
-    const refreshDQNPolicies = () => {
-        setLoadingDQNPolicies(true)
-        fetchDQNPoliciesIds()
-    }
-
-    const renderRemoveAllDQNPoliciesTooltip = (props) => (
+    const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all DQN policies.
+            More information about learned tabular policies.
         </Tooltip>
     );
 
-    const renderDQNRefreshTooltip = (props) => (
+    const renderRemoveAllTabularPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload DQN policies from the backend
+            Remove all Tabular policies.
         </Tooltip>
     );
 
-    const DQNPoliciesInfoModal = (props) => {
+    const renderTabularRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload Tabular policies from the backend
+        </Tooltip>
+    );
+
+    const TabularPoliciesInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -317,17 +324,17 @@ const DQNPolicyComponent = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        DQN Policies
+                        Tabular policies.
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        Policies trained with DQN are neural network policies where the input to the network
-                        is either a state or an observation and the output is either an action or a distribution
-                        over actions.
+                        Tabular policies are produced by tabular reinforcement learning algorithms such as
+                        Q-learning, Sarsa, and TD-learning. A tabular policy consists of a table of mappings between
+                        states and actions.
                     </p>
                     <div className="text-center">
-                        <img src={NeuralNetworkPolicies} alt="threshold policy" className="img-fluid"/>
+                        <img src={TabularPolicyImg} alt="tabular" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
@@ -337,15 +344,21 @@ const DQNPolicyComponent = (props) => {
         );
     }
 
-    const DeleteAllDQNPoliciesOrEmpty = (props) => {
+    const updateSelectedTabularPolicyId = (selectedId) => {
+        setSelectedTabularPolicyId(selectedId)
+        fetchTabularPolicy(selectedId)
+        setLoadingTabularPolicy(true)
+    }
+
+    const DeleteAllTabularPoliciesOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllDQNPoliciesTooltip}
+                    overlay={renderRemoveAllTabularPoliciesTooltip}
                 >
-                    <Button variant="danger" onClick={removeAllDQNPoliciesConfirm} size="sm">
+                    <Button variant="danger" onClick={removeAllTabularPoliciesConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -355,24 +368,24 @@ const DQNPolicyComponent = (props) => {
         }
     }
 
-    const SelectDQNPolicyOrSpinner = (props) => {
-        if (!props.loadingDQNPolicies && props.dqnPoliciesIds.length === 0) {
+    const SelectTabularPolicyOrSpinner = (props) => {
+        if (!props.loadingTabularPolicies && props.tabularPoliciesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No DQN policies are available</span>
+                    <span className="emptyText">No Tabular policies are available</span>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderDQNRefreshTooltip}
+                        overlay={renderTabularRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshDQNPolicies}>
+                        <Button variant="button" onClick={refreshTabularPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </div>
             )
         }
-        if (props.loadingDQNPolicies) {
+        if (props.loadingTabularPolicies) {
             return (
                 <div>
                     <span className="spinnerLabel"> Fetching policies... </span>
@@ -385,15 +398,15 @@ const DQNPolicyComponent = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected DQN policy:
+                            Selected tabular policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedDQNPolicyId}
-                                defaultValue={props.selectedDQNPolicyId}
-                                options={props.dqnPoliciesIds}
-                                onChange={updateSelectedDQNPolicyId}
+                                value={props.selectedTabularPolicyId}
+                                defaultValue={props.selectedTabularPolicyId}
+                                options={props.tabularPoliciesIds}
+                                onChange={updateSelectedTabularPolicyId}
                                 placeholder="Select policy"
                             />
                         </div>
@@ -402,9 +415,9 @@ const DQNPolicyComponent = (props) => {
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderDQNRefreshTooltip}
+                        overlay={renderTabularRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshDQNPolicies}>
+                        <Button variant="button" onClick={refreshTabularPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -414,22 +427,23 @@ const DQNPolicyComponent = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowDQNPoliciesInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowTabularPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <DQNPoliciesInfoModal show={showDQNPoliciesInfoModal}
-                                          onHide={() => setShowDQNPoliciesInfoModal(false)}/>
+                    <TabularPoliciesInfoModal
+                        show={showTabularPoliciesInfoModal}
+                        onHide={() => setShowTabularPoliciesInfoModal(false)}/>
 
-                    <DeleteAllDQNPoliciesOrEmpty sessionData={props.sessionData}/>
+                    <DeleteAllTabularPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
-    const DQNPolicyAccordion = (props) => {
-        if (props.loadingDQNPolicy || props.selectedDQNPolicy === null || props.selectedDQNPolicy === undefined) {
-            if (props.loadingDQNPolicy) {
+    const TabularPolicyAccordion = (props) => {
+        if (props.loadingTabularPolicy || props.selectedTabularPolicy === null || props.selectedTabularPolicy === undefined) {
+            if (props.loadingTabularPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -446,12 +460,12 @@ const DQNPolicyComponent = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Configuration of the selected DQN policy:
+                        Configuration of the selected tabular policy:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <DQNPolicy policy={selectedDQNPolicy} wrapper={wrapper} key={selectedDQNPolicy.id}
-                                   removeDQNPolicy={removeDQNPolicyConfirm}
-                                   sessionData={props.sessionData}
+                        <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
+                                       removeTabularPolicy={removeTabularPolicyConfirm}
+                                       sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -459,84 +473,72 @@ const DQNPolicyComponent = (props) => {
         }
     }
 
-    const searchDQNPoliciesFilter = (dqnPolicyId, searchVal) => {
-        return (searchVal === "" || dqnPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    const searchTabularPoliciesFilter = (tabularPolicyId, searchVal) => {
+        return (searchVal === "" || tabularPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const searchDQNPolicyChange = (event) => {
+    const searchTabularPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = dqnPoliciesIds.filter(policy => {
-            return searchDQNPoliciesFilter(policy, searchVal)
+        const fPoliciesIds = tabularPoliciesIds.filter(policy => {
+            return searchTabularPoliciesFilter(policy, searchVal)
         });
-        setFilteredDQNPoliciesIds(fPoliciesIds)
+        setFilteredTabularPoliciesIds(fPoliciesIds)
 
         var selectedPolicyRemoved = false
-        if (!loadingDQNPolicy && fPoliciesIds.length > 0) {
+        if (!loadingTabularPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if (selectedDQNPolicy !== null && selectedDQNPolicy !== undefined &&
-                    selectedDQNPolicy.id === fPoliciesIds[i].value) {
+                if (selectedTabularPolicy !== null && selectedTabularPolicy !== undefined &&
+                    selectedTabularPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
             if (!selectedPolicyRemoved) {
-                setSelectedDQNPolicyId(fPoliciesIds[0])
-                fetchDQNPolicy(fPoliciesIds[0])
-                setLoadingDQNPolicy(true)
+                setSelectedTabularPolicyId(fPoliciesIds[0])
+                fetchTabularPolicy(fPoliciesIds[0])
+                setLoadingTabularPolicy(true)
             }
         } else {
-            setSelectedDQNPolicy(null)
+            setSelectedTabularPolicy(null)
         }
     }
 
-    const searchDQNPoliciesHandler = useDebouncedCallback(
+    const searchTabularPoliciesHandler = useDebouncedCallback(
         (event) => {
-            searchDQNPolicyChange(event)
+            searchTabularPolicyChange(event)
         },
         350
     );
 
-    const updateSelectedDQNPolicyId = (selectedId) => {
-        setSelectedDQNPolicyId(selectedId)
-        fetchDQNPolicy(selectedId)
-        setLoadingDQNPolicy(true)
-    }
-
-    const renderInfoTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about the learned DQN policies.
-        </Tooltip>
-    );
-
     useEffect(() => {
-        setLoadingDQNPolicies(true)
-        fetchDQNPoliciesIds()
-    }, [fetchDQNPoliciesIds]);
+        setLoadingTabularPolicies(true)
+        fetchTabularPoliciesIds()
+    }, [fetchTabularPoliciesIds]);
 
     return (
         <div>
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectDQNPolicyOrSpinner loadingDQNPolicies={loadingDQNPolicies}
-                                                  dqnPoliciesIds={filteredDQNPoliciesIds}
-                                                  selectedDQNPolicyId={selectedDQNPolicyId}
-                                                  sessionData={props.sessionData}
+                        <SelectTabularPolicyOrSpinner loadingTabularPolicies={loadingTabularPolicies}
+                                                      tabularPoliciesIds={filteredTabulaPoliciesIds}
+                                                      selectedTabularPolicyId={selectedTabularPolicyId}
+                                                      sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
                 <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
-                            <InputGroup.Text id="dqnPoliciesSearchField" className="searchIcon">
+                            <InputGroup.Text id="tabularPoliciesSearchField" className="searchIcon">
                                 <i className="fa fa-search" aria-hidden="true"/>
                             </InputGroup.Text>
                             <FormControl
                                 size="lg"
                                 className="searchBar"
                                 placeholder="Search"
-                                aria-label="dqnPoliciesSearchLabel"
-                                aria-describedby="dqnPoliciesSearchField"
-                                onChange={searchDQNPoliciesHandler}
+                                aria-label="tabularPoliciesSearchLabel"
+                                aria-describedby="tabularPoliciesSearchField"
+                                onChange={searchTabularPoliciesHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -545,13 +547,13 @@ const DQNPolicyComponent = (props) => {
                 </div>
             </div>
 
-            <DQNPolicyAccordion loadingDQNPolicy={loadingDQNPolicy} selectedDQNPolicy={selectedDQNPolicy}
-                                sessionData={props.sessionData}
-            />
+            <TabularPolicyAccordion loadingTabularPolicy={loadingTabularPolicy}
+                                    selectedTabularPolicy={selectedTabularPolicy}
+                                    sessionData={props.sessionData}/>
         </div>
     )
 }
 
-DQNPolicyComponent.propTypes = {};
-DQNPolicyComponent.defaultProps = {};
-export default DQNPolicyComponent;
+TabularPolicies.propTypes = {};
+TabularPolicies.defaultProps = {};
+export default TabularPolicies;

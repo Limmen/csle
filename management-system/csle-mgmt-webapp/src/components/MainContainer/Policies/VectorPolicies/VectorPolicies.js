@@ -1,7 +1,8 @@
-import React, {useState, useCallback, useEffect, createRef} from 'react';
-import './AlphaVecPolicyComponent.css';
+import React, {useState, useCallback, createRef, useEffect} from 'react';
+import './VectorPolicies.css';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
+import VectorPolicy from "./VectorPolicy/VectorPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
@@ -17,29 +18,27 @@ import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
-import PWLCValueFun from './PWLCValueFun.png'
 import {
-    ALPHA_VEC_POLICIES_RESOURCE,
     HTTP_PREFIX,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
-    IDS_QUERY_PARAM
+    IDS_QUERY_PARAM,
+    VECTOR_POLICIES_RESOURCE
 } from "../../../Common/constants";
 
 /**
- * Component representing an alphavector policy
+ * Component representing a Vector policy
  */
-const AlphaVecPolicyComponent = (props) => {
-    const [showAlphaVectorPoliciesInfoModal, setShowAlphaVectorPoliciesInfoModal] = useState(false);
-    const [alphaVecPoliciesIds, setAlphaVecPoliciesIds] = useState([]);
-    const [selectedAlphaVecPolicy, setSelectedAlphaVecPolicy] = useState(null);
-    const [selectedAlphaVecPolicyId, setSelectedALphaVecPolicyId] = useState(null);
-    const [loadingAlphaVecPolicy, setLoadingAlphaVecPolicy] = useState(true);
-    const [filteredAlphaVecPoliciesIds, setFilteredAlphaVecPoliciesIds] = useState([]);
-    const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
+const VectorPolicies = (props) => {
+    const [showVectorPoliciesInfoModal, setShowVectorPoliciesInfoModal] = useState(false);
+    const [vectorPoliciesIds, setVectorPoliciesIds] = useState([]);
+    const [selectedVectorPolicy, setSelectedVectorPolicy] = useState(null);
+    const [selectedVectorPolicyId, setSelectedVectorPolicyId] = useState(null);
+    const [loadingVectorPolicy, setLoadingVectorPolicy] = useState(true);
+    const [filteredVectorPoliciesIds, setFilteredVectorPoliciesIds] = useState([]);
+    const [loadingVectorPolicies, setLoadingVectorPolicies] = useState(true);
     const ip = serverIp
     const port = serverPort
     const setSessionData = props.setSessionData
@@ -47,9 +46,9 @@ const AlphaVecPolicyComponent = (props) => {
     const navigate = useNavigate();
     const wrapper = createRef();
 
-    const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
+    const fetchVectorPolicy = useCallback((vector_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
+            (`${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -72,15 +71,15 @@ const AlphaVecPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedAlphaVecPolicy(response)
-                setLoadingAlphaVecPolicy(false)
+                setSelectedVectorPolicy(response)
+                setLoadingVectorPolicy(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const fetchAlphaVecPoliciesIds = useCallback(() => {
+    const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -102,59 +101,30 @@ const AlphaVecPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                const alphavecPoliciesIds = response.map((id_obj, index) => {
+                const vectorPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
                         label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
-                setAlphaVecPoliciesIds(alphavecPoliciesIds)
-                setFilteredAlphaVecPoliciesIds(alphavecPoliciesIds)
-                setLoadingAlphaVecPolicies(false)
-                if (alphavecPoliciesIds.length > 0) {
-                    setSelectedALphaVecPolicyId(alphavecPoliciesIds[0])
-                    fetchAlphaVecPolicy(alphavecPoliciesIds[0])
-                    setLoadingAlphaVecPolicy(true)
+                setVectorPoliciesIds(vectorPoliciesIds)
+                setFilteredVectorPoliciesIds(vectorPoliciesIds)
+                setLoadingVectorPolicies(false)
+                if (vectorPoliciesIds.length > 0) {
+                    setSelectedVectorPolicyId(vectorPoliciesIds[0])
+                    fetchVectorPolicy(vectorPoliciesIds[0])
+                    setLoadingVectorPolicy(true)
                 } else {
-                    setLoadingAlphaVecPolicy(false)
-                    setSelectedAlphaVecPolicy(null)
+                    setLoadingVectorPolicy(false)
+                    setSelectedVectorPolicy(null)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchAlphaVecPolicy]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchVectorPolicy]);
 
-    const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
+    const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
-                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_DELETE,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                fetchAlphaVecPoliciesIds()
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchAlphaVecPoliciesIds]);
-
-    const removeAllAlphaVecPoliciesRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}`
+            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -176,30 +146,53 @@ const AlphaVecPolicyComponent = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchAlphaVecPoliciesIds()
+                fetchVectorPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchAlphaVecPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchVectorPoliciesIds]);
 
-    const removeAlphaVecPolicy = (alphaVecPolicy) => {
-        setLoadingAlphaVecPolicies(true)
-        removeAlphaVecPoliciesRequest(alphaVecPolicy.id)
+    const removeAllVectorPoliciesRequest = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_DELETE,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                fetchVectorPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port,  navigate, props.sessionData.token, setSessionData, fetchVectorPoliciesIds]);
+
+    const removeVectorPolicy = (vectorPolicy) => {
+        setLoadingVectorPolicies(true)
+        removeVectorPoliciesRequest(vectorPolicy.id)
     }
 
-    const renderInfoTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about the alpha vector policies.
-        </Tooltip>
-    );
-
-    const removeAllAlphaVecPoliciesConfirm = () => {
+    const removeAllVectorPoliciesConfirm = () => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete all alpha-vector policies? this action cannot be undone',
+            message: 'Are you sure you want to delete all vector policies? this action cannot be undone',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAllAlphaVecPolicies()
+                    onClick: () => removeAllVectorPolicies()
                 },
                 {
                     label: 'No'
@@ -216,12 +209,11 @@ const AlphaVecPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all alpha-vector policies?
-                                    this action cannot be undone
+                                    Are you sure you want to delete all vector policies? this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAllAlphaVecPolicies()
+                                                    removeAllVectorPolicies()
                                                     onClose()
                                                 }}
                                         >
@@ -241,15 +233,15 @@ const AlphaVecPolicyComponent = (props) => {
         })
     }
 
-    const removeAlphaVecPolicyConfirm = (alphaVecPolicy) => {
+    const removeVectorPolicyConfirm = (vectorPolicy) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the alpha-vector policy with ID: ' + alphaVecPolicy.id +
+            message: 'Are you sure you want to delete the vector policy with ID: ' + vectorPolicy.id +
                 "? this action cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAlphaVecPolicy(alphaVecPolicy)
+                    onClick: () => removeVectorPolicy(vectorPolicy)
                 },
                 {
                     label: 'No'
@@ -266,12 +258,12 @@ const AlphaVecPolicyComponent = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the alpha-vector policy with ID {alphaVecPolicy.id}?
+                                    Are you sure you want to delete the vector policy with ID {vectorPolicy.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAlphaVecPolicy(alphaVecPolicy)
+                                                    removeVectorPolicy(vectorPolicy)
                                                     onClose()
                                                 }}
                                         >
@@ -291,44 +283,69 @@ const AlphaVecPolicyComponent = (props) => {
         })
     }
 
-    const removeAllAlphaVecPolicies = () => {
-        setLoadingAlphaVecPolicies(true)
-        removeAllAlphaVecPoliciesRequest()
-    }
-
-    const refreshAlphaVecPolicies = () => {
-        setLoadingAlphaVecPolicies(true)
-        fetchAlphaVecPoliciesIds()
-    }
-
-    const renderRemoveAllAlphaVecPoliciesTooltip = (props) => (
+    const renderVectorRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all Alpha-Vector policies.
+            Reload Vector policies from the backend
         </Tooltip>
     );
 
-    const renderAlphaVecRefreshTooltip = (props) => (
+    const renderRemoveAllVectorPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload Alpha-Vector policies from the backend
+            Remove all Vector policies.
         </Tooltip>
     );
 
-    const updateSelectedAlphaVecPolicyId = (selectedId) => {
-        setSelectedALphaVecPolicyId(selectedId)
-        fetchAlphaVecPolicy(selectedId)
-        setLoadingAlphaVecPolicy(true)
+    const VectorPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Vector policies.
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Vector policies are policies in the form of a single vector, e.g. obtained
+                        through linear programming methods.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
     }
 
+    const updateSelectedVectorPolicyId = (selectedId) => {
+        setSelectedVectorPolicyId(selectedId)
+        fetchVectorPolicy(selectedId)
+        setLoadingVectorPolicy(true)
+    }
 
-    const DeleteAllAlphaVecPoliciesOrEmpty = (props) => {
+    const refreshVectorPolicies = () => {
+        setLoadingVectorPolicies(true)
+        fetchVectorPoliciesIds()
+    }
+
+    const removeAllVectorPolicies = () => {
+        setLoadingVectorPolicies(true)
+        removeAllVectorPoliciesRequest()
+    }
+
+    const DeleteAllVectorPoliciesOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllAlphaVecPoliciesTooltip}
+                    overlay={renderRemoveAllVectorPoliciesTooltip}
                 >
-                    <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm} size="sm">
+                    <Button variant="danger" onClick={removeAllVectorPoliciesConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -338,24 +355,24 @@ const AlphaVecPolicyComponent = (props) => {
         }
     }
 
-    const SelectAlphaVecPolicyOrSpinner = (props) => {
-        if (!props.loadingAlphaVecPolicies && props.alphaVecPoliciesIds.length === 0) {
+    const SelectVectorPolicyOrSpinner = (props) => {
+        if (!props.loadingVectorPolicies && props.vectorPoliciesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No alpha-vector policies are available</span>
+                    <span className="emptyText">No vector policies are available</span>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderAlphaVecRefreshTooltip}
+                        overlay={renderVectorRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshAlphaVecPolicies}>
+                        <Button variant="button" onClick={refreshVectorPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </div>
             )
         }
-        if (props.loadingAlphaVecPolicies) {
+        if (props.loadingVectorPolicies) {
             return (
                 <div>
                     <span className="spinnerLabel"> Fetching policies... </span>
@@ -368,15 +385,15 @@ const AlphaVecPolicyComponent = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected alpha-vector policy:
+                            Selected vector policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedAlphaVecPolicyId}
-                                defaultValue={props.selectedAlphaVecPolicyId}
-                                options={props.alphaVecPoliciesIds}
-                                onChange={updateSelectedAlphaVecPolicyId}
+                                value={props.selectedVectorPolicyId}
+                                defaultValue={props.selectedVectorPolicyId}
+                                options={props.vectorPoliciesIds}
+                                onChange={updateSelectedVectorPolicyId}
                                 placeholder="Select policy"
                             />
                         </div>
@@ -385,9 +402,9 @@ const AlphaVecPolicyComponent = (props) => {
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderAlphaVecRefreshTooltip}
+                        overlay={renderVectorRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshAlphaVecPolicies}>
+                        <Button variant="button" onClick={refreshVectorPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -397,51 +414,21 @@ const AlphaVecPolicyComponent = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowAlphaVectorPoliciesInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowVectorPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <AlphaVectorPoliciesInfoModal show={showAlphaVectorPoliciesInfoModal}
-                                                  onHide={() => setShowAlphaVectorPoliciesInfoModal(false)}/>
+                    <VectorPoliciesInfoModal show={showVectorPoliciesInfoModal} onHide={() => setShowVectorPoliciesInfoModal(false)}/>
 
-                    <DeleteAllAlphaVecPoliciesOrEmpty sessionData={props.sessionData}/>
+                    <DeleteAllVectorPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
-    const AlphaVectorPoliciesInfoModal = (props) => {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        Alpha-vector policies.
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p className="modalText">
-                        Alpha-vector policies are greedy policies with respect to piece-wise linear and convex value functions
-                        for POMDPs.
-                    </p>
-                    <div className="text-center">
-                        <img src={PWLCValueFun} alt="piece-wise linar and convex value function" className="img-fluid"/>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer className="modalFooter">
-                    <Button onClick={props.onHide} size="sm">Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    const AlphaVecPolicyAccordion = (props) => {
-        if (props.loadingAlphaVecPolicy || props.selectedAlphaVecPolicy === null || props.selectedAlphaVecPolicy === undefined) {
-            if (props.loadingAlphaVecPolicy) {
+    const VectorPolicyAccordion = (props) => {
+        if (props.loadingVectorPolicy || props.selectedVectorPolicy === null || props.selectedVectorPolicy === undefined) {
+            if (props.loadingVectorPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -458,13 +445,12 @@ const AlphaVecPolicyComponent = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Configuration of the selected alpha-vector policy:
+                        Configuration of the selected vector policy:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
-                                        key={selectedAlphaVecPolicy.id}
-                                        removeAlphaVecPolicy={removeAlphaVecPolicyConfirm}
-                                        sessionData={props.sessionData}
+                        <VectorPolicy policy={selectedVectorPolicy} wrapper={wrapper} key={selectedVectorPolicy.id}
+                                      removeVectorPolicy={removeVectorPolicyConfirm}
+                                      sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -472,72 +458,79 @@ const AlphaVecPolicyComponent = (props) => {
         }
     }
 
-    const searchAlphaVecPoliciesFilter = (alphaVecPolicyId, searchVal) => {
-        return (searchVal === "" || alphaVecPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    const searchVectorPoliciesFilter = (vectorPolicyId, searchVal) => {
+        return (searchVal === "" || vectorPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const searchAlphaVecPolicyChange = (event) => {
+    const searchVectorPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = alphaVecPoliciesIds.filter(policy => {
-            return searchAlphaVecPoliciesFilter(policy, searchVal)
+        const fPoliciesIds = vectorPoliciesIds.filter(policy => {
+            return searchVectorPoliciesFilter(policy, searchVal)
         });
-        setFilteredAlphaVecPoliciesIds(fPoliciesIds)
+        setFilteredVectorPoliciesIds(fPoliciesIds)
 
         var selectedPolicyRemoved = false
-        if (!loadingAlphaVecPolicy && fPoliciesIds.length > 0) {
+        if (!loadingVectorPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if (selectedAlphaVecPolicy !== null && selectedAlphaVecPolicy !== undefined &&
-                    selectedAlphaVecPolicy.id === fPoliciesIds[i].value) {
+                if (selectedVectorPolicy !== null && selectedVectorPolicy !== undefined &&
+                    selectedVectorPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
             if (!selectedPolicyRemoved) {
-                setSelectedALphaVecPolicyId(fPoliciesIds[0])
-                fetchAlphaVecPolicy(fPoliciesIds[0])
-                setLoadingAlphaVecPolicy(true)
+                setSelectedVectorPolicyId(fPoliciesIds[0])
+                fetchVectorPolicy(fPoliciesIds[0])
+                setLoadingVectorPolicy(true)
             }
         } else {
-            setSelectedAlphaVecPolicy(null)
+            setSelectedVectorPolicy(null)
         }
     }
 
-    const searchAlphaVecPoliciesHandler = useDebouncedCallback(
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about learned vector policies.
+        </Tooltip>
+    );
+
+    const searchVectorPoliciesHandler = useDebouncedCallback(
         (event) => {
-            searchAlphaVecPolicyChange(event)
+            searchVectorPolicyChange(event)
         },
         350
     );
 
+
     useEffect(() => {
-        setLoadingAlphaVecPolicies(true)
-        fetchAlphaVecPoliciesIds()
-    }, [fetchAlphaVecPoliciesIds]);
+        setLoadingVectorPolicies(true)
+        fetchVectorPoliciesIds()
+    }, [fetchVectorPoliciesIds]);
 
     return (
         <div>
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectAlphaVecPolicyOrSpinner loadingAlphaVecPolicies={loadingAlphaVecPolicies}
-                                                       alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
-                                                       selectedAlphaVecPolicyId={selectedAlphaVecPolicyId}
-                                                       sessionData={props.sessionData}
+                        <SelectVectorPolicyOrSpinner loadingVectorPolicies={loadingVectorPolicies}
+                                                     vectorPoliciesIds={filteredVectorPoliciesIds}
+                                                     selectedVectorPolicyId={selectedVectorPolicyId}
+                                                     sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
                 <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
-                            <InputGroup.Text id="alphaVecPoliciesSearchField" className="searchIcon">
+                            <InputGroup.Text id="vectorPoliciesSearchField" className="searchIcon">
                                 <i className="fa fa-search" aria-hidden="true"/>
                             </InputGroup.Text>
                             <FormControl
                                 size="lg"
                                 className="searchBar"
                                 placeholder="Search"
-                                aria-label="alphaVecPoliciesSearchLabel"
-                                aria-describedby="alphaVecPoliciesSearchField"
-                                onChange={searchAlphaVecPoliciesHandler}
+                                aria-label="vectorPoliciesSearchLabel"
+                                aria-describedby="vectorPoliciesSearchField"
+                                onChange={searchVectorPoliciesHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -546,14 +539,13 @@ const AlphaVecPolicyComponent = (props) => {
                 </div>
             </div>
 
-            <AlphaVecPolicyAccordion loadingAlphaVecPolicy={loadingAlphaVecPolicy}
-                                     selectedAlphaVecPolicy={selectedAlphaVecPolicy}
-                                     sessionData={props.sessionData}
-            />
+            <VectorPolicyAccordion loadingVectorPolicy={loadingVectorPolicy}
+                                   selectedVectorPolicy={selectedVectorPolicy}
+                                   sessionData={props.sessionData}/>
         </div>
     )
 }
 
-AlphaVecPolicyComponent.propTypes = {};
-AlphaVecPolicyComponent.defaultProps = {};
-export default AlphaVecPolicyComponent;
+VectorPolicies.propTypes = {};
+VectorPolicies.defaultProps = {};
+export default VectorPolicies;
