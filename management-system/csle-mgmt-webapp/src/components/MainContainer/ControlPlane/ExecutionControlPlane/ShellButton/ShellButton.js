@@ -5,9 +5,10 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 /**
- * Subcomponent of the /control-plane page
+ * Component representing the button to create a new SSH shell to a container on the page /control-plane page
  */
 const ShellButton = (props) => {
+    console.log(props.ip)
 
     const renderShellTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

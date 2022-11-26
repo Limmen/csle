@@ -81,7 +81,9 @@ const ContainersInfo = (props) => {
                                         <ShellButton
                                             loading={props.loadingEntities.includes(
                                                 `${CONTAINER_SUBRESOURCE}-${container.full_name_str}`)}
-                                            name={container.full_name_str}/>
+                                            name={container.full_name_str}
+                                            ip={getIps(container.ips_and_networks)[0]}
+                                        />
                                     </td>
                                 </tr>
                             )}
