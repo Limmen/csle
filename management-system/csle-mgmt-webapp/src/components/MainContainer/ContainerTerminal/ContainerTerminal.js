@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import {useDebouncedCallback} from 'use-debounce';
+import ContainerTerminalImg from './ContainerTerminal.png'
 import io from 'socket.io-client';
 import {FitAddon} from 'xterm-addon-fit';
 import {WebLinksAddon} from 'xterm-addon-web-links';
@@ -39,6 +40,7 @@ import {
     IP_QUERY_PARAM
 } from "../../Common/constants";
 import getIps from "../../Common/getIps";
+import ControlPlaneImg from "../ControlPlane/ControlPlane.png";
 
 /**
  * Component representing the /container-terminal-page
@@ -217,15 +219,15 @@ const ContainerTerminal = (props) => {
                 setFilteredRunningContainerIds(rContainerIds)
                 if (rContainerIds.length > 0) {
                     var match = false
-                    if(location.state.ip !== null) {
+                    if(location.state !== null && location.state.ip !== null) {
                         for (let i = 0; i < rContainerIds.length; i++) {
                             if(getIps(rContainerIds[i].value.ips_and_networks).includes(location.state.ip)) {
                                 match = true
                                 setSelectedRunningContainer(rContainerIds[i])
                             }
                         }
+                        location.state.ip = null
                     }
-                    location.state.ip = null
                     if(!match) {
                         setSelectedRunningContainer(rContainerIds[0])
                     }
@@ -265,6 +267,10 @@ const ContainerTerminal = (props) => {
                         The browser communicates with the backend over a websocket, which in turn communicates with the
                         container over an SSH tunnel, whose' output is piped through the websocket.
                     </p>
+                    <div className="text-center">
+                        <img src={ContainerTerminalImg} alt="Container Terminal Setup"
+                             className="img-fluid containerTermImg"/>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
                     <Button onClick={props.onHide} size="sm">Close</Button>
@@ -309,7 +315,7 @@ const ContainerTerminal = (props) => {
                 if (emulationExecutionIds.length > 0) {
                     var match = false
                     var selectedExId = emulationExecutionIds[0]
-                    if(location.state.executionId !== null && location.state.emulation !== null) {
+                    if(location.state !== null && location.state.executionId !== null && location.state.emulation !== null) {
                         for (let i = 0; i < emulationExecutionIds.length; i++) {
                             if(emulationExecutionIds[i].value.id === location.state.executionId &&
                                 emulationExecutionIds[i].value.emulation === location.state.emulation) {
@@ -318,9 +324,9 @@ const ContainerTerminal = (props) => {
                                 selectedExId = emulationExecutionIds[i]
                             }
                         }
+                        location.state.executionId = null
+                        location.state.emulation = null
                     }
-                    location.state.executionId = null
-                    location.state.emulation = null
                     if(!match) {
                         setSelectedEmulationExecutionId(emulationExecutionIds[0])
                     }

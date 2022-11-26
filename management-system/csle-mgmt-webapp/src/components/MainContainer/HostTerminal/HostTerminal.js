@@ -12,6 +12,7 @@ import {FitAddon} from 'xterm-addon-fit';
 import {WebLinksAddon} from 'xterm-addon-web-links';
 import {SearchAddon} from 'xterm-addon-search';
 import {useNavigate} from "react-router-dom";
+import HostTerminalImg from './HostTerminal.png'
 import {useAlert} from "react-alert";
 import {
     LOGIN_PAGE_RESOURCE,
@@ -19,6 +20,7 @@ import {
     WS_CONNECT_MSG, WS_DISCONNECT_MSG, WS_HOST_TERMINAL_INPUT_MSG,
     WS_HOST_TERMINAL_NAMESPACE, WS_HOST_TERMINAL_OUTPUT_MSG, WS_RESIZE_MSG
 } from "../../Common/constants";
+import ContainerTerminalImg from "../ContainerTerminal/ContainerTerminal.png";
 
 /**
  * Component representing the /host-terminal-page
@@ -145,6 +147,10 @@ const HostTerminal = (props) => {
                         The browser communicates with the backend over a websocket, which executes the commands in
                         a pseudo-terminal bash session.
                     </p>
+                    <div className="text-center">
+                        <img src={HostTerminalImg} alt="Host Terminal Setup"
+                             className="img-fluid hostTermImg"/>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
                     <Button onClick={props.onHide} size="sm">Close</Button>
