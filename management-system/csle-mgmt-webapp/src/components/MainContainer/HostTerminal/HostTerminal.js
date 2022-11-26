@@ -65,19 +65,18 @@ const HostTerminal = (props) => {
                 {input: data, token: props.sessionData.token});
         });
         const socket = io.connect(`${ip}:${port}/${WS_HOST_TERMINAL_NAMESPACE}?${TOKEN_QUERY_PARAM}` +
-            `=${props.sessionData.token}`);
+            `=${props.sessionData.token}`, {'forceNew':true });
         setSocketState(socket)
         const status = document.getElementById("status");
 
         socket.on(WS_HOST_TERMINAL_OUTPUT_MSG, function (data) {
-            console.log("Receive data, host: ")
-            console.log(data)
             term.write(data.output);
         });
 
         socket.on(WS_CONNECT_ERROR, () => {
             alert.show("Websocket connection failed. You are not authorized to setup a connection.")
             navigate(`/${LOGIN_PAGE_RESOURCE}`);
+            socket.disconnect()
         });
 
         socket.on(WS_CONNECT_MSG, () => {
