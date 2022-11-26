@@ -705,7 +705,7 @@ const Emulations = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected emulation:
+                            Emulation:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

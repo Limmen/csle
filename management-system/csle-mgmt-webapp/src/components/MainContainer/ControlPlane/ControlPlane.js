@@ -264,7 +264,7 @@ const ControlPlane = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Selected execution:
+                        Execution:
                     </h3>
                     <Accordion defaultActiveKey="0">
                         <ExecutionControlPlane
@@ -325,7 +325,7 @@ const ControlPlane = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    Selected emulation execution:
+                    Execution:
                     <div className="conditionalDist inline-block selectEmulation">
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

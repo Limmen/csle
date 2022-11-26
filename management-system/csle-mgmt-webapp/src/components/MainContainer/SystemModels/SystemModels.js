@@ -706,7 +706,7 @@ const SystemModels = (props) => {
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected system model:
+                            System model:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

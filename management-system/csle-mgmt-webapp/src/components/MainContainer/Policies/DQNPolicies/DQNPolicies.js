@@ -385,7 +385,7 @@ const DQNPolicies = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected DQN policy:
+                            DQN policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

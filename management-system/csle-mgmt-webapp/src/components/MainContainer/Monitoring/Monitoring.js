@@ -856,7 +856,7 @@ const Monitoring = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    Selected emulation execution:
+                    Execution:
                     <div className="conditionalDist inline-block selectEmulation">
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

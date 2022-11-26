@@ -616,7 +616,7 @@ const SystemIdentificationJobs = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected system identification job:
+                            System identification job:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

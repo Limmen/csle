@@ -368,7 +368,7 @@ const AlphaVecPolicies = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected alpha-vector policy:
+                            Alpha-vector policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

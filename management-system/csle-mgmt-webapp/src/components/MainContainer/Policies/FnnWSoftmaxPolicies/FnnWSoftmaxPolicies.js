@@ -387,7 +387,7 @@ const FnnWSoftmaxPolicies = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected feed-forward neural network policy:
+                            Feed-forward neural network policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

@@ -317,7 +317,7 @@ const PolicyExamination = (props) => {
     return (
         <div className="policyExamination" onKeyDown={handleKeyPress} tabIndex={0}>
             <h3 className="managementTitle"> Policy Examination </h3>
-            <h4>Selected emulation trace:
+            <h4>Emulation trace:
                 <span className="infoPolicyExp">
                     <OverlayTrigger
                         placement="right"

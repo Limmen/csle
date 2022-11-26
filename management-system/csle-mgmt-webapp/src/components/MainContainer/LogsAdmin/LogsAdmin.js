@@ -354,7 +354,7 @@ const LogsAdmin = (props) => {
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    Selected log file:
+                    Log file:
                     <div className="conditionalDist inline-block selectEmulation">
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select

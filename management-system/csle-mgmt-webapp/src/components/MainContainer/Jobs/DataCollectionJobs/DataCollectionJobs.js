@@ -617,7 +617,7 @@ const DataCollectionJobs = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Selected data collection job:
+                            Data collection job:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
