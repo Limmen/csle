@@ -119,6 +119,8 @@ class MGMT_WEBAPP:
     WS_HOST_TERMINAL_OUTPUT_MSG = "host-terminal-output"
     WS_HOST_TERMINAL_INPUT_MSG = "host-terminal-input"
     WS_RESIZE_MSG = "resize"
+    WS_CONTAINER_TERMINAL_OUTPUT_MSG = "container-terminal-output"
+    WS_CONTAINER_TERMINAL_INPUT_MSG = "container-terminal-input"
     IP_PROPERTY = "ip"
     EXEC_ID_PROPERTY = "exec_id"
     EMULATION_PROPERTY = "emulation"
@@ -181,9 +183,12 @@ class MGMT_WEBAPP:
     KIBANA_TUNNELS_DICT = {}
     KIBANA_TUNNEL_BASE_PORT = 17000
     WS_HOST_TERMINAL_NAMESPACE = "host-terminal"
+    WS_CONTAINER_TERMINAL_NAMESPACE = "container-terminal"
     HOST_TERMINAL_FD = "host-terminal-fd"
     HOST_TERMINAL_CHILD_PID = "host-terminal-child-pid"
     HOST_TERMINAL_CMD = "host-terminal-cmd"
+    CONTAINER_TERMINAL_SSH_SHELL = "container-terminal-ssh-shell"
+    CONTAINER_TERMINAL_SSH_CONNECTION = "container-terminal-ssh-connection"
 
 
 class SESSION_TOKENS:

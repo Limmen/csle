@@ -1,15 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import './ContainerTerminal.css';
-import { Terminal } from 'xterm';
+import {Terminal} from 'xterm';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Button from 'react-bootstrap/Button'
 import io from 'socket.io-client';
-import { FitAddon } from 'xterm-addon-fit';
-import { WebLinksAddon } from 'xterm-addon-web-links';
-import { SearchAddon } from 'xterm-addon-search';
+import {FitAddon} from 'xterm-addon-fit';
+import {WebLinksAddon} from 'xterm-addon-web-links';
+import {SearchAddon} from 'xterm-addon-search';
+import {useNavigate} from "react-router-dom";
+import {useAlert} from "react-alert";
+import {
+    LOGIN_PAGE_RESOURCE,
+    TOKEN_QUERY_PARAM, WS_CONNECT_ERROR,
+    WS_CONNECT_MSG, WS_DISCONNECT_MSG, WS_CONTAINER_TERMINAL_INPUT_MSG,
+    WS_CONTAINER_TERMINAL_NAMESPACE, WS_CONTAINER_TERMINAL_OUTPUT_MSG, WS_RESIZE_MSG
+} from "../../Common/constants";
 
 /**
  * Component representing the /container-terminal-page
@@ -22,7 +30,7 @@ const ContainerTerminal = (props) => {
         cursorBlink: true,
         macOptionIsMeta: true,
         scrollback: true,
-        allowProposedApi:true
+        allowProposedApi: true
     });
     const fitAddon = new FitAddon();
     const webLinksAddon = new WebLinksAddon();
@@ -30,6 +38,8 @@ const ContainerTerminal = (props) => {
     term.loadAddon(fitAddon);
     term.loadAddon(webLinksAddon);
     term.loadAddon(searchAddon);
+    const navigate = useNavigate();
+    const alert = useAlert();
 
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -38,7 +48,7 @@ const ContainerTerminal = (props) => {
     );
 
     const refresh = () => {
-        if(socketState !== null) {
+        if (socketState !== null) {
             socketState.disconnect()
         }
         window.location.reload(false);
@@ -51,32 +61,39 @@ const ContainerTerminal = (props) => {
         fitAddon.fit();
         term.writeln('')
         term.onData((data) => {
-            socket.emit("host-terminal-input", { input: data, token:props.sessionData.token});
+            socket.emit(WS_CONTAINER_TERMINAL_INPUT_MSG,
+                {input: data, token: props.sessionData.token});
         });
-        const socket = io.connect(ip + ":" + port + "/host-terminal?token=" + props.sessionData.token);
+        const socket = io.connect(`${ip}:${port}/${WS_CONTAINER_TERMINAL_NAMESPACE}` +
+            +`?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`);
         setSocketState(socket)
         const status = document.getElementById("status");
 
-        socket.on("host-terminal-output", function (data) {
+        socket.on(WS_CONTAINER_TERMINAL_OUTPUT_MSG, function (data) {
             term.write(data.output);
         });
 
-        socket.on("connect", () => {
+        socket.on(WS_CONNECT_ERROR, () => {
+            alert.show("Websocket connection failed. You are not authorized to setup a connection.")
+            navigate(`/${LOGIN_PAGE_RESOURCE}`);
+        });
+
+        socket.on(WS_CONNECT_MSG, () => {
             fitToscreen();
             status.innerHTML =
                 '<span style="background-color: lightgreen;">connected</span>';
-            socket.emit("host-terminal-input", { input: "\r" , token:props.sessionData.token});
+            socket.emit(WS_CONTAINER_TERMINAL_INPUT_MSG, {input: "\r", token: props.sessionData.token});
         });
 
-        socket.on("disconnect", () => {
+        socket.on(WS_DISCONNECT_MSG, () => {
             status.innerHTML =
                 '<span style="background-color: #ff8383;">disconnected</span>';
         });
 
         function fitToscreen() {
             fitAddon.fit();
-            const dims = { cols: term.cols, rows: term.rows , token:props.sessionData.token};
-            socket.emit("resize", dims);
+            const dims = {cols: term.cols, rows: term.rows, token: props.sessionData.token};
+            socket.emit(WS_RESIZE_MSG, dims);
         }
 
         function debounce(func, wait_ms) {
@@ -87,6 +104,7 @@ const ContainerTerminal = (props) => {
                 timeout = setTimeout(() => func.apply(context, args), wait_ms);
             };
         }
+
         window.onresize = debounce(fitToscreen, 50);
     }
 
@@ -97,7 +115,7 @@ const ContainerTerminal = (props) => {
     return (
         <div className="Terminal">
             <h3 className="managementTitle">
-                Host Terminal
+                Container Terminal
                 <OverlayTrigger
                     placement="right"
                     delay={{show: 0, hide: 0}}
@@ -113,7 +131,7 @@ const ContainerTerminal = (props) => {
                 </div>
                 <div className="col-sm-10">
                     <span>
-                        Host: {serverIp}, Status: <span id="status">connecting...</span>
+                        Container: {serverIp}, Status: <span id="status">connecting...</span>
                     </span>
                     <div id="sshTerminal" className="sshTerminal2">
 

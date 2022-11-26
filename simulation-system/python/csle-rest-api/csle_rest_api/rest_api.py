@@ -60,6 +60,7 @@ from csle_rest_api.resources.config.routes import config_bp
 from csle_rest_api.resources.version.routes import version_bp
 from csle_rest_api.resources.logs.routes import logs_bp
 from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
+from csle_rest_api.web_sockets.container_terminal.container_terminal import get_container_terminal_bp
 import csle_rest_api.constants.constants as api_constants
 
 
@@ -242,8 +243,10 @@ def create_app(static_folder: str):
     app.register_blueprint(logs_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
-    web_sockets_bp = get_host_terminal_bp(app)
-    app.register_blueprint(web_sockets_bp)
+    web_sockets_host_terminal_bp = get_host_terminal_bp(app)
+    app.register_blueprint(web_sockets_host_terminal_bp)
+    # web_sockets_container_terminal_bp = get_container_terminal_bp(app)
+    # app.register_blueprint(web_sockets_container_terminal_bp)
 
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def root():
