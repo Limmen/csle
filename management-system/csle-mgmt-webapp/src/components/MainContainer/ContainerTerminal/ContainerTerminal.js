@@ -232,7 +232,7 @@ const ContainerTerminal = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error)),
-        [ip, navigate, port, alert, props.sessionData.token, setSessionData]);
+        [ip, navigate, port, alert, props.sessionData.token, setSessionData, location.state]);
 
     const renderRefreshTerminalTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -336,7 +336,7 @@ const ContainerTerminal = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchSelectedExecution,
-        fetchExecutionInfo]);
+        fetchExecutionInfo, location.state]);
 
     const setupConnection = (containerIp) => {
         term.open(document.getElementById('sshTerminal'));

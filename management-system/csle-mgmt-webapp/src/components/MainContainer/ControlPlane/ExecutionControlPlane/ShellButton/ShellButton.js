@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import {useNavigate} from "react-router-dom";
-import {CONTAINER_TERMINAL_PAGE_RESOURCE, LOGIN_PAGE_RESOURCE} from "../../../../Common/constants";
+import {CONTAINER_TERMINAL_PAGE_RESOURCE} from "../../../../Common/constants";
 
 /**
  * Component representing the button to create a new SSH shell to a container on the page /control-plane page
