@@ -10,15 +10,15 @@ import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-import getIpString from "../../../Common/getIpString";
-import serverIp from "../../../Common/serverIp";
-import serverPort from "../../../Common/serverPort";
+import getIpString from "../../../../Common/getIpString";
+import serverIp from "../../../../Common/serverIp";
+import serverPort from "../../../../Common/serverPort";
 import {
     HTTP_PREFIX,
     HTTP_REST_POST,
     LOGIN_PAGE_RESOURCE,
     FILE_RESOURCE,
-    TOKEN_QUERY_PARAM} from "../../../Common/constants";
+    TOKEN_QUERY_PARAM} from "../../../../Common/constants";
 
 /**
  * The component representing the /jobs/<id> resource for data collection jobs

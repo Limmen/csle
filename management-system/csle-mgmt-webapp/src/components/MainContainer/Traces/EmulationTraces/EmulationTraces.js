@@ -31,7 +31,7 @@ import {
 /**
  * Component representing emulation traces on the page /traces-page
  */
-const EmulationTracesComponent = (props) => {
+const EmulationTraces = (props) => {
     const [showEmulationTracesInfoModal, setShowEmulationTracesInfoModal] = useState(false);
     const [selectedEmulationTraceId, setSelectedEmulationTraceId] = useState(null);
     const [selectedEmulationTrace, setSelectedEmulationTrace] = useState(null);
@@ -548,6 +548,6 @@ const EmulationTracesComponent = (props) => {
     )
 }
 
-EmulationTracesComponent.propTypes = {};
-EmulationTracesComponent.defaultProps = {};
-export default EmulationTracesComponent;
+EmulationTraces.propTypes = {};
+EmulationTraces.defaultProps = {};
+export default EmulationTraces;

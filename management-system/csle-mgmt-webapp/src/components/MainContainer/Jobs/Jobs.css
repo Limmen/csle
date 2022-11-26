@@ -1,7 +1,11 @@
-.systemIdentificationJobs {
+.jobsContainer {
     margin-top:50px
 }
 
 .runningCheck {
  font-size: 14px;
+}
+
+.jobTypeSelection {
+    font-size: 14px;
 }

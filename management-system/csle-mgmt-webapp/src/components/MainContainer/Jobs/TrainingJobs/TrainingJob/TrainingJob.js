@@ -6,20 +6,20 @@ import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import MetricPlot from "../../TrainingResults/Experiment/MetricPlot/MetricPlot";
+import MetricPlot from "../../../TrainingResults/Experiment/MetricPlot/MetricPlot";
 import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
-import getAgentTypeStr from '../../../Common/getAgentTypeStr'
+import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-import serverIp from "../../../Common/serverIp";
-import serverPort from "../../../Common/serverPort";
+import serverIp from "../../../../Common/serverIp";
+import serverPort from "../../../../Common/serverPort";
 import {
     HTTP_PREFIX,
     HTTP_REST_POST,
     LOGIN_PAGE_RESOURCE,
     FILE_RESOURCE,
-    TOKEN_QUERY_PARAM} from "../../../Common/constants";
+    TOKEN_QUERY_PARAM} from "../../../../Common/constants";
 /**
  * The component representing the /jobs/<id> resource for training jobs
  */

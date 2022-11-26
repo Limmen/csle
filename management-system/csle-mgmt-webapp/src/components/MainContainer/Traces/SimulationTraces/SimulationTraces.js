@@ -31,7 +31,7 @@ import {
 /**
  * Component representing simulation traces on the page /traces-page
  */
-const SimulationTracesComponent = (props) => {
+const SimulationTraces = (props) => {
     const [showSimulationTracesInfoModal, setShowSimulationTracesInfoModal] = useState(false);
     const [selectedSimulationTraceId, setSelectedSimulationTraceId] = useState(null);
     const [selectedSimulationTrace, setSelectedSimulationTrace] = useState(null);
@@ -550,6 +550,6 @@ const SimulationTracesComponent = (props) => {
     )
 }
 
-SimulationTracesComponent.propTypes = {};
-SimulationTracesComponent.defaultProps = {};
-export default SimulationTracesComponent;
+SimulationTraces.propTypes = {};
+SimulationTraces.defaultProps = {};
+export default SimulationTraces;

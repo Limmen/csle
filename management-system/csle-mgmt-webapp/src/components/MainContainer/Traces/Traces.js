@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import Select from 'react-select'
 import './Traces.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import EmulationTracesComponent from "./EmulationTracesComponent/EmulationTracesComponent";
-import SimulationTracesComponent from "./SimulationTracesComponent/SimulationTracesComponent";
+import EmulationTraces from "./EmulationTraces/EmulationTraces";
+import SimulationTraces from "./SimulationTraces/SimulationTraces";
 
 /**
  * Component representing the /traces-page
@@ -28,12 +28,12 @@ const Traces = (props) => {
     const SelectedTraceTypeComponent = (props) => {
         if (props.selectedTraceType.value === 0) {
             return (
-                <EmulationTracesComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>
+                <EmulationTraces sessionData={props.sessionData} setSessionData={props.setSessionData}/>
             )
         }
         if (props.selectedTraceType.value === 1) {
             return (
-                <SimulationTracesComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>
+                <SimulationTraces sessionData={props.sessionData} setSessionData={props.setSessionData}/>
             )
         }
     }
