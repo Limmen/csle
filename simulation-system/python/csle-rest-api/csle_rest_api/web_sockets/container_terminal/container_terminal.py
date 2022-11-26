@@ -48,10 +48,12 @@ def get_container_terminal_bp(app):
                                         f"{api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE}")
 
     @socketio.on(api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_INPUT_MSG,
-                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE}")
+                 namespace=f"{constants.COMMANDS.SLASH_DELIM}"
+                           f"{api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE}")
     def container_terminal_input(data) -> None:
         """
-        Receives input msg on a websocket and writes it to the PTY representing the bash shell of the Container terminal.
+        Receives input msg on a websocket and writes it to the PTY representing the bash shell
+        of the Container terminal.
         The pty sees this as if you are typing in a real terminal.
 
         :param data: the input data to write

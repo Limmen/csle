@@ -108,6 +108,7 @@ const Monitoring = (props) => {
     const [monitoringData, setMonitoringData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingSelectedEmulationExecution, setLoadingSelectedEmulationExecution] = useState(true);
+    const [loadingMonitoringData, setLoadingMonitoringData] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(evolutionSpeedOptions[0]);
     const [animation, setAnimation] = useState(false);
     const animationDurationFactor = 50000
@@ -150,7 +151,7 @@ const Monitoring = (props) => {
                     return
                 }
                 setMonitoringData(response)
-                setLoadingSelectedEmulationExecution(false)
+                setLoadingMonitoringData(false)
                 var openFlowSwitchesOptions = []
                 openFlowSwitchesOptions = Object.keys(response.openflow_port_avg_metrics_per_switch).map((dpid, index) => {
                     return {
@@ -203,6 +204,7 @@ const Monitoring = (props) => {
                         })
                     setEmulationExecutionContainerOptions(containerOptions)
                     setSelectedContainer(containerOptions[0])
+                    setLoadingMonitoringData(true)
                     fetchMonitoringData(windowLength.value, response)
                 }
 
@@ -317,7 +319,7 @@ const Monitoring = (props) => {
     const onChangeWindowLength = (windowLenSelection) => {
         if (windowLenSelection.value !== windowLength) {
             setWindowLength(windowLenSelection)
-            setLoadingSelectedEmulationExecution(true)
+            setLoadingMonitoringData(true)
             fetchMonitoringData(windowLength.value, selectedEmulationExecution)
         }
     }
@@ -340,6 +342,7 @@ const Monitoring = (props) => {
     const refresh = () => {
         setLoading(true)
         setLoadingSelectedEmulationExecution(true)
+        setLoadingMonitoringData(true)
         setSelectedEmulationExecution(null)
         fetchGrafanaStatus()
         fetchPrometheusStatus()
@@ -556,6 +559,7 @@ const Monitoring = (props) => {
                     setSelectedEmulationExecutionId(emulationExecutionIds[0])
                     fetchSelectedExecution(emulationExecutionIds[0])
                     setLoadingSelectedEmulationExecution(true)
+                    setLoadingMonitoringData(true)
                 } else {
                     setLoadingSelectedEmulationExecution(false)
                     setSelectedEmulationExecution(null)
@@ -698,8 +702,9 @@ const Monitoring = (props) => {
     }
 
     const SelectedExecutionView = (props) => {
-        if (props.loadingSelectedEmulationExecution || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined) {
-            if (props.loadingSelectedEmulationExecution) {
+        if (props.loadingSelectedEmulationExecution || props.loadingMonitoringData ||
+            props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined) {
+            if (props.loadingSelectedEmulationExecution || props.loadingMonitoringData) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching execution... </span>
@@ -1187,6 +1192,7 @@ const Monitoring = (props) => {
                                    animation={animation}
                                    selectedSwitch={selectedOpenFlowSwitch}
                                    switchesOptions={openFlowSwitchesOptions}
+                                   loadingMonitoringData={loadingMonitoringData}
             />
             <div className="row">
                 <div className="col-sm-12">
