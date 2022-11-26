@@ -64,11 +64,8 @@ const HostTerminal = (props) => {
             socket.emit(WS_HOST_TERMINAL_INPUT_MSG,
                 {input: data, token: props.sessionData.token});
         });
-        console.log("connecting to:")
-        console.log(`${ip}:${port}/${WS_HOST_TERMINAL_NAMESPACE}`)
-        console.log(`?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`)
-        const socket = io.connect(`${ip}:${port}/${WS_HOST_TERMINAL_NAMESPACE}` +
-            +`?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`);
+        const socket = io.connect(`${ip}:${port}/${WS_HOST_TERMINAL_NAMESPACE}?${TOKEN_QUERY_PARAM}` +
+            `=${props.sessionData.token}`);
         setSocketState(socket)
         const status = document.getElementById("status");
 
