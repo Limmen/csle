@@ -52,6 +52,11 @@ Install the `flake8` linter:
 python -m pip install flake8
 ```
 
+Install the mypy for static type checking:
+```bash
+python3 -m pip install -U mypy
+```
+
 Install `pytest` and `mock`:
 ```bash
 pip install -U pytest mock pytest-mock
@@ -89,9 +94,14 @@ cp -r build/html ../../../../docs/_docs/csle-collector
 
 ## Static code analysis
 
-To run the static code analysis, execute the following command:
+To run the Python linter, execute the following command:
 ```
 flake8 .
+```
+
+To run the mypy type checker, execute the following command:
+```
+mypy .
 ```
 
 ## Unit tests

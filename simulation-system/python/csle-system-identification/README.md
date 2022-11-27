@@ -35,6 +35,11 @@ Install the `flake8` linter:
 python -m pip install flake8
 ```
 
+Install the mypy for static type checking:
+```bash
+python3 -m pip install -U mypy
+```
+
 Install `pytest` and `mock`:
 ```bash
 pip install -U pytest mock pytest-mock
@@ -69,6 +74,25 @@ To update the official documentation at [https://limmen.dev/csle](https://limmen
 copy the generated HTML files to the documentation folder:
 ```bash
 cp -r build/html ../../../../docs/_docs/csle-system-identification
+```
+
+## Static code analysis
+
+To run the Python linter, execute the following command:
+```
+flake8 .
+```
+
+To run the mypy type checker, execute the following command:
+```
+mypy .
+```
+
+## Unit tests
+
+To run the unit tests, execute the following command:
+```
+pytest
 ```
 
 ## Author & Maintainer

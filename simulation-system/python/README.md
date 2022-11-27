@@ -29,6 +29,22 @@ This folder contains python projects that implement the functionality of the sim
 - **csle-system-identification** ([csle-system-identification](./csle-system-identification)):
   - Implementation of system identification algorithms to learn system models based on measured data and traces
 
+## Commands
+To generate API docs, execute:
+```bash
+./generate_docs.sh
+```
+
+To run unit tests, execute:
+```bash
+./unit_tests.sh
+```
+
+To run the type checker, execute:
+```bash
+./type_checker.sh
+```
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>

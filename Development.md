@@ -7,6 +7,11 @@ Install the `flake8` linter:
 python -m pip install flake8
 ```
 
+Install the mypy for static type checking:
+```bash
+python3 -m pip install -U mypy
+```
+
 Install `pytest` and `mock`:
 ```bash
 pip install -U pytest mock pytest-mock
@@ -38,6 +43,11 @@ flake8 csle-cli
 flake8 emulation-system/envs
 flake8 examples/
 ```
+
+To run the type checker, execute:
+ ```bash
+simulation-system/python/type_checker.sh 
+ ```
 
 ### JavaScript:
 To run the JavaScript linter and print possible errors, use the commands:
