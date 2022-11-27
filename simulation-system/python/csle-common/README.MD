@@ -26,6 +26,39 @@ CSLE.
 - `psutil` (for command line tasks)
 - `csle-ryu` (for SDN network management)
 
+## Installation
+
+```bash
+# install from pip
+pip install csle-common==<version>
+# local install from source
+$ pip install -e csle-common
+# force upgrade deps
+$ pip install -e csle-common --upgrade
+
+# git clone and install from source
+git clone https://github.com/Limmen/csle
+cd csle/simulation-system/python/csle-common
+pip3 install -e .
+```
+
+### Development tools
+
+Install the `flake8` linter:
+```bash
+python -m pip install flake8
+```
+
+Install `pytest` and `mock`:
+```bash
+pip install -U pytest mock pytest-mock
+```
+
+Install Sphinx to automatically generate API documentation from docstrings:
+```bash
+pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
 ## API documentation 
 
 This section contains instructions for generating API documentation using `sphinx`.
@@ -51,29 +84,18 @@ To update the official documentation at [https://limmen.dev/csle](https://limmen
 cp -r build/html ../../../../docs/_docs/csle-common
 ```
 
-## Installation & Tests
+## Static code analysis
 
-```bash
-# install from pip
-pip install csle-common==1.0.0
-# local install from source
-$ pip install -e csle-common
-# force upgrade deps
-$ pip install -e csle-common --upgrade
-
-# git clone and install from source
-git clone https://github.com/Limmen/csle
-cd csle/simulation-system/gym-csle-stopping-game
-pip3 install -e .
+To run the static code analysis, execute the following command:
+```
+flake8 .
 ```
 
-## Usage
-The environment can be used as library of useful functionality when implementing 
-use cases in csle.
+## Unit tests
 
-```python
-from csle_common.dao.network.env_mode import EnvMode
-from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
+To run the unit tests, execute the following command:
+```
+pytest
 ```
 
 ## Author & Maintainer

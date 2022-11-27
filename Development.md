@@ -5,6 +5,10 @@
 Install the `flake8` linter:
 ```bash
 python -m pip install flake8
+```
+
+Install `pytest` and `mock`:
+```bash
 pip install -U pytest mock pytest-mock
 ```
 

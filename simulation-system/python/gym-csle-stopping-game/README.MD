@@ -1,6 +1,8 @@
 # `gym-csle-stopping-game`
 
-TODO
+An OpenAI gym reinforcement learning environment that represents the optimal stopping game described in 
+[Intrusion Prevention Through Optimal Stopping](https://ieeexplore.ieee.org/document/9779345) and
+[Learning Security Strategies through Game Play and Optimal Stopping](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
 
 ## Requirements
 
@@ -9,7 +11,40 @@ TODO
 - `csle-attacker`
 - `csle-csle-defender`
 - `csle-collector`
-- 
+
+## Installation
+
+```bash
+# install from pip
+pip install gym-csle-stopping-game==<version>
+# local install from source
+$ pip install -e gym-csle-stopping-game
+# force upgrade deps
+$ pip install -e gym-csle-stopping-game --upgrade
+
+# git clone and install from source
+git clone https://github.com/Limmen/csle
+cd csle/simulation-system/python/gym-csle-stopping-game
+pip3 install -e .
+```
+
+### Development tools
+
+Install the `flake8` linter:
+```bash
+python -m pip install flake8
+```
+
+Install `pytest` and `mock`:
+```bash
+pip install -U pytest mock pytest-mock
+```
+
+Install Sphinx to automatically generate API documentation from docstrings:
+```bash
+pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
 ## API documentation
 
 This section contains instructions for generating API documentation using `sphinx`.
@@ -52,19 +87,19 @@ csle/simulation-system/gym-csle-stopping-game
 pip3 install -e .
 ```
 
-## Usage
-The environment can be accessed like any other OpenAI environment with `gym.make`.
-Once the environment has been created, the API functions
-`step()`, `reset()`, `render()`, and `close()` can be used to train any RL algorithm of
-your preference.
+## Static code analysis
 
-```python
-TODO
+To run the static code analysis, execute the following command:
+```
+flake8 .
 ```
 
-## GUI
+## Unit tests
 
-TODO 
+To run the unit tests, execute the following command:
+```
+pytest
+``` 
 
 ## Author & Maintainer
 

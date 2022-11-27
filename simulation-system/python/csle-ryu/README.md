@@ -12,6 +12,39 @@ A library with SDN controllers used in CSLE for emulating software-defined netwo
 - `sphinxcontrib-napoleon` (for API documentation)
 - `sphinx-rtd-theme` (for API documentation)
 
+## Installation
+
+```bash
+# install from pip
+pip install csle-ryu==<version>
+# local install from source
+$ pip install -e csle-ryu
+# force upgrade deps
+$ pip install -e csle-ryu --upgrade
+
+# git clone and install from source
+git clone https://github.com/Limmen/csle
+cd csle/simulation-system/python/csle-ryu
+pip3 install -e .
+```
+
+### Development tools
+
+Install the `flake8` linter:
+```bash
+python -m pip install flake8
+```
+
+Install `pytest` and `mock`:
+```bash
+pip install -U pytest mock pytest-mock
+```
+
+Install Sphinx to automatically generate API documentation from docstrings:
+```bash
+pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
 ## API documentation
 
 This section contains instructions for generating API documentation using `sphinx`.
@@ -36,6 +69,20 @@ To update the official documentation at [https://limmen.dev/csle](https://limmen
 copy the generated HTML files to the documentation folder:
 ```bash
 cp -r build/html ../../../../docs/_docs/csle-ryu
+```
+
+## Static code analysis
+
+To run the static code analysis, execute the following command:
+```
+flake8 .
+```
+
+## Unit tests
+
+To run the unit tests, execute the following command:
+```
+pytest
 ```
 
 ## Author & Maintainer
