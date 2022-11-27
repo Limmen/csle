@@ -15,7 +15,7 @@ setup(
     install_requires=[
         'Click>=8.0.0',
         'csle-common', 'csle-collector', 'csle-attacker', 'csle-defender',
-        'csle-system-identification', 'gym-csle-stopping-game', 'stable-baselines3'
+        'csle-system-identification', 'gym-csle-stopping-game'
     ],
     entry_points='''
         [console_scripts]

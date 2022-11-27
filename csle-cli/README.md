@@ -103,6 +103,48 @@ csle systemidentificationjob <id>
 csle datacollectionjob <id>
 ```
 
+## Requirements
+
+- Python 3.8+
+- `click>=8.0.0`
+- `csle-common`
+- `csle-collector`
+- `csle-attacker`
+- `csle-defender`
+- `csle-system-identification`
+- `gym-csle-stopping-game`
+
+## Installation
+
+```bash
+# install from pip
+pip install csle-cli==<version>
+# local install from source
+$ pip install -e csle-cli
+# force upgrade deps
+$ pip install -e csle-cli --upgrade
+
+# git clone and install from source
+git clone https://github.com/Limmen/csle
+cd csle-cli
+pip3 install -e .
+```
+
+### Development tools
+
+Install the `flake8` linter:
+```bash
+python -m pip install flake8
+```
+
+Install `pytest` and `mock`:
+```bash
+pip install -U pytest mock pytest-mock
+```
+
+## API documentation
+
+The latest documentation is available at [https://limmen.dev/csle/docs](https://limmen.dev/csle/docs)
 
 ## Author & Maintainer
 

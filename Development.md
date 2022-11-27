@@ -62,8 +62,9 @@ simulation-system/python/generate_docs.sh
 
 To run the unit tests, execute:
 ```bash
-simulation-system/python/generate_docs.sh
+simulation-system/python/unit_tests.sh
 ```
+
 When adding new unit tests note that:
 
 - All unit tests must be written in a tests/ directory inside the python project
@@ -72,6 +73,10 @@ When adding new unit tests note that:
 
 ### Integration tests
 
+To run the integration tests, execute:
+```bash
+simulation-system/python/integration_tests.sh
+```
 
 ## Continuous Integration
 
