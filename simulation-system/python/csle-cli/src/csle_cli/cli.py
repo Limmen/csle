@@ -1263,7 +1263,7 @@ def list_statsmanager() -> None:
             active_monitor_threads = docker_stats_monitor_status.num_monitors
             active_emulations = docker_stats_monitor_status.emulations
         click.secho("Docker statsmanager status: " + f" {click.style('[running], ', fg='green')} "
-                                                     f"port:{50051}, num active monitor threads: "
+                                                     f"port:{50046}, num active monitor threads: "
                                                      f"{active_monitor_threads}, "
                                                      f"active emulations: {','.join(active_emulations)}", bold=False)
     else:
