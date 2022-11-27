@@ -14,7 +14,7 @@ python3 -m pip install -U mypy
 
 Install `pytest` and `mock`:
 ```bash
-pip install -U pytest mock pytest-mock
+pip install -U pytest mock pytest-mock pytest-cov
 ```
 
 Install ruby and its bundler to generate the documentation page:

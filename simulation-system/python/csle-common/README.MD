@@ -56,7 +56,7 @@ python3 -m pip install -U mypy
 
 Install `pytest` and `mock`:
 ```bash
-pip install -U pytest mock pytest-mock
+pip install -U pytest mock pytest-mock pytest-cov
 ```
 
 Install Sphinx to automatically generate API documentation from docstrings:
@@ -106,6 +106,11 @@ mypy .
 To run the unit tests, execute the following command:
 ```
 pytest
+```
+
+To generate a coverage report, execute the following command:
+```
+pytest --cov=csle_common
 ```
 
 ## Author & Maintainer
