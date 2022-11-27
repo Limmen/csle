@@ -5,6 +5,7 @@
 Install the `flake8` linter:
 ```bash
 python -m pip install flake8
+pip install -U pytest mock pytest-mock
 ```
 
 Install ruby and its bundler to generate the documentation page:
@@ -46,6 +47,21 @@ simulation-system/python/generate_docs.sh
 ```
 
 ## Tests
+
+### Unit tests
+
+All unit tests must be written in a tests/ directory
+File names should strictly start with tests_
+Function names should strictly start with test
+
+```bash
+pytest tests/
+pytest tests/test_sample.py
+pytest tests/test_sample.py::test_function_one
+```
+
+### Integration tests
+
 
 ## Continuous Integration
 

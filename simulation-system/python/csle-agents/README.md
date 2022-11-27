@@ -40,6 +40,18 @@ To update the official documentation at [https://limmen.dev/csle](https://limmen
 cp -r build/html ../../../../docs/_docs/csle-agents
 ```
 
+### Static code analysis
+
+```
+flake8 .
+```
+
+### Unit tests
+
+```
+pytest
+```
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>

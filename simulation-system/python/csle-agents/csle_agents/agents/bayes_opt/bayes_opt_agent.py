@@ -70,8 +70,8 @@ class BayesOptAgent(BaseAgent):
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
         for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
-            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
+            exp_result.plot_metrics.append(f"{env_constants.ENV_METRICS.STOP}_{l}")
+            exp_result.plot_metrics.append(f"{env_constants.ENV_METRICS.STOP}_running_average_{l}")
 
         descr = f"Training of policies with the Bayesian Optimization algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
@@ -84,7 +84,7 @@ class BayesOptAgent(BaseAgent):
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
                     exp_result.all_metrics[seed][
-                        (agents_constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER + f"_l={l}")] = []
+                        f"{agents_constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER}_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
                     for l in range(1,
@@ -101,8 +101,8 @@ class BayesOptAgent(BaseAgent):
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
             for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+                exp_result.all_metrics[seed][f"{env_constants.ENV_METRICS.STOP}_{l}"] = []
+                exp_result.all_metrics[seed][f"{env_constants.ENV_METRICS.STOP}_running_average_{l}"] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -138,6 +138,7 @@ class BayesOptAgent(BaseAgent):
 
         config = self.simulation_env_config.simulation_env_input_config
         if self.env is None:
+            print(f"MAKING GYM: {self.simulation_env_config.gym_env_name}")
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
