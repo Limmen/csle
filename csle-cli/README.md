@@ -114,6 +114,18 @@ csle datacollectionjob <id>
 - `csle-system-identification`
 - `gym-csle-stopping-game`
 
+## Development Requirements
+
+- Python 3.8+
+- `flake8` (for linting)
+- `tox` (for automated testing)
+- `pytest` (for unit tests)
+- `pytest-cov` (for unit test coverage)
+- `mypy` (for static typing)
+- `sphinx` (for API documentation)
+- `sphinxcontrib-napoleon` (for API documentation)
+- `sphinx-rtd-theme` (for API documentation)
+
 ## Installation
 
 ```bash
@@ -132,6 +144,16 @@ pip3 install -e .
 
 ### Development tools
 
+Install the Python build tool
+```bash
+pip install -q build
+```
+
+Install `twine` for publishing the package to PyPi:
+```bash
+python3 -m pip install --upgrade twine
+```
+
 Install the `flake8` linter:
 ```bash
 python -m pip install flake8
@@ -145,6 +167,52 @@ pip install -U pytest mock pytest-mock
 ## API documentation
 
 The latest documentation is available at [https://limmen.dev/csle/docs](https://limmen.dev/csle/docs)
+
+## Static code analysis
+
+To run the Python linter, execute the following command:
+```
+flake8 .
+```
+
+To run the mypy type checker, execute the following command:
+```
+mypy .
+``` 
+
+
+## Integration tests
+
+To run the integration tests, execute the following command:
+```
+pytest
+```
+
+To generate a coverage report, execute the following command:
+```
+pytest --cov=csle_cli
+```
+
+## Run tests and code analysis in different python environments
+
+To run tests and code analysis in different python environemnts, execute the following command:
+
+```bash
+tox
+```
+
+## Create a new release and publish to PyPi
+
+First build the package by executing:
+```bash
+python3 -m build
+```
+After running the command above, the built package is available at `./dist`.
+
+Push the built package to PyPi by running:
+```bash
+python3 -m twine upload dist/*
+```
 
 ## Author & Maintainer
 

@@ -6,6 +6,9 @@ This library contains scripts and programs for collecting data from the emulatio
 <img src="docs/data_collection_1.png" width="600">
 </p>
 
+[![PyPI version](https://badge.fury.io/py/csle-collector.svg)](https://badge.fury.io/py/csle-collector)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-collector)
+
 ## Re-generate gRPC files
 
 To re-generate the gRPC files, run: 
@@ -58,6 +61,16 @@ pip3 install -e .
 ```
 
 ### Development tools
+
+Install the Python build tool
+```bash
+pip install -q build
+```
+
+Install `twine` for publishing the package to PyPi:
+```bash
+python3 -m pip install --upgrade twine
+```
 
 Install the `flake8` linter:
 ```bash
@@ -141,13 +154,26 @@ To run tests and code analysis in different python environemnts, execute the fol
 tox
 ```
 
+## Create a new release and publish to PyPi
+
+First build the package by executing:
+```bash
+python3 -m build
+```
+After running the command above, the built package is available at `./dist`.
+
+Push the built package to PyPi by running:
+```bash
+python3 -m twine upload dist/*
+```
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
-[../../LICENSE](LICENSE.md)
+[LICENSE](LICENSE.md)
 
 Creative Commons
 

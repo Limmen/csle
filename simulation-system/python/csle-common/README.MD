@@ -3,6 +3,9 @@
 `csle-common` is a library with common functionality for all use-cases implemented in
 CSLE. 
 
+[![PyPI version](https://badge.fury.io/py/csle-common.svg)](https://badge.fury.io/py/csle-common)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-common)
+
 ## Requirements
 
 - Python 3.8+
@@ -52,6 +55,16 @@ pip3 install -e .
 ```
 
 ### Development tools
+
+Install the Python build tool
+```bash
+pip install -q build
+```
+
+Install `twine` for publishing the package to PyPi:
+```bash
+python3 -m pip install --upgrade twine
+```
 
 Install the `flake8` linter:
 ```bash
@@ -135,14 +148,27 @@ To run tests and code analysis in different python environemnts, execute the fol
 tox
 ```
 
+## Create a new release and publish to PyPi
+
+First build the package by executing:
+```bash
+python3 -m build
+```
+After running the command above, the built package is available at `./dist`.
+
+Push the built package to PyPi by running:
+```bash
+python3 -m twine upload dist/*
+```
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
+[LICENSE](LICENSE.md)
+
 Creative Commons
 
-[LICENSE](../../LICENSE.md)
-
-(C) 2021, Kim Hammar
+(C) 2020-2022, Kim Hammar

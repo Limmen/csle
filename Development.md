@@ -2,6 +2,16 @@
 
 ## Install development tools
 
+Install the Python build tool
+```bash
+pip install -q build
+```
+
+Install `twine` for publishing packages to PyPi:
+```bash
+python3 -m pip install --upgrade twine
+```
+
 Install the `flake8` linter for Python:
 ```bash
 python -m pip install flake8
@@ -107,6 +117,21 @@ find . -name 'Dockerfile' | xargs wc -l
 find . -name 'Makefile' | xargs wc -l
 find . -name '*.sh' | xargs wc -l
 ```
+
+## Release management
+
+### Python Releases
+
+Release order:
+csle-ryu
+csle-collector
+csle-common
+csle-attacker
+csle-defender
+csle-system-identification
+gym-csle-stopping-game
+csle-rest-api
+csle-agents
 
 ## Author & Maintainer
 
