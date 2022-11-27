@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
 
 setup(name='csle_collector',
       version='0.0.70',
-      install_requires=['grpcio==1.46.3', 'grpcio-tools==1.46.3', 'scipy', 'confluent-kafka==1.8.2', 'docker',
-                        'sphinx', 'sphinxcontrib-napoleon', 'sphinx-rtd-theme'],
+      install_requires=['grpcio>=1.46.3', 'grpcio-tools>=1.46.3', 'scipy>=1.9.3', 'confluent-kafka>=1.8.2',
+                        'docker>=6.0.1',
+                        'sphinx>=5.3.0', 'sphinxcontrib-napoleon>=0.7', 'sphinx-rtd-theme>=1.1.1'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='scripts for data collection in CSLE',

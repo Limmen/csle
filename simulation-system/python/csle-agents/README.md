@@ -6,7 +6,7 @@ and game-theoretic algorithms for finding defender policies.
 ## Requirements
 
 - Python 3.8+
-- `csle-common`
+- `csle-common0.0.1`
 - `csle-collector`
 - `csle-attacker`
 - `csle-defender`
@@ -14,6 +14,18 @@ and game-theoretic algorithms for finding defender policies.
 - `gym-csle-stopping-game`
 - `pulp` (for linear and convex optimization)
 - `Bayesian optimization` (for Bayesian optimization algorithms)
+
+## Development Requirements
+
+- Python 3.8+
+- `flake8` (for linting)
+- `tox` (for automated testing)
+- `pytest` (for unit tests)
+- `pytest-cov` (for unit test coverage)
+- `mypy` (for static typing)
+- `sphinx` (for API documentation)
+- `sphinxcontrib-napoleon` (for API documentation)
+- `sphinx-rtd-theme` (for API documentation)
 
 ## Installation
 
@@ -107,7 +119,7 @@ To generate a coverage report, execute the following command:
 pytest --cov=csle_agents
 ```
 
-## Run tests and code analysis in different python environemnts
+## Run tests and code analysis in different python environments
 
 To run tests and code analysis in different python environemnts, execute the following command:
 

@@ -2,7 +2,8 @@ from setuptools import setup
 
 setup(name='gym_csle_stopping_game',
       version='0.0.1',
-      install_requires=['csle-common', 'csle-attacker', 'csle-defender', 'csle-collector'],
+      install_requires=['csle-common==0.0.1', 'csle-attacker==0.0.1', 'csle-defender==0.0.1',
+                        'csle-collector>=0.0.70'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='CSLE is a platform for evaluating and developing reinforcement learning agents for '

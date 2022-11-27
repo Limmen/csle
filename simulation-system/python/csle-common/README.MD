@@ -15,9 +15,6 @@ CSLE.
 - `stable-baselines3` (for baseline RL algorithms)
 - `scp` (for SSH copying)
 - `random_username` (for auto generating emulations)
-- `sphinx` (for API documentation)
-- `sphinxcontrib-napoleon` (for API documentation)
-- `sphinx-rtd-theme` (for API documentation)
 - `psycopg` (to interact with the metastore)
 - `click` (for the command line interface)
 - `flask` (for the management system Web UI)
@@ -25,6 +22,18 @@ CSLE.
 - `csle-collector` (for data collection and telemetry)
 - `psutil` (for command line tasks)
 - `csle-ryu` (for SDN network management)
+
+## Development Requirements
+
+- Python 3.8+
+- `flake8` (for linting)
+- `tox` (for automated testing)
+- `pytest` (for unit tests)
+- `pytest-cov` (for unit test coverage)
+- `mypy` (for static typing)
+- `sphinx` (for API documentation)
+- `sphinxcontrib-napoleon` (for API documentation)
+- `sphinx-rtd-theme` (for API documentation)
 
 ## Installation
 
@@ -116,6 +125,14 @@ pytest
 To generate a coverage report, execute the following command:
 ```
 pytest --cov=csle_common
+```
+
+## Run tests and code analysis in different python environments
+
+To run tests and code analysis in different python environemnts, execute the following command:
+
+```bash
+tox
 ```
 
 ## Author & Maintainer
