@@ -99,35 +99,35 @@ running commands can read and write to this directory.
     source activate python38
     ```
 
-    - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
+    - Install `csle-collector` (see ([README](simulation-system/python/csle-collector/README.md)) for more information)
       ```bash
        cd simulation-system/python/csle-collector/
        pip install -e . 
        cd ../../../
       ```
 
-    - Install `csle-common` (see ([README](simulation-system/csle-common/README.md)) for more information)
+    - Install `csle-common` (see ([README](simulation-system/python/csle-common/README.md)) for more information)
       ```bash
        cd simulation-system/python/csle-common/
        pip install -e .
        cd ../../../
       ```
 
-    - Install `csle-attacker` (see ([README](simulation-system/csle-attacker/README.md)) for more information)
+    - Install `csle-attacker` (see ([README](simulation-system/python/csle-attacker/README.md)) for more information)
       ```bash
       cd simulation-system/python/csle-attacker/
       pip install -e . 
       cd ../../../
       ```
 
-    - Install `csle-defender` (see ([README](simulation-system/csle-defender/README.md)) for more information)
+    - Install `csle-defender` (see ([README](simulation-system/python/csle-defender/README.md)) for more information)
       ```bash
       cd simulation-system/python/csle-defender/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `gym-csle-stopping-game` (see ([README](simulation-system/gym-csle-stopping-game/README.MD)) for more
+    - Install `gym-csle-stopping-game` (see ([README](simulation-system/python/gym-csle-stopping-game/README.MD)) for more
       information)
       ```bash
       cd simulation-system/python/gym-csle-stopping-game/
@@ -135,7 +135,7 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
-    - Install `csle-system-identification` (see ([README](simulation-system/csle-system-identification/README.MD)) for more
+    - Install `csle-system-identification` (see ([README](simulation-system/python/csle-system-identification/README.MD)) for more
       information)
       ```bash
       cd simulation-system/python/csle-system-identification/
@@ -143,7 +143,7 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
-    - Install `csle-agents` (see ([README](simulation-system/csle-agents/README.MD)) for more
+    - Install `csle-agents` (see ([README](simulation-system/python/csle-agents/README.MD)) for more
       information)
       ```bash
       cd simulation-system/python/csle-agents/
@@ -151,7 +151,7 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
-    - Install `csle-ryu` (see ([README](simulation-system/csle-ryu/README.MD)) for more
+    - Install `csle-ryu` (see ([README](simulation-system/python/csle-ryu/README.MD)) for more
       information)
       ```bash
       cd simulation-system/python/csle-ryu/
@@ -159,10 +159,18 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
-    - Install `csle-rest-api` (see ([README](simulation-system/csle-rest-api/README.MD)) for more
+    - Install `csle-rest-api` (see ([README](simulation-system/python/csle-rest-api/README.MD)) for more
       information)
       ```bash
       cd simulation-system/python/csle-rest-api/
+      pip install -e .
+      cd ../../../
+      ```
+
+    - Install `csle-cli` (see ([README](simulation-system/python/csle-cli/README.MD)) for more
+      information)
+      ```bash
+      cd simulation-system/python/csle-cli/
       pip install -e .
       cd ../../../
       ```
@@ -174,26 +182,7 @@ running commands can read and write to this directory.
       cd ../../
       ```
 
-8. **Install the CLI tool**
-    - Install the CLI tool and make it executable as a script:
-      ```bash
-      cd csle-cli
-      pip install -e .
-      cd ../../
-      ```
-    - Setup auto-completion in BASH by generating the following file:
-      ```bash
-      _CSLE_COMPLETE=bash_source csle > ~/.csle-complete.bash
-      ```
-      and then adding the following line to ~/.bashrc
-      ```bash
-      . ~/.csle-complete.bash
-      ```
-    - Setup auto-completion in Fish:
-      ```bash
-      _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish
-      ```
-    - Initialize management users
+8. **Initialize management users** 
       ```bash
       csle init
       ```
