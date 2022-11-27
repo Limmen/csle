@@ -120,19 +120,36 @@ find . -name '*.sh' | xargs wc -l
 
 ## Release management
 
+CSLE has semantic versioning, i.e versions of CSLE are of the form `MAJOR.MINOR.PATCH`
+1. The MAJOR version is incremented when incompatible API changes are made
+2. The MINOR version is incremented new functionality is added in a backwards compatible manner
+3. The PATCH version is incremented when backwards compatible bug fixes are made
+
+To generate a new release of CSLE, the following steps must be performed:
+
+1. Publish new versions of the Python libraries to [https://pypi.org/](https://pypi.org/)
+2. Publish new versions of the Docker containers to [https://hub.docker.com/](https://hub.docker.com/)
+3. Publish a new version of the documentation to (http://limmen.dev/csle)[http://limmen.dev/csle]
+4. Make a github release with all artefacts at [https://github.com/Limmen/csle](https://github.com/Limmen/csle)
+
 ### Python Releases
 
-Release order:
-csle-ryu
-csle-collector
-csle-common
-csle-attacker
-csle-defender
-csle-system-identification
-gym-csle-stopping-game
-csle-agents
-csle-rest-api
-csle-cli
+To make a new python release, do the following:
+
+1. Edit the `RELEASE_CONFIG` variable in [./simulation-system/python/make_release.py](./simulation-system/python/make_release.py) to match the versions of the release.
+2. Run: `python ./simulation-system/python/make_release.py`
+
+### Documentation Releases
+
+TODO
+
+### Docker Releases
+
+TODO
+
+### GitHub Releases
+
+TODO
 
 ## Author & Maintainer
 
