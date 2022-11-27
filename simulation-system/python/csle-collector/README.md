@@ -57,7 +57,7 @@ Install the mypy for static type checking:
 python3 -m pip install -U mypy
 ```
 
-Install `pytest` and `mock`:
+Install `pytest` and `mock` for unit tests:
 ```bash
 pip install -U pytest mock pytest-mock pytest-cov
 ```
@@ -65,6 +65,11 @@ pip install -U pytest mock pytest-mock pytest-cov
 Install Sphinx to automatically generate API documentation from docstrings:
 ```bash
 pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
+Install tox for automatically running tests in different python environments:
+```bash
+pip install tox
 ```
 
 ## API documentation

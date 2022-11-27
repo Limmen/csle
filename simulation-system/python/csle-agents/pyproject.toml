@@ -3,10 +3,14 @@ requires = ["setuptools>=42.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
-addopts = "--cov=slapping"
+addopts = "--cov=csle_agents -p no:warnings"
 testpaths = [
     "tests",
 ]
+log_cli = 1
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format="%Y-%m-%d %H:%M:%S"
 
 [tool.mypy]
 mypy_path = "src"

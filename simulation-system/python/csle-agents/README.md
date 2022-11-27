@@ -43,7 +43,7 @@ Install the mypy for static type checking:
 python3 -m pip install -U mypy
 ```
 
-Install `pytest` and `mock`:
+Install `pytest` and `mock` for unit tests:
 ```bash
 pip install -U pytest mock pytest-mock pytest-cov
 ```
@@ -51,6 +51,11 @@ pip install -U pytest mock pytest-mock pytest-cov
 Install Sphinx to automatically generate API documentation from docstrings:
 ```bash
 pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
+Install tox for automatically running tests in different python environments: 
+```bash
+pip install tox
 ```
 
 ## API documentation
@@ -100,6 +105,14 @@ pytest
 To generate a coverage report, execute the following command:
 ```
 pytest --cov=csle_agents
+```
+
+## Run tests and code analysis in different python environemnts
+
+To run tests and code analysis in different python environemnts, execute the following command:
+
+```bash
+tox
 ```
 
 ## Author & Maintainer

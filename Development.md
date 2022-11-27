@@ -2,17 +2,17 @@
 
 ## Install development tools
 
-Install the `flake8` linter:
+Install the `flake8` linter for Python:
 ```bash
 python -m pip install flake8
 ```
 
-Install the mypy for static type checking:
+Install the mypy for static type checking in Python:
 ```bash
 python3 -m pip install -U mypy
 ```
 
-Install `pytest` and `mock`:
+Install `pytest` and `mock` for Python unit tests:
 ```bash
 pip install -U pytest mock pytest-mock pytest-cov
 ```
@@ -26,6 +26,11 @@ sudo gem install bundler
 Install Sphinx to automatically generate API documentation from docstrings: 
 ```bash
 pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
+```
+
+Install tox for automatically running Python tests in different Python environments:
+```bash
+pip install tox
 ```
 
 ## Static code analysis
