@@ -1,6 +1,9 @@
 # `csle-cli`
 
-The command-line-interface (CLI) tool for CSLE. 
+The command-line-interface (CLI) tool for CSLE.
+
+[![PyPI version](https://badge.fury.io/py/csle-agents.svg)](https://badge.fury.io/py/csle-cli)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-cli)
 
 ## Quickstart
 

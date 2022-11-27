@@ -130,8 +130,9 @@ csle-attacker
 csle-defender
 csle-system-identification
 gym-csle-stopping-game
-csle-rest-api
 csle-agents
+csle-rest-api
+csle-cli
 
 ## Author & Maintainer
 
