@@ -50,6 +50,7 @@ if __name__ == '__main__':
     # Update __version__.py files
     print("Updating __version__.py files")
     for lib, versions in RELEASE_CONFIG.items():
+        print(f"Updating {lib} from version {versions['old_version']} to {versions['new_version']}")
         with io.open(f"{lib}/src/{lib.replace('-', '_')}/__version__.py", 'r', encoding='utf-8') as f:
             file_contents = f.read()
         with io.open(f"{lib}/src/{lib.replace('-', '_')}/__version__.py", 'w', encoding='utf-8') as f:
@@ -92,20 +93,22 @@ if __name__ == '__main__':
     # Build
     print("Build")
     for lib, versions in RELEASE_CONFIG.items():
+        print(f"Building {lib}")
         p = subprocess.Popen(f"cd {lib}; python3 -m build", stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
         output = str(output)
-        print(output)
+        print(f"{lib} built successfully")
 
     # Push
     print("Push to PyPi")
     for lib, versions in RELEASE_CONFIG.items():
+        print(f"Uploading {lib} to PyPi")
         p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/* -p {password} -u {username}", stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
         output = str(output)
-        print(output)
+        print(f"Successfully uploaded {lib} to PyPi")
 
 
 
