@@ -50,16 +50,18 @@ if __name__ == '__main__':
     # Update __version__.py files
     print("Updating __version__.py files")
     for lib, versions in RELEASE_CONFIG.items():
-        with io.open(f"{lib}/src/{lib.replace('-', '_')}/__version__.py", '+', encoding='utf-8') as f:
+        with io.open(f"{lib}/src/{lib.replace('-', '_')}/__version__.py", 'r', encoding='utf-8') as f:
             file_contents = f.read()
+        with io.open(f"{lib}/src/{lib.replace('-', '_')}/__version__.py", 'w', encoding='utf-8') as f:
             file_contents = file_contents.replace(versions["old_version"], versions["new_version"])
             f.write(file_contents)
 
     # Update requirements.txt files
     print("Updating requirements.txt files")
     for lib, versions in RELEASE_CONFIG.items():
-        with io.open(f"{lib}/requirements.txt", '+', encoding='utf-8') as f:
+        with io.open(f"{lib}/requirements.txt", 'r', encoding='utf-8') as f:
             file_contents = f.read()
+        with io.open(f"{lib}/requirements.txt", 'w', encoding='utf-8') as f:
             file_contents = file_contents.replace(f"{lib}=={versions['old_version']}",
                                                   f"{lib}=={versions['new_version']}")
             file_contents = file_contents.replace(f"{lib}>={versions['old_version']}",
@@ -71,8 +73,9 @@ if __name__ == '__main__':
     # Update setup.cfg files
     print("Updating setup.cfg files")
     for lib, versions in RELEASE_CONFIG.items():
-        with io.open(f"{lib}/setup.cfg", '+', encoding='utf-8') as f:
+        with io.open(f"{lib}/setup.cfg", 'r', encoding='utf-8') as f:
             file_contents = f.read()
+        with io.open(f"{lib}/requirements.txt", 'w', encoding='utf-8') as f:
             file_contents = file_contents.replace(f"{lib}=={versions['old_version']}",
                                                   f"{lib}=={versions['new_version']}")
             file_contents = file_contents.replace(f"{lib}>={versions['old_version']}",
