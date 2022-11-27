@@ -25,7 +25,13 @@ pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
 
 ## Static code analysis
 
-### Python: 
+### Python:
+
+To run the python linter execute:
+ ```bash
+./python_linter.sh 
+ ```
+or:
 ```bash
 flake8 simulation-system/
 flake8 csle-cli
@@ -34,7 +40,7 @@ flake8 examples/
 ```
 
 ### JavaScript:
-To run the linter and print possible errors, use the commands:
+To run the JavaScript linter and print possible errors, use the commands:
 ```bash
 cd management-system/csle-mgmt-webapp/; npm run lint
 ```
@@ -54,15 +60,15 @@ simulation-system/python/generate_docs.sh
 
 ### Unit tests
 
-All unit tests must be written in a tests/ directory
-File names should strictly start with tests_
-Function names should strictly start with test
-
+To run the unit tests, execute:
 ```bash
-pytest tests/
-pytest tests/test_sample.py
-pytest tests/test_sample.py::test_function_one
+simulation-system/python/generate_docs.sh
 ```
+When adding new unit tests note that:
+
+- All unit tests must be written in a tests/ directory inside the python project
+- File names should strictly start with tests_
+- Function names should strictly start with test
 
 ### Integration tests
 
