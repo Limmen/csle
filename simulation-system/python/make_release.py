@@ -5,31 +5,31 @@ import subprocess
 
 RELEASE_CONFIG = {
     "csle-ryu": {
-        "new_version": "'0.0.22'",
+        "new_version": "'0.0.23'",
     },
     "csle-collector": {
-        "new_version": "'0.0.73'",
+        "new_version": "'0.0.74'",
     },
     "csle-attacker": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     },
     "csle-defender": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     },
     "csle-system-identification": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     },
     "gym-csle-stopping-game": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     },
     "csle-agents": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     },
     "csle-rest-api": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     },
     "csle-cli": {
-        "new_version": "'0.0.4'",
+        "new_version": "'0.0.5'",
     }
 }
 
@@ -96,9 +96,15 @@ if __name__ == '__main__':
         print(f"Building {lib}")
         p = subprocess.Popen(f"cd {lib}; python3 -m build", stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        p.wait()
+        exit_code = p.wait()
         output = str(output)
-        print(f"{lib} built successfully")
+        err = str(err)
+        if exit_code == 0:
+            print(f"{lib} built successfully")
+        else:
+            print(f"There was an error building {lib}; exit code: {exit_code}")
+            print(output)
+            print(err)
 
     # Push
     print("Push to PyPi")
@@ -106,9 +112,15 @@ if __name__ == '__main__':
         print(f"Uploading {lib} to PyPi")
         p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/* -p {password} -u {username}", stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        p.wait()
+        exit_code = p.wait()
         output = str(output)
-        print(f"Successfully uploaded {lib} to PyPi")
+        err = str(err)
+        if exit_code == 0:
+            print(f"Successfully uploaded {lib} to PyPi")
+        else:
+            print(f"There was an error uploading {lib} to PyPi; exit code: {exit_code}")
+            print(output)
+            print(err)
 
 
 
