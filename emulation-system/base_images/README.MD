@@ -6,49 +6,85 @@ more specific Docker images.
 
 ## List of Base Images
 
-- `cve_2010_0426_base` ([cve_2010_0426_base](./docker_files/cve_2010_0426_base)): a base image for csle emulations with the CVE-2010-0426 vulnerability. 
+- `cve_2010_0426_base` ([cve_2010_0426_base](./docker_files/cve_2010_0426_base)): a base image for csle emulations with the CVE-2010-0426 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2010_0426_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_base/)
      - OS: Debian:Jessie. 
      - Inherits from `debian_jessie_base`.
-- `cve_2015_1427_base` ([cve_2015_1427_base](./docker_files/cve_2015_1427_base)): a base image for csle emulations with the CVE-2015-1427 vulnerability. 
+- `cve_2015_1427_base` ([cve_2015_1427_base](./docker_files/cve_2015_1427_base)): a base image for csle emulations with the CVE-2015-1427 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_1427_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_1427_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2015_1427_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2015_1427_base/)     
      - OS: Debian:Jessie. 
      - Inherits from `debian_jessie_base`.
-- `cve_2015_3306_base` ([cve_2015_3306_base](./docker_files/cve_2015_3306_base)): a base image for csle emulations with the CVE-2015-3306 vulnerability. 
+- `cve_2015_3306_base` ([cve_2015_3306_base](./docker_files/cve_2015_3306_base)): a base image for csle emulations with the CVE-2015-3306 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_3306_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_csle_cve_2010_0426_1/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2015_3306_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_csle_cve_2010_0426_1/)
      - OS: Debian:Jessie. 
      - Inherits from `debian_jessie_base`.
-- `cve_2015_5602_base` ([cve_2015_5602_base](./docker_files/cve_2015_5602_base)): a base image for csle emulations with the CVE-2015-5602 vulnerability. 
+- `cve_2015_5602_base` ([cve_2015_5602_base](./docker_files/cve_2015_5602_base)): a base image for csle emulations with the CVE-2015-5602 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_5602_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_5602_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2015_5602_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2015_5602_base/)
      - OS: Debian:Jessie. 
      - Inherits from `debian_jessie_base`.
 - `cve_2016_10033_base` ([cve_2016_10033_base](./docker_files/cve_2016_10033_base)): a base image for csle emulations with the CVE-2016-10033 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2016_10033_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2016_10033_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2016_10033_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2016_10033_base/) 
      - OS: Debian:Jessie. 
      - Inherits from `debian_jessie_base`.
-- `debian_jessie_base` ([debian_jessie_base](./docker_files/debian_jessie_base)): a base debian image for csle emulations. 
+- `debian_jessie_base` ([debian_jessie_base](./docker_files/debian_jessie_base)): a base debian image for csle emulations.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_debian_jessie_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_debian_jessie_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_debian_jessie_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_debian_jessie_base/)
      - OS: Debian:Jessie.
-- `kali_base` ([kali_base](./docker_files/kali_base)): a base Kali image for csle emulations, used to generate containers with tools for penetration testing. 
+- `kali_base` ([kali_base](./docker_files/kali_base)): a base Kali image for csle emulations, used to generate containers with tools for penetration testing.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_kali_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_kali_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_kali_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_kali_base/)
      - OS: Kali (Latest).
-- `samba_base` ([samba_base](./docker_files/samba_base)): a base image for csle emulations with the SambaCry CVE-2017-7494 vulnerability. 
+- `samba_base` ([samba_base](./docker_files/samba_base)): a base image for csle emulations with the SambaCry CVE-2017-7494 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_samba_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_samba_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_samba_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_samba_base/)
      - OS: Debian:Jessie.
-- `shellshock_base` ([shellshock_base](./docker_files/shellshock_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability. 
+- `shellshock_base` ([shellshock_base](./docker_files/shellshock_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_shellshock_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
      - OS: Debian:Wheezy.
-- `sql_injection_base` ([sql_injection_base](./docker_files/sql_injection_base)): a base image for csle emulations with a webapp that is vulnerable to SQL injections. 
+- `sql_injection_base` ([sql_injection_base](./docker_files/sql_injection_base)): a base image for csle emulations with a webapp that is vulnerable to SQL injections.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_sql_injection_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_sql_injection_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_sql_injection_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_sql_injection_base/)
      - OS: Debian:9.2.
-- `ssh_base` ([ssh_base](./docker_files/ssh_base)): a base image for csle emulations with a SSH server that accepts arbitrary login attempts logins. 
+- `ssh_base` ([ssh_base](./docker_files/ssh_base)): a base image for csle emulations with a SSH server that accepts arbitrary login attempts logins.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ssh_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ssh_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ssh_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ssh_base/)
      - OS: Ubuntu:20.
-- `ubuntu_14_base` ([ubuntu_14_base](./docker_files/ubuntu_14_base)): a base image for csle emulations with Ubuntu 14. 
+- `ubuntu_14_base` ([ubuntu_14_base](./docker_files/ubuntu_14_base)): a base image for csle emulations with Ubuntu 14.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ubuntu_14_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ubuntu_14_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ubuntu_14_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ubuntu_14_base/)
      - OS: Ubuntu:14.
-- `ubuntu_20_base` ([ubuntu_20_base](./docker_files/ubuntu_20_base)): a base image for csle emulations with Ubuntu 20. 
+- `ubuntu_20_base` ([ubuntu_20_base](./docker_files/ubuntu_20_base)): a base image for csle emulations with Ubuntu 20.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ubuntu_20_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ubuntu_20_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ubuntu_20_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ubuntu_20_base/)
      - OS: Ubuntu:20.
-- `blank_ubuntu_20` ([blank_ubuntu_20](./docker_files/blank_ubuntu_20)): a plain base image with Ubuntu 20. 
+- `blank_ubuntu_20` ([blank_ubuntu_20](./docker_files/blank_ubuntu_20)): a plain base image with Ubuntu 20.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_blank_ubuntu_20?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_blank_ubuntu_20/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_blank_ubuntu_20?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_blank_ubuntu_20/)
      - OS: Ubuntu:20.
-- `pengine_exploit_base` ([pengine_exploit_base](./docker_files/pengine_exploit_base)): a base image with a vulnerable prolog SLD pengine server 
+- `pengine_exploit_base` ([pengine_exploit_base](./docker_files/pengine_exploit_base)): a base image with a vulnerable prolog SLD pengine server
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_pengine_exploit_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_pengine_exploit_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_pengine_exploit_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_pengine_exploit_base/)
      - OS: Ubuntu:20.      
 - `ovs_base` ([ovs_base](./docker_files/ovs_base)): a base image with a Open virtual Switch (OVS)
-  - OS: Ubuntu:20.
-  - Inherits from `ùbuntu_20_base`
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ovs_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ovs_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ovs_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ovs_base/)
+     - OS: Ubuntu:20.
+     - Inherits from `ùbuntu_20_base`
 - `ryu_base` ([ryu_base](./docker_files/ryu_base)): a base image with the Ryu SDN controller
-  - OS: Ubuntu:20.
-  - Inherits from `ùbuntu_20_base`
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ryu_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ryu_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ryu_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ryu_base/)
+     - OS: Ubuntu:20.
+     - Inherits from `ùbuntu_20_base`
 - `elk_base` ([elk_base](./docker_files/elk_base)): a base image with the ELK stack
-  - OS: Ubuntu:20.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_elk_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_elk_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_elk_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_elk_base/)
+     - OS: Ubuntu:20.
 
 ## Useful commands
 
