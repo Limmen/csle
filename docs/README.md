@@ -2,6 +2,8 @@
 
 This directory contains the code of the documentation page for CSLE. It is built on top on Jekyll.
 
+The live documentation page is available [here](https://limmen.dev/csle).
+
 ## Running locally
 
 You need Ruby and gem before starting, then:
