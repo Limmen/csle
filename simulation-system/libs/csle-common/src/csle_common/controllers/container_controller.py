@@ -15,6 +15,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
+from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
@@ -507,18 +508,18 @@ class ContainerController:
                 stub=stub, emulation=execution.emulation_name, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
-    def get_docker_stats_manager_status(kafka_config: KafkaConfig) \
+    def get_docker_stats_manager_status(docker_stats_manager_config: DockerStatsManagerConfig) \
             -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
         """
         Sends a request to get the status of the docker stats manager
 
-        :param kafka_config: the kafka configuration
+        :param docker_stats_manager_config: the docker stats manager configuration
         :return: None
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
         docker_stats_monitor_dto = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
-            ip=ip, port=kafka_config.kafka_manager_port)
+            ip=ip, port=docker_stats_manager_config.docker_stats_manager_port)
         return docker_stats_monitor_dto
 
     @staticmethod
@@ -538,7 +539,7 @@ class ContainerController:
                     csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
                         stub=stub)
                 return docker_stats_monitor_dto
-        except Exception:
+        except Exception as e:
             return None
 
 

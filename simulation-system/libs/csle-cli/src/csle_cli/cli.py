@@ -214,7 +214,7 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
         if stats:
             for exec in executions:
                 stats_manager_dto = ContainerController.get_docker_stats_manager_status(
-                    kafka_config=exec.emulation_env_config.kafka_config)
+                    docker_stats_manager_config=exec.emulation_env_config.docker_stats_manager_config)
                 click.secho(f"Docker stats manager status for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
                 click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
@@ -1255,7 +1255,7 @@ def list_statsmanager() -> None:
         for em in emulations:
             if em.name in running_emulations:
                 docker_stats_monitor_status = ContainerController.get_docker_stats_manager_status(
-                    kafka_config=em.kafka_config)
+                    docker_stats_manager_config=em.docker_stats_manager_config)
                 break
         active_monitor_threads = 0
         active_emulations = []
