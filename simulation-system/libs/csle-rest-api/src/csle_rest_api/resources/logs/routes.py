@@ -40,6 +40,8 @@ def logs():
         item = os.path.join(path, f)
         if os.path.isfile(item):
             log_files.append(item)
+    if len(log_files) > 20:
+        log_files = log_files[0:20]
     data = log_files
     data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
     response = jsonify(data_dict)

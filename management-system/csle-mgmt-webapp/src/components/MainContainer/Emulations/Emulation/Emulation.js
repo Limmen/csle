@@ -10,6 +10,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import getIps from "../../../Common/getIps";
+import getTransportProtocolStr from "../../../Common/getTransportProtocolStr";
 
 
 /**
@@ -404,7 +405,7 @@ const Emulation = (props) => {
                                     <tr>
                                         <td>Configuration</td>
                                         <td>
-                                            <Button variant="link"
+                                            <Button variant="link" className="dataDownloadLink"
                                                     onClick={() => fileDownload(JSON.stringify(emulation), "config.json")}>
                                                 config.json
                                             </Button>
@@ -577,7 +578,7 @@ const Emulation = (props) => {
                                             <td>{service_config.ip}</td>
                                             <td>{service.name}</td>
                                             <td>{service.port}</td>
-                                            <td>{service.protocol}</td>
+                                            <td>{getTransportProtocolStr(service.protocol)}</td>
                                         </tr>))}
                                 </tbody>
                             </Table>
@@ -614,7 +615,7 @@ const Emulation = (props) => {
                                         <td>{vuln.ip}</td>
                                         <td>{vuln.name}</td>
                                         <td>{vuln.port}</td>
-                                        <td>{vuln.protocol}</td>
+                                        <td>{getTransportProtocolStr(vuln.protocol)}</td>
                                         <td>{getRootStr(vuln.root)}</td>
                                     </tr>
                                 )}

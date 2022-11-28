@@ -77,8 +77,12 @@ class EmulationDefenderMachineObservationState:
         :param d: the dict representation
         :return: the object instance
         """
+        if "kafka_config" in d and d["kafka_config"] is not None:
+            kafka_config = KafkaConfig.from_dict(d["kafka_config"])
+        else:
+            kafka_config = None
         obj = EmulationDefenderMachineObservationState(
-            ips=d["ips"], kafka_config=KafkaConfig.from_dict(d["kafka_config"]),
+            ips=d["ips"], kafka_config=kafka_config,
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
             docker_stats=DockerStats.from_dict(d["docker_stats"]))
         obj.os = d["os"]
@@ -98,7 +102,10 @@ class EmulationDefenderMachineObservationState:
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
         d["host_metrics"] = self.host_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
-        d["kafka_config"] = self.kafka_config.to_dict()
+        if self.kafka_config is not None:
+            d["kafka_config"] = self.kafka_config.to_dict()
+        else:
+            d["kafka_config"] = None
         return d
 
     def __str__(self) -> str:

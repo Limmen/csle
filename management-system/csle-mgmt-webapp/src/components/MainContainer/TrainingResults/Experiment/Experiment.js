@@ -254,7 +254,7 @@ const Experiment = (props) => {
                                     <tr>
                                         <td>Configuration</td>
                                         <td>
-                                            <Button variant="link"
+                                            <Button variant="link" className="dataDownloadLink"
                                                     onClick={() => fileDownload(JSON.stringify(props.experiment), "config.json")}>
                                                 training_run.json
                                             </Button>

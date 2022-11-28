@@ -138,7 +138,10 @@ class EmulationDefenderObservationState:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = EmulationDefenderObservationState(kafka_config=d["kafka_config"])
+        try:
+            obj = EmulationDefenderObservationState(kafka_config=d["kafka_config"])
+        except:
+            obj = EmulationDefenderObservationState(kafka_config=None)
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))
         obj.actions_tried = set(list(map(lambda x: tuple(x), d["actions_tried"])))
         obj.client_population_metrics = ClientPopulationMetrics.from_dict(d["client_population_metrics"])
@@ -148,7 +151,6 @@ class EmulationDefenderObservationState:
         obj.aggregated_host_metrics = HostMetrics.from_dict(d["aggregated_host_metrics"])
         obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
-        obj.kafka_config = KafkaConfig.from_dict(d["kafka_config"])
         obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
@@ -167,7 +169,10 @@ class EmulationDefenderObservationState:
         d["docker_stats"] = self.docker_stats.to_dict()
         d["snort_ids_alert_counters"] = self.snort_ids_alert_counters.to_dict()
         d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
-        d["kafka_config"] = self.kafka_config.to_dict()
+        if self.kafka_config is not None:
+            d["kafka_config"] = self.kafka_config.to_dict()
+        else:
+            d["kafka_config"] = None
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["aggregated_host_metrics"] = self.aggregated_host_metrics.to_dict()

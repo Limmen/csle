@@ -1005,7 +1005,7 @@ const SystemModels = (props) => {
                                             <tr>
                                                 <td>Data</td>
                                                 <td>
-                                                    <Button variant="link"
+                                                    <Button variant="link" className="dataDownloadLink"
                                                             onClick={() => fileDownload(JSON.stringify(props.selectedSystemModel), "data.json")}>
                                                         data.json
                                                     </Button>

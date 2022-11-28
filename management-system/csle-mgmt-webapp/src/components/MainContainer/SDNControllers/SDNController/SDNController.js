@@ -251,7 +251,7 @@ const SDNController = (props) => {
                                             <td>{switchDesc.aggflows.flow_count}</td>
                                             <td>{switchDesc.aggflows.packet_count}</td>
                                             <td>
-                                                <Button variant="link"
+                                                <Button variant="link" className="dataDownloadLink"
                                                         onClick={() => fileDownload(JSON.stringify(switchDesc), switchDesc.dpid + ".json")}>
                                                     {switchDesc.dpid}.json
                                                 </Button>

@@ -40,7 +40,7 @@ class ImportUtil:
         traces = EmulationTrace.load_traces_from_disk(input_file)
         Logger.__call__().get_logger().info(f"Read {len(traces)} traces")
         for i, trace in enumerate(traces):
-            Logger.__call__().get_logger().info(f"Saving trace {i}/{len(traces)} to the metastoer")
+            Logger.__call__().get_logger().info(f"Saving trace {i}/{len(traces)} to the metastore")
             MetastoreFacade.save_emulation_trace(trace)
         Logger.__call__().get_logger().info("Import of emulation traces from disk complete, "
                                             f"input file: {input_file}")

@@ -866,7 +866,7 @@ const EmulationStatistics = (props) => {
                                             <tr>
                                                 <td>Data</td>
                                                 <td>
-                                                    <Button variant="link"
+                                                    <Button variant="link" className="dataDownloadLink"
                                                             onClick={() => fileDownload(JSON.stringify(props.selectedEmulationStatistic), "config.json")}>
                                                         data.json
                                                     </Button>

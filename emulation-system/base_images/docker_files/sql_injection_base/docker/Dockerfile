@@ -213,6 +213,18 @@ RUN mv /etc/default/sysstat /etc/default/sysstat.bak
 ADD docker_files/common/sysstat /etc/default/sysstat
 RUN service sysstat restart
 
+# Beats
+RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.3.3-amd64.deb &&\
+    dpkg -i filebeat-8.3.3-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-8.3.3-amd64.deb &&\
+    dpkg -i metricbeat-8.3.3-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-8.3.3-amd64.deb &&\
+    dpkg -i packetbeat-8.3.3-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-8.3.3-amd64.deb &&\
+    dpkg -i auditbeat-8.3.3-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/heartbeat/heartbeat-8.3.3-amd64.deb &&\
+    dpkg -i heartbeat-8.3.3-amd64.deb
+
 # Add Tini
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
