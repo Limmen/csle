@@ -9,7 +9,7 @@ generate containers for emulating various network infrastructures.
 
 - `cve_2010_0426_1` ([cve_2010_0426_1](./cve_2010_0426_1)): an image with the CVE-2010-0426 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1/)
-     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2010_0426_1?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2010_0426_1:0.0.1?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1:0.0.1/)
      - OS: Debian:Jessie. 
      - Inherits from `cve_2010_0426_base`.
      - Services: teamspeak3, tomcat, ssh
