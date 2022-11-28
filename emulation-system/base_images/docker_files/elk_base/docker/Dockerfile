@@ -1,26 +1,5 @@
-# Dockerfile for ELK stack
-# Elasticsearch, Logstash, Kibana 8.3.3
-
-# Build with:
-# docker build -t <repo-user>/elk .
-
-# Run with:
-# docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk <repo-user>/elk
-
-# replace with master-arm64 for ARM64
 ARG IMAGE=focal-1.1.0
-
 FROM phusion/baseimage:${IMAGE}
-MAINTAINER Sebastien Pujadas http://pujadas.net
-ENV \
- REFRESHED_AT=2020-06-20
-
-
-###############################################################################
-#                                INSTALLATION
-###############################################################################
-
-### install prerequisites (cURL, gosu, tzdata, JDK for Logstash)
 
 RUN set -x \
  && apt update -qq \
@@ -264,6 +243,18 @@ RUN chmod 777 /elk_manager.py
 ADD docker_files/common/traffic_manager.py /traffic_manager.py
 RUN chmod 777 /traffic_manager.py
 
+# Beats
+RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.5.2-amd64.deb &&\
+    dpkg -i filebeat-8.5.2-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-8.5.2-amd64.deb &&\
+    dpkg -i metricbeat-8.5.2-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-8.5.2-amd64.deb &&\
+    dpkg -i packetbeat-8.5.2-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-8.5.2-amd64.deb &&\
+    dpkg -i auditbeat-8.5.2-amd64.deb &&\
+    curl -L -O https://artifacts.elastic.co/downloads/beats/heartbeat/heartbeat-8.5.2-amd64.deb &&\
+    dpkg -i heartbeat-8.5.2-amd64.deb
+
 ###############################################################################
 #                                   START
 ###############################################################################
@@ -277,8 +268,4 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 
-#EXPOSE 5601 9200 9300 9600 5044
-#VOLUME /var/lib/elasticsearch
-
-#CMD [ "/usr/local/bin/start.sh" ]
 
