@@ -4,7 +4,7 @@ A library with reinforcement learning algorithms, control-theoreitc algorithms, 
 and game-theoretic algorithms for finding defender policies.
 
 [![PyPI version](https://badge.fury.io/py/csle-agents.svg)](https://badge.fury.io/py/csle-agents)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-agents)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-agents) 
 
 ## Requirements
 

@@ -3,7 +3,7 @@
 A library with SDN controllers used in CSLE for emulating software-defined networks.
 
 [![PyPI version](https://badge.fury.io/py/csle-ryu.svg)](https://badge.fury.io/py/csle-ryu)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-ryu)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-ryu) 
 
 ## Requirements
 
