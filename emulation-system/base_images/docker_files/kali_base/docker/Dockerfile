@@ -91,9 +91,9 @@ RUN gcc -c -fpic bindshell-samba.c &&\
 ## Make subsequent RUN commands use the samba env
 #SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 #
-#RUN pip install pycrypto==2.6 &&\
-#    pip install git+https://github.com/opsxcq/impacket.git &&\
-#    pip install pyasn1==0.4.8
+RUN pip install pycryptodome==3.16.0 &&\
+    pip install git+https://github.com/opsxcq/impacket.git &&\
+    pip install pyasn1==0.4.8
 
 # Setup base environment with csle-collector
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]

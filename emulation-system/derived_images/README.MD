@@ -75,7 +75,8 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, telnet, CockroachDB
-- `telnet_3` ([telnet_3](./telnet_3)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
+- `telnet_3` ([telnet_3](./telnet_3)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_telnet_3?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_telnet_3/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Glassfish, telnet
@@ -99,10 +100,10 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh
- - `blank_1` ([blank_1](./blank_1)): a blank image for testing purposes 
-     - OS: Ubuntu:20. 
-     - Inherits from `blank_ubuntu_20`.
-     - Services: None
+- `blank_1` ([blank_1](./blank_1)): a blank image for testing purposes 
+    - OS: Ubuntu:20. 
+    - Inherits from `blank_ubuntu_20`.
+    - Services: None
 - `pengine_exploit_1` ([pengine_exploit_1](./pengine_exploit_1)): an image with a vulnerable Prolog SLD Pengine Server 
      - OS: Ubuntu:20. 
      - Inherits from `pengine_exploit_base`.

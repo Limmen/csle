@@ -130,7 +130,7 @@ SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 #RUN conda activate samba
 RUN pip install pycrypto==2.6 &&\
     pip install git+https://github.com/opsxcq/impacket.git &&\
-    pip install pyasn1
+    pip install pyasn1==0.4.8
 
 # Web server HTTP
 RUN mkdir -p /web/ &&\
