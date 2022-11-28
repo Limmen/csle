@@ -93,10 +93,10 @@ class DockerUtil:
         """
         parsed_containers = []
         for c in containers:
-            if "csle-" in c.name:
+            if constants.CONTAINER_IMAGES.CSLE_PREFIX in c.name:
                 name_parts = c.name.split("-")
-                container_name_2 = name_parts[1]
-                level = name_parts[2]
+                container_name_2 = name_parts[0]
+                level = name_parts[1]
                 inspect_info = client2.inspect_container(c.id)
                 net = None
                 if len(list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())) > 0:

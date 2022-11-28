@@ -18,42 +18,45 @@ class CONTAINER_IMAGES:
     """
     String constants representing container images names
     """
-    SSH_1 = "ssh_1"
-    ROUTER_2 = "router_2"
-    SAMBA_2 = "samba_2"
-    HONEYPOT_1 = "honeypot_1"
-    FTP_1 = "ftp_1"
-    HACKER_KALI_1 = "hacker_kali_1"
-    SHELLSHOCK_1 = "shellshock_1"
-    SQL_INJECTION_1 = "sql_injection_1"
-    CVE_2010_0426_1 = "cve_2010_0426_1"
-    CVE_2015_1427_1 = "cve_2015_1427_1"
-    HONEYPOT_2 = "honeypot_2"
-    SAMBA_1 = "samba_1"
-    CVE_2015_3306_1 = "cve_2015_3306_1"
-    CVE_2015_5602_1 = "cve_2015_5602_1"
-    CVE_2016_10033_1 = "cve_2016_10033_1"
-    CLIENT_1 = "client_1"
-    KAFKA_1 = "kafka_1"
-    ELK_1 = "elk_1"
-    ROUTER_1 = "router_1"
-    TELNET_1 = "telnet_1"
-    SSH_2 = "ssh_2"
-    SSH_3 = "ssh_3"
-    TELNET_2 = "telnet_2"
-    TELNET_3 = "telnet_3"
-    FTP_2 = "ftp_2"
-    OVS_1 = "ovs_1"
-    RYU_1 = "ryu_1"
-    PENGINE_EXPLOIT_1 = "pengine_exploit_1"
-    CVE_2014_0160_1 = "cve_2014_0160_1"
-    SNORT_IDS_IMAGES = ["router_2"]
-    OVS_IMAGES = ["ovs_1"]
-    OSSEC_IDS_IMAGES = ["honeypot_1", "honeypot_2", "pengine_exploit_1", "router_1", "router_2", "ssh_1", "ssh_2",
-                        "ssh_3", "telnet_1", "telnet_2", "telnet_3"]
-    ROUTER_IMAGES = ["router_1", "router_2"]
-    HACKER_IMAGES = ["hacker_kali_1"]
-    CLIENT_IMAGES = ["client_1"]
+    CSLE_PREFIX = "csle_"
+    DOCKERHUB_USERNAME = "kimham"
+    SSH_1 = "csle_ssh_1"
+    ROUTER_2 = "csle_router_2"
+    SAMBA_2 = "csle_samba_2"
+    HONEYPOT_1 = "csle_honeypot_1"
+    FTP_1 = "csle_ftp_1"
+    HACKER_KALI_1 = "csle_hacker_kali_1"
+    SHELLSHOCK_1 = "csle_shellshock_1"
+    SQL_INJECTION_1 = "csle_sql_injection_1"
+    CVE_2010_0426_1 = "csle_cve_2010_0426_1"
+    CVE_2015_1427_1 = "csle_cve_2015_1427_1"
+    HONEYPOT_2 = "csle_honeypot_2"
+    SAMBA_1 = "csle_samba_1"
+    CVE_2015_3306_1 = "csle_cve_2015_3306_1"
+    CVE_2015_5602_1 = "csle_cve_2015_5602_1"
+    CVE_2016_10033_1 = "csle_cve_2016_10033_1"
+    CLIENT_1 = "csle_client_1"
+    KAFKA_1 = "csle_kafka_1"
+    ELK_1 = "csle_elk_1"
+    ROUTER_1 = "csle_router_1"
+    TELNET_1 = "csle_telnet_1"
+    SSH_2 = "csle_ssh_2"
+    SSH_3 = "csle_ssh_3"
+    TELNET_2 = "csle_telnet_2"
+    TELNET_3 = "csle_telnet_3"
+    FTP_2 = "csle_ftp_2"
+    OVS_1 = "csle_ovs_1"
+    RYU_1 = "csle_ryu_1"
+    PENGINE_EXPLOIT_1 = "csle_pengine_exploit_1"
+    CVE_2014_0160_1 = "csle_cve_2014_0160_1"
+    SNORT_IDS_IMAGES = ["csle_router_2"]
+    OVS_IMAGES = ["csle_ovs_1"]
+    OSSEC_IDS_IMAGES = ["csle_honeypot_1", "csle_honeypot_2", "csle_pengine_exploit_1", "csle_router_1",
+                        "csle_router_2", "csle_ssh_1", "csle_ssh_2",
+                        "csle_ssh_3", "csle_telnet_1", "csle_telnet_2", "csle_telnet_3"]
+    ROUTER_IMAGES = ["csle_router_1", "csle_router_2"]
+    HACKER_IMAGES = ["csle_hacker_kali_1"]
+    CLIENT_IMAGES = ["csle_client_1"]
     CADVISOR = "cadvisor"
     GRAFANA = "grafana"
 

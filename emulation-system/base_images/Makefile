@@ -1,4 +1,4 @@
-PROJECT=csle
+DOCKERHUB_USER=csle
 VERSION=0.0.1
 
 .PHONY: all build rm_image kali_base ubuntu_20_base ubuntu_14_base ssh_base samba_base \
@@ -8,166 +8,251 @@ VERSION=0.0.1
 	rm_shellshock_base rm_sql_injection_base rm_debian_jessie_base rm_cve_2015_3306_base rm_cve_2015_1427_base \
 	rm_cve_2016_10033_base rm_cve_2010_0426_base rm_cve_2015_5602_base \
 	rm_blank_ubuntu_20 rm_pengine_exploit_base cve_2014_0160_base rm_cve_2014_0160_base rm_ovs_base rm_ryu_base \
-	rm_elk_base
+	rm_elk_base push_kali_base push_ubuntu_20_base push_ubuntu_14_base push_ssh_base push_samba_base \
+	push_shellshock_base push_sql_injection_base push_debian_jessie_base push_cve_2015_3306_base \
+	push_cve_2015_1427_base push_cve_2016_10033_base push_cve_2010_0426_base push_cve_2015_5602_base \
+    push_blank_ubuntu_20 push_pengine_exploit_base cve_2014_0160_base push_cve_2014_0160_base \
+    push_ovs_base push_ryu_base push_elk_base
 
 all: build
 
 # Targets for building all of the base images
 kali_base:
-	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(PROJECT)/kali_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(DOCKERHUB_USER)/kali_base:$(VERSION)
 
 ubuntu_20_base:
-	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(PROJECT)/ubuntu_20_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ubuntu_20_base:$(VERSION)
 
 ubuntu_14_base:
-	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(PROJECT)/ubuntu_14_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ubuntu_14_base:$(VERSION)
 
 ssh_base:
-	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(PROJECT)/ssh_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ssh_base:$(VERSION)
 
 samba_base:
-	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(PROJECT)/samba_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/samba_base:$(VERSION)
 
 shellshock_base:
-	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(PROJECT)/shellshock_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(DOCKERHUB_USER)/shellshock_base:$(VERSION)
 
 sql_injection_base:
-	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(PROJECT)/sql_injection_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(DOCKERHUB_USER)/sql_injection_base:$(VERSION)
 
 debian_jessie_base:
-	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(PROJECT)/debian_jessie_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(DOCKERHUB_USER)/debian_jessie_base:$(VERSION)
 
 cve_2015_3306_base:
-	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(PROJECT)/cve_2015_3306_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2015_3306_base:$(VERSION)
 
 cve_2015_1427_base:
-	docker build . --no-cache -f ./docker_files/cve_2015_1427_base/docker/Dockerfile -t $(PROJECT)/cve_2015_1427_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_1427_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2015_1427_base:$(VERSION)
 
 cve_2016_10033_base:
-	docker build . --no-cache -f ./docker_files/cve_2016_10033_base/docker/Dockerfile -t $(PROJECT)/cve_2016_10033_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2016_10033_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2016_10033_base:$(VERSION)
 
 cve_2010_0426_base:
-	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(PROJECT)/cve_2010_0426_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2010_0426_base:$(VERSION)
 
 cve_2015_5602_base:
-	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2015_5602_base:$(VERSION)
 
 blank_ubuntu_20:
-	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(PROJECT)/blank_ubuntu_20:$(VERSION)
+	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(DOCKERHUB_USER)/blank_ubuntu_20:$(VERSION)
 
 pengine_exploit_base:
-	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(PROJECT)/pengine_exploit_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(DOCKERHUB_USER)/pengine_exploit_base:$(VERSION)
 
 cve_2014_0160_base:
-	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(PROJECT)/cve_2014_0160_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2014_0160_base:$(VERSION)
 
 ovs_base:
-	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(PROJECT)/ovs_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ovs_base:$(VERSION)
 
 ryu_base:
-	docker build . --no-cache -f ./docker_files/ryu_base/docker/Dockerfile -t $(PROJECT)/ryu_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ryu_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ryu_base:$(VERSION)
 
 elk_base:
-	docker build . --no-cache -f ./docker_files/elk_base/docker/Dockerfile -t $(PROJECT)/elk_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/elk_base/docker/Dockerfile -t $(DOCKERHUB_USER)/elk_base:$(VERSION)
 
 # Targets for removing all of the base images
 rm_kali_base:
-	-docker rmi $(PROJECT)/kali_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/kali_base:$(VERSION)
 
 rm_ubuntu_20_base:
-	-docker rmi $(PROJECT)/ubuntu_20_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ubuntu_20_base:$(VERSION)
 
 rm_ubuntu_14_base:
-	-docker rmi $(PROJECT)/ubuntu_14_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ubuntu_14_base:$(VERSION)
 
 rm_ssh_base:
-	-docker rmi $(PROJECT)/ssh_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ssh_base:$(VERSION)
 
 rm_samba_base:
-	-docker rmi $(PROJECT)/samba_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/samba_base:$(VERSION)
 
 rm_shellshock_base:
-	-docker rmi $(PROJECT)/shellshock_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/shellshock_base:$(VERSION)
 
 rm_sql_injection_base:
-	-docker rmi $(PROJECT)/sql_injection_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/sql_injection_base:$(VERSION)
 
 rm_debian_jessie_base:
-	-docker rmi $(PROJECT)/debian_jessie_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/debian_jessie_base:$(VERSION)
 
 rm_cve_2015_3306_base:
-	-docker rmi $(PROJECT)/cve_2015_3306_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2015_3306_base:$(VERSION)
 
 rm_cve_2015_1427_base:
-	-docker rmi $(PROJECT)/cve_2015_1427_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2015_1427_base:$(VERSION)
 
 rm_cve_2016_10033_base:
-	-docker rmi $(PROJECT)/cve_2016_10033_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2016_10033_base:$(VERSION)
 
 rm_cve_2010_0426_base:
-	-docker rmi $(PROJECT)/cve_2010_0426_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2010_0426_base:$(VERSION)
 
 rm_cve_2015_5602_base:
-	-docker rmi $(PROJECT)/cve_2015_5602_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2015_5602_base:$(VERSION)
 
 rm_blank_ubuntu_20:
-	-docker rmi $(PROJECT)/blank_ubuntu_20:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/blank_ubuntu_20:$(VERSION)
 
 rm_pengine_exploit_base:
-	-docker rmi $(PROJECT)/pengine_exploit_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/pengine_exploit_base:$(VERSION)
 
 rm_cve_2014_0160_base:
-	-docker rmi $(PROJECT)/cve_2014_0160_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2014_0160_base:$(VERSION)
 
 rm_ovs_base:
-	-docker rmi $(PROJECT)/ovs_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ovs_base:$(VERSION)
 
 rm_ryu_base:
-	-docker rmi $(PROJECT)/ryu_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ryu_base:$(VERSION)
 
 rm_elk_base:
-	-docker rmi $(PROJECT)/elk_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/elk_base:$(VERSION)
+
+# Targets for pushing all of the base images to DockerHub
+push_kali_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/kali_base:$(VERSION)
+
+push_ubuntu_20_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ubuntu_20_base:$(VERSION)
+
+push_ubuntu_14_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ubuntu_14_base:$(VERSION)
+
+push_ssh_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ssh_base:$(VERSION)
+
+push_samba_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/samba_base:$(VERSION)
+
+push_shellshock_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/shellshock_base:$(VERSION)
+
+push_sql_injection_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/sql_injection_base:$(VERSION)
+
+push_debian_jessie_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/debian_jessie_base:$(VERSION)
+
+push_cve_2015_3306_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2015_3306_base:$(VERSION)
+
+push_cve_2015_1427_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2015_1427_base:$(VERSION)
+
+push_cve_2016_10033_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2016_10033_base:$(VERSION)
+
+push_cve_2010_0426_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2010_0426_base:$(VERSION)
+
+push_cve_2015_5602_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2015_5602_base:$(VERSION)
+
+push_blank_ubuntu_20:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/blank_ubuntu_20:$(VERSION)
+
+push_pengine_exploit_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/pengine_exploit_base:$(VERSION)
+
+push_cve_2014_0160_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2014_0160_base:$(VERSION)
+
+push_ovs_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ovs_base:$(VERSION)
+
+push_ryu_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ryu_base:$(VERSION)
+
+push_elk_base:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/elk_base:$(VERSION)
 
 # Build all of the base images sequentially
 build:
-	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(PROJECT)/kali_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(PROJECT)/ubuntu_20_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(PROJECT)/ubuntu_14_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(PROJECT)/ssh_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(PROJECT)/samba_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(PROJECT)/shellshock_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(PROJECT)/sql_injection_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(PROJECT)/debian_jessie_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(PROJECT)/cve_2015_3306_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/cve_2015_1427_base/docker/Dockerfile -t $(PROJECT)/cve_2015_1427_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/cve_2016_10033_base/docker/Dockerfile -t $(PROJECT)/cve_2016_10033_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(PROJECT)/cve_2010_0426_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(PROJECT)/blank_ubuntu_20:$(VERSION)
-	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(PROJECT)/pengine_exploit_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(PROJECT)/cve_2014_0160_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(PROJECT)/ovs_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/ryu_base/docker/Dockerfile -t $(PROJECT)/ryu_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/elk_base/docker/Dockerfile -t $(PROJECT)/elk_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(DOCKERHUB_USER)/kali_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ubuntu_20_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ubuntu_14_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ssh_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/samba_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(DOCKERHUB_USER)/shellshock_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(DOCKERHUB_USER)/sql_injection_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(DOCKERHUB_USER)/debian_jessie_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2015_3306_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_1427_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2015_1427_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2016_10033_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2016_10033_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2010_0426_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2015_5602_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(DOCKERHUB_USER)/blank_ubuntu_20:$(VERSION)
+	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(DOCKERHUB_USER)/pengine_exploit_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(DOCKERHUB_USER)/cve_2014_0160_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ovs_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ryu_base/docker/Dockerfile -t $(DOCKERHUB_USER)/ryu_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/elk_base/docker/Dockerfile -t $(DOCKERHUB_USER)/elk_base:$(VERSION)
 
 # Remove all base images
 rm_image:
-	-docker rmi $(PROJECT)/kali_base:$(VERSION)
-	-docker rmi $(PROJECT)/ubuntu_20_base:$(VERSION)
-	-docker rmi $(PROJECT)/ubuntu_14_base:$(VERSION)
-	-docker rmi $(PROJECT)/ssh_base:$(VERSION)
-	-docker rmi $(PROJECT)/samba_base:$(VERSION)
-	-docker rmi $(PROJECT)/shellshock_base:$(VERSION)
-	-docker rmi $(PROJECT)/sql_injection_base:$(VERSION)
-	-docker rmi $(PROJECT)/debian_jessie_base:$(VERSION)
-	-docker rmi $(PROJECT)/cve_2015_3306_base:$(VERSION)
-	-docker rmi $(PROJECT)/cve_2015_1427_base:$(VERSION)
-	-docker rmi $(PROJECT)/cve_2016_10033_base:$(VERSION)
-	-docker rmi $(PROJECT)/cve_2010_0426_base:$(VERSION)
-	-docker rmi $(PROJECT)/cve_2015_5602_base:$(VERSION)
-	-docker rmi $(PROJECT)/blank_ubuntu_20:$(VERSION)
-	-docker rmi $(PROJECT)/pengine_exploit_base:$(VERSION)
-	-docker rmi $(PROJECT)/cve_2014_0160_base:$(VERSION)
-	-docker rmi $(PROJECT)/ovs_base:$(VERSION)
-	-docker rmi $(PROJECT)/ryu_base:$(VERSION)
-	-docker rmi $(PROJECT)/elk_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/kali_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ubuntu_20_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ubuntu_14_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ssh_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/samba_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/shellshock_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/sql_injection_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/debian_jessie_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2015_3306_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2015_1427_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2016_10033_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2010_0426_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2015_5602_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/blank_ubuntu_20:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/pengine_exploit_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/cve_2014_0160_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ovs_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/ryu_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/elk_base:$(VERSION)
+
+
+# Push all base images
+push:
+	-docker push kimham/csle:$(DOCKERHUB_USER)/kali_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ubuntu_20_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ubuntu_14_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ssh_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/samba_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/shellshock_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/sql_injection_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/debian_jessie_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2015_3306_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2015_1427_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2016_10033_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2010_0426_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2015_5602_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/blank_ubuntu_20:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/pengine_exploit_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/cve_2014_0160_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ovs_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/ryu_base:$(VERSION)
+	-docker push kimham/csle:$(DOCKERHUB_USER)/elk_base:$(VERSION)

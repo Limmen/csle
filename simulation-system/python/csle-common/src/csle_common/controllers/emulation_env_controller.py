@@ -410,13 +410,14 @@ class EmulationEnvController:
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
 
         # Start the kafka container
         c = emulation_env_config.kafka_config.container
         container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
-        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
+        name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
               f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -424,13 +425,14 @@ class EmulationEnvController:
               f"-e TZ=Europe/Stockholm " \
               f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
               f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
+              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+              f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
         subprocess.call(cmd, shell=True)
 
         # Start the ELK container
         c = emulation_env_config.elk_config.container
         container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
-        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
+        name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
               f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -438,7 +440,8 @@ class EmulationEnvController:
               f"-e TZ=Europe/Stockholm " \
               f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
               f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
+              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+              f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
         subprocess.call(cmd, shell=True)
 
         if emulation_env_config.sdn_controller_config is not None:
@@ -453,7 +456,8 @@ class EmulationEnvController:
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
 
     @staticmethod
@@ -495,7 +499,7 @@ class EmulationEnvController:
         :param create_network: whether to create a virtual network or not
         :return: None
         """
-        Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle-{name}-001")
+        Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle_{name}-001")
         if create_network:
             net_id = random.randint(128, 254)
             sub_net_id = random.randint(2, 254)
@@ -505,7 +509,7 @@ class EmulationEnvController:
             ContainerController.create_network(name=net_name,
                                                subnetmask=f"55.{net_id}.0.0/16",
                                                existing_network_names=[])
-            cmd = f"docker container run -dt --name csle-{name}-001 " \
+            cmd = f"docker container run -dt --name csle_{name}-001 " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--network={net_name} --ip {ip} --publish-all=true " \

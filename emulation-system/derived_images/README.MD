@@ -108,24 +108,25 @@ generate containers for emulating various network infrastructures.
      - Inherits from `pengine_exploit_base`.
      - Services: Pengine server, SSH
 - `ovs_1` ([ovs_1](./ovs_1)): an image with a OVS virtual switch
-  - OS: Ubuntu:20.
-  - Inherits from `ovs_base`.
-  - Services: OVS switch, SSH
+    - OS: Ubuntu:20.
+    - Inherits from `ovs_base`.
+    - Services: OVS switch, SSH
 - `ryu_1` ([ryu_1](./ryu_1)): an image with the Ryu SDN controller
-  - OS: Ubuntu:20.
-  - Inherits from `ryu_base`.
-  - Services: Ryu SDN controller, SSH
+    - OS: Ubuntu:20.
+    - Inherits from `ryu_base`.
+    - Services: Ryu SDN controller, SSH
 - `elk_1` ([elk_1](./elk_1)): an image with the ELK stack
-  - OS: Ubuntu:20.
-  - Inherits from `elk_base`.
-  - Services: Elastic search, Kibana, Logstash, SSH  
+    - OS: Ubuntu:20.
+    - Inherits from `elk_base`.
+    - Services: Elastic search, Kibana, Logstash, SSH  
 
 ## Useful commands
 
 ```bash
-make rm-image # Delete all base images
-make build # Build all base images
-make all # Build all base images
+make rm-image # Delete all derived images
+make build # Build all derived images
+make all # Build all derived images
+make push # Push all images
 
 make samba_1 # Build samba_1
 make shellshock_1 # Build shellshock_1
@@ -184,6 +185,35 @@ make rm_pengine_exploit_1 # Remove pengine_exploit_1
 make rm_ovs_1 # Remove ovs_1
 make rm_ryu_1 # Remove ryu_1
 make rm_elk_1 # Remove elk_1
+
+make push_samba_1 # Push samba_1 to DockerHub
+make push_shellshock_1 # Push shellshock_1 to DockerHub
+make push_sql_injection_1 # Push sql_injection_1 to DockerHub
+make push_debian_jessie_base # Push debian_jessie_1 to DockerHub
+make push_cve_2015_3306_1 # Push cve_2015_3306_1 to DockerHub
+make push_cve_2015_1427_1 # Push cve_2015_1427_1 to DockerHub
+make push_cve_2016_10033_1 # Push cve_2016_10033_1 to DockerHub
+make push_cve_2010_0426_1 # Push cve_2010_0426_1 to DockerHub
+make push_cve_2015_5602_1 # Push cve_2010_0426_1 to DockerHub
+make push_ftp_1 # Push ftp_1 to DockerHub
+make push_ftp_2 # Push ftp_2 to DockerHub
+make push_hacker_kali_1 # Push hacker_kali_1 to DockerHub
+make push_honeypot_1 # Push honeypot_1 to DockerHub
+make push_honeypot_2 # Push honeypot_2 to DockerHub
+make push_router_1 # Push router_1 to DockerHub
+make push_router_2 # Push router_2 to DockerHub
+make push_ssh_1 # Push ssh_1 to DockerHub
+make push_ssh_2 # Push ssh_2 to DockerHub
+make push_ssh_3 # Push ssh_3 to DockerHub
+make push_telnet_1 # Push telnet_1 to DockerHub
+make push_telnet_2 # Push telnet_2 to DockerHub
+make push_telnet_3 # Push telnet_3 to DockerHub
+make push_client_1 # Push client_1 to DockerHub
+make push_blank_1 # Push blank_1 to DockerHub
+make push_pengine_exploit_1 # Push pengine_exploit_1 to DockerHub
+make push_ovs_1 # Push ovs_1 to DockerHub
+make push_ryu_1 # Push ryu_1 to DockerHub
+make push_elk_1 # Push elk_1 to DockerHub
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

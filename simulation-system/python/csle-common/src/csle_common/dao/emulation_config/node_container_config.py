@@ -100,7 +100,7 @@ class NodeContainerConfig:
         """
         :return: the full name
         """
-        return f"{constants.CSLE.NAME}-{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}-" \
+        return f"{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}-" \
                f"{self.execution_ip_first_octet}"
 
     def to_json_str(self) -> str:
