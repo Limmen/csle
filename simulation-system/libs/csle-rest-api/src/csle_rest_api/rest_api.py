@@ -1,28 +1,29 @@
 from flask import Flask
 from . import socketio
 import csle_common.constants.constants as constants
-from csle_rest_api.pages.emulations.routes import emulations_page_bp
-from csle_rest_api.pages.simulations.routes import simulations_page_bp
-from csle_rest_api.pages.monitoring.routes import monitoring_page_bp
-from csle_rest_api.pages.traces.routes import traces_page_bp
-from csle_rest_api.pages.emulation_statistics.routes import emulation_statistics_page_bp
-from csle_rest_api.pages.system_models.routes import system_models_page_bp
-from csle_rest_api.pages.about.routes import about_page_bp
-from csle_rest_api.pages.login.routes import login_page_bp
-from csle_rest_api.pages.register.routes import register_page_bp
-from csle_rest_api.pages.downloads.routes import downloads_page_bp
-from csle_rest_api.pages.images.routes import images_page_bp
-from csle_rest_api.pages.jobs.routes import jobs_page_bp
-from csle_rest_api.pages.policies.routes import policies_page_bp
-from csle_rest_api.pages.policy_examination.routes import policy_examination_page_bp
-from csle_rest_api.pages.training.routes import training_page_bp
-from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
-from csle_rest_api.pages.control_plane.routes import control_plane_page_bp
-from csle_rest_api.pages.user_admin.routes import user_admin_page_bp
-from csle_rest_api.pages.host_terminal.routes import host_terminal_page_bp
-from csle_rest_api.pages.container_terminal.routes import container_terminal_page_bp
-from csle_rest_api.pages.system_admin.routes import system_admin_page_bp
-from csle_rest_api.pages.logs_admin.routes import logs_admin_page_bp
+from csle_common.dao.emulation_config.config import Config
+from csle_rest_api.pages.emulations.routes import get_emulations_page_bp
+from csle_rest_api.pages.simulations.routes import get_simulations_page_bp
+from csle_rest_api.pages.monitoring.routes import get_monitoring_page_bp
+from csle_rest_api.pages.traces.routes import get_traces_page_bp
+from csle_rest_api.pages.emulation_statistics.routes import get_emulation_statistics_page_bp
+from csle_rest_api.pages.system_models.routes import get_system_models_page_bp
+from csle_rest_api.pages.about.routes import get_about_page_bp
+from csle_rest_api.pages.login.routes import get_login_page_bp
+from csle_rest_api.pages.register.routes import get_register_page_bp
+from csle_rest_api.pages.downloads.routes import get_downloads_page_bp
+from csle_rest_api.pages.images.routes import get_images_page_bp
+from csle_rest_api.pages.jobs.routes import get_jobs_page_bp
+from csle_rest_api.pages.policies.routes import get_policies_page_bp
+from csle_rest_api.pages.policy_examination.routes import get_policy_examination_page_bp
+from csle_rest_api.pages.training.routes import get_training_page_bp
+from csle_rest_api.pages.sdn_controllers.routes import get_sdn_controllers_page_bp
+from csle_rest_api.pages.control_plane.routes import get_control_plane_page_bp
+from csle_rest_api.pages.user_admin.routes import get_user_admin_page_bp
+from csle_rest_api.pages.host_terminal.routes import get_host_terminal_page_bp
+from csle_rest_api.pages.container_terminal.routes import get_container_terminal_page_bp
+from csle_rest_api.pages.system_admin.routes import get_system_admin_page_bp
+from csle_rest_api.pages.logs_admin.routes import get_logs_admin_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
 from csle_rest_api.resources.prometheus.routes import prometheus_bp
 from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
@@ -73,79 +74,79 @@ def create_app(static_folder: str):
     """
     app = Flask(__name__, static_url_path='', static_folder=static_folder)
 
-    app.register_blueprint(emulations_page_bp,
+    app.register_blueprint(get_emulations_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}")
-    app.register_blueprint(simulations_page_bp,
+    app.register_blueprint(get_simulations_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE}")
-    app.register_blueprint(traces_page_bp,
+    app.register_blueprint(get_traces_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE}")
-    app.register_blueprint(monitoring_page_bp,
+    app.register_blueprint(get_monitoring_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}")
-    app.register_blueprint(emulation_statistics_page_bp,
+    app.register_blueprint(get_emulation_statistics_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}")
-    app.register_blueprint(system_models_page_bp,
+    app.register_blueprint(get_system_models_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_PAGE_RESOURCE}")
-    app.register_blueprint(about_page_bp,
+    app.register_blueprint(get_about_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.ABOUT_PAGE_RESOURCE}")
-    app.register_blueprint(login_page_bp,
+    app.register_blueprint(get_login_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGIN_PAGE_RESOURCE}")
-    app.register_blueprint(downloads_page_bp,
+    app.register_blueprint(get_downloads_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.DOWNLOADS_PAGE_RESOURCE}")
     app.register_blueprint(cadvisor_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}")
     app.register_blueprint(grafana_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}")
-    app.register_blueprint(images_page_bp,
+    app.register_blueprint(get_images_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE}")
-    app.register_blueprint(jobs_page_bp,
+    app.register_blueprint(get_jobs_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.JOBS_PAGE_RESOURCE}")
     app.register_blueprint(node_exporter_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}")
-    app.register_blueprint(policies_page_bp,
+    app.register_blueprint(get_policies_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.POLICIES_PAGE_RESOURCE}")
-    app.register_blueprint(policy_examination_page_bp,
+    app.register_blueprint(get_policy_examination_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE}")
     app.register_blueprint(prometheus_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}")
-    app.register_blueprint(training_page_bp,
+    app.register_blueprint(get_training_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.TRAINING_PAGE_RESOURCE}")
-    app.register_blueprint(sdn_controllers_page_bp,
+    app.register_blueprint(get_sdn_controllers_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE}")
-    app.register_blueprint(control_plane_page_bp,
+    app.register_blueprint(get_control_plane_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE}")
-    app.register_blueprint(user_admin_page_bp,
+    app.register_blueprint(get_user_admin_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE}")
-    app.register_blueprint(host_terminal_page_bp,
+    app.register_blueprint(get_host_terminal_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.HOST_TERMINAL_PAGE_RESOURCE}")
-    app.register_blueprint(container_terminal_page_bp,
+    app.register_blueprint(get_container_terminal_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_PAGE_RESOURCE}")
-    app.register_blueprint(system_admin_page_bp,
+    app.register_blueprint(get_system_admin_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}")
-    app.register_blueprint(logs_admin_page_bp,
+    app.register_blueprint(get_logs_admin_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_ADMIN_PAGE_RESOURCE}")
-    app.register_blueprint(register_page_bp,
+    app.register_blueprint(get_register_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE}")
     app.register_blueprint(emulations_bp,
@@ -279,6 +280,7 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
     # run(f"gunicorn -b {host}:{port} 'csle_rest_api.rest_api:create_app() --workers 4 --threads
     # {num_threads}'".split(' '))
     # gunicorn -b 0.0.0.0:5000 --workers 4 --threads num_threads module:app
+    Config.set_config_parameters_from_config_file()
     print(f"Starting web server, listening on port: {port}")
     app = create_app(static_folder=static_folder)
     socketio.run(app, debug=False, port=port, host=host)

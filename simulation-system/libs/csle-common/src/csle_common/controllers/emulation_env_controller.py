@@ -819,6 +819,8 @@ class EmulationEnvController:
         :return: None
         """
         config = Config.get_current_confg()
+        if config is None:
+            Config.set_config_parameters_from_config_file()
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         conn.connect(execution.emulation_env_config.elk_config.container.get_ips()[0],

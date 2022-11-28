@@ -37,7 +37,9 @@ def logs():
     path = config.default_log_dir
     log_files = []
     for f in os.listdir(path):
-        log_files.append(os.path.join(path, f))
+        item = os.path.join(path, f)
+        if os.path.isfile(item):
+            log_files.append(item)
     data = log_files
     data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
     response = jsonify(data_dict)
