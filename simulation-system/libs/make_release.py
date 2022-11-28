@@ -5,34 +5,34 @@ import subprocess
 
 RELEASE_CONFIG = {
     "csle-ryu": {
-        "new_version": "'0.0.23'",
+        "new_version": "'0.0.24'",
     },
     "csle-collector": {
-        "new_version": "'0.0.74'",
+        "new_version": "'0.0.75'",
     },
     "csle-common": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "csle-attacker": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "csle-defender": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "csle-system-identification": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "gym-csle-stopping-game": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "csle-agents": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "csle-rest-api": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     },
     "csle-cli": {
-        "new_version": "'0.0.5'",
+        "new_version": "'0.0.6'",
     }
 }
 
@@ -60,33 +60,39 @@ if __name__ == '__main__':
             version_file_contents = version_file_contents.replace(versions["old_version"], versions["new_version"])
             f.write(version_file_contents)
 
+    for lib, versions in RELEASE_CONFIG.items():
+        versions["old_version"]=versions["old_version"].replace("'","").replace('"',"")
+        versions["new_version"]=versions["new_version"].replace("'","").replace('"',"")
+
     # Update requirements.txt files
     print("Updating requirements.txt files")
     for lib, versions in RELEASE_CONFIG.items():
-        with io.open(f"{lib}/requirements.txt", 'r', encoding='utf-8') as f:
-            requirements_file_contents = f.read()
-        with io.open(f"{lib}/requirements.txt", 'w', encoding='utf-8') as f:
-            requirements_file_contents = requirements_file_contents.replace(f"{lib}=={versions['old_version']}",
-                                                  f"{lib}=={versions['new_version']}")
-            requirements_file_contents = requirements_file_contents.replace(f"{lib}>={versions['old_version']}",
-                                                  f"{lib}>={versions['new_version']}")
-            requirements_file_contents = requirements_file_contents.replace(f"{lib}=>{versions['old_version']}",
-                                                  f"{lib}=>{versions['new_version']}")
-            f.write(requirements_file_contents)
+        for lib2, versions2 in RELEASE_CONFIG.items():
+            with io.open(f"{lib2}/requirements.txt", 'r', encoding='utf-8') as f:
+                requirements_file_contents = f.read()
+            with io.open(f"{lib2}/requirements.txt", 'w', encoding='utf-8') as f:
+                requirements_file_contents = requirements_file_contents.replace(f"{lib}=={versions['old_version']}",
+                                                                                f"{lib}=={versions['new_version']}")
+                requirements_file_contents = requirements_file_contents.replace(f"{lib}>={versions['old_version']}",
+                                                                                f"{lib}>={versions['new_version']}")
+                requirements_file_contents = requirements_file_contents.replace(f"{lib}=>{versions['old_version']}",
+                                                                                f"{lib}=>{versions['new_version']}")
+                f.write(requirements_file_contents)
 
     # Update setup.cfg files
     print("Updating setup.cfg files")
     for lib, versions in RELEASE_CONFIG.items():
-        with io.open(f"{lib}/setup.cfg", 'r', encoding='utf-8') as f:
-            setup_cfg_file_contents = f.read()
-        with io.open(f"{lib}/setup.cfg", 'w', encoding='utf-8') as f:
-            setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}=={versions['old_version']}",
-                                                  f"{lib}=={versions['new_version']}")
-            setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}>={versions['old_version']}",
-                                                  f"{lib}>={versions['new_version']}")
-            setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}=>{versions['old_version']}",
-                                                  f"{lib}=>{versions['new_version']}")
-            f.write(setup_cfg_file_contents)
+        for lib2, versions2 in RELEASE_CONFIG.items():
+            with io.open(f"{lib2}/setup.cfg", 'r', encoding='utf-8') as f:
+                setup_cfg_file_contents = f.read()
+            with io.open(f"{lib2}/setup.cfg", 'w', encoding='utf-8') as f:
+                setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}=={versions['old_version']}",
+                                                                          f"{lib}=={versions['new_version']}")
+                setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}>={versions['old_version']}",
+                                                                          f"{lib}>={versions['new_version']}")
+                setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}=>{versions['old_version']}",
+                                                                          f"{lib}=>{versions['new_version']}")
+                f.write(setup_cfg_file_contents)
 
     # Delete old build directories
     print("Delete old build directories")
@@ -124,6 +130,3 @@ if __name__ == '__main__':
             print(f"There was an error uploading {lib} to PyPi; exit code: {exit_code}")
             print(output)
             print(err)
-
-
-
