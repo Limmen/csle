@@ -16,13 +16,22 @@ To install all images and emulations, run:
 make build
 ```
 
+For more detailed information about installation of images, see ([README](./base_images/README.MD)),
+([README](./derived_images/README.MD)) and ([README](./envs/README.md)),
+
+## Uninstall
+
 To remove all images and all emulations, run: 
 ```bash
 make rm
 ```
 
-For more detailed information about installation of images, see ([README](./base_images/README.MD)), 
-([README](./derived_images/README.MD)) and ([README](./envs/README.md)),
+## Push to DockerHub
+To push all Docker images to DockerHub, run:
+
+```bash
+make push
+```
 
 ### Install and setup Docker
 

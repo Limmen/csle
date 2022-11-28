@@ -1,5 +1,5 @@
 # OS
-FROM csle/ssh_base:0.0.1
+FROM kimham/csle_ssh_base:0.0.1
 USER root
 
 # Add start script

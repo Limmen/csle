@@ -24,9 +24,20 @@ rm_base_images: rm_derived_images
 rm_emulations:
 	cd envs/ && $(MAKE) uninstall
 
+# Target for pushing all derived images to DockerHub
+push_derived_images:
+	cd derived_images/ && $(MAKE) push
+
+# Target for pushing all base images to DockerHub
+push_base_images: rm_derived_images
+	cd base_images/ && $(MAKE) push
+
 # Build all images
 build: base_images derived_images
 
 # Remove all base images
 rm: rm_emulations rm_base_images
+
+# Push all images to DockerHub
+push: push_base_images push_derived_images
 

@@ -1,5 +1,5 @@
 # OS
-FROM csle/ubuntu_14_base:0.0.1
+FROM kimham/csle_ubuntu_14_base:0.0.1
 USER root
 
 # Add start script

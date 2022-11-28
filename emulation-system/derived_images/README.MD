@@ -126,6 +126,7 @@ generate containers for emulating various network infrastructures.
 make rm-image # Delete all derived images
 make build # Build all derived images
 make all # Build all derived images
+make pull # Pull all images
 make push # Push all images
 
 make samba_1 # Build samba_1
@@ -214,6 +215,35 @@ make push_pengine_exploit_1 # Push pengine_exploit_1 to DockerHub
 make push_ovs_1 # Push ovs_1 to DockerHub
 make push_ryu_1 # Push ryu_1 to DockerHub
 make push_elk_1 # Push elk_1 to DockerHub
+
+make pull_samba_1 # pull samba_1 from DockerHub
+make pull_shellshock_1 # pull shellshock_1 from DockerHub
+make pull_sql_injection_1 # pull sql_injection_1 from DockerHub
+make pull_debian_jessie_base # pull debian_jessie_1 from DockerHub
+make pull_cve_2015_3306_1 # pull cve_2015_3306_1 from DockerHub
+make pull_cve_2015_1427_1 # pull cve_2015_1427_1 from DockerHub
+make pull_cve_2016_10033_1 # pull cve_2016_10033_1 from DockerHub
+make pull_cve_2010_0426_1 # pull cve_2010_0426_1 from DockerHub
+make pull_cve_2015_5602_1 # pull cve_2010_0426_1 from DockerHub
+make pull_ftp_1 # pull ftp_1 from DockerHub
+make pull_ftp_2 # pull ftp_2 from DockerHub
+make pull_hacker_kali_1 # pull hacker_kali_1 from DockerHub
+make pull_honeypot_1 # pull honeypot_1 from DockerHub
+make pull_honeypot_2 # pull honeypot_2 from DockerHub
+make pull_router_1 # pull router_1 from DockerHub
+make pull_router_2 # pull router_2 from DockerHub
+make pull_ssh_1 # pull ssh_1 from DockerHub
+make pull_ssh_2 # pull ssh_2 from DockerHub
+make pull_ssh_3 # pull ssh_3 from DockerHub
+make pull_telnet_1 # pull telnet_1 from DockerHub
+make pull_telnet_2 # pull telnet_2 from DockerHub
+make pull_telnet_3 # pull telnet_3 from DockerHub
+make pull_client_1 # pull client_1 from DockerHub
+make pull_blank_1 # pull blank_1 from DockerHub
+make pull_pengine_exploit_1 # pull pengine_exploit_1 from DockerHub
+make pull_ovs_1 # pull ovs_1 from DockerHub
+make pull_ryu_1 # pull ryu_1 from DockerHub
+make pull_elk_1 # pull elk_1 from DockerHub
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

@@ -290,6 +290,99 @@ push_ryu_1:
 push_elk_1:
 	-docker push $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
 
+
+# Targets for pulling all images
+
+pull_ftp_1:
+	-docker pull $(DOCKERHUB_USER)/csle_ftp_1:$(VERSION)
+
+pull_ftp_2:
+	-docker pull $(DOCKERHUB_USER)/csle_ftp_2:$(VERSION)
+
+pull_hacker_kali_1:
+	-docker pull $(DOCKERHUB_USER)/csle_hacker_kali_1:$(VERSION)
+
+pull_honeypot_1:
+	-docker pull $(DOCKERHUB_USER)/csle_honeypot_1:$(VERSION)
+
+pull_honeypot_2:
+	-docker pull $(DOCKERHUB_USER)/csle_honeypot_2:$(VERSION)
+
+pull_ssh_1:
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_1:$(VERSION)
+
+pull_ssh_2:
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_2:$(VERSION)
+
+pull_ssh_3:
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_3:$(VERSION)
+
+pull_telnet_1:
+	-docker pull $(DOCKERHUB_USER)/csle_telnet_1:$(VERSION)
+
+pull_telnet_2:
+	-docker pull $(DOCKERHUB_USER)/csle_telnet_2:$(VERSION)
+
+pull_telnet_3:
+	-docker pull $(DOCKERHUB_USER)/csle_telnet_3:$(VERSION)
+
+pull_router_1:
+	-docker pull $(DOCKERHUB_USER)/csle_router_1:$(VERSION)
+
+pull_router_2:
+	-docker pull $(DOCKERHUB_USER)/csle_router_2:$(VERSION)
+
+pull_samba_1:
+	-docker pull $(DOCKERHUB_USER)/csle_samba_1:$(VERSION)
+
+pull_samba_2:
+	-docker pull $(DOCKERHUB_USER)/csle_samba_2:$(VERSION)
+
+pull_shellshock_1:
+	-docker pull $(DOCKERHUB_USER)/csle_shellshock_1:$(VERSION)
+
+pull_sql_injection_1:
+	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_1:$(VERSION)
+
+pull_cve_2015_3306_1:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_3306_1:$(VERSION)
+
+pull_cve_2015_1427_1:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_1427_1:$(VERSION)
+
+pull_cve_2016_10033_1:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2016_10033_1:$(VERSION)
+
+pull_cve_2010_0426_1:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2010_0426_1:$(VERSION)
+
+pull_cve_2015_5602_1:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_5602_1:$(VERSION)
+
+pull_client_1:
+	-docker pull $(DOCKERHUB_USER)/csle_client_1:$(VERSION)
+
+pull_blank_1:
+	-docker pull $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+
+pull_pengine_exploit_1:
+	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
+
+pull_cve_2014_0160_1:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2014_0160_1:$(VERSION)
+
+pull_kafka_1:
+	-docker pull $(DOCKERHUB_USER)/csle_kafka_1:$(VERSION)
+
+pull_ovs_1:
+	-docker pull $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
+
+pull_ryu_1:
+	-docker pull $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
+
+pull_elk_1:
+	-docker pull $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
+
 # Building all images sequentially
 build:
 	docker build --no-cache -f ./ftp_1/docker/Dockerfile ./ftp_1/docker/ -t $(DOCKERHUB_USER)/csle_ftp_1:$(VERSION)
@@ -389,3 +482,37 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
+
+
+# Pullin all images sequentially
+pull:
+	-docker pull $(DOCKERHUB_USER)/csle_ftp_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ftp_2:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_hacker_kali_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_honeypot_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_honeypot_2:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_2:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_3:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_telnet_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_telnet_2:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_telnet_3:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_router_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_router_2:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_samba_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_samba_2:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_shellshock_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_3306_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_1427_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2016_10033_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2010_0426_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_5602_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_client_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2014_0160_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_kafka_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)

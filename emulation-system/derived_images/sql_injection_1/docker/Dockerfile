@@ -1,5 +1,5 @@
 # OS
-FROM csle/sql_injection_base:0.0.1
+FROM kimham/csle_sql_injection_base:0.0.1
 USER root
 
 # Add start script

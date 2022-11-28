@@ -1,5 +1,5 @@
 # OS
-FROM csle/shellshock_base:0.0.1
+FROM kimham/csle_shellshock_base:0.0.1
 USER root
 
 # Add start script

@@ -91,7 +91,7 @@ SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 #RUN conda activate samba
 RUN pip install pycrypto==2.6 &&\
     pip install git+https://github.com/opsxcq/impacket.git &&\
-    pip install pyasn1
+    pip install pyasn1==0.4.8
 
 # Setup base environment with csle-collector
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]

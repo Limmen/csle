@@ -1,5 +1,5 @@
 # OS
-FROM csle/elk_base:0.0.1
+FROM kimham/csle_elk_base:0.0.1
 USER root
 
 # Add start script

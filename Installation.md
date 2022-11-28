@@ -201,17 +201,33 @@ running commands can read and write to this directory.
       sudo groupadd docker
       sudo usermod -aG docker $USER
       ```
-    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) (this may take a
-      while, e.g. an hour)
+    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) 
+      To install the base images you have two options: (1) pull the images from DockerHub; or (2), build the images locally.
+      To build the images locally, run (this may take a while, e.g. an hour):
       ```bash
       cd emulation-system/base_images
       make build
       cd ../../
+      ```     
+      To pull the images from DockerHub, run:
+      ```bash
+      cd emulation-system/base_images
+      make pull
+      cd ../../
       ```
+
     - Install derived images (see ([README](emulation-system/derived_images/README.MD)) for more information)
+      To install the derived images you have two options: (1) pull the images from DockerHub; or (2), build the images locally.
+      To build the images locally, run (this may take a while, e.g. an hour):
       ```bash
       cd emulation-system/derived_images
       make build
+      cd ../../
+      ```
+      To pull the images from DockerHub, run:
+      ```bash
+      cd emulation-system/derived_images
+      make pull
       cd ../../
       ```
     - Install emulation envs (see [README](emulation-system/envs/README.MD) for more information)
