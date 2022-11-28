@@ -6,9 +6,9 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 if __name__ == '__main__':
     descr = "A dataset with traces of network intrusions. Each trace includes sequences of attacker actions, " \
             "intrusion states, defender actions, attacker observations and defender observations"
-    dir_path = "/var/csle/datasets/traces_dataset_2_aug_22_json"
-    zip_file_path = "/var/csle/datasets/traces_dataset_2_aug_22_json.zip"
-    name = "emulation_traces_level_9_22_aug_2022_json"
+    dir_path = "/media/lagring/traces_31_oct/"
+    zip_file_path = "/media/lagring/traces_31_oct.zip"
+    name = "emulation_traces_level_9_31_oct_2022_json"
     url = "-"
     date_added = datetime.datetime.now()
     citation = "not defined"

@@ -7,9 +7,9 @@ if __name__ == '__main__':
     descr = "A dataset with metric statistics of network intrusions. The dataset includes several metrics measured " \
             "through" \
             "randomized controlled trials under different conditions"
-    dir_path = "/var/csle/datasets/statistics_dataset_3_aug_22_json"
-    zip_file_path = "/var/csle/datasets/statistics_dataset_3_aug_22_json.zip"
-    name = "emulation_statistics_level_9_22_aug_json_2022"
+    dir_path = "/media/lagring/statistics_dataset_14_nov_22_json"
+    zip_file_path = "/media/lagring/statistics_dataset_14_nov_22_json.zip"
+    name = "emulation_statistics_level_9_14_nov_json_2022"
     url = "-"
     date_added = datetime.datetime.now()
     citation = "Intrusion Prevention through Optimal Stopping (Hammar & Stadler 2022)"

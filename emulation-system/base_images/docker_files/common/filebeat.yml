@@ -1,0 +1,8 @@
+filebeat.modules:
+  - module: system
+    syslog:
+      var.paths: ["/var/log/host/system.log*"]
+output.elasticsearch:
+  hosts: ["15.4.253.252:9200"]
+setup.kibana:
+  host: "15.4.253.252:5601"

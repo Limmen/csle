@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Tuple, Union
 import json
 import os
 import numpy as np
+from csle_common.logging.log import Logger
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -107,25 +108,22 @@ class EmulationTrace:
             json.dump({"traces": traces}, fp, cls=NpEncoder)
 
     @staticmethod
-    def load_traces_from_disk(traces_save_dir, traces_file: str = None) -> List["EmulationTrace"]:
+    def load_traces_from_disk(traces_file: str) -> List["EmulationTrace"]:
         """
         Utility function for loading and parsing a list of traces from a json file
 
-        :param traces_save_dir: the directory where to load the traces from
         :param traces_file: (optional) a custom name of the traces file
         :return: a list of the loaded traces
         """
-        if traces_file is None:
-            traces_file = constants.SYSTEM_IDENTIFICATION.TRACES_FILE
-        path = traces_save_dir + constants.COMMANDS.SLASH_DELIM + traces_file
-        if os.path.exists(path):
-            with open(path, 'r') as fp:
+        if os.path.exists(traces_file):
+            with open(traces_file, 'r') as fp:
                 d = json.load(fp)
-                traces = d["traces"]
+                traces = d[constants.METADATA_STORE.TRACES_PROPERTY]
                 traces = list(map(lambda x: EmulationTrace.from_dict(x), traces))
                 return traces
         else:
-            print("Warning: Could not read traces file, path does not exist:{}".format(path))
+            Logger.__call__().get_logger().info("Warning: Could not "
+                                                f"read traces file, path does not exist:{traces_file}")
             return []
 
     def to_json_str(self) -> str:

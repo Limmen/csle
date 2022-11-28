@@ -243,13 +243,7 @@ RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.
     curl -L -O https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-8.5.2-amd64.deb &&\
     dpkg -i auditbeat-8.5.2-amd64.deb &&\
     curl -L -O https://artifacts.elastic.co/downloads/beats/heartbeat/heartbeat-8.5.2-amd64.deb &&\
-    dpkg -i heartbeat-8.5.2-amd64.deb &&\
-    filebeat modules enable auditd &&\
-    filebeat modules enable system &&\
-    filebeat modules enable iptables &&\
-    filebeat modules enable netflow &&\
-#filebeat setup -e
-#service filebeat start
+    dpkg -i heartbeat-8.5.2-amd64.deb
 
 # Add Tini
 ENV TINI_VERSION v0.19.0

@@ -144,13 +144,34 @@ class ExportUtil:
                      encoding='utf-8') as f:
             metadata_dict = json.loads(f.read())
         if metadata_dict is not None:
-            schema = metadata_dict[constants.DATASETS.SCHEMA_PROPERTY]
-            num_traces = metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY]
-            num_attributes_per_time_step = metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY]
-            num_traces_per_file = metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY]
-            file_format = metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY]
-            added_by = metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY]
-            columns = metadata_dict[constants.DATASETS.COLUMNS_PROPERTY]
+            if constants.DATASETS.SCHEMA_PROPERTY in metadata_dict:
+                schema = metadata_dict[constants.DATASETS.SCHEMA_PROPERTY]
+            else:
+                schema = {}
+            if constants.DATASETS.NUM_TRACES_PROPERTY in metadata_dict:
+                num_traces = metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY]
+            else:
+                num_traces = 0
+            if constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY in metadata_dict:
+                num_attributes_per_time_step = metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY]
+            else:
+                num_attributes_per_time_step = 0
+            if constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY in metadata_dict:
+                num_traces_per_file = metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY]
+            else:
+                num_traces_per_file = 0
+            if constants.DATASETS.FILE_FORMAT_PROPERTY in metadata_dict:
+                file_format = metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY]
+            else:
+                file_format = "unknown"
+            if constants.DATASETS.ADDED_BY_PROPERTY in metadata_dict:
+                added_by = metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY]
+            else:
+                added_by = "unknown"
+            if constants.DATASETS.COLUMNS_PROPERTY in metadata_dict:
+                columns = metadata_dict[constants.DATASETS.COLUMNS_PROPERTY]
+            else:
+                columns = []
 
         num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))]) - 1
         size_compressed_gb = round(float(os.path.getsize(zip_file_path)) / 1000000000, 2)
@@ -234,7 +255,7 @@ class ExportUtil:
     def export_emulation_statistics_to_disk_json(output_dir: str, zip_file_output: str, statistics_id: int,
                                                  added_by: str = "unknown") -> None:
         """
-        Exports emulation traces from the metastore to disk
+        Exports emulation statistics from the metastore to disk
 
         :param output_dir: the output directory
         :param zip_file_output: the compressed zip file path
@@ -242,7 +263,7 @@ class ExportUtil:
         :param statistics_id: the id of the statistics to fetch
         :return: None
         """
-        Logger.__call__().get_logger().info(f"Exporting emulation traces to disk (json), output dir: {output_dir}, "
+        Logger.__call__().get_logger().info(f"Exporting emulation statistics to disk (json), output dir: {output_dir}, "
                                             f"output zip file: {zip_file_output}")
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -296,13 +317,20 @@ class ExportUtil:
                      encoding='utf-8') as f:
             metadata_dict = json.loads(f.read())
         if metadata_dict is not None:
-            file_format = metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY]
-            added_by = metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY]
-            num_measurements = metadata_dict[constants.DATASETS.NUM_MEASUREMENTS_PROPERTY]
-            num_metrics = metadata_dict[constants.DATASETS.NUM_METRICS_PROPERTY]
-            metrics = metadata_dict[constants.DATASETS.METRICS_PROPERTY]
-            conditions = metadata_dict[constants.DATASETS.CONDITIONS_PROPERTY]
-            num_conditions = metadata_dict[constants.DATASETS.NUM_CONDITIONS_PROPERTY]
+            if constants.DATASETS.FILE_FORMAT_PROPERTY in metadata_dict:
+                file_format = metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY]
+            if constants.DATASETS.ADDED_BY_PROPERTY in metadata_dict:
+                added_by = metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY]
+            if constants.DATASETS.NUM_MEASUREMENTS_PROPERTY in metadata_dict:
+                num_measurements = metadata_dict[constants.DATASETS.NUM_MEASUREMENTS_PROPERTY]
+            if constants.DATASETS.NUM_METRICS_PROPERTY in metadata_dict:
+                num_metrics = metadata_dict[constants.DATASETS.NUM_METRICS_PROPERTY]
+            if constants.DATASETS.METRICS_PROPERTY in metadata_dict:
+                metrics = metadata_dict[constants.DATASETS.METRICS_PROPERTY]
+            if constants.DATASETS.CONDITIONS_PROPERTY in metadata_dict:
+                conditions = metadata_dict[constants.DATASETS.CONDITIONS_PROPERTY]
+            if constants.DATASETS.NUM_CONDITIONS_PROPERTY in metadata_dict:
+                num_conditions = metadata_dict[constants.DATASETS.NUM_CONDITIONS_PROPERTY]
 
         num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))]) - 1
         size_compressed_gb = round(float(os.path.getsize(zip_file_path)) / 1000000000, 2)
