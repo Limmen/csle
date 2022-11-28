@@ -10,17 +10,18 @@ RUN echo 'deb http://archive.debian.org/debian jessie-backports main' > /etc/apt
     apt-get -o Acquire::Check-Valid-Until=false update
 
 # Install dependencies
-RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
-        echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
-        apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
-                       ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
-                       dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
-                       wget openjdk-7-jre-headless &&\
-         DEBIAN_FRONTEND=noninteractive apt-get install -y wget apache2 php5 build-essential gcc make \
-         php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev irssi irssi-scripts screen postgresql-client-common \
-         snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3
+RUN echo "postfix postfix/mailname string csle" | debconf-set-selections && \
+    echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
+    apt-get install -y --force-yes lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl  \
+    htop ssh openssh-server \
+    ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
+    dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables \
+    wget openjdk-7-jre-headless && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes wget apache2 php5 build-essential gcc make \
+    php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev irssi irssi-scripts screen postgresql-client-common \
+    snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3
 
-RUN apt-get install -y openssl libssl-dev -t jessie-backports
+RUN apt-get install -y --force-yes openssl libssl-dev -t jessie-backports
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
