@@ -118,7 +118,10 @@ class EmulationTrace:
         if os.path.exists(traces_file):
             with open(traces_file, 'r') as fp:
                 d = json.load(fp)
-                traces = d[constants.METADATA_STORE.TRACES_PROPERTY]
+                if constants.METADATA_STORE.TRACES_PROPERTY in d:
+                    traces = d[constants.METADATA_STORE.TRACES_PROPERTY]
+                else:
+                    traces = d["emulations"]
                 traces = list(map(lambda x: EmulationTrace.from_dict(x), traces))
                 return traces
         else:
