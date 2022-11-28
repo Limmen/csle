@@ -1,36 +1,19 @@
-# `csle-collector`
+# `csle-system-identification`
 
-This library contains scripts and programs for collecting data from the emulation. 
+A library with system identification algorithms for learning system models in CSLE based on traces and data collected
+from emulated infrastructures.
 
-<p align="center">
-<img src="docs/data_collection_1.png" width="600">
-</p>
-
-[![PyPI version](https://badge.fury.io/py/csle-collector.svg)](https://badge.fury.io/py/csle-collector)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-collector)
-
-## Re-generate gRPC files
-
-To re-generate the gRPC files, run: 
-```bash
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/client_manager/. ./protos/client_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/kafka_manager/. ./protos/kafka_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/elk_manager/. ./protos/elk_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/docker_stats_manager/. ./protos/docker_stats_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/snort_ids_manager/. ./protos/snort_ids_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/host_manager/. ./protos/host_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/ossec_ids_manager/. ./protos/ossec_ids_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_python_out=./csle_collector/traffic_manager/. ./protos/traffic_manager.proto
-```
+[![PyPI version](https://badge.fury.io/py/csle-system-identification.svg)](https://badge.fury.io/py/csle-system-identification)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-system-identification)
 
 ## Requirements
 
 - Python 3.8+
-- `grpcio` (for the collector API)
-- `grpcio-tools` (for the collector API)
-- `scipy` (for statistical models of client processes)
-- `confluent-kafka` (for interacting with Kafka)
-- `docker` (for interacting with Docker)
+- `csle-common`
+- `csle-collector`
+- `csle-attacker`
+- `csle-defender`
+- `gpytorch` (For system identification algorithms based on Gaussian processes)
 
 ## Development Requirements
 
@@ -48,15 +31,15 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./csle_collector/. --grpc_p
 
 ```bash
 # install from pip
-pip install csle-collector==<version>
+pip install csle-system-identification==<version>
 # local install from source
-$ pip install -e csle-collector
+$ pip install -e csle-system-identification
 # force upgrade deps
-$ pip install -e csle-collector --upgrade
+$ pip install -e csle-system-identification --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/csle-collector
+cd csle/simulation-system/libs/csle-system-identification
 pip3 install -e .
 ```
 
@@ -103,7 +86,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-collector](https://limmen.dev/csle/docs/csle-collector)
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-system-identification](https://limmen.dev/csle/docs/csle-system-identification)
 
 ### Generate API Documentation
 
@@ -114,12 +97,13 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../csle_collector/
+sphinx-apidoc -f -o source/ ../csle_system_identification/
 make html
 ```
-To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle),
+copy the generated HTML files to the documentation folder:
 ```bash
-cp -r build/html ../../../../docs/_docs/csle-collector
+cp -r build/html ../../../../docs/_docs/csle-system-identification
 ```
 
 ## Static code analysis
@@ -143,7 +127,7 @@ pytest
 
 To generate a coverage report, execute the following command:
 ```
-pytest --cov=csle_collector
+pytest --cov=csle_system_identification
 ```
 
 ## Run tests and code analysis in different python environments
@@ -178,3 +162,4 @@ Kim Hammar <kimham@kth.se>
 Creative Commons
 
 (C) 2020-2022, Kim Hammar
+

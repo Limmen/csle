@@ -204,7 +204,7 @@ $ pip install -e csle-rest-api --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/csle-rest-api
+cd csle/simulation-system/libs/csle-rest-api
 pip3 install -e .
 ```
 

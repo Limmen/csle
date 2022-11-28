@@ -36,7 +36,7 @@ $ pip install -e csle-ryu --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/csle-ryu
+cd csle/simulation-system/libs/csle-ryu
 pip3 install -e .
 ```
 

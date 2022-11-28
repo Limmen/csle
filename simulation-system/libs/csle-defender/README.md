@@ -1,19 +1,14 @@
-# `gym-csle-stopping-game`
+# `csle-defender`
 
-An OpenAI gym reinforcement learning environment that represents the optimal stopping game described in 
-[Intrusion Prevention Through Optimal Stopping](https://ieeexplore.ieee.org/document/9779345) and
-[Learning Security Strategies through Game Play and Optimal Stopping](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
+Scrips and programs for automating defensive actions in emulations of CSLE.
 
-[![PyPI version](https://badge.fury.io/py/gym-csle-stopping-game.svg)](https://badge.fury.io/py/gym-csle-stopping-game)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-stopping-game)
+[![PyPI version](https://badge.fury.io/py/csle-defender.svg)](https://badge.fury.io/py/csle-defender)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-defender)
 
 ## Requirements
 
 - Python 3.8+
 - `csle-common`
-- `csle-attacker`
-- `csle-csle-defender`
-- `csle-collector`
 
 ## Development Requirements
 
@@ -31,15 +26,15 @@ An OpenAI gym reinforcement learning environment that represents the optimal sto
 
 ```bash
 # install from pip
-pip install gym-csle-stopping-game==<version>
+pip install csle-defender==<version>
 # local install from source
-$ pip install -e gym-csle-stopping-game
+$ pip install -e csle-defender
 # force upgrade deps
-$ pip install -e gym-csle-stopping-game --upgrade
+$ pip install -e csle-defender --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/gym-csle-stopping-game
+cd csle/simulation-system/libs/csle-defender
 pip3 install -e .
 ```
 
@@ -86,7 +81,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/gym-csle-stopping-game](https://limmen.dev/csle/docs/gym-csle-stopping-game)
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-defender](https://limmen.dev/csle/docs/csle-defender)
 
 ### Generate API Documentation
 
@@ -97,13 +92,12 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../gym_csle_stopping_game/
+sphinx-apidoc -f -o source/ ../csle_defender/
 make html
 ```
-To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle),
-copy the generated HTML files to the documentation folder:
+To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
 ```bash
-cp -r build/html ../../../../docs/_docs/gym-csle-stopping-game
+cp -r build/html ../../../../docs/_docs/csle-defender
 ```
 
 ## Static code analysis
@@ -123,11 +117,11 @@ mypy .
 To run the unit tests, execute the following command:
 ```
 pytest
-``` 
+```
 
 To generate a coverage report, execute the following command:
 ```
-pytest --cov=gym_csle_stopping_game
+pytest --cov=csle_defender
 ```
 
 ## Run tests and code analysis in different python environments
@@ -162,3 +156,4 @@ Kim Hammar <kimham@kth.se>
 Creative Commons
 
 (C) 2020-2022, Kim Hammar
+

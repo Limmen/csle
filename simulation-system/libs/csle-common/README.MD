@@ -50,7 +50,7 @@ $ pip install -e csle-common --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/csle-common
+cd csle/simulation-system/libs/csle-common
 pip3 install -e .
 ```
 

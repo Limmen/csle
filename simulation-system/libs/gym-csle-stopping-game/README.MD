@@ -1,19 +1,19 @@
-# `csle-system-identification`
+# `gym-csle-stopping-game`
 
-A library with system identification algorithms for learning system models in CSLE based on traces and data collected
-from emulated infrastructures.
+An OpenAI gym reinforcement learning environment that represents the optimal stopping game described in 
+[Intrusion Prevention Through Optimal Stopping](https://ieeexplore.ieee.org/document/9779345) and
+[Learning Security Strategies through Game Play and Optimal Stopping](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
 
-[![PyPI version](https://badge.fury.io/py/csle-system-identification.svg)](https://badge.fury.io/py/csle-system-identification)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-system-identification)
+[![PyPI version](https://badge.fury.io/py/gym-csle-stopping-game.svg)](https://badge.fury.io/py/gym-csle-stopping-game)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-stopping-game)
 
 ## Requirements
 
 - Python 3.8+
 - `csle-common`
-- `csle-collector`
 - `csle-attacker`
-- `csle-defender`
-- `gpytorch` (For system identification algorithms based on Gaussian processes)
+- `csle-csle-defender`
+- `csle-collector`
 
 ## Development Requirements
 
@@ -31,15 +31,15 @@ from emulated infrastructures.
 
 ```bash
 # install from pip
-pip install csle-system-identification==<version>
+pip install gym-csle-stopping-game==<version>
 # local install from source
-$ pip install -e csle-system-identification
+$ pip install -e gym-csle-stopping-game
 # force upgrade deps
-$ pip install -e csle-system-identification --upgrade
+$ pip install -e gym-csle-stopping-game --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/csle-system-identification
+cd csle/simulation-system/libs/gym-csle-stopping-game
 pip3 install -e .
 ```
 
@@ -86,7 +86,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-system-identification](https://limmen.dev/csle/docs/csle-system-identification)
+The latest documentation is available at [https://limmen.dev/csle/docs/gym-csle-stopping-game](https://limmen.dev/csle/docs/gym-csle-stopping-game)
 
 ### Generate API Documentation
 
@@ -97,13 +97,13 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../csle_system_identification/
+sphinx-apidoc -f -o source/ ../gym_csle_stopping_game/
 make html
 ```
 To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle),
 copy the generated HTML files to the documentation folder:
 ```bash
-cp -r build/html ../../../../docs/_docs/csle-system-identification
+cp -r build/html ../../../../docs/_docs/gym-csle-stopping-game
 ```
 
 ## Static code analysis
@@ -123,11 +123,11 @@ mypy .
 To run the unit tests, execute the following command:
 ```
 pytest
-```
+``` 
 
 To generate a coverage report, execute the following command:
 ```
-pytest --cov=csle_system_identification
+pytest --cov=gym_csle_stopping_game
 ```
 
 ## Run tests and code analysis in different python environments
@@ -162,4 +162,3 @@ Kim Hammar <kimham@kth.se>
 Creative Commons
 
 (C) 2020-2022, Kim Hammar
-

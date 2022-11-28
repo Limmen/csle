@@ -1,15 +1,22 @@
-# `csle-attacker`
+# `csle-agents`
 
-Scrips and programs for automating cyber attacks in CSLE. 
-These attacks are used to evaluate defender policies and to collect data.
+A library with reinforcement learning algorithms, control-theoreitc algorithms, dynamic programming algorithms,
+and game-theoretic algorithms for finding defender policies.
 
-[![PyPI version](https://badge.fury.io/py/csle-attacker.svg)](https://badge.fury.io/py/csle-attacker)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-attacker)
+[![PyPI version](https://badge.fury.io/py/csle-agents.svg)](https://badge.fury.io/py/csle-agents)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-agents)
 
 ## Requirements
 
 - Python 3.8+
 - `csle-common`
+- `csle-collector`
+- `csle-attacker`
+- `csle-defender`
+- `csle-system-identification`
+- `gym-csle-stopping-game`
+- `pulp` (for linear and convex optimization)
+- `Bayesian optimization` (for Bayesian optimization algorithms)
 
 ## Development Requirements
 
@@ -27,15 +34,15 @@ These attacks are used to evaluate defender policies and to collect data.
 
 ```bash
 # install from pip
-pip install csle-attacker==<version>
+pip install csle-agents==<version>
 # local install from source
-$ pip install -e csle-attacker
+$ pip install -e csle-agents
 # force upgrade deps
-$ pip install -e csle-attacker --upgrade
+$ pip install -e csle-agents --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/python/csle-attacker
+cd csle/simulation-system/libs/csle-agents
 pip3 install -e .
 ```
 
@@ -71,7 +78,7 @@ Install Sphinx to automatically generate API documentation from docstrings:
 pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
 ```
 
-Install tox for automatically running tests in different python environments:
+Install tox for automatically running tests in different python environments: 
 ```bash
 pip install tox
 ```
@@ -82,7 +89,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-attacker](https://limmen.dev/csle/docs/csle-attacker)
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-agents](https://limmen.dev/csle/docs/csle-agents)
 
 ### Generate API Documentation
 
@@ -93,12 +100,12 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../csle_attacker/
+sphinx-apidoc -f -o source/ ../csle_agents/
 make html
 ```
 To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
 ```bash
-cp -r build/html ../../../../docs/_docs/csle-attacker
+cp -r build/html ../../../../docs/_docs/csle-agents
 ```
 
 ## Static code analysis
@@ -111,8 +118,7 @@ flake8 .
 To run the mypy type checker, execute the following command:
 ```
 mypy .
-``` 
-
+```
 
 ## Unit tests
 
@@ -123,7 +129,7 @@ pytest
 
 To generate a coverage report, execute the following command:
 ```
-pytest --cov=csle_attacker
+pytest --cov=csle_agents
 ```
 
 ## Run tests and code analysis in different python environments
@@ -153,9 +159,9 @@ Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
-Creative Commons
+[LICENSE](LICENSE.md)
 
-[LICENSE](../../LICENSE.md)
+Creative Commons
 
 (C) 2020-2022, Kim Hammar
 

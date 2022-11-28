@@ -99,78 +99,78 @@ running commands can read and write to this directory.
     source activate python38
     ```
 
-    - Install `csle-collector` (see ([README](simulation-system/python/csle-collector/README.md)) for more information)
+    - Install `csle-collector` (see ([README](simulation-system/libs/csle-collector/README.md)) for more information)
       ```bash
-       cd simulation-system/python/csle-collector/
+       cd simulation-system/libs/csle-collector/
        pip install -e . 
        cd ../../../
       ```
 
-    - Install `csle-common` (see ([README](simulation-system/python/csle-common/README.md)) for more information)
+    - Install `csle-common` (see ([README](simulation-system/libs/csle-common/README.md)) for more information)
       ```bash
-       cd simulation-system/python/csle-common/
+       cd simulation-system/libs/csle-common/
        pip install -e .
        cd ../../../
       ```
 
-    - Install `csle-attacker` (see ([README](simulation-system/python/csle-attacker/README.md)) for more information)
+    - Install `csle-attacker` (see ([README](simulation-system/libs/csle-attacker/README.md)) for more information)
       ```bash
-      cd simulation-system/python/csle-attacker/
+      cd simulation-system/libs/csle-attacker/
       pip install -e . 
       cd ../../../
       ```
 
-    - Install `csle-defender` (see ([README](simulation-system/python/csle-defender/README.md)) for more information)
+    - Install `csle-defender` (see ([README](simulation-system/libs/csle-defender/README.md)) for more information)
       ```bash
-      cd simulation-system/python/csle-defender/
+      cd simulation-system/libs/csle-defender/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `gym-csle-stopping-game` (see ([README](simulation-system/python/gym-csle-stopping-game/README.MD)) for more
+    - Install `gym-csle-stopping-game` (see ([README](simulation-system/libs/gym-csle-stopping-game/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/python/gym-csle-stopping-game/
+      cd simulation-system/libs/gym-csle-stopping-game/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `csle-system-identification` (see ([README](simulation-system/python/csle-system-identification/README.MD)) for more
+    - Install `csle-system-identification` (see ([README](simulation-system/libs/csle-system-identification/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/python/csle-system-identification/
+      cd simulation-system/libs/csle-system-identification/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `csle-agents` (see ([README](simulation-system/python/csle-agents/README.MD)) for more
+    - Install `csle-agents` (see ([README](simulation-system/libs/csle-agents/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/python/csle-agents/
+      cd simulation-system/libs/csle-agents/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `csle-ryu` (see ([README](simulation-system/python/csle-ryu/README.MD)) for more
+    - Install `csle-ryu` (see ([README](simulation-system/libs/csle-ryu/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/python/csle-ryu/
+      cd simulation-system/libs/csle-ryu/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `csle-rest-api` (see ([README](simulation-system/python/csle-rest-api/README.MD)) for more
+    - Install `csle-rest-api` (see ([README](simulation-system/libs/csle-rest-api/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/python/csle-rest-api/
+      cd simulation-system/libs/csle-rest-api/
       pip install -e .
       cd ../../../
       ```
 
-    - Install `csle-cli` (see ([README](simulation-system/python/csle-cli/README.MD)) for more
+    - Install `csle-cli` (see ([README](simulation-system/libs/csle-cli/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/python/csle-cli/
+      cd simulation-system/libs/csle-cli/
       pip install -e .
       cd ../../../
       ```
