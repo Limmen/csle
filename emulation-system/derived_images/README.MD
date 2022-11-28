@@ -7,71 +7,88 @@ generate containers for emulating various network infrastructures.
 
 ## List of Derived Images
 
-- `cve_2010_0426_1` ([cve_2010_0426_1](./cve_2010_0426_1)): an image with the CVE-2010-0426 vulnerability. 
+- `cve_2010_0426_1` ([cve_2010_0426_1](./cve_2010_0426_1)): an image with the CVE-2010-0426 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1/)
      - OS: Debian:Jessie. 
      - Inherits from `cve_2010_0426_base`.
      - Services: teamspeak3, tomcat, ssh
-- `cve_2015_1427_1` ([cve_2015_1427_1](./cve_2015_1427_1)): an image with the CVE-2015-1427 vulnerability. 
+- `cve_2015_1427_1` ([cve_2015_1427_1](./cve_2015_1427_1)): an image with the CVE-2015-1427 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_1427_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_1427_1/)
      - OS: Debian:Jessie. 
      - Inherits from `cve_2015_1427_base`.
      - Services: SNMP, elasticsearch, apache webserver, ssh
-- `cve_2015_3306_1` ([cve_2015_3306_1](./cve_2015_3306_1)): an image with the CVE-2015-3306 vulnerability. 
+- `cve_2015_3306_1` ([cve_2015_3306_1](./cve_2015_3306_1)): an image with the CVE-2015-3306 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_3306_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_3306_1/)
      - OS: Debian:Jessie. 
      - Inherits from `cve_2015_3306_base`.
      - Services: ssh, SNMP, proftpd, apache2
-- `cve_2015_5602_1` ([cve_2015_5602_1](./cve_2015_5602_1)): an image with the CVE-2015-5602 vulnerability. 
+- `cve_2015_5602_1` ([cve_2015_5602_1](./cve_2015_5602_1)): an image with the CVE-2015-5602 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_5602_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_5602_1/) 
      - OS: Debian:Jessie. 
      - Inherits from `cve_2015_5602_base`.
      - Services: ssh
-- `cve_2016_10033_1` ([cve_2016_10033_1](./cve_2016_10033_1)): an image with the CVE-2016-10033 vulnerability. 
+- `cve_2016_10033_1` ([cve_2016_10033_1](./cve_2016_10033_1)): an image with the CVE-2016-10033 vulnerability.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2016_10033_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2016_10033_1/)
      - OS: Debian:Jessie. 
      - Inherits from `cve_2010_0426_1`.
      - Services: ssh, apache2, SMTPD
-- `hacker_kali_1` ([hacker_kali_1](./hacker_kali_1)): a Kali image, used to generate containers with tools for penetration testing. 
+- `hacker_kali_1` ([hacker_kali_1](./hacker_kali_1)): a Kali image, used to generate containers with tools for penetration testing.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_hacker_kali_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_hacker_kali_1/)
      - OS: Kali (Latest). 
      - Inherits from `kali_base`.
      - Services: ssh
-- `samba_1` ([samba_1](./samba_1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy. 
+- `samba_1` ([samba_1](./samba_1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/samba_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/samba_1/)
      - OS: Debian:Jessie. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba
-- `samba_2` ([samba_1](./samba_1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy and a telnet server. 
+- `samba_2` ([samba_2](./samba_2)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy and a telnet server.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_samba_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_samba_2/)
      - OS: Debian:Jessie. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba, telnet     
-- `shellshock_1` ([shellshock_1](./shellshock_1)): an image with the ShellShock CVE-2014-6271 vulnerabilitiy. 
+- `shellshock_1` ([shellshock_1](./shellshock_1)): an image with the ShellShock CVE-2014-6271 vulnerabilitiy.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_1/)
      - OS: Debian:Wheezy. 
      - Inherits from `shellshock_base`.
      - Services: ssh, SNMP, apache2
-- `sql_injection_1` ([sql_injection_1](./sql_injection_1)): an image with a webapp that is vulnerable to SQL injections. 
+- `sql_injection_1` ([sql_injection_1](./sql_injection_1)): an image with a webapp that is vulnerable to SQL injections.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_sql_injection_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_sql_injection_1/)
      - OS: Debian:9.2. 
      - Inherits from `sql_injection_base`.
      - Services: IRC, apache2, ssh
-- `ftp_1` ([ftp_1](./ftp_1)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ftp_1` ([ftp_1](./ftp_1)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ftp_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ftp_1/)
      - OS: Ubuntu:14. 
      - Inherits from `ubuntu_14_base`.
      - Services: VSFTPD, MongoDB, SMTP, tomcat, teamspeak3, ssh
-- `ftp_2` ([ftp_2](./ftp_2)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ftp_2` ([ftp_2](./ftp_2)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ftp_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ftp_2/)
      - OS: Ubuntu:14. 
      - Inherits from `ubuntu_14_base`.
      - Services: VSFTPD, ssh, DNS
-- `ssh_1` ([ssh_1](./ssh_1)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ssh_1` ([ssh_1](./ssh_1)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ssh_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ssh_1/)
      - OS: Ubuntu:20. 
      - Inherits from `ssh_base`.
      - Services: ssh, erl_pengine webapp, DNS
-- `ssh_2` ([ssh_2](./ssh_2)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ssh_2` ([ssh_2](./ssh_2)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ssh_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ssh_2/)
      - OS: Ubuntu:20. 
      - Inherits from `ssh_base`.
      - Services: ssh, DNS, NTP
-- `ssh_3` ([ssh_3](./ssh_3)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ssh_3` ([ssh_3](./ssh_3)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ssh_3?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ssh_3/)
      - OS: Ubuntu:20. 
      - Inherits from `ssh_base`.
      - Services: ssh, IRC, RethinkDB
-- `telnet_1` ([telnet_1](./telnet_1)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
+- `telnet_1` ([telnet_1](./telnet_1)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_telnet_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_telnet_1/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Flask server, telnet
-- `telnet_2` ([telnet_2](./telnet_2)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
+- `telnet_2` ([telnet_2](./telnet_2)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_telnet_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_telnet_2/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, telnet, CockroachDB
@@ -80,46 +97,61 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Glassfish, telnet
-- `honeypot_1` ([honeypot_1](./honeypot_1)): an image with a set of arbitrary network services that can be used to generate honeypot containers. 
+- `honeypot_1` ([honeypot_1](./honeypot_1)): an image with a set of arbitrary network services that can be used to generate honeypot containers.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_honeypot_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_honeypot_1/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, IRC, SNMP, SMTP, PostgreSQL, NTP
-- `honeypot_2` ([honeypot_2](./honeypot_2)): an image with a set of arbitrary network services that can be used to generate honeypot containers. 
+- `honeypot_2` ([honeypot_2](./honeypot_2)): an image with a set of arbitrary network services that can be used to generate honeypot containers.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_honeypot_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_honeypot_2/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, SNMP, PostgreSQL, IRC, NTP
-- `router_1` ([router_1](./router_1)): an image without any particular services that can be used to generate containers acting as gateways. 
+- `router_1` ([router_1](./router_1)): an image without any particular services that can be used to generate containers acting as gateways.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_router_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_router_1/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh
-- `router_2` ([router_2](./router_1)): an image with the Snort IDS that can be used to generate containers acting as gateways. 
+- `router_2` ([router_2](./router_2)): an image with the Snort IDS that can be used to generate containers acting as gateways.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_router_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_router_2/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Snort
-- `client_1` ([client_1](./client_1)): an image without any particular services that can be used to generate containers acting as clients. 
+- `client_1` ([client_1](./client_1)): an image without any particular services that can be used to generate containers acting as clients.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_client_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_client_1/)
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh
-- `blank_1` ([blank_1](./blank_1)): a blank image for testing purposes 
+- `blank_1` ([blank_1](./blank_1)): a blank image for testing purposes
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_blank_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_blank_1/)
     - OS: Ubuntu:20. 
     - Inherits from `blank_ubuntu_20`.
     - Services: None
-- `pengine_exploit_1` ([pengine_exploit_1](./pengine_exploit_1)): an image with a vulnerable Prolog SLD Pengine Server 
+- `pengine_exploit_1` ([pengine_exploit_1](./pengine_exploit_1)): an image with a vulnerable Prolog SLD Pengine Server
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_pengine_exploit_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_pengine_exploit_1/)
      - OS: Ubuntu:20. 
      - Inherits from `pengine_exploit_base`.
      - Services: Pengine server, SSH
 - `ovs_1` ([ovs_1](./ovs_1)): an image with a OVS virtual switch
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ovs_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ovs_1/)
     - OS: Ubuntu:20.
     - Inherits from `ovs_base`.
     - Services: OVS switch, SSH
 - `ryu_1` ([ryu_1](./ryu_1)): an image with the Ryu SDN controller
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ryu_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ryu_1/)
     - OS: Ubuntu:20.
     - Inherits from `ryu_base`.
     - Services: Ryu SDN controller, SSH
 - `elk_1` ([elk_1](./elk_1)): an image with the ELK stack
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_elk_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_elk_1/)
     - OS: Ubuntu:20.
     - Inherits from `elk_base`.
-    - Services: Elastic search, Kibana, Logstash, SSH  
+    - Services: Elastic search, Kibana, Logstash, SSH
+- `kafka_1` ([kafka_1](./kafka_1)): an image with Kafka
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_kafka_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_kafka_1/)
+     - OS: Ubuntu:20.
+     - Inherits from `ubuntu_20_base`.
+     - Services: Kafka, SSH
 
 ## Useful commands
 
