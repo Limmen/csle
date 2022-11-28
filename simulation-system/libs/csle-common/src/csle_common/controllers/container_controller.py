@@ -531,12 +531,16 @@ class ContainerController:
         :param port: port that the host manager is listening to
         :return: None
         """
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
-            stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
-            docker_stats_monitor_dto = \
-                csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
-                    stub=stub)
-            return docker_stats_monitor_dto
+        try:
+            with grpc.insecure_channel(f'{ip}:{port}') as channel:
+                stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+                docker_stats_monitor_dto = \
+                    csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
+                        stub=stub)
+                return docker_stats_monitor_dto
+        except Exception:
+            return None
+
 
     @staticmethod
     def connect_containers_to_management_network(containers_config: ContainersConfig, kafka_config: KafkaConfig,
