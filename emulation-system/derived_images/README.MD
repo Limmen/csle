@@ -9,6 +9,7 @@ generate containers for emulating various network infrastructures.
 
 - `cve_2010_0426_1` ([cve_2010_0426_1](./cve_2010_0426_1)): an image with the CVE-2010-0426 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_cve_2010_0426_1?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1/)
      - OS: Debian:Jessie. 
      - Inherits from `cve_2010_0426_base`.
      - Services: teamspeak3, tomcat, ssh
@@ -190,6 +191,7 @@ make pengine_exploit_1 # Build pengine_exploit_1
 make ovs_1 # Build ovs_1
 make ryu_1 # Build ryu_1
 make elk_1 # Build elk_1
+make kafka_1 # Build kafka_1
 
 make rm_samba_1 # Remove samba_1
 make rm_shellshock_1 # Remove shellshock_1
@@ -219,6 +221,7 @@ make rm_pengine_exploit_1 # Remove pengine_exploit_1
 make rm_ovs_1 # Remove ovs_1
 make rm_ryu_1 # Remove ryu_1
 make rm_elk_1 # Remove elk_1
+make rm_kafka_1 # Remove kafka_1
 
 make push_samba_1 # Push samba_1 to DockerHub
 make push_shellshock_1 # Push shellshock_1 to DockerHub
@@ -248,6 +251,7 @@ make push_pengine_exploit_1 # Push pengine_exploit_1 to DockerHub
 make push_ovs_1 # Push ovs_1 to DockerHub
 make push_ryu_1 # Push ryu_1 to DockerHub
 make push_elk_1 # Push elk_1 to DockerHub
+make push_kafka_1 # Push kafka_1 to DockerHub
 
 make pull_samba_1 # pull samba_1 from DockerHub
 make pull_shellshock_1 # pull shellshock_1 from DockerHub
@@ -277,6 +281,7 @@ make pull_pengine_exploit_1 # pull pengine_exploit_1 from DockerHub
 make pull_ovs_1 # pull ovs_1 from DockerHub
 make pull_ryu_1 # pull ryu_1 from DockerHub
 make pull_elk_1 # pull elk_1 from DockerHub
+make pull_kafka_1 # pull kafka_1 from DockerHub
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images
