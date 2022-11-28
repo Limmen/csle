@@ -76,10 +76,6 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
 RUN wget --no-check-certificate https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
      ./configure && make && make install
 
-# Cockroach DB
-RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
-    tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
-
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
 ADD docker_files/common/snmpd.conf /etc/snmp/snmpd.conf

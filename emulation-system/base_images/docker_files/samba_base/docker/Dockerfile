@@ -12,13 +12,14 @@ RUN echo 'deb http://archive.debian.org/debian jessie-backports main' > /etc/apt
 # Install dependencies
 RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
-        apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
+        apt-get install -y --force-yes lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh  \
+                       openssh-server \
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget irssi irssi-scripts screen postgresql-client-common snmp mongodb-clients postgresql-client \
                        smbclient fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3
 
-RUN apt-get install -y openssl libssl-dev -t jessie-backports
+RUN apt-get install -y --force-yes openssl libssl-dev -t jessie-backports
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
@@ -35,12 +36,6 @@ ADD docker_files/common/vsftpd.conf /etc/vsftpd.conf
 
 # Pengine Server
 RUN git clone https://github.com/Limmen/erl_pengine
-
-# Cassandra
-RUN wget --no-check-certificate https://archive.apache.org/dist/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
-    tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
-    mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
-ADD docker_files/common/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
 
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
@@ -81,10 +76,6 @@ ADD docker_files/common/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
-
-# Cockroach DB
-RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
-    tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup

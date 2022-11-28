@@ -70,7 +70,7 @@ def default_config(name: str, network_id: int = 10, level: int = 10, version: st
     services_cfg = default_services_config(network_id=network_id)
     descr = "An emulation environment with a set of nodes that run common " \
             "networked services such as SSH, FTP, Telnet, IRC, Kafka, " \
-            "Cassandra, etc. Some of the services are vulnerable to different network attacks " \
+            "etc. Some of the services are vulnerable to different network attacks " \
             "such as the SambaCry exploit, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, " \
             "and SQL injection. " \
             "Moreover, some nodes are vulnerable to privilege escalation attacks " \

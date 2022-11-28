@@ -12,7 +12,12 @@ VERSION=0.0.1
 	push_shellshock_base push_sql_injection_base push_debian_jessie_base push_cve_2015_3306_base \
 	push_cve_2015_1427_base push_cve_2016_10033_base push_cve_2010_0426_base push_cve_2015_5602_base \
     push_blank_ubuntu_20 push_pengine_exploit_base cve_2014_0160_base push_cve_2014_0160_base \
-    push_ovs_base push_ryu_base push_elk_base
+    push_ovs_base push_ryu_base push_elk_base pull_kali_base pull_ubuntu_20_base \
+    pull_ubuntu_14_base pull_ssh_base pull_samba_base pull_shellshock_base \
+    pull_sql_injection_base pull_debian_jessie_base pull_cve_2015_3306_base \
+    pull_cve_2015_1427_base pull_cve_2016_10033_base pull_cve_2010_0426_base pull_cve_2015_5602_base \
+    pull_blank_ubuntu_20 pull_pengine_exploit_base cve_2014_0160_base pull_cve_2014_0160_base \
+    pull_ovs_base pull_ryu_base pull_elk_base
 
 all: build
 
@@ -134,61 +139,119 @@ rm_elk_base:
 
 # Targets for pushing all of the base images to DockerHub
 push_kali_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 
 push_ubuntu_20_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
 
 push_ubuntu_14_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
 
 push_ssh_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 
 push_samba_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 
 push_shellshock_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 
 push_sql_injection_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 
 push_debian_jessie_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
 
 push_cve_2015_3306_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
 
 push_cve_2015_1427_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2015_1427_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2015_1427_base:$(VERSION)
 
 push_cve_2016_10033_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2016_10033_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2016_10033_base:$(VERSION)
 
 push_cve_2010_0426_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
 
 push_cve_2015_5602_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
 
 push_blank_ubuntu_20:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
 
 push_pengine_exploit_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 
 push_cve_2014_0160_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
 
 push_ovs_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
 
 push_ryu_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 
 push_elk_base:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+
+# Targets for pulling all of the base images from DockerHub
+pull_kali_base:
+	-docker pull $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
+
+pull_ubuntu_20_base:
+	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+
+pull_ubuntu_14_base:
+	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
+
+pull_ssh_base:
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
+
+pull_samba_base:
+	-docker pull $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
+
+pull_shellshock_base:
+	-docker pull $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+
+pull_sql_injection_base:
+	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
+
+pull_debian_jessie_base:
+	-docker pull $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
+
+pull_cve_2015_3306_base:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
+
+pull_cve_2015_1427_base:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_1427_base:$(VERSION)
+
+pull_cve_2016_10033_base:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2016_10033_base:$(VERSION)
+
+pull_cve_2010_0426_base:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
+
+pull_cve_2015_5602_base:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
+
+pull_blank_ubuntu_20:
+	-docker pull $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+
+pull_pengine_exploit_base:
+	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
+
+pull_cve_2014_0160_base:
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
+
+pull_ovs_base:
+	-docker pull $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
+
+pull_ryu_base:
+	-docker pull $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
+
+pull_elk_base:
+	-docker pull $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
 
 # Build all of the base images sequentially
 build:
@@ -237,22 +300,45 @@ rm_image:
 
 # Push all base images
 push:
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2015_1427_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2016_10033_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
-	-docker push kimham/csle:$(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2015_1427_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2016_10033_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+
+
+# Pull all base images
+pull:
+	-docker pull $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_1427_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2016_10033_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)

@@ -29,15 +29,28 @@ push_derived_images:
 	cd derived_images/ && $(MAKE) push
 
 # Target for pushing all base images to DockerHub
-push_base_images: rm_derived_images
+push_base_images:
 	cd base_images/ && $(MAKE) push
 
-# Build all images
-build: base_images derived_images
+# Target for pulling all derived images from DockerHub
+pull_derived_images:
+	cd derived_images/ && $(MAKE) pull
 
-# Remove all base images
-rm: rm_emulations rm_base_images
+# Target for pulling all base images from DockerHub
+pull_base_images:
+	cd base_images/ && $(MAKE) pull
+
+# Build emulation system
+build: base_images derived_images emulations
+
+install: pull_base_images pull_derived_images emulations
+
+# Remove emulation system
+rm: rm_emulations rm_derived_images rm_base_images
 
 # Push all images to DockerHub
 push: push_base_images push_derived_images
+
+# Pull all images from DockerHub
+push: pull_base_images pull_derived_images
 

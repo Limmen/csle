@@ -70,7 +70,7 @@ def default_config(name: str, network_id: int = 2, level: int = 2, version: str 
     services_cfg = default_services_config(network_id=network_id)
     descr = "An emulation environment with a set of nodes that run common networked services such as SSH, " \
             "FTP, Telnet, IRC, Kafka," \
-            "Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as they use " \
+            " etc. Some of the services are vulnerable to simple dictionary attacks as they use " \
             "weak passwords." \
             "The task of an attacker agent is to identify the vulnerabilities and exploit them and discover " \
             "hidden flags" \
@@ -2261,9 +2261,7 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.TELNET.DEFAULT_PORT,
-                               name=constants.TELNET.SERVICE_NAME, credentials=[]),
-                NetworkService(protocol=TransportProtocol.TCP, port=constants.COCKROACH.DEFAULT_PORT,
-                               name=constants.COCKROACH.SERVICE_NAME, credentials=[])
+                               name=constants.TELNET.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(

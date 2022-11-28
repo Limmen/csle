@@ -42,12 +42,6 @@ ADD docker_files/common/vsftpd.conf /etc/vsftpd.conf
 # Pengine Server
 RUN git clone https://github.com/Limmen/erl_pengine
 
-# Cassandra
-RUN wget --no-check-certificate https://archive.apache.org/dist/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
-    tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
-    mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
-ADD docker_files/common/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
-
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 ADD docker_files/sql_injection_base/docker/sshd_config /etc/ssh/sshd_config
@@ -87,10 +81,6 @@ ADD docker_files/common/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
-
-# Cockroach DB
-RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
-    tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup

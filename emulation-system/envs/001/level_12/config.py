@@ -73,7 +73,7 @@ def default_config(name: str, network_id: int = 12, level: int = 12, version: st
     services_cfg = default_services_config(network_id=network_id)
     descr = "An emulation environment with a set of nodes that run common networked services " \
             "such as SSH, FTP, Telnet, IRC, Kafka," \
-            "Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as " \
+            " etc. Some of the services are vulnerable to simple dictionary attacks as " \
             "they use weak passwords." \
             "The task of an attacker agent is to identify the vulnerabilities and exploit them and " \
             "discover hidden flags" \

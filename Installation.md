@@ -209,7 +209,7 @@ running commands can read and write to this directory.
       make build
       cd ../../
       ```     
-      To pull the images from DockerHub, run:
+      To pull the base images from DockerHub, run:
       ```bash
       cd emulation-system/base_images
       make pull
@@ -224,7 +224,7 @@ running commands can read and write to this directory.
       make build
       cd ../../
       ```
-      To pull the images from DockerHub, run:
+      To pull the derived images from DockerHub, run:
       ```bash
       cd emulation-system/derived_images
       make pull

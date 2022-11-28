@@ -56,6 +56,8 @@ more specific Docker images.
 make rm-image # Delete all base images
 make build # Build all base images
 make all # Build all base images
+make push # Push all base images to DockerHub
+make pull # Pull all base images from DockerHub
 
 make kali_base # Build kali_base
 make ubuntu_20_base # Build ubuntu_20_base
@@ -94,6 +96,44 @@ make rm_pengine_exploit_base # Remove pengine_exploit_base
 make rm_ovs_base # Remove ovs_base
 make rm_ryu_base # Remove ryu_base
 make rm_elk_base # Remove elk_base
+
+make push_kali_base # Push kali_base to DockerHub
+make push_ubuntu_20_base # Push ubuntu_20_base to DockerHub
+make push_ubuntu_14_base # Push ubuntu_14_base to DockerHub
+make push_ssh_base # Push ssh_base to DockerHub
+make push_samba_base # Push samba_base to DockerHub
+make push_shellshock_base # Push shellshock_base to DockerHub
+make push_sql_injection_base # Push sql_injection_base to DockerHub
+make push_debian_jessie_base # Push debian_jessie_base to DockerHub
+make push_cve_2015_3306_base # Push cve_2015_3306_base to DockerHub
+make push_cve_2015_1427_base # Push cve_2015_1427_base to DockerHub
+make push_cve_2016_10033_base # Push cve_2016_10033_base to DockerHub
+make push_cve_2010_0426_base # Push cve_2010_0426_base to DockerHub
+make push_cve_2015_5602_base # Push cve_2010_0426_base to DockerHub
+make push_blank_ubuntu_20 # Push blank_ubuntu_20 to DockerHub
+make push_pengine_exploit_base # Push pengine_exploit_base to DockerHub
+make push_ovs_base # Push ovs_base to DockerHub
+make push_ryu_base # Push ryu_base to DockerHub
+make push_elk_base # Push elk_base to DockerHub
+
+make pull_kali_base # pull kali_base from DockerHub
+make pull_ubuntu_20_base # pull ubuntu_20_base from DockerHub
+make pull_ubuntu_14_base # pull ubuntu_14_base from DockerHub
+make pull_ssh_base # pull ssh_base from DockerHub
+make pull_samba_base # pull samba_base from DockerHub
+make pull_shellshock_base # pull shellshock_base from DockerHub
+make pull_sql_injection_base # pull sql_injection_base from DockerHub
+make pull_debian_jessie_base # pull debian_jessie_base from DockerHub
+make pull_cve_2015_3306_base # pull cve_2015_3306_base from DockerHub
+make pull_cve_2015_1427_base # pull cve_2015_1427_base from DockerHub
+make pull_cve_2016_10033_base # pull cve_2016_10033_base from DockerHub
+make pull_cve_2010_0426_base # pull cve_2010_0426_base from DockerHub
+make pull_cve_2015_5602_base # pull cve_2010_0426_base from DockerHub
+make pull_blank_ubuntu_20 # pull blank_ubuntu_20 from DockerHub
+make pull_pengine_exploit_base # pull pengine_exploit_base from DockerHub
+make pull_ovs_base # pull ovs_base from DockerHub
+make pull_ryu_base # pull ryu_base from DockerHub
+make pull_elk_base # pull elk_base from DockerHub
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

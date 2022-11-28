@@ -11,27 +11,7 @@ This directory contains scripts, configurations, and tools related to emulation 
 </p>
 
 ## Installation
-To install all images and emulations, run:
-```bash
-make build
-```
-
-For more detailed information about installation of images, see ([README](./base_images/README.MD)),
-([README](./derived_images/README.MD)) and ([README](./envs/README.md)),
-
-## Uninstall
-
-To remove all images and all emulations, run: 
-```bash
-make rm
-```
-
-## Push to DockerHub
-To push all Docker images to DockerHub, run:
-
-```bash
-make push
-```
+To install the emulation system, follow the instructions below.
 
 ### Install and setup Docker
 
@@ -78,13 +58,96 @@ kim             hard       nofile          1024000
 ```
 
 ### Install Open vSwitch (OVS)  for SDN emulations
+
+To install openvswitch, run:
 ```bash
 sudo apt install -y openvswitch-switch
 ```
 
 ### Install Emulation System
 
-TODO
+The emulation system consists of three parts: (1) base docker images; (2) derived docker images; 
+and (3) bemulation environment configurations.
+
+To install everything with one command, run:
+```bash
+make install
+```
+
+Alternatively, follow the instructions below to install each component of the emulation system separately.
+
+For more detailed information about installation of images, see ([README](./base_images/README.MD)),
+([README](./derived_images/README.MD)) and ([README](./envs/README.md)),
+
+#### Install Base Docker images
+
+To install the base docker images, you have two options: (i) pull the images from DockerHub; or (ii), build the images locally.
+To build the images locally, run (this may take a while, e.g. an hour):
+```bash
+cd base_images
+make build
+cd ../
+```     
+To pull the base images from DockerHub, run:
+```bash
+cd base_images
+make pull
+cd ../
+```
+
+#### Install Derived Docker images
+
+To install the derived docker images, you have two options: (i) pull the images from DockerHub; or (ii), build the images locally.
+To build the images locally, run (this may take a while, e.g. an hour):
+```bash
+cd derived_images
+make build
+cd ../
+```     
+To pull the derived images from DockerHub, run:
+```bash
+cd derived_images
+make pull
+cd ../
+```
+
+#### Install Emulation Environment Configurations
+
+To install the emulation environment configurations, run: 
+
+```bash
+cd envs
+make install
+cd ../
+```
+
+### Uninstall Emulation System
+
+To uninstall the emulation system, run:
+
+```bash
+make rm
+```
+Alternatively you can run:
+```bash
+cd envs
+make uninstall
+make clean_config
+cd ../
+cd derived_images
+make rm_image
+cd ../
+cd base_images
+make rm_image
+cd ../
+```
+
+### Push to DockerHub
+To push all Docker images to DockerHub, run:
+
+```bash
+make push
+```
 
 ## Author & Maintainer
 
