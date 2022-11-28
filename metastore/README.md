@@ -3,7 +3,7 @@
 CSLE stores metadata in a PostgreSQL database. Follow the steps below to install PostgreSQL and setup the database.
 
 <p align="center">
-<img src="./docs/postgres_logo.png" width="600">
+<img src="./../docs/img/postgres.png" width="600">
 </p>
 
 ## Setup PostgreSQL
