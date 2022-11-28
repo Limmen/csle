@@ -1,4 +1,4 @@
-# Metastore
+# CSLE Metastore
 
 CSLE stores metadata in a PostgreSQL database. Follow the steps below to install PostgreSQL and setup the database.
 

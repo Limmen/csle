@@ -1,4 +1,4 @@
-# Emulation Environments
+# CSLE Emulation System
 
 This directory contains scripts, configurations, and tools related to emulation environments of `csle`. Specifically:
 
