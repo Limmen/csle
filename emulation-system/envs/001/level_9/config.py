@@ -5112,6 +5112,65 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
     return config
 
 
+def default_beats_config(network_id: int) -> BeatsConfig:
+    """
+    Generates default beats config
+
+    :param network_id: the network id
+    :return: the beats configuration
+    """
+    node_beats_configs = [
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24"),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25")
+    ]
+    beats_conf = BeatsConfig(node_beats_configs=node_beats_configs)
+    return beats_conf
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-r", "--run", help="Boolean parameter, if true, run containers",

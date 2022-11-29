@@ -1022,6 +1022,24 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     return traffic_conf
 
 
+def default_beats_config(network_id: int) -> BeatsConfig:
+    """
+    Generates default beats config
+
+    :param network_id: the network id
+    :return: the beats configuration
+    """
+    node_beats_configs = [
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79")
+    ]
+    beats_conf = BeatsConfig(node_beats_configs=node_beats_configs)
+    return beats_conf
+
+
 def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConfig:
     """
     Generates the default kafka configuration

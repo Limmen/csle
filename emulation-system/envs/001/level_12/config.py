@@ -2940,6 +2940,27 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
     return config
 
 
+def default_beats_config(network_id: int) -> BeatsConfig:
+    """
+    Generates default beats config
+
+    :param network_id: the network id
+    :return: the beats configuration
+    """
+    node_beats_configs = [
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.5",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.8",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.41",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.42",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.3",),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.31",),
+    ]
+    beats_conf = BeatsConfig(node_beats_configs=node_beats_configs)
+    return beats_conf
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-r", "--run", help="Boolean parameter, if true, run containers",
