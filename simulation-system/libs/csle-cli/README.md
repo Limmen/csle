@@ -9,7 +9,6 @@ The command-line-interface (CLI) tool for CSLE.
 
 To see the available commands, run:
 
-
 ```bash
 csle --help
 ```
@@ -61,7 +60,7 @@ csle ls <name>
 - Start/Stop/Clean a specific emulation/container
 
 ```bash
-csle start| stop | clean <name>
+csle start | stop | clean <name>
 ```
 
 - Open a shell in a given container
@@ -76,13 +75,13 @@ csle shell <container-name>
 csle rm <container-name> | <network-name> | <image-name> | <emulation-name> all
 ```
 
-- Install emulations, simulations, or Docker images
+- Install emulations, simulations, the metastore, or Docker images
 
 ```bash
 csle install emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | metastore | all
 ```
 
-- Uninstall emulations, simulations, or Docker images
+- Uninstall emulations, simulations, the metastore, or Docker images
 
 ```bash
 csle uninstall emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | metastore | all
@@ -104,6 +103,31 @@ csle systemidentificationjob <id>
 
 ```bash
 csle datacollectionjob <id>
+```
+
+- Start the management system
+```bash
+csle start managementsystem
+```
+
+- Start grafana
+```bash
+csle start | stop grafana
+```
+
+- Start prometheus
+```bash
+csle start | stop prometheus
+```
+
+- Start cadvisor
+```bash
+csle start | stop cadvisor
+```
+
+- Start node-exporter
+```bash
+csle start | stop nodeexporter
 ```
 
 ## Requirements
@@ -182,7 +206,6 @@ To run the mypy type checker, execute the following command:
 ```
 mypy .
 ``` 
-
 
 ## Integration tests
 

@@ -85,7 +85,9 @@ simulation-system/libs/generate_docs.sh
 
 ### Unit tests
 
-To run the unit tests, execute:
+#### Python 
+
+The Python unit tests are based on [pytest](https://docs.pytest.org/en/7.2.x/).  To run the Python unit tests, execute:
 ```bash
 simulation-system/libs/unit_tests.sh
 ```
@@ -95,6 +97,12 @@ When adding new unit tests note that:
 - All unit tests must be written in a tests/ directory inside the python project
 - File names should strictly start with tests_
 - Function names should strictly start with test
+
+#### JavaScript
+The JavaScript unit tests are based on [jest](https://jestjs.io/).  To run the JavaScript unit tests, execute:
+```bash
+cd management-system/csle-mgmt-webapp; npm test
+```
 
 ### Integration tests
 
