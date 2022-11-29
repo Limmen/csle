@@ -62,10 +62,10 @@ RUN wget --no-check-certificate https://raw.githubusercontent.com/nmap/nmap/mast
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
 RUN wget --no-check-certificate \
-    https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+    https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh \
     && mkdir /root/.conda \
-    && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh
+    && bash Miniconda3-py39_4.12.0-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-py39_4.12.0-Linux-x86_64.sh
 
 # make non-activate conda commands available
 ENV PATH=$CONDA_DIR/bin:$PATH

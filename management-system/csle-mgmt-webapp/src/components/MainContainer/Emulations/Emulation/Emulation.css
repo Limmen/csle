@@ -20,3 +20,11 @@
     margin-bottom: 20px;
     font-size: 13px;
 }
+
+.elastic {
+    width:25px;
+}
+
+.kafka {
+    width:45px;
+}

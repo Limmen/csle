@@ -11,6 +11,11 @@ import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import getIps from "../../../Common/getIps";
 import getTransportProtocolStr from "../../../Common/getTransportProtocolStr";
+import ElasticImg from "./Elastic.png"
+import SnortImg from "./Snort.png"
+import KafkaImg from "./Kafka.png"
+import DockerImg from "./Docker.png"
+import OssecImg from "./Ossec.png"
 
 
 /**
@@ -360,7 +365,10 @@ const Emulation = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> General information about the emulation</h5>
+                            <h5 className="semiTitle">
+                                General information about the emulation
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -427,7 +435,10 @@ const Emulation = (props) => {
                             aria-expanded={topologyOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Topology</h5>
+                            <h5 className="semiTitle">
+                                Topology
+                                <i className="fa fa-sitemap headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={topologyOpen}>
@@ -446,7 +457,9 @@ const Emulation = (props) => {
                             aria-expanded={containersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Containers</h5>
+                            <h5 className="semiTitle">
+                                Containers <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={containersOpen}>
@@ -481,7 +494,10 @@ const Emulation = (props) => {
                             aria-expanded={flagsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Flags</h5>
+                            <h5 className="semiTitle">
+                                Flags
+                                <i className="fa fa-flag headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={flagsOpen}>
@@ -520,7 +536,9 @@ const Emulation = (props) => {
                             aria-expanded={usersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Users</h5>
+                            <h5 className="semiTitle">
+                                Users <i className="fa fa-user headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={usersOpen}>
@@ -557,7 +575,9 @@ const Emulation = (props) => {
                             aria-expanded={servicesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Services</h5>
+                            <h5 className="semiTitle">
+                                Services <i className="fa fa-signal headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={servicesOpen}>
@@ -594,7 +614,9 @@ const Emulation = (props) => {
                             aria-expanded={vulnerabilitiesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Vulnerabilities</h5>
+                            <h5 className="semiTitle">
+                                Vulnerabilities <i className="fa fa-ambulance headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={vulnerabilitiesOpen}>
@@ -633,7 +655,10 @@ const Emulation = (props) => {
                             aria-expanded={resourcesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Resources</h5>
+                            <h5 className="semiTitle">
+                                Resources
+                                <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={resourcesOpen}>
@@ -669,7 +694,9 @@ const Emulation = (props) => {
                             aria-expanded={networkInterfacesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Network interfaces</h5>
+                            <h5 className="semiTitle">
+                                Network interfaces <i className="fa fa-podcast headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={networkInterfacesOpen}>
@@ -725,7 +752,9 @@ const Emulation = (props) => {
                             aria-expanded={clientPopulationOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Client population</h5>
+                            <h5 className="semiTitle">
+                                Client population <i className="fa fa-users headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={clientPopulationOpen}>
@@ -766,7 +795,10 @@ const Emulation = (props) => {
                             aria-expanded={trafficOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Traffic commands</h5>
+                            <h5 className="semiTitle">
+                                Traffic commands
+                                <i className="fa fa-chrome headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={trafficOpen}>
@@ -800,7 +832,10 @@ const Emulation = (props) => {
                             aria-expanded={kafkaOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Kafka configuration</h5>
+                            <h5 className="semiTitle">
+                                Kafka configuration
+                                <img src={KafkaImg} alt="Kafka" className="img-fluid headerIcon kafka"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={kafkaOpen}>
@@ -845,7 +880,10 @@ const Emulation = (props) => {
                             aria-expanded={kafkaTopicsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Kafka topics</h5>
+                            <h5 className="semiTitle">
+                                Kafka topics
+                                <img src={KafkaImg} alt="Kafka" className="img-fluid headerIcon kafka"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={kafkaTopicsOpen}>
@@ -884,7 +922,10 @@ const Emulation = (props) => {
                             aria-expanded={elkOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">ELK configuration</h5>
+                            <h5 className="semiTitle">
+                                ELK configuration
+                                <img src={ElasticImg} alt="Elastic" className="img-fluid headerIcon elastic"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={elkOpen}>
@@ -933,7 +974,10 @@ const Emulation = (props) => {
                             aria-expanded={hostManagerConfigOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Host managers configuration</h5>
+                            <h5 className="semiTitle">
+                                Host managers configuration
+                                <i className="fa fa-linux headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={hostManagerConfigOpen}>
@@ -968,7 +1012,9 @@ const Emulation = (props) => {
                             aria-expanded={trafficManagersConfigOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Traffic managers configuration</h5>
+                            <h5 className="semiTitle">Traffic managers configuration
+                                <i className="fa fa-linux headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={trafficManagersConfigOpen}>
@@ -1005,7 +1051,10 @@ const Emulation = (props) => {
                             aria-expanded={snortManagerConfigOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Snort IDS managers configuration</h5>
+                            <h5 className="semiTitle">
+                                Snort IDS managers configuration
+                                <img src={SnortImg} alt="Snort" className="img-fluid headerIcon elastic"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={snortManagerConfigOpen}>
@@ -1040,7 +1089,10 @@ const Emulation = (props) => {
                             aria-expanded={ossecManagerConfigOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">OSSEC IDS managers configuration</h5>
+                            <h5 className="semiTitle">
+                                OSSEC IDS managers configuration
+                                <img src={OssecImg} alt="OSSEC" className="img-fluid headerIcon kafka"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={ossecManagerConfigOpen}>
@@ -1075,7 +1127,10 @@ const Emulation = (props) => {
                             aria-expanded={dockerStatsManagerConfigOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Docker stats managers configuration</h5>
+                            <h5 className="semiTitle">
+                                Docker stats managers configuration
+                                <img src={DockerImg} alt="Docker" className="img-fluid headerIcon kafka"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={dockerStatsManagerConfigOpen}>
@@ -1110,7 +1165,10 @@ const Emulation = (props) => {
                             aria-expanded={firewallOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Firewall configurations</h5>
+                            <h5 className="semiTitle">
+                                Firewall configurations
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={firewallOpen}>
@@ -1156,7 +1214,10 @@ const Emulation = (props) => {
                             aria-expanded={staticAttackerSequenceOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Static attacker sequences</h5>
+                            <h5 className="semiTitle">
+                                Static attacker sequences
+                                <i className="fa fa-user-secret headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={staticAttackerSequenceOpen}>
@@ -1208,7 +1269,10 @@ const Emulation = (props) => {
                             aria-expanded={ovsSwitchesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Open vSwitch switches configurations </h5>
+                            <h5 className="semiTitle">
+                                Open vSwitch switches configurations
+                                <i className="fa fa-code headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={ovsSwitchesOpen}>
