@@ -46,6 +46,8 @@ from csle_common.dao.emulation_config.host_manager_config import HostManagerConf
 from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
+from csle_common.dao.emulation_config.beats_config import BeatsConfig
+from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 
 
@@ -1529,6 +1531,24 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
                        resources=resources, firewall_config=firewall_config,
                        elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10)
     return config
+
+
+def default_beats_config(network_id: int) -> BeatsConfig:
+    """
+    Generates default beats config
+
+    :param network_id: the network id
+    :return: the beats configuration
+    """
+    beat_configs = [
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3"),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79")
+    ]
+    beats_conf = BeatsConfig(node_beats_configs=beat_configs, num_elastic_shards=1, reload_enabled=False)
+    return beats_conf
 
 
 if __name__ == '__main__':
