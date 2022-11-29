@@ -1,9 +1,12 @@
+from typing import List
 import logging
 import socket
 import time
 import grpc
+import os
 import threading
 from concurrent import futures
+import subprocess
 from confluent_kafka import Producer
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
@@ -19,7 +22,7 @@ class HostMonitorThread(threading.Thread):
     def __init__(self, kafka_ip: str, kafka_port: int, ip: str, hostname: str,
                  time_step_len_seconds: int):
         """
-        Intializes the thread
+        Initializes the thread
 
         :param kafka_ip: IP of the Kafka server to push to
         :param kafka_port: port of the Kafka server to push to
@@ -140,6 +143,66 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             running = self.host_monitor_thread.running
         return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=running)
+
+    @staticmethod
+    def _get_filebeat_status() -> bool:
+        """
+        Utility method to get the status of filebeat
+
+        :return: status of filebeat
+        """
+        p = subprocess.Popen(constants.FILEBEAT.FILEBEAT_STATUS, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        status_output = output.decode()
+        filebeat_running = not ("not" in status_output)
+        return filebeat_running
+
+    @staticmethod
+    def _start_filebeat() -> None:
+        """
+        Utility method to start filebeat
+
+        :return: None
+        """
+        logging.info("Starting filebeat")
+        os.system(constants.FILEBEAT.FILEBEAT_START)
+
+    @staticmethod
+    def _set_filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
+                             elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> None:
+        """
+        Updates the filebeat configuration file
+
+        :param log_files_paths: the list of log files that filebeat should monitor
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :param reload_enabled: whether automatic reload of modules should be enabled
+        :return: None
+        """
+        filebeat_config = HostManagerUtil.filebeat_config(log_files_paths=log_files_paths, kibana_ip=kibana_ip,
+                                                          kibana_port=kibana_port, elastic_ip=elastic_ip,
+                                                          elastic_port=elastic_port,
+                                                          num_elastic_shards=num_elastic_shards,
+                                                          reload_enabled=reload_enabled)
+        logging.info(f"Updating filebeat config: \n{filebeat_config}")
+        HostManagerUtil.write_yaml_config(config=filebeat_config, path=constants.FILEBEAT.CONFIG_FILE)
+
+    @staticmethod
+    def set_filebeat_snort_module_config() -> None:
+        """
+        Updates the filebeat snort module configuration
+
+        :return: None
+        """
+        snort_module_config = HostManagerUtil.filebeat_snort_module_config()
+        logging.info(f"Updating filebeat snort module config: \n{snort_module_config}")
+        HostManagerUtil.write_yaml_config(config=snort_module_config,
+                                          path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.FILEBEAT.SNORT_MODULE_CONFIG_FILE}")
 
 
 def serve(port: int = 50049, log_dir: str = "/", max_workers: int = 10,

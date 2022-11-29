@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 import datetime
 import subprocess
 import yaml
@@ -331,15 +331,16 @@ class HostManagerUtil:
         return filebeat_config
 
     @staticmethod
-    def write_filebeat_config(filebeat_config: Dict[str, Any]) -> None:
+    def write_yaml_config(config: Union[Dict[str, Any], List[Dict[str, Any]]], path: str) -> None:
         """
         Writes a given filebeat config to disk
 
-        :param filebeat_config: the filebeat config to write
+        :param config: the filebeat config to write
+        :param path: the path to write the file to
         :return: None
         """
-        with open(constants.FILEBEAT.CONFIG_FILE, 'w') as file:
-            yaml.dump(filebeat_config, file)
+        with open(path, 'w') as file:
+            yaml.dump(config, file)
 
     @staticmethod
     def filebeat_snort_module_config() -> List[Dict[str, Any]]:
@@ -361,12 +362,45 @@ class HostManagerUtil:
         return snort_config
 
     @staticmethod
-    def write_filebeat_snort_module_config(snort_config: Dict[str, Any]) -> None:
+    def filebeat_elasticsearch_module_config() -> List[Dict[str, Any]]:
         """
-        Writes a given snort module config to disk
+        :return: the elasticsearch filebeat module config
+        """
+        elastic_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.ELASTICSEARCH_MODULE,
+                constants.BEATS.SERVER_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.ELK.ELASTICSEARCH_LOG_DIR}*.log",
+                        f"{constants.ELK.ELASTICSEARCH_LOG_DIR}*_server.json"
+                    ]
+                }
+            }
+        ]
+        return elastic_config
 
-        :param snort_config: the filebeat config to write
-        :return: None
+    @staticmethod
+    def filebeat_logstash_module_config() -> List[Dict[str, Any]]:
         """
-        with open(f"{constants.FILEBEAT.MODULES_CONFIG_DIR}{constants.FILEBEAT.SNORT_MODULE_CONFIG_FILE}", 'w') as file:
-            yaml.dump(snort_config, file)
+        :return: the logstash filebeat module config
+        """
+        logstash_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.LOGSTASH_MODULE,
+                constants.BEATS.LOG_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.ELK.LOGSTASH_LOG_DIR}logstash.log*"
+                    ]
+                },
+                constants.BEATS.SLOWLOG_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.ELK.LOGSTASH_LOG_DIR}logstash-slowlog.log*"
+                    ]
+                }
+            }
+        ]
+        return logstash_config
+

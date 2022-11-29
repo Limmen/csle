@@ -24,6 +24,8 @@ class BEATS:
     FORWARDED_PROPERTY = "forwarded"
     MODULE_PROPERTY = "module"
     LOG_PROPERTY = "log"
+    SLOWLOG_PROPERTY = "slowlog"
+    SERVER_PROPERTY = "server"
     VAR_INPUT_PROPERTY = "var.input"
     VAR_PATHS_PROPERTY = "var.paths"
     FILE_PROPERTY = "file"
@@ -43,11 +45,18 @@ class FILEBEAT:
     CONFIG_FILE = "/etc/filebeat/filebeat.yml"
     SETUP_CMD = "filebeat setup -e"
     SNORT_MODULE = "snort"
+    ELASTICSEARCH_MODULE = "elasticsearch"
+    KIBANA_MODULE = "kibana"
+    LOGSTASH_MODULE = "logstash"
     ENABLE_MODULE_CMD = "filebeat modules enable {}"
     MODULES_CONFIG_DIR = "/etc/filebeat/modules.d/"
     SNORT_MODULE_CONFIG_FILE = "snort.yml"
+    ELASTICSEARCH_MODULE_CONFIG_FILE = "elasticsearch.yml"
     INPUTS_PROPERTY = "filebeats.inputs"
     MODULES_PROPERTY = "filebeats.config.modules"
+    FILEBEAT_STATUS = "service filebeat status"
+    FILEBEAT_START = "service filebeat start"
+    FILEBEAT_STOP = "service filebeat stop"
 
 
 class GRPC:
@@ -477,3 +486,5 @@ class ELK:
     ELASTICSEARCH_STATUS = "service elasticsearch status"
     KIBANA_STATUS = "service kibana status"
     LOGSTASH_STATUS = "service logstash status"
+    ELASTICSEARCH_LOG_DIR = "/var/log/elasticsearch/"
+    LOGSTASH_LOG_DIR = "/var/log/logstash/"
