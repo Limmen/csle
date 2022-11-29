@@ -50,6 +50,8 @@ from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSMa
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
+from csle_common.dao.emulation_config.beats_config import BeatsConfig
+from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
 
 def default_config(name: str, network_id: int = 12, level: int = 12, version: str = "0.0.1") -> EmulationEnvConfig:
