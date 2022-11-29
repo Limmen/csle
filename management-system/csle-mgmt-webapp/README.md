@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# CSLE Management System Web UI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This directory contains the CSLE management system UI, which is implemented in 
+JavaScript and is based on React.
 
 ## Available Scripts
 
