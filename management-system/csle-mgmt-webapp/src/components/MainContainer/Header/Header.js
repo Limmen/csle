@@ -137,7 +137,8 @@ const Header = (props) => {
                            role="button" aria-haspopup="true" aria-expanded="false"
                            id="navbarDropdown"
                         >
-                            Administration </a>
+                            Administration <i className="fa fa-user headerIcon" aria-hidden="true"></i>
+                        </a>
                     </OverlayTrigger>
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                         <OverlayTrigger
@@ -146,7 +147,7 @@ const Header = (props) => {
                             overlay={renderUserAdminTooltip}
                             data-toggle="tab">
                             <NavLink className="dropdown-item" to={USER_ADMIN_PAGE_RESOURCE} data-toggle="tab">
-                                User administration
+                                User administration <i className="fa fa-user headerIcon" aria-hidden="true"></i>
                             </NavLink>
                         </OverlayTrigger>
                         <OverlayTrigger
@@ -155,7 +156,7 @@ const Header = (props) => {
                             overlay={renderSystemAdminTooltip}
                             data-toggle="tab">
                             <NavLink className="dropdown-item" to={SYSTEM_ADMIN_PAGE_RESOURCE} data-toggle="tab">
-                                System administration
+                                System administration <i className="fa fa-linux headerIcon" aria-hidden="true"></i>
                             </NavLink>
                         </OverlayTrigger>
                         <OverlayTrigger
@@ -164,7 +165,7 @@ const Header = (props) => {
                             overlay={renderLogsAdminTooltip}
                             data-toggle="tab">
                             <NavLink className="dropdown-item" to={LOGS_ADMIN_PAGE_RESOURCE} data-toggle="tab">
-                                Logs administration
+                                Logs administration <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
                             </NavLink>
                         </OverlayTrigger>
                     </div>
@@ -184,7 +185,7 @@ const Header = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={props.renderHostTerminalTooltip}>
                     <NavLink className="dropdown-item" to={HOST_TERMINAL_PAGE_RESOURCE}>
-                        Host Terminal
+                        Host Terminal <i className="fa fa-terminal headerIcon" aria-hidden="true"></i>
                     </NavLink>
                 </OverlayTrigger>
             )
@@ -201,7 +202,7 @@ const Header = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={props.renderContainerTerminalTooltip}>
                     <NavLink className="dropdown-item" to={CONTAINER_TERMINAL_PAGE_RESOURCE}>
-                        Container Terminal
+                        Container Terminal <i className="fa fa-terminal headerIcon" aria-hidden="true"></i>
                     </NavLink>
                 </OverlayTrigger>
             )
@@ -392,7 +393,7 @@ const Header = (props) => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderLoginTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={LOGIN_PAGE_RESOURCE}>
-                                    Login
+                                    Login <i className="fa fa-sign-in headerIcon" aria-hidden="true"></i>
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
@@ -403,6 +404,7 @@ const Header = (props) => {
                                 overlay={renderAboutTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={ABOUT_PAGE_RESOURCE}>
                                     About
+                                    <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
@@ -413,7 +415,7 @@ const Header = (props) => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderDownloadsTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={DOWNLOADS_PAGE_RESOURCE}>
-                                    Downloads
+                                    Downloads <i className="fa fa-download headerIcon" aria-hidden="true"></i>
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
@@ -428,7 +430,8 @@ const Header = (props) => {
                                    role="button" aria-haspopup="true" aria-expanded="false"
                                    id="navbarDropdown"
                                 >
-                                    Management</a>
+                                    Management <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                                </a>
                             </OverlayTrigger>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <OverlayTrigger
@@ -437,7 +440,7 @@ const Header = (props) => {
                                     overlay={renderEmulationsTooltip}
                                     data-toggle="tab">
                                     <NavLink className="dropdown-item" to={EMULATIONS_PAGE_RESOURCE} data-toggle="tab">
-                                        Emulations
+                                        Emulations <i className="fa fa-linux headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -445,7 +448,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderSimulationsTooltip}>
                                     <NavLink className="dropdown-item" to={SIMULATIONS_PAGE_RESOURCE}>
-                                        Simulations
+                                        Simulations <i className="fa fa-code headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -453,7 +456,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderMonitoringTooltip}>
                                     <NavLink className="dropdown-item" to={MONITORING_PAGE_RESOURCE}>
-                                        Monitoring
+                                        Monitoring <i className="fa fa-area-chart headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -461,7 +464,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderTracesTooltip}>
                                     <NavLink className="dropdown-item" to={TRACES_PAGE_RESOURCE}>
-                                        Traces
+                                        Traces <i className="fa fa-database headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -469,7 +472,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderEmulationStatisticsTooltip}>
                                     <NavLink className="dropdown-item" to={EMULATION_STATISTICS_PAGE_RESOURCE}>
-                                        Statistics
+                                        Statistics <i className="fa fa-pie-chart headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -477,7 +480,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderSystemModelsTooltip}>
                                     <NavLink className="dropdown-item" to={SYSTEM_MODELS_PAGE_RESOURCE}>
-                                        System Models
+                                        System Models <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -485,7 +488,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderPolicyExaminationTooltip}>
                                     <NavLink className="dropdown-item" to={POLICY_EXAMINATION_PAGE_RESOURCE}>
-                                        Policy Examination
+                                        Policy Examination <i className="fa fa-search headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -493,7 +496,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderContainerImagesTooltip}>
                                     <NavLink className="dropdown-item" to={IMAGES_PAGE_RESOURCE}>
-                                        Container Images
+                                        Container Images <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -502,6 +505,7 @@ const Header = (props) => {
                                     overlay={renderTrainingResultsTooltip}>
                                     <NavLink className="dropdown-item" to={TRAINING_PAGE_RESOURCE}>
                                         Training Results
+                                        <i className="fa fa-line-chart headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -509,7 +513,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderPoliciesTooltip}>
                                     <NavLink className="dropdown-item" to={POLICIES_PAGE_RESOURCE}>
-                                        Policies
+                                        Policies <i className="fa fa-lightbulb-o headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -517,7 +521,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderJobsTooltip}>
                                     <NavLink className="dropdown-item" to={JOBS_PAGE_RESOURCE}>
-                                        Jobs
+                                        Jobs <i className="fa fa-play headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -525,7 +529,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderSdnControllersTooltip}>
                                     <NavLink className="dropdown-item" to={SDN_CONTROLLERS_PAGE_RESOURCE}>
-                                        SDN Controllers
+                                        SDN Controllers <i className="fa fa-podcast headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
@@ -533,7 +537,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderControlPlaneTooltip}>
                                     <NavLink className="dropdown-item" to={CONTROL_PLANE_PAGE_RESOURCE}>
-                                        Control Plane
+                                        Control Plane <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}

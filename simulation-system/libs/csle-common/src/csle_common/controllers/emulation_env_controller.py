@@ -112,7 +112,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 29
+        steps = 31
         if no_traffic:
             steps = steps - 1
         if no_clients:
@@ -227,8 +227,19 @@ class EmulationEnvController:
         EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
+                                            f"and host monitors --")
         HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
+        HostController.config_filebeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
+        HostController.start_filebeats(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1
