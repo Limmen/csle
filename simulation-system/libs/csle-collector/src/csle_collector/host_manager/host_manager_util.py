@@ -1,6 +1,7 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 import datetime
 import subprocess
+import yaml
 import csle_collector.constants.constants as constants
 from csle_collector.host_manager.failed_login_attempt import FailedLoginAttempt
 from csle_collector.host_manager.successful_login import SuccessfulLogin
@@ -282,3 +283,90 @@ class HostManagerUtil:
         host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostMonitorDTO()
         host_monitor_dto.running = False
         return host_monitor_dto
+
+    @staticmethod
+    def filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
+                        elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> Dict[str, Any]:
+        """
+        Generates the filebeat.yml config
+
+        :param log_files_paths: the list of log files that filebeat should monitor
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :param reload_enabled: whether automatic reload of modules should be enabled
+        :return: the filebeat configuration dict
+        """
+        filebeat_config = {}
+        filebeat_config[constants.FILEBEAT.INPUTS_PROPERTY] = [
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.BEATS.FILESTREAM_PROPERTY,
+                constants.BEATS.ID_PROPERTY: 1,
+                constants.BEATS.ENABLED_PROPERTY: True,
+                constants.BEATS.PATHS_PROPERTY: [
+                    log_files_paths
+                ]
+            }
+        ]
+        filebeat_config[constants.FILEBEAT.MODULES_PROPERTY] = {
+            constants.BEATS.PATH_PROPERTY: f"{constants.FILEBEAT.MODULES_CONFIG_DIR}*.yml",
+            constants.BEATS.RELOAD_ENABLED_PROPERTY: reload_enabled
+        }
+        filebeat_config[constants.BEATS.SETUP_TEMPLATE_SETTINGS_PROPERTY] = {
+            constants.BEATS.INDEX_NUM_SHARDS_PROPERTY: num_elastic_shards
+        }
+        filebeat_config[constants.BEATS.SETUP_KIBANA_PROPERTY] = {
+            constants.BEATS.HOST_PROPERTY: f"{kibana_ip}:{kibana_port}"
+        }
+        filebeat_config[constants.BEATS.ELASTIC_OUTPUT_PROPERTY] = {
+            constants.BEATS.HOSTS_PROPERTY: [f"{elastic_ip}:{elastic_port}"]
+        }
+        filebeat_config[constants.BEATS.PROCESSORS_PROPERTY] = {
+            constants.BEATS.ADD_HOST_METADATA_PROPERTY: {
+                constants.BEATS.WHEN_NOT_CONTAIN_TAGS_PROPERTY: constants.BEATS.FORWARDED_PROPERTY
+            }
+        }
+        return filebeat_config
+
+    @staticmethod
+    def write_filebeat_config(filebeat_config: Dict[str, Any]) -> None:
+        """
+        Writes a given filebeat config to disk
+
+        :param filebeat_config: the filebeat config to write
+        :return: None
+        """
+        with open(constants.FILEBEAT.CONFIG_FILE, 'w') as file:
+            yaml.dump(filebeat_config, file)
+
+    @staticmethod
+    def filebeat_snort_module_config() -> List[Dict[str, Any]]:
+        """
+        :return: the snort filebeat module config
+        """
+        snort_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.SNORT_MODULE,
+                constants.BEATS.LOG_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_INPUT_PROPERTY: constants.BEATS.FILE_PROPERTY,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE
+                    ]
+                }
+            }
+        ]
+        return snort_config
+
+    @staticmethod
+    def write_filebeat_snort_module_config(snort_config: Dict[str, Any]) -> None:
+        """
+        Writes a given snort module config to disk
+
+        :param snort_config: the filebeat config to write
+        :return: None
+        """
+        with open(f"{constants.FILEBEAT.MODULES_CONFIG_DIR}{constants.FILEBEAT.SNORT_MODULE_CONFIG_FILE}", 'w') as file:
+            yaml.dump(snort_config, file)

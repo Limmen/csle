@@ -7,6 +7,49 @@ LATEST_VERSION = "latest"
 INSTALL = "sudo /root/miniconda3/bin/pip install -U csle-collector"
 
 
+class BEATS:
+    """
+    Constants related to beats
+    """
+    RELOAD_ENABLED_PROPERTY = "reload.enabled"
+    SETUP_TEMPLATE_SETTINGS_PROPERTY = "setup.template.settings"
+    INDEX_NUM_SHARDS_PROPERTY = "index.number_of_shards"
+    SETUP_KIBANA_PROPERTY = "setup.kibana"
+    HOST_PROPERTY = "host"
+    HOSTS_PROPERTY = "hosts"
+    ELASTIC_OUTPUT_PROPERTY = "output.elasticsearch"
+    PROCESSORS_PROPERTY = "processors"
+    ADD_HOST_METADATA_PROPERTY = "add_host_metadata"
+    WHEN_NOT_CONTAIN_TAGS_PROPERTY = "when.not.contains.tags"
+    FORWARDED_PROPERTY = "forwarded"
+    MODULE_PROPERTY = "module"
+    LOG_PROPERTY = "log"
+    VAR_INPUT_PROPERTY = "var.input"
+    VAR_PATHS_PROPERTY = "var.paths"
+    FILE_PROPERTY = "file"
+    TYPE_PROPERTY = "type"
+    FILESTREAM_PROPERTY = "filestream"
+    ID_PROPERTY = "id"
+    ENABLED_PROPERTY = "enabled"
+    PATHS_PROPERTY = "paths"
+    PATH_PROPERTY = "paths"
+
+
+class FILEBEAT:
+    """
+    Constants related to Filebeat
+    """
+    CONFIG_DIR = "/etc/filebeat/"
+    CONFIG_FILE = "/etc/filebeat/filebeat.yml"
+    SETUP_CMD = "filebeat setup -e"
+    SNORT_MODULE = "snort"
+    ENABLE_MODULE_CMD = "filebeat modules enable {}"
+    MODULES_CONFIG_DIR = "/etc/filebeat/modules.d/"
+    SNORT_MODULE_CONFIG_FILE = "snort.yml"
+    INPUTS_PROPERTY = "filebeats.inputs"
+    MODULES_PROPERTY = "filebeats.config.modules"
+
+
 class GRPC:
     """
     Constants related to GRPC
