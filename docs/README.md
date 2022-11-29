@@ -4,6 +4,10 @@ This directory contains the code of the documentation page for CSLE. It is built
 
 The live documentation page is available [here](https://limmen.dev/csle).
 
+<p align="center">
+<img src="img/docs_screen.png" width="40%", height="40%">
+</p>
+
 ## Running locally
 
 You need Ruby and gem before starting, then:
