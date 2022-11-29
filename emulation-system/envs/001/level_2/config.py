@@ -87,6 +87,7 @@ def default_config(name: str, network_id: int = 2, level: int = 2, version: str 
     ossec_ids_manager_cfg = default_ossec_ids_manager_config(network_id=network_id, level=level, version=version)
     docker_stats_manager_cfg = default_docker_stats_manager_config(network_id=network_id, level=level, version=version)
     elk_cfg = default_elk_config(network_id=network_id, level=level, version=version)
+    beats_cfg = default_beats_config(network_id=network_id)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
@@ -95,7 +96,7 @@ def default_config(name: str, network_id: int = 2, level: int = 2, version: str 
         sdn_controller_config=sdn_controller_cfg, host_manager_config=host_manager_cfg,
         snort_ids_manager_config=snort_ids_manager_cfg, ossec_ids_manager_config=ossec_ids_manager_cfg,
         docker_stats_manager_config=docker_stats_manager_cfg, elk_config=elk_cfg,
-        level=level, execution_id=-1, version=version
+        level=level, execution_id=-1, version=version, beats_config=beats_cfg
     )
     return emulation_env_cfg
 
@@ -2533,6 +2534,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
     ]
     beats_conf = BeatsConfig(node_beats_configs=beat_configs, num_elastic_shards=1, reload_enabled=False)
     return beats_conf
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

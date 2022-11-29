@@ -196,29 +196,31 @@ class HostManagerUtil:
         return host_metrics
 
     @staticmethod
-    def host_monitor_dto_to_dict(host_monitor_dto: csle_collector.host_manager.host_manager_pb2.HostMonitorDTO) \
+    def host_monitor_dto_to_dict(host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO) \
             -> Dict[str, Any]:
         """
-        Converts a HostMonitorDTO to a dict
+        Converts a HostStatusDTO to a dict
 
-        :param host_monitor_dto: the dto to convert
+        :param host_dto: the dto to convert
         :return: a dict representation of the DTO
         """
         d = {}
-        d["running"] = host_monitor_dto.running
+        d["monitor_running"] = host_dto.monitor_running
+        d["filebeat_running"] = host_dto.filebeat_running
         return d
 
     @staticmethod
-    def host_monitor_dto_from_dict(d: Dict[str, Any]) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+    def host_monitor_dto_from_dict(d: Dict[str, Any]) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
-        Converts a dict representation of a HostMonitorDTO to a DTO
+        Converts a dict representation of a HostStatusDTO to a DTO
 
         :param d: the dict to convert
         :return: the converted DTO
         """
-        host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostMonitorDTO()
-        host_monitor_dto.running = d["running"]
-        return host_monitor_dto
+        host_dto = csle_collector.host_manager.host_manager_pb2.HostStatusDTO()
+        host_dto.monitor_running = d["monitor_running"]
+        host_dto.filebeat_running = d["filebeat_running"]
+        return host_dto
 
     @staticmethod
     def host_metrics_dto_to_dict(host_metrics_dto: csle_collector.host_manager.host_manager_pb2.HostMetricsDTO) \
@@ -276,12 +278,13 @@ class HostManagerUtil:
         return host_metrics_dto
 
     @staticmethod
-    def host_monitor_dto_empty() -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+    def host_monitor_dto_empty() -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
-        :return: an empty HostMonitorDTO
+        :return: an empty HostStatusDTO
         """
-        host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostMonitorDTO()
-        host_monitor_dto.running = False
+        host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostStatusDTO()
+        host_monitor_dto.monitor_running = False
+        host_monitor_dto.filebeat_running = False
         return host_monitor_dto
 
     @staticmethod

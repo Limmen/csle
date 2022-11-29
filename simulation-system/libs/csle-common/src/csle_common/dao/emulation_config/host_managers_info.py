@@ -11,7 +11,7 @@ class HostManagersInfo:
 
     def __init__(self, ips: List[str], ports: List[int],
                  emulation_name: str, execution_id: int,
-                 host_managers_statuses: List[csle_collector.host_manager.host_manager_pb2.HostMonitorDTO],
+                 host_managers_statuses: List[csle_collector.host_manager.host_manager_pb2.HostStatusDTO],
                  host_managers_running: List[bool]):
         """
         Initializes the DTO

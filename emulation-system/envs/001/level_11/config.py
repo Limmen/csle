@@ -95,6 +95,7 @@ def default_config(name: str, network_id: int = 11, level: int = 11, version: st
     ossec_ids_manager_cfg = default_ossec_ids_manager_config(network_id=network_id, level=level, version=version)
     docker_stats_manager_cfg = default_docker_stats_manager_config(network_id=network_id, level=level, version=version)
     elk_cfg = default_elk_config(network_id=network_id, level=level, version=version)
+    beats_cfg = default_beats_config(network_id=network_id)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
@@ -103,7 +104,7 @@ def default_config(name: str, network_id: int = 11, level: int = 11, version: st
         sdn_controller_config=sdn_controller_cfg, host_manager_config=host_manager_cfg,
         snort_ids_manager_config=snort_ids_manager_cfg, ossec_ids_manager_config=ossec_ids_manager_cfg,
         docker_stats_manager_config=docker_stats_manager_cfg, elk_config=elk_cfg,
-        level=level, execution_id=-1, version=version
+        level=level, execution_id=-1, version=version, beats_config=beats_cfg
     )
     return emulation_env_cfg
 
