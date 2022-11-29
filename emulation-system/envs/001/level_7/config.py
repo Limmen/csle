@@ -2748,7 +2748,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
         NodeBeatsConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",)
     ]
-    beats_conf = BeatsConfig(node_beats_configs=node_beats_configs,)
+    beats_conf = BeatsConfig(node_beats_configs=node_beats_configs, num_elastic_shards=1, reload_enabled=False)
     return beats_conf
 
 
