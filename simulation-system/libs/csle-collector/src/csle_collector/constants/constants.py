@@ -24,7 +24,10 @@ class BEATS:
     FORWARDED_PROPERTY = "forwarded"
     MODULE_PROPERTY = "module"
     LOG_PROPERTY = "log"
+    SYSLOG_PROPERTY = "syslog"
+    AUTH_PROPERTY = "auth"
     SLOWLOG_PROPERTY = "slowlog"
+    AUDIT_PROPERTY = "audit"
     SERVER_PROPERTY = "server"
     VAR_INPUT_PROPERTY = "var.input"
     VAR_PATHS_PROPERTY = "var.paths"
@@ -47,10 +50,16 @@ class FILEBEAT:
     SNORT_MODULE = "snort"
     ELASTICSEARCH_MODULE = "elasticsearch"
     KIBANA_MODULE = "kibana"
+    SYSTEM_MODULE = "system"
+    KAFKA_MODULE = "system"
     LOGSTASH_MODULE = "logstash"
     ENABLE_MODULE_CMD = "filebeat modules enable {}"
     MODULES_CONFIG_DIR = "/etc/filebeat/modules.d/"
     SNORT_MODULE_CONFIG_FILE = "snort.yml"
+    LOGSTASH_MODULE_CONFIG_FILE = "logstash.yml"
+    KIBANA_MODULE_CONFIG_FILE = "kibana.yml"
+    SYSTEM_MODULE_CONFIG_FILE = "system.yml"
+    KAFKA_MODULE_CONFIG_FILE = "kafka.yml"
     ELASTICSEARCH_MODULE_CONFIG_FILE = "elasticsearch.yml"
     INPUTS_PROPERTY = "filebeats.inputs"
     MODULES_PROPERTY = "filebeats.config.modules"
@@ -64,6 +73,14 @@ class GRPC:
     Constants related to GRPC
     """
     TIMEOUT_SECONDS = 30
+
+
+class SYSTEM:
+    """
+    Constants related to system
+    """
+    AUTH_LOG = "/var/log/auth.log"
+    SYSLOG = "/var/log/syslog"
 
 
 class LOG_FILES:
@@ -469,6 +486,7 @@ class KAFKA:
     AUTO_OFFSET_RESET_PROPERTY = "auto.offset.reset"
     EARLIEST_OFFSET = "earliest"
     PORT = 9092
+    DIR = "/usr/local/kafka/logs/"
 
 
 class ELK:
@@ -488,3 +506,4 @@ class ELK:
     LOGSTASH_STATUS = "service logstash status"
     ELASTICSEARCH_LOG_DIR = "/var/log/elasticsearch/"
     LOGSTASH_LOG_DIR = "/var/log/logstash/"
+    KIBANA_LOG_DIR = "/var/log/kibana/"

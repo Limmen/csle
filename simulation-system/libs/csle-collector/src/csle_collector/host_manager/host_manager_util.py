@@ -404,3 +404,69 @@ class HostManagerUtil:
         ]
         return logstash_config
 
+    @staticmethod
+    def filebeat_kibana_module_config() -> List[Dict[str, Any]]:
+        """
+        :return: the kibana filebeat module config
+        """
+        kibana_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.KIBANA_MODULE,
+                constants.BEATS.LOG_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.ELK.KIBANA_LOG_DIR}*.log"
+                    ]
+                },
+                constants.BEATS.AUDIT_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True
+                }
+            }
+        ]
+        return kibana_config
+
+    @staticmethod
+    def filebeat_system_module_config() -> List[Dict[str, Any]]:
+        """
+        :return: the system filebeat module config
+        """
+        system_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.SYSTEM_MODULE,
+                constants.BEATS.SYSLOG_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.SYSTEM.SYSLOG}*"
+                    ]
+                },
+                constants.BEATS.AUTH_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.SYSTEM.AUTH_LOG}"
+                    ]
+                }
+            }
+        ]
+        return system_config
+
+    @staticmethod
+    def filebeat_kafka_module_config() -> List[Dict[str, Any]]:
+        """
+        :return: the kafka filebeat module config
+        """
+        system_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.KAFKA_MODULE,
+                constants.BEATS.LOG_PROPERTY: {
+                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.VAR_PATHS_PROPERTY: [
+                        f"{constants.KAFKA.DIR}controller.log*",
+                        f"{constants.KAFKA.DIR}server.log*",
+                        f"{constants.KAFKA.DIR}state-change.log*",
+                        f"{constants.KAFKA.DIR}kafka-*.log*"
+                    ]
+                }
+            }
+        ]
+        return system_config
+

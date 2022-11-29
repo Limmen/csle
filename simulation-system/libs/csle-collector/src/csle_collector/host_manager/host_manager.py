@@ -169,6 +169,16 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         os.system(constants.FILEBEAT.FILEBEAT_START)
 
     @staticmethod
+    def _stop_filebeat() -> None:
+        """
+        Utility method to stop filebeat
+
+        :return: None
+        """
+        logging.info("Stopping filebeat")
+        os.system(constants.FILEBEAT.FILEBEAT_STOP)
+
+    @staticmethod
     def _set_filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
                              elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> None:
         """
@@ -198,11 +208,100 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
+        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SNORT_MODULE),
+                             stdout=subprocess.PIPE, shell=True)
+        p.communicate()
+        p.wait()
         snort_module_config = HostManagerUtil.filebeat_snort_module_config()
         logging.info(f"Updating filebeat snort module config: \n{snort_module_config}")
         HostManagerUtil.write_yaml_config(config=snort_module_config,
                                           path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
                                                f"{constants.FILEBEAT.SNORT_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_filebeat_elasticsearch_module_config() -> None:
+        """
+        Updates the filebeat elasticsearch module configuration
+
+        :return: None
+        """
+        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.ELASTICSEARCH_MODULE),
+                             stdout=subprocess.PIPE, shell=True)
+        p.communicate()
+        p.wait()
+        elasticsearch_module_config = HostManagerUtil.filebeat_elasticsearch_module_config()
+        logging.info(f"Updating filebeat elasticsearch module config: \n{elasticsearch_module_config}")
+        HostManagerUtil.write_yaml_config(config=elasticsearch_module_config,
+                                          path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.FILEBEAT.ELASTICSEARCH_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_filebeat_logstash_module_config() -> None:
+        """
+        Updates the filebeat logstash module configuration
+
+        :return: None
+        """
+        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.LOGSTASH_MODULE),
+                             stdout=subprocess.PIPE, shell=True)
+        p.communicate()
+        p.wait()
+        logstash_module_config = HostManagerUtil.filebeat_logstash_module_config()
+        logging.info(f"Updating filebeat logstash module config: \n{logstash_module_config}")
+        HostManagerUtil.write_yaml_config(config=logstash_module_config,
+                                          path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.FILEBEAT.LOGSTASH_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_filebeat_kibana_module_config() -> None:
+        """
+        Updates the filebeat kibana module configuration
+
+        :return: None
+        """
+        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KIBANA_MODULE),
+                             stdout=subprocess.PIPE, shell=True)
+        p.communicate()
+        p.wait()
+        kibana_module_config = HostManagerUtil.filebeat_kibana_module_config()
+        logging.info(f"Updating filebeat kibana module config: \n{kibana_module_config}")
+        HostManagerUtil.write_yaml_config(config=kibana_module_config,
+                                          path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.FILEBEAT.KIBANA_MODULE}")
+
+    @staticmethod
+    def set_filebeat_system_module_config() -> None:
+        """
+        Updates the filebeat system module configuration
+
+        :return: None
+        """
+        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SYSTEM_MODULE),
+                             stdout=subprocess.PIPE, shell=True)
+        p.communicate()
+        p.wait()
+        system_module_config = HostManagerUtil.filebeat_system_module_config()
+        logging.info(f"Updating filebeat system module config: \n{system_module_config}")
+        HostManagerUtil.write_yaml_config(config=system_module_config,
+                                          path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.FILEBEAT.SYSTEM_MODULE}")
+
+    @staticmethod
+    def set_filebeat_kafka_module_config() -> None:
+        """
+        Updates the filebeat kafka module configuration
+
+        :return: None
+        """
+        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KAFKA_MODULE),
+                             stdout=subprocess.PIPE, shell=True)
+        p.communicate()
+        p.wait()
+        kafka_module_config = HostManagerUtil.filebeat_kafka_module_config()
+        logging.info(f"Updating filebeat kafka module config: \n{kafka_module_config}")
+        HostManagerUtil.write_yaml_config(config=kafka_module_config,
+                                          path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.FILEBEAT.KAFKA_MODULE}")
 
 
 def serve(port: int = 50049, log_dir: str = "/", max_workers: int = 10,
