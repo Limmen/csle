@@ -1,6 +1,13 @@
 # CSLE Management System
 
-This system builds on Grafana, Prometheus, Cadvisor, NodeExporter, the rest api, and the `csle-mgmt-webapp` applicaton 
+The management system system builds on Grafana, Prometheus, Cadvisor, NodeExporter, the rest api, and the `csle-mgmt-webapp` applicaton 
+
+## `csle-mgmt-webapp`
+A webapp for managing and monitoring emulation environments created with csle
+
+### Video demonstration
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/18P7MjPKNDg/0.jpg)](http://www.youtube.com/watch?v=18P7MjPKNDg "A System for Interactive Examination of Learned Security Policies - Hammar & Stadler")
 
 ## Contents
 This directory includes scripts for starting Grafana+Prometheus+Cadvisor+NodeExporter for monitoring running
@@ -19,13 +26,6 @@ Grafana is used to monitor the performance of the emulation environments
 
 <p align="center">
 <img src="docs/grafana_2.png" width="1200">
-</p>
-
-## CSLE Management System
-A webapp for managing and monitoring emulation environments created with csle
-
-<p align="center">
-<img src="csle-mgmt-webapp/docs/screen.png" width="1200">
 </p>
 
 ## Useful scripts
