@@ -96,7 +96,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         return host_metrics_dto
 
     def startHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StartHostMonitorMsg,
-                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Starts the Host monitor thread
 
@@ -114,10 +114,12 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                      time_step_len_seconds=request.time_step_len_seconds)
         self.host_monitor_thread.start()
         logging.info("Started the HostMonitor thread")
-        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=True)
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=True,
+                                                                          filebeat_running=filebeat_status)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,
-                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Stops the Host monitor thread if it is running
 
@@ -125,24 +127,96 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :param context: the gRPC context
         :return: a DTO with the status of the Host monitor thread
         """
+        logging.info(f"Stopping the host monitor")
         if self.host_monitor_thread is not None:
             self.host_monitor_thread.running = False
-        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=False)
+        logging.info(f"Host monitor stopped")
+        filebeat_running = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=False,
+                                                                          filebeat_running=filebeat_running)
 
-    def getHostMonitorStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostMonitorStatusMsg,
-                             context: grpc.ServicerContext) \
-            -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+    def startFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StartFilebeatMsg,
+                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
-        Gets the status of the Host Monitor thread
+        Starts filebeat
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a DTO with the status of the Host monitor
+        :return: a DTO with the status of the Host
         """
-        running = False
+        logging.info(f"Starting filebeat")
+        HostManagerServicer._start_filebeat()
+        logging.info("Started filebeat")
+        monitor_running = False
         if self.host_monitor_thread is not None:
-            running = self.host_monitor_thread.running
-        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=running)
+            monitor_running = self.host_monitor_thread.running
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=True)
+
+    def stopFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StopFilebeatMsg,
+                     context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Stops filebeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info(f"Stopping filebeat")
+        HostManagerServicer._stop_filebeat()
+        logging.info(f"Filebeat stopped")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=False)
+
+    def configFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigFilebeatMsg,
+                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Updates the configuration of filebeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info(f"Updating the filebeat configuration, "
+                     f"log_files_paths: {request.log_files_paths}, "
+                     f"kibana_ip : {request.kibana_ip}, kibana_port: {request.kibana_port}, "
+                     f"elastic_ip: {request.elastic_ip}, elastic_port: {request.elastic_port}, "
+                     f"num_elastic_shards: {request.num_elastic_shards}, reload_enabled: {request.reload_enabled}, "
+                     f"kafka: {request.kafka}, kafka_ip: {request.kafka_ip}, kafka_port: {request.kafka_port}, "
+                     f"kafka_topics: {request.kafka_topics}, filebeat_modules: {request.filebeat_modules}")
+        HostManagerServicer._set_filebeat_config(
+            log_files_paths=request.log_files_paths, kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
+            elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
+            num_elastic_shards=request.num_elastic_shards, reload_enabled=request.reload_enabled,
+            kafka=request.kafka, kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
+            kafka_topics=request.kafka_topics, filebeat_modules=request.filebeat_modules)
+        logging.info("Filebeat configuration updated")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        filebeat_running = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_running)
+
+    def getHostStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostStatusMsg,
+                             context: grpc.ServicerContext) \
+            -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Gets the status of the host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the host
+        """
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        filebeat_running = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_running)
 
     @staticmethod
     def _get_filebeat_status() -> bool:
@@ -180,7 +254,9 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
     @staticmethod
     def _set_filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
-                             elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> None:
+                             elastic_port: int, num_elastic_shards: int, kafka_topics : List [str], kafka_ip: str,
+                             filebeat_modules: List[str],
+                             kafka_port: int, reload_enabled: bool = False, kafka: bool = False) -> None:
         """
         Updates the filebeat configuration file
 
@@ -191,13 +267,36 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :param elastic_port: the port of elastic where the data should be shipped
         :param num_elastic_shards: the number of elastic shards
         :param reload_enabled: whether automatic reload of modules should be enabled
+        :param kafka: whether kafka should be added as input
+        :param kafka_topics: list of kafka topics to ingest
+        :param kafka_port: the kafka server port
+        :param kafka_ip: the kafka server ip
+        :param filebeat_modules: list of filebeat modules to enable
         :return: None
         """
         filebeat_config = HostManagerUtil.filebeat_config(log_files_paths=log_files_paths, kibana_ip=kibana_ip,
                                                           kibana_port=kibana_port, elastic_ip=elastic_ip,
                                                           elastic_port=elastic_port,
                                                           num_elastic_shards=num_elastic_shards,
-                                                          reload_enabled=reload_enabled)
+                                                          reload_enabled=reload_enabled, kafka=kafka,
+                                                          kafka_port=kafka_port, kafka_ip=kafka_ip,
+                                                          kafka_topics=kafka_topics)
+        for module in filebeat_modules:
+            if module == constants.FILEBEAT.SYSTEM_MODULE:
+                HostManagerUtil.filebeat_system_module_config()
+            elif module == constants.FILEBEAT.SNORT_MODULE:
+                HostManagerUtil.filebeat_snort_module_config()
+            elif module == constants.FILEBEAT.KAFKA_MODULE:
+                HostManagerUtil.filebeat_kafka_module_config()
+            elif module == constants.FILEBEAT.KIBANA_MODULE:
+                HostManagerUtil.filebeat_kibana_module_config()
+            elif module == constants.FILEBEAT.ELASTICSEARCH_MODULE:
+                HostManagerUtil.filebeat_elasticsearch_module_config()
+            elif module == constants.FILEBEAT.LOGSTASH_MODULE:
+                HostManagerUtil.filebeat_logstash_module_config()
+            else:
+                logging.warning(f"Filebeat module: {module} not recognized")
+
         logging.info(f"Updating filebeat config: \n{filebeat_config}")
         HostManagerUtil.write_yaml_config(config=filebeat_config, path=constants.FILEBEAT.CONFIG_FILE)
 

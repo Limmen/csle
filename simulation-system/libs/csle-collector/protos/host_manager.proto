@@ -2,10 +2,13 @@ syntax = "proto3";
 
 // Interface exported by the server
 service HostManager {
-  rpc stopHostMonitor(StopHostMonitorMsg) returns (HostMonitorDTO) {}
-  rpc startHostMonitor(StartHostMonitorMsg) returns (HostMonitorDTO) {}
-  rpc getHostMonitorStatus(GetHostMonitorStatusMsg) returns (HostMonitorDTO) {}
+  rpc stopHostMonitor(StopHostMonitorMsg) returns (HostStatusDTO) {}
+  rpc startHostMonitor(StartHostMonitorMsg) returns (HostStatusDTO) {}
+  rpc getHostStatus(GetHostStatusMsg) returns (HostStatusDTO) {}
   rpc getHostMetrics(GetHostMetricsMsg) returns (HostMetricsDTO) {}
+  rpc stopFilebeat(StopFilebeatMsg) returns (HostStatusDTO) {}
+  rpc startFilebeat(StartFilebeatMsg) returns (HostStatusDTO) {}
+  rpc configFilebeat(ConfigFilebeatMsg) returns (HostStatusDTO) {}
 }
 
 // Message that the client sends to stop the HostMonitor
@@ -18,12 +21,35 @@ message StartHostMonitorMsg {
   int32 time_step_len_seconds = 4;
 }
 
-// Message that the client sends to get the status of the HostMonitor
-message GetHostMonitorStatusMsg {}
+// Message that the client sends to stop filebeat
+message StopFilebeatMsg {}
 
-//Message that the server returns when asked about the status of the Host Monitor thread
-message HostMonitorDTO {
-  bool running = 1;
+// Message that the client sends to start filebeat
+message StartFilebeatMsg {}
+
+// Message that the client sends to set the filebeat configuration
+message ConfigFilebeatMsg {
+  string kibana_ip = 1;
+  int32 kibana_port = 2;
+  string elastic_ip = 3;
+  int32 elastic_port = 4;
+  int32 num_elastic_shards = 5;
+  bool reload_enabled = 6;
+  string kafka_ip = 7;
+  int32 kafka_port = 8;
+  bool kafka = 9;
+  repeated string kafka_topics = 10;
+  repeated string filebeat_modules = 11;
+  repeated string log_files_paths = 12;
+}
+
+// Message that the client sends to get the status of the HostMonitor
+message GetHostStatusMsg {}
+
+//Message that the server returns when asked about the status of running processes
+message HostStatusDTO {
+  bool monitor_running = 1;
+  bool filebeat_running = 2;
 }
 
 // Message that the client sends to extract the Host metrics from given timestamps

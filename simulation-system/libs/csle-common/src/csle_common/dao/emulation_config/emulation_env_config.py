@@ -19,6 +19,7 @@ from csle_common.dao.emulation_config.host_manager_config import HostManagerConf
 from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
+from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
@@ -39,6 +40,7 @@ class EmulationEnvConfig:
                  host_manager_config: HostManagerConfig, snort_ids_manager_config: SnortIDSManagerConfig,
                  ossec_ids_manager_config: OSSECIDSManagerConfig,
                  docker_stats_manager_config: DockerStatsManagerConfig, elk_config: ElkConfig,
+                 beats_config: BeatsConfig,
                  level: int, version: str, execution_id: int,
                  csle_collector_version: str = collector_constants.LATEST_VERSION):
         """
@@ -61,6 +63,7 @@ class EmulationEnvConfig:
         :param snort_ids_manager_config: the Snort IDS manager config
         :param ossec_ids_manager_config: the OSSEC IDS manager config
         :param docker_stats_manager_config: the Docker stats manager config
+        :param beats_config: the beats config
         :param elk_config: the ELK config
         :param level: the level of the emulation
         :param version: the version of the emulation
@@ -96,6 +99,7 @@ class EmulationEnvConfig:
         self.ossec_ids_manager_config = ossec_ids_manager_config
         self.docker_stats_manager_config = docker_stats_manager_config
         self.elk_config = elk_config
+        self.beats_config = beats_config
         self.csle_collector_version = csle_collector_version
 
     @staticmethod
@@ -127,7 +131,8 @@ class EmulationEnvConfig:
             ossec_ids_manager_config=OSSECIDSManagerConfig.from_dict(d["ossec_ids_manager_config"]),
             snort_ids_manager_config=SnortIDSManagerConfig.from_dict(d["snort_ids_manager_config"]),
             docker_stats_manager_config=DockerStatsManagerConfig.from_dict(d["docker_stats_manager_config"]),
-            elk_config=ElkConfig.from_dict(d["elk_config"]), csle_collector_version=d["csle_collector_version"]
+            elk_config=ElkConfig.from_dict(d["elk_config"]), csle_collector_version=d["csle_collector_version"],
+            beats_config=BeatsConfig.from_dict(d["beats_config"])
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -172,6 +177,7 @@ class EmulationEnvConfig:
         d["docker_stats_manager_config"] = self.docker_stats_manager_config.to_dict()
         d["elk_config"] = self.elk_config.to_dict()
         d["csle_collector_version"] = self.csle_collector_version
+        d["beats_config"] = self.beats_config.to_dict()
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "",
@@ -305,7 +311,7 @@ class EmulationEnvConfig:
                f"snort_ids_manager_config: {self.snort_ids_manager_config}, " \
                f"ossec_ids_manager_config: {self.ossec_ids_manager_config}, " \
                f"docker_stats_manager_config: {self.docker_stats_manager_config}, elk_config: {self.elk_config}," \
-               f" csle_collector_version: {self.csle_collector_version}"
+               f" csle_collector_version: {self.csle_collector_version}, beats_config: {self.beats_config}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -374,6 +380,7 @@ class EmulationEnvConfig:
             ip_first_octet=ip_first_octet)
         config.elk_config = config.elk_config.create_execution_config(
             ip_first_octet=ip_first_octet)
+        config.beats_config = config.beats_config.create_execution_config(ip_first_octet=ip_first_octet)
         if config.sdn_controller_config is not None:
             config.sdn_controller_config = config.sdn_controller_config.create_execution_config(
                 ip_first_octet=ip_first_octet)

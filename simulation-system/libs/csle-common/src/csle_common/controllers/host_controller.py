@@ -110,6 +110,42 @@ class HostController:
             HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
     @staticmethod
+    def start_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and filebeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            HostController.start_filebeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+    @staticmethod
+    def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and to stop filebeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            HostController.stop_filebeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+    @staticmethod
+    def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and to setup the configuration of filebeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            HostController.config_filebeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+    @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
@@ -123,7 +159,7 @@ class HostController:
 
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
-        if not host_monitor_dto.running:
+        if not host_monitor_dto.monitor_running:
             Logger.__call__().get_logger().info(
                 f"Host monitor thread is not running on {ip}, starting it.")
             # Open a gRPC session
@@ -134,6 +170,62 @@ class HostController:
                     stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
                     kafka_port=emulation_env_config.kafka_config.kafka_port,
                     time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
+
+    @staticmethod
+    def start_filebeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to start the Host manager and filebeat
+
+        :param emulation_env_config: the emulation env config
+        :param ip: IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+
+        host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
+            ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
+        if not host_monitor_dto.filebeat_running:
+            Logger.__call__().get_logger().info(
+                f"Filebeat is not running on {ip}, starting it.")
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+                csle_collector.host_manager.query_host_manager.start_filebeat(stub=stub)
+
+    @staticmethod
+    def config_filebeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to setup the filebeat configuration
+
+        :param emulation_env_config: the emulation env config
+        :param ip: IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ip(ip=ip)
+        kafka_topics = list(map(lambda topic: topic.name, emulation_env_config.kafka_config.topics))
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Configuring filebeat on {ip}.")
+            csle_collector.host_manager.query_host_manager.config_filebeat(
+                stub=stub, log_files_paths=node_beats_config.log_files_paths,
+                kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
+                kibana_port=emulation_env_config.elk_config.kibana_port,
+                elastic_ip=emulation_env_config.elk_config.container.get_ips()[0],
+                elastic_port=emulation_env_config.elk_config.elastic_port,
+                num_elastic_shards=emulation_env_config.beats_config.num_elastic_shards, kafka_topics=kafka_topics,
+                kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                kafka_port=emulation_env_config.kafka_config.kafka_port,
+                filebeat_modules=node_beats_config.filebeat_modules,
+                reload_enabled=emulation_env_config.beats_config.reload_enabled,
+                kafka = node_beats_config.kafka_input)
 
     @staticmethod
     def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
@@ -166,8 +258,27 @@ class HostController:
             csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
 
     @staticmethod
+    def stop_filebeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific container to stop filebeat
+
+        :param emulation_env_config: the emulation env config
+        :param ip: the IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Stopping filebeat on {ip}.")
+            csle_collector.host_manager.query_host_manager.stop_filebeat(stub=stub)
+
+    @staticmethod
     def get_host_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
-            List[Tuple[csle_collector.host_manager.host_manager_pb2.HostMonitorDTO, str]]:
+            List[Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]]:
         """
         A method that sends a request to the HostManager on every container to get the status of the Host monitor thread
 
@@ -184,7 +295,7 @@ class HostController:
 
     @staticmethod
     def get_host_monitor_thread_status_by_port_and_ip(ip: str, port: int) -> \
-            csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+            csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         A method that sends a request to the HostManager on a specific container
         to get the status of the Host monitor thread
@@ -196,7 +307,7 @@ class HostController:
         with grpc.insecure_channel(
                 f'{ip}:{port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            status = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub=stub)
+            status = csle_collector.host_manager.query_host_manager.get_host_status(stub=stub)
             return status
 
     @staticmethod

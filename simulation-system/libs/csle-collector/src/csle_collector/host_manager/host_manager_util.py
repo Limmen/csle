@@ -286,7 +286,9 @@ class HostManagerUtil:
 
     @staticmethod
     def filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
-                        elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> Dict[str, Any]:
+                        elastic_port: int, num_elastic_shards: int, kafka_topics : List [str], kafka_ip: str,
+                        kafka_port: int, reload_enabled: bool = False, kafka: bool = False) \
+            -> Dict[str, Any]:
         """
         Generates the filebeat.yml config
 
@@ -297,6 +299,10 @@ class HostManagerUtil:
         :param elastic_port: the port of elastic where the data should be shipped
         :param num_elastic_shards: the number of elastic shards
         :param reload_enabled: whether automatic reload of modules should be enabled
+        :param kafka: whether kafka should be added as input
+        :param kafka_topics: list of kafka topics to ingest
+        :param kafka_port: the kafka server port
+        :param kafka_ip: the kafka server ip
         :return: the filebeat configuration dict
         """
         filebeat_config = {}
@@ -310,6 +316,16 @@ class HostManagerUtil:
                 ]
             }
         ]
+        if kafka:
+            filebeat_config[constants.FILEBEAT.INPUTS_PROPERTY].append(
+                {
+                    constants.BEATS.TYPE_PROPERTY: constants.BEATS.FILESTREAM_PROPERTY,
+                    constants.BEATS.ENABLED_PROPERTY: True,
+                    constants.BEATS.GROUP_ID_PROPERTY: constants.FILEBEAT.FILEBEAT_GROUP_ID,
+                    constants.BEATS.TOPICS_PROPERTY: kafka_topics,
+                    constants.BEATS.HOSTS_PROPERTY: [f"{kafka_ip}:{kafka_port}"],
+                }
+            )
         filebeat_config[constants.FILEBEAT.MODULES_PROPERTY] = {
             constants.BEATS.PATH_PROPERTY: f"{constants.FILEBEAT.MODULES_CONFIG_DIR}*.yml",
             constants.BEATS.RELOAD_ENABLED_PROPERTY: reload_enabled

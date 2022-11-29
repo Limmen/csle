@@ -4,6 +4,7 @@ import grpc
 
 import csle_collector.host_manager.host_manager_pb2 as host__manager__pb2
 
+
 class HostManagerStub(object):
     """Interface exported by the server
     """
@@ -17,22 +18,37 @@ class HostManagerStub(object):
         self.stopHostMonitor = channel.unary_unary(
                 '/HostManager/stopHostMonitor',
                 request_serializer=host__manager__pb2.StopHostMonitorMsg.SerializeToString,
-                response_deserializer=host__manager__pb2.HostMonitorDTO.FromString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
         self.startHostMonitor = channel.unary_unary(
                 '/HostManager/startHostMonitor',
                 request_serializer=host__manager__pb2.StartHostMonitorMsg.SerializeToString,
-                response_deserializer=host__manager__pb2.HostMonitorDTO.FromString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
-        self.getHostMonitorStatus = channel.unary_unary(
-                '/HostManager/getHostMonitorStatus',
-                request_serializer=host__manager__pb2.GetHostMonitorStatusMsg.SerializeToString,
-                response_deserializer=host__manager__pb2.HostMonitorDTO.FromString,
+        self.getHostStatus = channel.unary_unary(
+                '/HostManager/getHostStatus',
+                request_serializer=host__manager__pb2.GetHostStatusMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
         self.getHostMetrics = channel.unary_unary(
                 '/HostManager/getHostMetrics',
                 request_serializer=host__manager__pb2.GetHostMetricsMsg.SerializeToString,
                 response_deserializer=host__manager__pb2.HostMetricsDTO.FromString,
+                )
+        self.stopFilebeat = channel.unary_unary(
+                '/HostManager/stopFilebeat',
+                request_serializer=host__manager__pb2.StopFilebeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.startFilebeat = channel.unary_unary(
+                '/HostManager/startFilebeat',
+                request_serializer=host__manager__pb2.StartFilebeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.configFilebeat = channel.unary_unary(
+                '/HostManager/configFilebeat',
+                request_serializer=host__manager__pb2.ConfigFilebeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
 
 
@@ -52,7 +68,7 @@ class HostManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def getHostMonitorStatus(self, request, context):
+    def getHostStatus(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -64,28 +80,61 @@ class HostManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopFilebeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startFilebeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def configFilebeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_HostManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'stopHostMonitor': grpc.unary_unary_rpc_method_handler(
                     servicer.stopHostMonitor,
                     request_deserializer=host__manager__pb2.StopHostMonitorMsg.FromString,
-                    response_serializer=host__manager__pb2.HostMonitorDTO.SerializeToString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
             'startHostMonitor': grpc.unary_unary_rpc_method_handler(
                     servicer.startHostMonitor,
                     request_deserializer=host__manager__pb2.StartHostMonitorMsg.FromString,
-                    response_serializer=host__manager__pb2.HostMonitorDTO.SerializeToString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
-            'getHostMonitorStatus': grpc.unary_unary_rpc_method_handler(
-                    servicer.getHostMonitorStatus,
-                    request_deserializer=host__manager__pb2.GetHostMonitorStatusMsg.FromString,
-                    response_serializer=host__manager__pb2.HostMonitorDTO.SerializeToString,
+            'getHostStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.getHostStatus,
+                    request_deserializer=host__manager__pb2.GetHostStatusMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
             'getHostMetrics': grpc.unary_unary_rpc_method_handler(
                     servicer.getHostMetrics,
                     request_deserializer=host__manager__pb2.GetHostMetricsMsg.FromString,
                     response_serializer=host__manager__pb2.HostMetricsDTO.SerializeToString,
+            ),
+            'stopFilebeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopFilebeat,
+                    request_deserializer=host__manager__pb2.StopFilebeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'startFilebeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startFilebeat,
+                    request_deserializer=host__manager__pb2.StartFilebeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'configFilebeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.configFilebeat,
+                    request_deserializer=host__manager__pb2.ConfigFilebeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -111,7 +160,7 @@ class HostManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/HostManager/stopHostMonitor',
             host__manager__pb2.StopHostMonitorMsg.SerializeToString,
-            host__manager__pb2.HostMonitorDTO.FromString,
+            host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -128,12 +177,12 @@ class HostManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/HostManager/startHostMonitor',
             host__manager__pb2.StartHostMonitorMsg.SerializeToString,
-            host__manager__pb2.HostMonitorDTO.FromString,
+            host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def getHostMonitorStatus(request,
+    def getHostStatus(request,
             target,
             options=(),
             channel_credentials=None,
@@ -143,9 +192,9 @@ class HostManager(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/HostManager/getHostMonitorStatus',
-            host__manager__pb2.GetHostMonitorStatusMsg.SerializeToString,
-            host__manager__pb2.HostMonitorDTO.FromString,
+        return grpc.experimental.unary_unary(request, target, '/HostManager/getHostStatus',
+            host__manager__pb2.GetHostStatusMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -163,5 +212,56 @@ class HostManager(object):
         return grpc.experimental.unary_unary(request, target, '/HostManager/getHostMetrics',
             host__manager__pb2.GetHostMetricsMsg.SerializeToString,
             host__manager__pb2.HostMetricsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopFilebeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/stopFilebeat',
+            host__manager__pb2.StopFilebeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startFilebeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/startFilebeat',
+            host__manager__pb2.StartFilebeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def configFilebeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/configFilebeat',
+            host__manager__pb2.ConfigFilebeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
