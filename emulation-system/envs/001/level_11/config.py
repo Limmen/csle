@@ -5279,7 +5279,23 @@ def default_beats_config(network_id: int) -> BeatsConfig:
             log_files_paths=["/*.log",
                              "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
             filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-            kafka_input=False)
+            kafka_input=False),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                        log_files_paths=["/*.log",
+                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
+                                          collector_constants.FILEBEAT.KAFKA_MODULE],
+                        kafka_input=False),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                           f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                           f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
+                                          collector_constants.FILEBEAT.ELASTICSEARCH_MODULE,
+                                          collector_constants.FILEBEAT.KIBANA_MODULE,
+                                          collector_constants.FILEBEAT.LOGSTASH_MODULE], kafka_input=False)
     ]
     beats_conf = BeatsConfig(node_beats_configs=node_beats_configs, num_elastic_shards=1, reload_enabled=False)
     return beats_conf
