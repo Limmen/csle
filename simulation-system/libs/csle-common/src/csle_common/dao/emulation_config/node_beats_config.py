@@ -9,7 +9,7 @@ class NodeBeatsConfig:
 
     def __init__(self, ip: str, log_files_paths: List[str], filebeat_modules: List[str], kafka_input: bool = False):
         """
-        Intializes th DTO
+        Intializes the DTO
 
         :param ip: the ip of the nod
         :param log_files_paths: list of log files to ingest to elastic through filebeat
