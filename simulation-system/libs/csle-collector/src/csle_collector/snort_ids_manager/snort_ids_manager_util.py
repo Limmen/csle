@@ -20,7 +20,7 @@ class SnortIdsManagerUtil:
         :return: a list of alerts
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_ALERTS_FILE
-        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         alerts = []
         year = datetime.datetime.now().year
         for line in result.stdout.split("\n"):
@@ -37,7 +37,7 @@ class SnortIdsManagerUtil:
         :return: a list of alerts
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE
-        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         fast_logs = []
         year = datetime.datetime.now().year
         for line in result.stdout.split("\n"):
@@ -55,7 +55,7 @@ class SnortIdsManagerUtil:
         :return: the latest timestamp
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_ALERTS_FILE
-        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         year = datetime.datetime.now().year
         alerts = []
         year = datetime.datetime.now().year
@@ -65,7 +65,7 @@ class SnortIdsManagerUtil:
                 alerts.append(SnortIdsAlert.parse_from_str(a_str, year=year))
         if len(alerts) == 0:
             # retry once
-            result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             alerts = []
             for line in result.stdout.split("\n"):
                 if line != "" and line is not None and line != " ":

@@ -134,24 +134,6 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
         EmulationEnvController.install_csle_collector_library(emulation_env_config=emulation_env_config)
 
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
-                                            f"and host monitors --")
-        HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
-        HostController.config_filebeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        HostController.start_filebeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
         EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
@@ -245,21 +227,21 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the ELK stack --")
         EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
-        #                                     f"and host monitors --")
-        # HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
-        # time.sleep(10)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
-        # HostController.config_filebeats(emulation_env_config=emulation_env_config)
-        # time.sleep(10)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        # HostController.start_filebeats(emulation_env_config=emulation_env_config)
-        # time.sleep(10)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
+                                            f"and host monitors --")
+        HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
+        HostController.config_filebeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
+        HostController.start_filebeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")

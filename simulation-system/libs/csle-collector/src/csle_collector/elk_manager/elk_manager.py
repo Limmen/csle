@@ -33,13 +33,13 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :return: status of elastic, status of kibana, status of logstash
         """
         status_output = subprocess.run(constants.ELK.ELASTICSEARCH_STATUS.split(" "),
-                                check=True, capture_output=True, text=True).stdout
+                                       capture_output=True, text=True).stdout
         elasticsearch_running = not ("not" in status_output)
         status_output = subprocess.run(constants.ELK.KIBANA_STATUS.split(" "),
-                                       check=True, capture_output=True, text=True).stdout
+                                       capture_output=True, text=True).stdout
         kibana_running = not ("not" in status_output)
         status_output = subprocess.run(constants.ELK.LOGSTASH_STATUS.split(" "),
-                                       check=True, capture_output=True, text=True).stdout
+                                       capture_output=True, text=True).stdout
         logstash_running = not ("not" in status_output)
         return elasticsearch_running, kibana_running, logstash_running
 

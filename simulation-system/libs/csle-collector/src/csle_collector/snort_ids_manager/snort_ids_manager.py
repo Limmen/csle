@@ -84,7 +84,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         :return: status and list of topics
         """
         status_output = subprocess.run(constants.SNORT_IDS_ROUTER.CHECK_IF_SNORT_IS_RUNNING_CMD.split(" "),
-                                check=True, capture_output=True, text=True).stdout
+                                       capture_output=True, text=True).stdout
         running = constants.SNORT_IDS_ROUTER.SEARCH_SNORT_RUNNING in status_output
         return running
 
@@ -144,11 +144,11 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         snort_running = self._is_snort_running()
         if snort_running:
             result = subprocess.run(constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS.split(" "),
-                                           check=True, capture_output=True, text=True)
+                                    capture_output=True, text=True)
             logging.info(f"Stopped the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}")
         if not snort_running:
             result = subprocess.run(constants.SNORT_IDS_ROUTER.START_SNORT_IDS.split(" "),
-                                    check=True, capture_output=True, text=True)
+                                    capture_output=True, text=True)
             logging.info(f"Started the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}")
         logging.info("Started the SnortIDS")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
@@ -169,7 +169,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         if self.ids_monitor_thread is not None:
             monitor_running = self.ids_monitor_thread.running
         result = subprocess.run(constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS.split(" "),
-                                check=True, capture_output=True, text=True)
+                                capture_output=True, text=True)
         logging.info(f"Stopped the SnortIDS, stdout: {result.stdout}, stderr: {result.stderr}")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             monitor_running=monitor_running, snort_ids_running=False)

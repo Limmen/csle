@@ -20,7 +20,7 @@ class OSSecManagerUtil:
         :return: a list of alerts
         """
         cmd = constants.OSSEC.TAIL_ALERTS_COMMAND + " " + constants.OSSEC.OSSEC_ALERTS_FILE
-        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         alerts = []
         timestamp = " "
         groups = []

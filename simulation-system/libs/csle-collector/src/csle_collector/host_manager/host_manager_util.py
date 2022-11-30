@@ -20,7 +20,7 @@ class HostManagerUtil:
         """
         try:
             cmd = constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
-            output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             login_attempts_str = output.stdout
             login_attempts = login_attempts_str.split("\n")
             login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
@@ -40,7 +40,7 @@ class HostManagerUtil:
         :return: the number of recently failed login attempts
         """
         cmd = constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
-        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         login_attempts_str = output.stdout
         login_attempts = login_attempts_str.split("\n")
         login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
@@ -59,7 +59,7 @@ class HostManagerUtil:
         """
         try:
             cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
-            output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             logins = output.stdout
             logins = logins.split("\n")
             logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
@@ -77,7 +77,7 @@ class HostManagerUtil:
         :return: the number of recently failed login attempts
         """
         cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
-        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         logins = output.stdout
         logins = logins.split("\n")
         logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
@@ -95,7 +95,7 @@ class HostManagerUtil:
         :return: the number of open connections
         """
         cmd = constants.HOST_METRICS.LIST_OPEN_CONNECTIONS_CMD
-        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         connections_str = output.stdout
         parts = connections_str.split("Active UNIX domain sockets", 1)
         if len(parts) > 0:
@@ -113,7 +113,7 @@ class HostManagerUtil:
         :return: the number of user accounts
         """
         cmd = constants.HOST_METRICS.LIST_USER_ACCOUNTS
-        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         users_str = output.stdout
         users = users_str.split("\n")
         return len(users)
@@ -126,7 +126,7 @@ class HostManagerUtil:
         :return: the number of logged in users
         """
         cmd = constants.HOST_METRICS.LIST_LOGGED_IN_USERS_CMD
-        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         users_str = output.stdout
         users_str = users_str.replace("\n", "")
         users = users_str.split(" ")
@@ -142,7 +142,7 @@ class HostManagerUtil:
         """
         try:
             cmd = constants.HOST_METRICS.LIST_NUMBER_OF_PROCESSES
-            output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             processes_str = output.stdout
             num_processes = int(processes_str)
         except Exception:
