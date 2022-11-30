@@ -225,7 +225,7 @@ class HostController:
                 kafka_port=emulation_env_config.kafka_config.kafka_port,
                 filebeat_modules=node_beats_config.filebeat_modules,
                 reload_enabled=emulation_env_config.beats_config.reload_enabled,
-                kafka = node_beats_config.kafka_input)
+                kafka=node_beats_config.kafka_input)
 
     @staticmethod
     def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:

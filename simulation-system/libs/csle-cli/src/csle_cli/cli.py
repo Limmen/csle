@@ -11,6 +11,7 @@ import click
 
 Config.set_config_parameters_from_config_file()
 
+
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
 def commands() -> None:
     """

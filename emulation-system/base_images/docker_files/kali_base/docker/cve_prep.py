@@ -1,5 +1,6 @@
 import pickle
 
+
 def cves():
     cves = []
     with open('/allitems.csv', 'rb') as f:
@@ -10,6 +11,7 @@ def cves():
             f.write("%s\n" % item)
     with open('/allitems_prep.pickle', 'wb') as f:
         pickle.dump(cves, f)
+
 
 if __name__ == '__main__':
     cves()

@@ -18,7 +18,8 @@ def get_emulation_statistics_page_bp(static_folder: str) -> Blueprint:
     emulation_statistics_page_bp = Blueprint(
         api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE, __name__,
         url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}",
-        static_url_path=f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}'
+        static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
+                        f'{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}'
                         f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
         static_folder=static_folder)
 

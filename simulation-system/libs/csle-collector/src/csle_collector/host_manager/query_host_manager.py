@@ -93,8 +93,8 @@ def stop_filebeat(
 def config_filebeat(
         stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
         log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
-        elastic_port: int, num_elastic_shards: int, kafka_topics : List [str], kafka_ip: str,
-        kafka_port: int, filebeat_modules : List [str], reload_enabled: bool = False, kafka: bool = False,
+        elastic_port: int, num_elastic_shards: int, kafka_topics: List[str], kafka_ip: str,
+        kafka_port: int, filebeat_modules: List[str], reload_enabled: bool = False, kafka: bool = False,
         timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
     """
     Sends a request to the Host manager to update the filebeat configuration

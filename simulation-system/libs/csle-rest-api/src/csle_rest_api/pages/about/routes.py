@@ -21,7 +21,6 @@ def get_about_page_bp(static_folder: str) -> Blueprint:
                         f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
         static_folder=static_folder)
 
-
     @about_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def about_page():
         """

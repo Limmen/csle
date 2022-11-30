@@ -20,7 +20,8 @@ def get_monitoring_page_bp(static_folder: str) -> Blueprint:
                                               f"{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}",
                                    static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
                                                    f'{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}'
-                                                   f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
+                                                   f'{constants.COMMANDS.SLASH_DELIM}'
+                                                   f'{api_constants.MGMT_WEBAPP.STATIC}',
                                    static_folder=static_folder)
 
     @monitoring_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])

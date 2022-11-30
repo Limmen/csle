@@ -6,6 +6,7 @@ class BeatsConfig:
     """
     A DTO object representing the beats configuration of an emulation environment
     """
+
     def __init__(self, node_beats_configs: List[NodeBeatsConfig], num_elastic_shards: int, reload_enabled: bool):
         """
         Initializes the DTO
@@ -98,5 +99,5 @@ class BeatsConfig:
         """
         config = self.copy()
         config.node_beats_configs = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
-                                               config.node_beats_configs))
+                                             config.node_beats_configs))
         return config

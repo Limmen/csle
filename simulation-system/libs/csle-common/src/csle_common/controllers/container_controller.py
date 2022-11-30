@@ -539,9 +539,8 @@ class ContainerController:
                     csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
                         stub=stub)
                 return docker_stats_monitor_dto
-        except Exception as e:
+        except Exception:
             return None
-
 
     @staticmethod
     def connect_containers_to_management_network(containers_config: ContainersConfig, kafka_config: KafkaConfig,

@@ -127,16 +127,16 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :param context: the gRPC context
         :return: a DTO with the status of the Host monitor thread
         """
-        logging.info(f"Stopping the host monitor")
+        logging.info("Stopping the host monitor")
         if self.host_monitor_thread is not None:
             self.host_monitor_thread.running = False
-        logging.info(f"Host monitor stopped")
+        logging.info("Host monitor stopped")
         filebeat_running = HostManagerServicer._get_filebeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=False,
                                                                           filebeat_running=filebeat_running)
 
     def startFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StartFilebeatMsg,
-                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Starts filebeat
 
@@ -144,7 +144,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :param context: the gRPC context
         :return: a DTO with the status of the Host
         """
-        logging.info(f"Starting filebeat")
+        logging.info("Starting filebeat")
         HostManagerServicer._start_filebeat()
         logging.info("Started filebeat")
         monitor_running = False
@@ -162,9 +162,9 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :param context: the gRPC context
         :return: a DTO with the status of the Host
         """
-        logging.info(f"Stopping filebeat")
+        logging.info("Stopping filebeat")
         HostManagerServicer._stop_filebeat()
-        logging.info(f"Filebeat stopped")
+        logging.info("Filebeat stopped")
         monitor_running = False
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
@@ -172,7 +172,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=False)
 
     def configFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigFilebeatMsg,
-                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Updates the configuration of filebeat
 
@@ -202,7 +202,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running)
 
     def getHostStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostStatusMsg,
-                             context: grpc.ServicerContext) \
+                      context: grpc.ServicerContext) \
             -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Gets the status of the host
@@ -254,7 +254,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
     @staticmethod
     def _set_filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
-                             elastic_port: int, num_elastic_shards: int, kafka_topics : List [str], kafka_ip: str,
+                             elastic_port: int, num_elastic_shards: int, kafka_topics: List[str], kafka_ip: str,
                              filebeat_modules: List[str],
                              kafka_port: int, reload_enabled: bool = False, kafka: bool = False) -> None:
         """

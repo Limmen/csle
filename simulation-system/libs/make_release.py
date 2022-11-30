@@ -36,7 +36,6 @@ RELEASE_CONFIG = {
     }
 }
 
-
 if __name__ == '__main__':
     username = input("Enter PyPi username: ")
     password = getpass()
@@ -61,8 +60,8 @@ if __name__ == '__main__':
             f.write(version_file_contents)
 
     for lib, versions in RELEASE_CONFIG.items():
-        versions["old_version"]=versions["old_version"].replace("'","").replace('"',"")
-        versions["new_version"]=versions["new_version"].replace("'","").replace('"',"")
+        versions["old_version"] = versions["old_version"].replace("'", "").replace('"', "")
+        versions["new_version"] = versions["new_version"].replace("'", "").replace('"', "")
 
     # Update requirements.txt files
     print("Updating requirements.txt files")
@@ -119,7 +118,8 @@ if __name__ == '__main__':
     print("Push to PyPi")
     for lib, versions in RELEASE_CONFIG.items():
         print(f"Uploading {lib} to PyPi")
-        p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/* -p {password} -u {username}", stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/* -p {password} -u {username}",
+                             stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         exit_code = p.wait()
         output = str(output)

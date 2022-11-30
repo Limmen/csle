@@ -289,7 +289,7 @@ class HostManagerUtil:
 
     @staticmethod
     def filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
-                        elastic_port: int, num_elastic_shards: int, kafka_topics : List [str], kafka_ip: str,
+                        elastic_port: int, num_elastic_shards: int, kafka_topics: List[str], kafka_ip: str,
                         kafka_port: int, reload_enabled: bool = False, kafka: bool = False) \
             -> Dict[str, Any]:
         """
@@ -370,7 +370,7 @@ class HostManagerUtil:
             {
                 constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.SNORT_MODULE,
                 constants.BEATS.LOG_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_INPUT_PROPERTY: constants.BEATS.FILE_PROPERTY,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE
@@ -389,7 +389,7 @@ class HostManagerUtil:
             {
                 constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.ELASTICSEARCH_MODULE,
                 constants.BEATS.SERVER_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.ELK.ELASTICSEARCH_LOG_DIR}*.log",
                         f"{constants.ELK.ELASTICSEARCH_LOG_DIR}*_server.json"
@@ -408,13 +408,13 @@ class HostManagerUtil:
             {
                 constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.LOGSTASH_MODULE,
                 constants.BEATS.LOG_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.ELK.LOGSTASH_LOG_DIR}logstash.log*"
                     ]
                 },
                 constants.BEATS.SLOWLOG_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.ELK.LOGSTASH_LOG_DIR}logstash-slowlog.log*"
                     ]
@@ -432,13 +432,13 @@ class HostManagerUtil:
             {
                 constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.KIBANA_MODULE,
                 constants.BEATS.LOG_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.ELK.KIBANA_LOG_DIR}*.log"
                     ]
                 },
                 constants.BEATS.AUDIT_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True
+                    constants.BEATS.ENABLED_PROPERTY: True
                 }
             }
         ]
@@ -453,13 +453,13 @@ class HostManagerUtil:
             {
                 constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.SYSTEM_MODULE,
                 constants.BEATS.SYSLOG_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.SYSTEM.SYSLOG}*"
                     ]
                 },
                 constants.BEATS.AUTH_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.SYSTEM.AUTH_LOG}"
                     ]
@@ -477,7 +477,7 @@ class HostManagerUtil:
             {
                 constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.KAFKA_MODULE,
                 constants.BEATS.LOG_PROPERTY: {
-                    constants.BEATS.ENABLED_PROPERTY : True,
+                    constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.VAR_PATHS_PROPERTY: [
                         f"{constants.KAFKA.DIR}controller.log*",
                         f"{constants.KAFKA.DIR}server.log*",
@@ -488,4 +488,3 @@ class HostManagerUtil:
             }
         ]
         return system_config
-
