@@ -31,6 +31,18 @@ class BeatsConfig:
                 return node_beats_config
         return None
 
+    def get_node_beats_config_by_ips(self, ips: List[str]) -> Union[NodeBeatsConfig, None]:
+        """
+        Gets a node beats config which matches a list of ips
+
+        :param ips: the ips
+        :return: the node beats config or None
+        """
+        for node_beats_config in self.node_beats_configs:
+            if node_beats_config.ip in ips:
+                return node_beats_config
+        return None
+
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "BeatsConfig":
         """

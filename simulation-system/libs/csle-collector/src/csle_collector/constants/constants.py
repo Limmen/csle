@@ -348,6 +348,13 @@ class HOST_METRICS:
     LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
 
 
+class EXTERNAL_NETWORK:
+    """
+    Constants related to the external network
+    """
+    NETWORK_ID_THIRD_OCTET = 1
+
+
 class ELK_CONFIG:
     """
     Constants related to the ELK container configuration

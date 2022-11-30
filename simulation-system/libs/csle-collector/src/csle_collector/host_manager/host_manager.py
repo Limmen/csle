@@ -188,11 +188,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                      f"kafka: {request.kafka}, kafka_ip: {request.kafka_ip}, kafka_port: {request.kafka_port}, "
                      f"kafka_topics: {request.kafka_topics}, filebeat_modules: {request.filebeat_modules}")
         HostManagerServicer._set_filebeat_config(
-            log_files_paths=request.log_files_paths, kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
+            log_files_paths=list(request.log_files_paths), kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
             elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
             num_elastic_shards=request.num_elastic_shards, reload_enabled=request.reload_enabled,
             kafka=request.kafka, kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
-            kafka_topics=request.kafka_topics, filebeat_modules=request.filebeat_modules)
+            kafka_topics=list(request.kafka_topics), filebeat_modules=list(request.filebeat_modules))
         logging.info("Filebeat configuration updated")
         monitor_running = False
         if self.host_monitor_thread is not None:

@@ -3,6 +3,7 @@ import grpc
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 import csle_common.constants.constants as constants
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
@@ -143,7 +144,7 @@ class HostController:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            HostController.config_filebeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.config_filebeat(emulation_env_config=emulation_env_config, container=c)
 
     @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -195,25 +196,25 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_filebeat(stub=stub)
 
     @staticmethod
-    def config_filebeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def config_filebeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
         """
-        A method that sends a request to the HostManager on a specific IP
+        A method that sends a request to the HostManager on a specific container
         to setup the filebeat configuration
 
         :param emulation_env_config: the emulation env config
-        :param ip: IP of the container
+        :param container: the container
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
-        node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ip(ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
         kafka_topics = list(map(lambda topic: topic.name, emulation_env_config.kafka_config.topics))
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{ip}:'
+                f'{container.get_ips()[0]}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring filebeat on {ip}.")
+            Logger.__call__().get_logger().info(f"Configuring filebeat on {container.get_ips()[0]}.")
             csle_collector.host_manager.query_host_manager.config_filebeat(
                 stub=stub, log_files_paths=node_beats_config.log_files_paths,
                 kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],

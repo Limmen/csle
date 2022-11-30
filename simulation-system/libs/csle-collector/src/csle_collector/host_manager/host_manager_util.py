@@ -314,9 +314,7 @@ class HostManagerUtil:
                 constants.BEATS.TYPE_PROPERTY: constants.BEATS.FILESTREAM_PROPERTY,
                 constants.BEATS.ID_PROPERTY: 1,
                 constants.BEATS.ENABLED_PROPERTY: True,
-                constants.BEATS.PATHS_PROPERTY: [
-                    log_files_paths
-                ]
+                constants.BEATS.PATHS_PROPERTY: log_files_paths
             }
         ]
         if kafka:

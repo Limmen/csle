@@ -121,6 +121,7 @@ class EmulationEnvController:
 
         current_step = 1
         emulation_env_config = emulation_execution.emulation_env_config
+
         Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
         ContainerController.create_networks(containers_config=emulation_env_config.containers_config)
@@ -132,6 +133,24 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
         EmulationEnvController.install_csle_collector_library(emulation_env_config=emulation_env_config)
+
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
+                                            f"and host monitors --")
+        HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
+        HostController.config_filebeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
+        HostController.start_filebeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
@@ -226,21 +245,21 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the ELK stack --")
         EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
-                                            f"and host monitors --")
-        HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
-        HostController.config_filebeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        HostController.start_filebeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
+        #                                     f"and host monitors --")
+        # HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
+        # time.sleep(10)
+        #
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
+        # HostController.config_filebeats(emulation_env_config=emulation_env_config)
+        # time.sleep(10)
+        #
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
+        # HostController.start_filebeats(emulation_env_config=emulation_env_config)
+        # time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
@@ -762,7 +781,7 @@ class EmulationEnvController:
         """
         Gets runtime information about an execution
 
-        :param emulation_env_config: the emulation for which executions should be stopped
+        :param execution: the emulation execution to get the information for
         :return: execution information
         """
         running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
