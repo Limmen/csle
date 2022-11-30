@@ -2,18 +2,18 @@ DOCKERHUB_USER=kimham
 VERSION=0.0.1
 
 .PHONY: all build rm_image kali_base ubuntu_20_base ubuntu_14_base ssh_base samba_base \
-	shellshock_base sql_injection_base \
+	shellshock_base shellshock_debian_wheezy_base sql_injection_base \
 	debian_jessie_base cve_2015_3306_base cve_2015_1427_base cve_2016_10033_base cve_2010_0426_base cve_2015_5602_base \
 	blank_ubuntu_20 pengine_exploit_base rm_kali_base rm_ubuntu_20_base rm_ubuntu_14_base rm_ssh_base rm_samba_base \
 	rm_shellshock_base rm_sql_injection_base rm_debian_jessie_base rm_cve_2015_3306_base rm_cve_2015_1427_base \
-	rm_cve_2016_10033_base rm_cve_2010_0426_base rm_cve_2015_5602_base \
+	rm_cve_2016_10033_base rm_cve_2010_0426_base rm_cve_2015_5602_base rm_shellshock_debian_wheezy_base \
 	rm_blank_ubuntu_20 rm_pengine_exploit_base cve_2014_0160_base rm_cve_2014_0160_base rm_ovs_base rm_ryu_base \
 	rm_elk_base push_kali_base push_ubuntu_20_base push_ubuntu_14_base push_ssh_base push_samba_base \
 	push_shellshock_base push_sql_injection_base push_debian_jessie_base push_cve_2015_3306_base \
 	push_cve_2015_1427_base push_cve_2016_10033_base push_cve_2010_0426_base push_cve_2015_5602_base \
     push_blank_ubuntu_20 push_pengine_exploit_base cve_2014_0160_base push_cve_2014_0160_base \
-    push_ovs_base push_ryu_base push_elk_base pull_kali_base pull_ubuntu_20_base \
-    pull_ubuntu_14_base pull_ssh_base pull_samba_base pull_shellshock_base \
+    push_ovs_base push_ryu_base push_elk_base pull_kali_base pull_ubuntu_20_base push_shellshock_debian_wheezy_base \
+    pull_ubuntu_14_base pull_ssh_base pull_samba_base pull_shellshock_base pull_shellshock_debian_wheezy_base \
     pull_sql_injection_base pull_debian_jessie_base pull_cve_2015_3306_base \
     pull_cve_2015_1427_base pull_cve_2016_10033_base pull_cve_2010_0426_base pull_cve_2015_5602_base \
     pull_blank_ubuntu_20 pull_pengine_exploit_base cve_2014_0160_base pull_cve_2014_0160_base \
@@ -39,6 +39,9 @@ samba_base:
 
 shellshock_base:
 	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+
+shellshock_debian_wheezy_base:
+	docker build . --no-cache -f ./docker_files/shellshock_debian_wheezy_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
 
 sql_injection_base:
 	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
@@ -98,6 +101,9 @@ rm_samba_base:
 rm_shellshock_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 
+rm_shellshock_debian_wheezy_base:
+	-docker rmi $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
+
 rm_sql_injection_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 
@@ -155,6 +161,9 @@ push_samba_base:
 
 push_shellshock_base:
 	-docker push $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+
+push_shellshock_debian_wheezy_base:
+	-docker push $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
 
 push_sql_injection_base:
 	-docker push $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
@@ -214,6 +223,9 @@ pull_samba_base:
 pull_shellshock_base:
 	-docker pull $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 
+pull_shellshock_debian_wheezy_base:
+	-docker pull $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
+
 pull_sql_injection_base:
 	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 
@@ -261,6 +273,7 @@ build:
 	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/shellshock_debian_wheezy_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -283,6 +296,7 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -306,6 +320,7 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -329,6 +344,7 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_debian_jessie_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)

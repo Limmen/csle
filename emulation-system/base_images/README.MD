@@ -46,6 +46,9 @@ more specific Docker images.
 - `shellshock_base` ([shellshock_base](./docker_files/shellshock_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
      - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_shellshock_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
+     - OS: Ubuntu:14.
+- `shellshock_debian_wheezy_base` ([shellshock_base](./docker_files/shellshock_debian_wheezy_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability.- [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_debian_wheezy_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_debian_wheezy_base/)
+     - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_shellshock_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
      - OS: Debian:Wheezy.
 - `sql_injection_base` ([sql_injection_base](./docker_files/sql_injection_base)): a base image for csle emulations with a webapp that is vulnerable to SQL injections.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_sql_injection_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_sql_injection_base/)
@@ -101,6 +104,7 @@ make ubuntu_14_base # Build ubuntu_14_base
 make ssh_base # Build ssh_base
 make samba_base # Build samba_base
 make shellshock_base # Build shellshock_base
+make shellshock_debian_wheezy_base # Build shellshock_base
 make sql_injection_base # Build sql_injection_base
 make debian_jessie_base # Build debian_jessie_base
 make cve_2015_3306_base # Build cve_2015_3306_base
@@ -120,6 +124,7 @@ make rm_ubuntu_14_base # Remove ubuntu_14_base
 make rm_ssh_base # Remove ssh_base
 make rm_samba_base # Remove samba_base
 make rm_shellshock_base # Remove shellshock_base
+make rm_shellshock_debian_wheezy_base # Remove shellshock_base
 make rm_sql_injection_base # Remove sql_injection_base
 make rm_debian_jessie_base # Remove debian_jessie_base
 make rm_cve_2015_3306_base # Remove cve_2015_3306_base
@@ -139,6 +144,7 @@ make push_ubuntu_14_base # Push ubuntu_14_base to DockerHub
 make push_ssh_base # Push ssh_base to DockerHub
 make push_samba_base # Push samba_base to DockerHub
 make push_shellshock_base # Push shellshock_base to DockerHub
+make push_shellshock_debian_wheezy_base # Push shellshock_base to DockerHub
 make push_sql_injection_base # Push sql_injection_base to DockerHub
 make push_debian_jessie_base # Push debian_jessie_base to DockerHub
 make push_cve_2015_3306_base # Push cve_2015_3306_base to DockerHub
@@ -158,6 +164,7 @@ make pull_ubuntu_14_base # pull ubuntu_14_base from DockerHub
 make pull_ssh_base # pull ssh_base from DockerHub
 make pull_samba_base # pull samba_base from DockerHub
 make pull_shellshock_base # pull shellshock_base from DockerHub
+make pull_shellshock_debian_wheezy_base # pull shellshock_base from DockerHub
 make pull_sql_injection_base # pull sql_injection_base from DockerHub
 make pull_debian_jessie_base # pull debian_jessie_base from DockerHub
 make pull_cve_2015_3306_base # pull cve_2015_3306_base from DockerHub

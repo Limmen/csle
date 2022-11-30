@@ -1,22 +1,26 @@
 # OS
-FROM ubuntu:14.04
+# Debian GNU/Linux 8 (wheezy)
+FROM debian/eol:wheezy
 USER root
 
-# Add mongo repo
-RUN echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+# Setup wheezy packet repos
+RUN echo 'deb http://archive.debian.org/debian wheezy-backports main' > /etc/apt/sources.list.d/wheezy-backports.list &&\
+    sed -i '/wheezy-updates/d' /etc/apt/sources.list &&\
+    echo "deb [check-valid-until=no] http://archive.debian.org/debian/ wheezy-backports main" >> /etc/apt/sources.list &&\
+    apt-get -o Acquire::Check-Valid-Until=false update
 
 # Install dependencies
 RUN apt-get update
 RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
-    echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
-    echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
-    apt-get install -y --force-yes lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop telnet telnetd \
-                       ssh openssh-server ftp snmpd snmp mailutils inspircd postgresql ntp fingerd mongodb-org \
-                       vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git swi-prolog default-jdk sshpass iptables \
-                       unzip nmap git lftp zip snort arptables irssi irssi-scripts screen postgresql-client-common \
-                       snmp postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3 lsof
-RUN apt-get install -y xinetd
-RUN apt-get install -y inetutils-inetd
+        echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
+        DEBIAN_FRONTEND=noninteractive apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping \
+        emacs curl htop ssh openssh-server build-essential \
+        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
+        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
+        wget apache2 irssi irssi-scripts screen openssh-server snmp mongodb-clients postgresql-client smbclient \
+        fail2ban rsyslog netcat traceroute sysstat iproute2
+
+RUN apt-get install -y openssl libssl-dev -t wheezy-backports
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
@@ -25,6 +29,19 @@ RUN chmod 777 /make_root_users.sh
 
 # setup root users
 RUN /make_root_users.sh
+
+# Apache2 Shellshock setup
+ADD docker_files/shellshock_debian_wheezy_base/docker/packages /packages
+RUN dpkg -i /packages/*
+ADD docker_files/shellshock_debian_wheezy_base/docker/vulnerable /usr/lib/cgi-bin/
+ADD docker_files/shellshock_debian_wheezy_base/docker/index.html /var/www
+RUN chown www-data:www-data /var/www/index.html
+ADD docker_files/shellshock_debian_wheezy_base/docker/main.sh /main.sh
+RUN mv /etc/apache2/envvars /etc/apache2/envvars.backup
+ADD docker_files/common/apache_envvars /etc/apache2/envvars
+RUN chown -R csle_admin:root /run &&\
+    chmod -R 777 /var &&\
+    chown -R csle_admin:root /var
 
 # Setup FTP
 RUN mkdir -p /var/ftp &&\
@@ -55,25 +72,9 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
-# Setup Mongo
-RUN mkdir -p /data/db
-
-# Setup Tomcat
-RUN wget --no-check-certificate https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
-    tar xvzf apache-tomcat-8.0.1.tar.gz &&\
-    mv apache-tomcat-8.0.1 /usr/local/tomcat &&\
-    mv /usr/local/tomcat/conf/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml.bak
-ADD docker_files/common/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
-
-# Setup TeamSpeak 3 Server
-RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
-    tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
-    touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
-
-# setup Kafka
-RUN wget --no-check-certificate https://archive.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz &&\
-    tar xzf kafka_2.13-2.4.0.tgz &&\
-    mv kafka_2.13-2.4.0 /usr/local/kafka
+## Install NMAP manually since the version in wheezy repos is too old
+RUN wget --no-check-certificate https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
+     ./configure && make && make install
 
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
@@ -84,10 +85,6 @@ RUN service snmpd restart
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
 ADD docker_files/common/inspircd.conf /etc/inspircd/inspircd.conf
 
-# setup Postgres
-#RUN mv /etc/postgresql/12/main/postgresql.conf /etc/postgresql/12/main/postgresql.conf.bak
-#ADD docker_files/common/postgresql.conf /etc/postgresql/12/main/postgresql.conf
-
 # Telnet config (disabled by default for security reasons)
 ADD docker_files/common/telnet /etc/xinetd.d/telnet
 ADD docker_files/common/xinetd.conf /etc/xinetd.conf
@@ -97,12 +94,12 @@ RUN chmod 644 /etc/xinetd.d/telnet &&\
 # Conda
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
-RUN wget --no-check-certificate \
-    https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh \
-    && mkdir /root/.conda \
-    && bash Miniconda3-py39_4.12.0-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-py39_4.12.0-Linux-x86_64.sh
 
+RUN wget --no-check-certificate \
+    https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh
 
 # make non-activate conda commands available
 ENV PATH=$CONDA_DIR/bin:$PATH
@@ -111,7 +108,11 @@ RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
 # make conda activate command available from /bin/bash --interative shells
 RUN conda init bash
 
-# Setup Samba
+# DWVA WebApp Exploit
+ADD docker_files/common/sql_injection_exploit.sh /sql_injection_exploit.sh
+RUN chmod 777 /sql_injection_exploit.sh
+
+## Setup Samba
 ADD docker_files/common/samba_exploit.py /samba_exploit.py
 ADD docker_files/common/bindshell-samba.c /bindshell-samba.c
 ADD docker_files/common/bindshell-samba.h /bindshell-samba.h
@@ -121,45 +122,22 @@ RUN gcc -c -fpic bindshell-samba.c &&\
     chmod 777 /bindshell-samba.c &&\
     chmod 777 /bindshell-samba.h &&\
     chmod 777 /libbindshell-samba.so &&\
-    chmod 777 /bindshell-samba.o &&\
-    conda create --name samba python=2.7 -y
+    conda create --clone base --name samba -y
+
+# TODO Solve this
 # Make subsequent RUN commands use the samba env
 SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
-#RUN conda activate samba
-RUN pip install pycrypto==2.6 &&\
-    pip install git+https://github.com/opsxcq/impacket.git &&\
-    pip install pyasn1==0.4.8
 
-# Web server HTTP
-RUN mkdir -p /web/ &&\
-    mkdir -p /web/static
-ADD docker_files/common/web_server.py /web/web_server.py
-ADD docker_files/common/index.html /web/static/index.html
+## Install pycrypto, pyasn and impacket
+RUN pip install pycrypto==2.6 &&\
+    pip install git+https://github.com/Limmen/impacket.git &&\
+    pip install pyasn1==0.4.8
 
 # Setup base environment with csle-collector
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
 RUN pip install flask &&\
-    pip install waitress &&\
-    pip install csle-collector
-
-# Back to normal shell
-SHELL ["/bin/bash", "--login", "-c"]
-
-# Setup glassfish
-RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
-    unzip latest-glassfish.zip
-
-# Setup Snort
-RUN wget --no-check-certificate https://www.snort.org/downloads/community/snort3-community-rules.tar.gz -O community-rules.tar.gz &&\
-    tar -xvzf community-rules.tar.gz -C /etc/snort/rules &&\
-    mkdir /var/snort &&\
-    chmod 777 /var/snort &&\
-    mv /etc/snort/snort.conf /etc/snort/snort.conf.bak
-ADD docker_files/common/snort.conf /etc/snort/snort.conf
-
-# DWVA WebApp Exploit
-ADD docker_files/common/sql_injection_exploit.sh /sql_injection_exploit.sh
-RUN chmod 777 /sql_injection_exploit.sh
+    pip install waitress
+#    pip install csle-collector
 
 # CVE-2015-3306 Exploit
 ADD docker_files/common/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
@@ -222,9 +200,9 @@ ADD docker_files/common/traffic_manager.py /traffic_manager.py
 RUN chmod 777 /traffic_manager.py
 
 # Setup Sysstat
-#RUN mv /etc/default/sysstat /etc/default/sysstat.bak
-#ADD docker_files/common/sysstat /etc/default/sysstat
-#RUN service sysstat restart
+RUN mv /etc/default/sysstat /etc/default/sysstat.bak
+ADD docker_files/common/sysstat /etc/default/sysstat
+RUN service sysstat restart
 
 # Beats
 RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.3.3-amd64.deb &&\
