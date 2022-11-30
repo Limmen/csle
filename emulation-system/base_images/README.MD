@@ -47,7 +47,7 @@ more specific Docker images.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
      - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_shellshock_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
      - OS: Ubuntu:14.
-- `shellshock_debian_wheezy_base` ([shellshock_base](./docker_files/shellshock_debian_wheezy_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability.- 
+- `shellshock_debian_wheezy_base` ([shellshock_base](./docker_files/shellshock_debian_wheezy_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability. 
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_debian_wheezy_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_debian_wheezy_base/)
      - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_shellshock_debian_wheezy_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_shellshock_debian_wheezy_base/)
      - OS: Debian:Wheezy.
