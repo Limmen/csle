@@ -225,11 +225,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: status of filebeat
         """
-        p = subprocess.Popen(constants.FILEBEAT.FILEBEAT_STATUS, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        status_output = output.decode()
-        filebeat_running = not ("not" in status_output)
+        logging.info(f"Getting filebeat status with command: {constants.FILEBEAT.FILEBEAT_STATUS}")
+        output = subprocess.run(constants.FILEBEAT.FILEBEAT_STATUS.split(" "),
+                                check=True, capture_output=True, text=True)
+        filebeat_running = not ("not" in output.stdout)
+        logging.info(f"Got filebeat status, output:{output.stdout}, err output: {output.stderr} ")
         return filebeat_running
 
     @staticmethod
@@ -239,8 +239,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        logging.info("Starting filebeat")
-        os.system(constants.FILEBEAT.FILEBEAT_START)
+        logging.info(f"Starting filebeat with command: {constants.FILEBEAT.FILEBEAT_START}")
+        output = subprocess.run(constants.FILEBEAT.FILEBEAT_START.split(" "), check=True,
+                                capture_output=True, text=True)
+        logging.info(f"Started filebeat, stdout:{output.stdout}, stderr: {output.stderr}")
 
     @staticmethod
     def _stop_filebeat() -> None:
@@ -249,8 +251,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        logging.info("Stopping filebeat")
-        os.system(constants.FILEBEAT.FILEBEAT_STOP)
+        logging.info(f"Stopping filebeat with command: {constants.FILEBEAT.FILEBEAT_STOP}")
+        output = subprocess.run(constants.FILEBEAT.FILEBEAT_STOP.split(" "), check=True,
+                                capture_output=True, text=True)
+        logging.info(f"Stopped filebeat, output:{output.stdout}, err output: {output.stderr} ")
 
     @staticmethod
     def _set_filebeat_config(log_files_paths: List[str], kibana_ip: str, kibana_port: int, elastic_ip: str,
@@ -307,10 +311,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SNORT_MODULE),
-                             stdout=subprocess.PIPE, shell=True)
-        p.communicate()
-        p.wait()
+        logging.info(f"Enabling module with command: "
+                     f"{constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SNORT_MODULE)}")
+        output = subprocess.run(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SNORT_MODULE).split(" "),
+                                check=True, capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         snort_module_config = HostManagerUtil.filebeat_snort_module_config()
         logging.info(f"Updating filebeat snort module config: \n{snort_module_config}")
         HostManagerUtil.write_yaml_config(config=snort_module_config,
@@ -324,10 +329,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.ELASTICSEARCH_MODULE),
-                             stdout=subprocess.PIPE, shell=True)
-        p.communicate()
-        p.wait()
+        logging.info(f"Enabling module with command: "
+                     f"{constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.ELASTICSEARCH_MODULE)}")
+        output = subprocess.run(constants.FILEBEAT.ENABLE_MODULE_CMD.format(
+            constants.FILEBEAT.ELASTICSEARCH_MODULE).split(" "), check=True, capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         elasticsearch_module_config = HostManagerUtil.filebeat_elasticsearch_module_config()
         logging.info(f"Updating filebeat elasticsearch module config: \n{elasticsearch_module_config}")
         HostManagerUtil.write_yaml_config(config=elasticsearch_module_config,
@@ -341,10 +347,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.LOGSTASH_MODULE),
-                             stdout=subprocess.PIPE, shell=True)
-        p.communicate()
-        p.wait()
+        logging.info(f"Enabling module with command: "
+                     f"{constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.LOGSTASH_MODULE)}")
+        output = subprocess.run(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.LOGSTASH_MODULE).split(
+            " "), check=True, capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         logstash_module_config = HostManagerUtil.filebeat_logstash_module_config()
         logging.info(f"Updating filebeat logstash module config: \n{logstash_module_config}")
         HostManagerUtil.write_yaml_config(config=logstash_module_config,
@@ -358,10 +365,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KIBANA_MODULE),
-                             stdout=subprocess.PIPE, shell=True)
-        p.communicate()
-        p.wait()
+        logging.info(f"Enabling module with command: "
+                     f"{constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KIBANA_MODULE)}")
+        output = subprocess.run(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KIBANA_MODULE).split(
+            " "), check=True, capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         kibana_module_config = HostManagerUtil.filebeat_kibana_module_config()
         logging.info(f"Updating filebeat kibana module config: \n{kibana_module_config}")
         HostManagerUtil.write_yaml_config(config=kibana_module_config,
@@ -375,10 +383,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SYSTEM_MODULE),
-                             stdout=subprocess.PIPE, shell=True)
-        p.communicate()
-        p.wait()
+        logging.info(f"Enabling module with command: "
+                     f"{constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SYSTEM_MODULE)}")
+        output = subprocess.run(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.SYSTEM_MODULE).split(
+            " "), check=True, capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdoutf}, err output: {output.stderr}")
         system_module_config = HostManagerUtil.filebeat_system_module_config()
         logging.info(f"Updating filebeat system module config: \n{system_module_config}")
         HostManagerUtil.write_yaml_config(config=system_module_config,
@@ -392,10 +401,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
 
         :return: None
         """
-        p = subprocess.Popen(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KAFKA_MODULE),
-                             stdout=subprocess.PIPE, shell=True)
-        p.communicate()
-        p.wait()
+        logging.info(f"Enabling module with command: "
+                     f"{constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KAFKA_MODULE)}")
+        output = subprocess.run(constants.FILEBEAT.ENABLE_MODULE_CMD.format(constants.FILEBEAT.KAFKA_MODULE).split(" "),
+                                check=True, capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         kafka_module_config = HostManagerUtil.filebeat_kafka_module_config()
         logging.info(f"Updating filebeat kafka module config: \n{kafka_module_config}")
         HostManagerUtil.write_yaml_config(config=kafka_module_config,

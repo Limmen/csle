@@ -20,12 +20,10 @@ class SnortIdsManagerUtil:
         :return: a list of alerts
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_ALERTS_FILE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
         alerts = []
         year = datetime.datetime.now().year
-        for line in output.decode().split("\n"):
+        for line in result.stdout.split("\n"):
             a_str = line.replace("\n", "")
             alerts.append(SnortIdsAlert.parse_from_str(a_str, year=year))
         return alerts
@@ -39,12 +37,10 @@ class SnortIdsManagerUtil:
         :return: a list of alerts
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
         fast_logs = []
         year = datetime.datetime.now().year
-        for line in output.decode().split("\n"):
+        for line in result.stdout.split("\n"):
             if line is not None and line != "" and line != " ":
                 a_str = line.replace("\n", "")
                 fast_logs.append(SnortIdsAlert.fast_log_parse(a_str, year=year))
@@ -59,23 +55,19 @@ class SnortIdsManagerUtil:
         :return: the latest timestamp
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_ALERTS_FILE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
         year = datetime.datetime.now().year
         alerts = []
         year = datetime.datetime.now().year
-        for line in output.decode().split("\n"):
+        for line in result.stdout.split("\n"):
             if line != "" and line is not None and line != " ":
                 a_str = line.replace("\n", "")
                 alerts.append(SnortIdsAlert.parse_from_str(a_str, year=year))
         if len(alerts) == 0:
             # retry once
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            p.wait()
+            result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
             alerts = []
-            for line in output.decode().split("\n"):
+            for line in result.stdout.split("\n"):
                 if line != "" and line is not None and line != " ":
                     a_str = line.replace("\n", "")
                     alerts.append(SnortIdsAlert.parse_from_str(a_str, year=year))

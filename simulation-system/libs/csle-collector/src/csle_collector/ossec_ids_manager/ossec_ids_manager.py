@@ -83,10 +83,8 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
 
         :return: status and list of topics
         """
-        p = subprocess.Popen(constants.OSSEC.CHECK_IF_OSSEC_IS_RUNNING_CMD, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        status_output = output.decode()
+        status_output = subprocess.run(constants.OSSEC.CHECK_IF_OSSEC_IS_RUNNING_CMD.split(" "),
+                                       check=True, capture_output=True, text=True).stdout
         running = constants.OSSEC.OSSEC_RUNNING_SEARCH in status_output
         return running
 
@@ -163,13 +161,13 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
             monitor_running = self.ids_monitor_thread.running
         ossec_running = self._is_ossec_running()
         if ossec_running:
-            p = subprocess.Popen(constants.OSSEC.STOP_OSSEC_IDS, stdout=subprocess.DEVNULL, shell=True)
-            (output, err) = p.communicate()
-            p.wait()
+            result = subprocess.run(constants.OSSEC.STOP_OSSEC_IDS.split(" "),
+                           check=True, capture_output=True, text=True)
+            logging.info(f"Stopped the OSSEC IDS, stdout: {result.stdout}, stderr: {result.stderr}")
         if not ossec_running:
-            p = subprocess.Popen(constants.OSSEC.START_OSSEC_IDS, stdout=subprocess.DEVNULL, shell=True)
-            (output, err) = p.communicate()
-            p.wait()
+            result = subprocess.run(constants.OSSEC.START_OSSEC_IDS.split(" "),
+                                    check=True, capture_output=True, text=True)
+            logging.info(f"Started the OSSEC IDS, stdout: {result.stdout}, stderr: {result.stderr}")
         logging.info("Started the OSSEC IDS")
         return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
             monitor_running=monitor_running, ossec_ids_running=True)
@@ -188,10 +186,9 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         monitor_running = False
         if self.ids_monitor_thread is not None:
             monitor_running = self.ids_monitor_thread.running
-        p = subprocess.Popen(constants.OSSEC.STOP_OSSEC_IDS, stdout=subprocess.DEVNULL, shell=True)
-        p.communicate()
-        p.wait()
-        logging.info("Stopped the OSSECIDS")
+        result = subprocess.run(constants.OSSEC.STOP_OSSEC_IDS.split(" "),
+                                check=True, capture_output=True, text=True)
+        logging.info(f"Stopped the OSSECIDS, stdout: {result.stdout}, stderr: {result.stderr}")
         return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
             monitor_running=monitor_running, ossec_ids_running=False)
 

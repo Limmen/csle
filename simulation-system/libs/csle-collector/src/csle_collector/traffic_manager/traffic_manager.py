@@ -34,9 +34,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         :return: status of the traffic generator
         """
         cmd = constants.TRAFFIC_GENERATOR.CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = str(output)
+        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True).stdout
         running = constants.TRAFFIC_GENERATOR.TRAFFIC_GENERATOR_FILE_NAME in output
         return running
 
@@ -72,21 +70,18 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
 
         # Remove old file if exists
         cmd = constants.TRAFFIC_GENERATOR.REMOVE_OLD_TRAFFIC_GENERATOR_FILE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        logging.info(f"Removed old file, stdout: {result.stdout}, stderr: {result.stderr}")
 
         # Create file
         cmd = constants.TRAFFIC_GENERATOR.CREATE_TRAFFIC_GENERATOR_FILE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        logging.info(f"Created new file, stdout: {result.stdout}, stderr: {result.stderr}")
 
         # Make executable
         cmd = constants.TRAFFIC_GENERATOR.MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        logging.info(f"Changed permissions, stdout: {result.stdout}, stderr: {result.stderr}")
 
         # Write traffic generation script file
         with io.open(f"/{constants.TRAFFIC_GENERATOR.TRAFFIC_GENERATOR_FILE_NAME}", 'w', encoding='utf-8') as f:

@@ -20,11 +20,8 @@ class OSSecManagerUtil:
         :return: a list of alerts
         """
         cmd = constants.OSSEC.TAIL_ALERTS_COMMAND + " " + constants.OSSEC.OSSEC_ALERTS_FILE
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
+        result = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
         alerts = []
-
         timestamp = " "
         groups = []
         host = " "
@@ -35,7 +32,7 @@ class OSSecManagerUtil:
         src = " "
         user = " "
         linesmatched = 0
-        for line in output.decode().split("\n"):
+        for line in result.stdout.split("\n"):
             linematched = 0
 
             # Test for matches. A line will have more than one matching RE.

@@ -20,10 +20,8 @@ class HostManagerUtil:
         """
         try:
             cmd = constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            p.wait()
-            login_attempts_str = output.decode()
+            output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            login_attempts_str = output.stdout
             login_attempts = login_attempts_str.split("\n")
             login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
             year = datetime.datetime.now().year
@@ -42,10 +40,8 @@ class HostManagerUtil:
         :return: the number of recently failed login attempts
         """
         cmd = constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        login_attempts_str = output.decode()
+        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        login_attempts_str = output.stdout
         login_attempts = login_attempts_str.split("\n")
         login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
         year = datetime.datetime.now().year
@@ -63,10 +59,8 @@ class HostManagerUtil:
         """
         try:
             cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            p.wait()
-            logins = output.decode()
+            output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            logins = output.stdout
             logins = logins.split("\n")
             logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
             year = datetime.datetime.now().year
@@ -83,10 +77,8 @@ class HostManagerUtil:
         :return: the number of recently failed login attempts
         """
         cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        logins = output.decode()
+        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        logins = output.stdout
         logins = logins.split("\n")
         logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
         year = datetime.datetime.now().year
@@ -103,10 +95,8 @@ class HostManagerUtil:
         :return: the number of open connections
         """
         cmd = constants.HOST_METRICS.LIST_OPEN_CONNECTIONS_CMD
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        connections_str = output.decode()
+        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        connections_str = output.stdout
         parts = connections_str.split("Active UNIX domain sockets", 1)
         if len(parts) > 0:
             parts2 = parts[0].split("State")
@@ -123,10 +113,8 @@ class HostManagerUtil:
         :return: the number of user accounts
         """
         cmd = constants.HOST_METRICS.LIST_USER_ACCOUNTS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        users_str = output.decode()
+        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        users_str = output.stdout
         users = users_str.split("\n")
         return len(users)
 
@@ -138,10 +126,8 @@ class HostManagerUtil:
         :return: the number of logged in users
         """
         cmd = constants.HOST_METRICS.LIST_LOGGED_IN_USERS_CMD
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        users_str = output.decode()
+        output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+        users_str = output.stdout
         users_str = users_str.replace("\n", "")
         users = users_str.split(" ")
         return len(users)
@@ -156,10 +142,8 @@ class HostManagerUtil:
         """
         try:
             cmd = constants.HOST_METRICS.LIST_NUMBER_OF_PROCESSES
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            p.wait()
-            processes_str = output.decode()
+            output = subprocess.run(cmd.split(" "), check=True, capture_output=True, text=True)
+            processes_str = output.stdout
             num_processes = int(processes_str)
         except Exception:
             num_processes = -1

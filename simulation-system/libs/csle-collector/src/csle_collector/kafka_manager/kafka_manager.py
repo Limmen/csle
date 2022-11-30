@@ -37,10 +37,8 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
 
         :return: status and list of topics
         """
-        p = subprocess.Popen(constants.KAFKA.KAFKA_STATUS, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        p.wait()
-        status_output = output.decode()
+        status_output = subprocess.run(constants.KAFKA.KAFKA_STATUS.split(" "),
+                                       check=True, capture_output=True, text=True).stdout
         running = not ("not" in status_output)
         topics = []
         if running:

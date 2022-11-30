@@ -67,9 +67,9 @@ class FILEBEAT:
     ELASTICSEARCH_MODULE_CONFIG_FILE = "elasticsearch.yml"
     INPUTS_PROPERTY = "filebeat.inputs"
     MODULES_PROPERTY = "filebeat.config.modules"
-    FILEBEAT_STATUS = "service filebeat status"
-    FILEBEAT_START = "service filebeat start"
-    FILEBEAT_STOP = "service filebeat stop"
+    FILEBEAT_STATUS = "sudo service filebeat status"
+    FILEBEAT_START = "sudo service filebeat start"
+    FILEBEAT_STOP = "sudo service filebeat stop"
 
 
 class GRPC:
