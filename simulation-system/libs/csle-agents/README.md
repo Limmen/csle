@@ -37,6 +37,8 @@ and game-theoretic algorithms for finding defender policies.
 pip install csle-agents==<version>
 # local install from source
 $ pip install -e csle-agents
+# or (equivalently):
+make install
 # force upgrade deps
 $ pip install -e csle-agents --upgrade
 
@@ -47,6 +49,11 @@ pip3 install -e .
 ```
 
 ### Development tools
+
+Install all development tools at once:
+```bash
+make install_dev
+```
 
 Install the Python build tool
 ```bash
@@ -108,16 +115,25 @@ To update the official documentation at [https://limmen.dev/csle](https://limmen
 cp -r build/html ../../../../docs/_docs/csle-agents
 ```
 
+To run all documentation commands at once, use the command:
+```bash
+make docs
+```
+
 ## Static code analysis
 
 To run the Python linter, execute the following command:
 ```
 flake8 .
+# or (equivalently):
+make lint
 ```
 
 To run the mypy type checker, execute the following command:
 ```
 mypy .
+# or (equivalently):
+make types
 ```
 
 ## Unit tests
@@ -125,6 +141,8 @@ mypy .
 To run the unit tests, execute the following command:
 ```
 pytest
+# or (equivalently):
+make unit_tests
 ```
 
 To generate a coverage report, execute the following command:
@@ -138,6 +156,8 @@ To run tests and code analysis in different python environemnts, execute the fol
 
 ```bash
 tox
+# or (equivalently):
+make tests
 ```
 
 ## Create a new release and publish to PyPi
@@ -145,12 +165,21 @@ tox
 First build the package by executing:
 ```bash
 python3 -m build
+# or (equivalently)
+make build
 ```
 After running the command above, the built package is available at `./dist`.
 
 Push the built package to PyPi by running:
 ```bash
 python3 -m twine upload dist/*
+# or (equivalently)
+make push
+```
+
+To run all commands for the release at once, execute:
+```bash
+make release
 ```
 
 ## Author & Maintainer

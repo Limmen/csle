@@ -136,8 +136,8 @@ RUN pip install pycrypto==2.6 &&\
 # Setup base environment with csle-collector
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
 RUN pip install flask &&\
-    pip install waitress &&\
-    pip install csle-collector
+    pip install waitress
+#    pip install csle-collector
 
 # CVE-2015-3306 Exploit
 ADD docker_files/common/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py

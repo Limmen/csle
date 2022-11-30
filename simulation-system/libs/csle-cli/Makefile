@@ -25,9 +25,6 @@ types:
 lint:
 	flake8 .
 
-docs:
-	cd docs; sphinx-apidoc -f -o source/ ../csle_cli/ && make html && cp -r build/html ../../../../docs/_docs/csle-cli
-
 install:
 	pip install -e .
 
