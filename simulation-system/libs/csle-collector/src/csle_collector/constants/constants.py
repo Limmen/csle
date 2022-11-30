@@ -77,6 +77,7 @@ class GRPC:
     Constants related to GRPC
     """
     TIMEOUT_SECONDS = 30
+    CONFIG_TIMEOUT_SECONDS = 300
 
 
 class SYSTEM:
