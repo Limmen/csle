@@ -79,12 +79,12 @@ more specific Docker images.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ovs_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ovs_base/)
      - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ovs_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ovs_base/)
      - OS: Ubuntu:20.
-     - Inherits from `ùbuntu_20_base`
+     - Inherits from `ubuntu_20_base`
 - `ryu_base` ([ryu_base](./docker_files/ryu_base)): a base image with the Ryu SDN controller
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ryu_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ryu_base/)
      - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_ryu_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_ryu_base/)
      - OS: Ubuntu:20.
-     - Inherits from `ùbuntu_20_base`
+     - Inherits from `ubuntu_20_base`
 - `elk_base` ([elk_base](./docker_files/elk_base)): a base image with the ELK stack
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_elk_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_elk_base/)
      - [![Docker Image Size](https://badgen.net/docker/size/kimham/csle_elk_base?icon=docker&label=image%20size)](https://hub.docker.com/r/kimham/csle_elk_base/)
