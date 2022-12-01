@@ -1,6 +1,10 @@
 # CSLE Data Collection Examples
 
-This directory contains example scripts for collecting data with CSLE.  
+This directory contains example scripts for collecting data with CSLE.
+
+<p align="center">
+<img src="./../../docs/img/traces_loop.png" width="600">
+</p>
 
 - Collecting traces: [./static_sequences](static_sequences): this directory contains example scripts for running static attacker sequences in an emulation and recording metrics in traces.
 - Data exportation: [./data_exportation](data_exportation): this directory contains example scripts for exporting data from the CSLE metastore to disk.
