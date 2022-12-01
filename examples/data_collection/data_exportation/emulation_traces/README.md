@@ -1,6 +1,6 @@
-# Expectation-Maximization
+# Exporting emulation traces
 
-This directory contains example scripts for system identification using the expectation-maximization method
+This directory contains example scripts for exporting emulation traces from the metastore to disk
 
 ## Commands
 

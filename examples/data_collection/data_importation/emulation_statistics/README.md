@@ -1,6 +1,6 @@
-# Expectation-Maximization
+# Importing emulation statistics
 
-This directory contains example scripts for system identification using the expectation-maximization method
+This directory contains example scripts for importing emulation statistics from disk to the metastore
 
 ## Commands
 

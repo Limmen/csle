@@ -1,6 +1,6 @@
-# Expectation-Maximization
+# Saving Emulation Traces Datasets
 
-This directory contains example scripts for system identification using the expectation-maximization method
+This directory contains example scripts for saving datasets with emulation traces
 
 ## Commands
 
