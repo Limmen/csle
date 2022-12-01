@@ -117,7 +117,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=True,
                                                                           filebeat_running=filebeat_status,
-                                                                          packetbeat_status=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
