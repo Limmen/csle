@@ -131,7 +131,9 @@ const Simulation = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> General information about the emulation</h5>
+                            <h5 className="semiTitle"> General information about the simulation
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -190,7 +192,9 @@ const Simulation = (props) => {
                             aria-expanded={playersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Players</h5>
+                            <h5 className="semiTitle"> Players
+                                <i className="fa fa-users headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={playersOpen}>
@@ -225,7 +229,9 @@ const Simulation = (props) => {
                             aria-expanded={stateSpaceOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> State space </h5>
+                            <h5 className="semiTitle"> State space
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={stateSpaceOpen}>
@@ -260,7 +266,9 @@ const Simulation = (props) => {
                             aria-expanded={actionSpacesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Action spaces</h5>
+                            <h5 className="semiTitle"> Action spaces
+                                <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={actionSpacesOpen}>
@@ -300,7 +308,9 @@ const Simulation = (props) => {
                             aria-expanded={initialStateDistributionOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Initial state distribution </h5>
+                            <h5 className="semiTitle"> Initial state distribution
+                                <i className="fa fa-area-chart headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={initialStateDistributionOpen}>
@@ -333,7 +343,9 @@ const Simulation = (props) => {
                             aria-expanded={otherEnvParametersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Other environment parameters </h5>
+                            <h5 className="semiTitle"> Other environment parameters
+                                <i className="fa fa-list headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={otherEnvParametersOpen}>
@@ -368,7 +380,9 @@ const Simulation = (props) => {
                             aria-expanded={observationSpacesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Observation spaces </h5>
+                            <h5 className="semiTitle"> Observation spaces
+                                <i className="fa fa-list-ul headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={observationSpacesOpen}>
@@ -427,7 +441,9 @@ const Simulation = (props) => {
                             aria-expanded={transitionProbabilitiesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Transition probabilities </h5>
+                            <h5 className="semiTitle"> Transition probabilities
+                                <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={transitionProbabilitiesOpen}>
@@ -448,7 +464,9 @@ const Simulation = (props) => {
                             aria-expanded={observationFunctionOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Observation function </h5>
+                            <h5 className="semiTitle"> Observation function
+                                <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={observationFunctionOpen}>
@@ -467,7 +485,10 @@ const Simulation = (props) => {
                             aria-expanded={rewardFunctionOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Reward function </h5>
+                            <h5 className="semiTitle"> Reward function
+
+                                <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={rewardFunctionOpen}>

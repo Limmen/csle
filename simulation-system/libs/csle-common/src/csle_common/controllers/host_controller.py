@@ -138,24 +138,52 @@ class HostController:
                                                  ip=emulation_env_config.elk_config.container.get_ips()[0])
 
     @staticmethod
-    def start_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_filebeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and filebeat
 
         :param emulation_env_config: the emulation env config
+        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
         :return: None
         """
         # Start filebeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_filebeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.start_filebeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
+                                          initial_start=initial_start)
 
-        # Start host monitor on the Kafka container
+        # Start filebeat on the Kafka container
         HostController.start_filebeat(emulation_env_config=emulation_env_config,
-                                                 ip=emulation_env_config.kafka_config.container.get_ips()[0])
-        # Start host monitor on the ELK container
+                                      ips=emulation_env_config.kafka_config.container.get_ips(),
+                                      initial_start=initial_start)
+        # Start filebeat on the ELK container
         HostController.start_filebeat(emulation_env_config=emulation_env_config,
-                                                 ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                      ips=emulation_env_config.elk_config.container.get_ips(),
+                                      initial_start=initial_start)
+
+    @staticmethod
+    def start_packetbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and packetbeat
+
+        :param emulation_env_config: the emulation env config
+        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :return: None
+        """
+        # Start packetbeat on emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            HostController.start_filebeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
+                                          initial_start=initial_start)
+
+        # Start packetbeat on the Kafka container
+        HostController.start_packetbeat(emulation_env_config=emulation_env_config,
+                                      ips=emulation_env_config.kafka_config.container.get_ips(),
+                                      initial_start=initial_start)
+        # Start packetbeat on the ELK container
+        HostController.start_packetbeat(emulation_env_config=emulation_env_config,
+                                      ips=emulation_env_config.elk_config.container.get_ips(),
+                                      initial_start=initial_start)
 
     @staticmethod
     def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -179,6 +207,27 @@ class HostController:
                                      ip=emulation_env_config.elk_config.container.get_ips()[0])
 
     @staticmethod
+    def stop_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and to stop packetbeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        # Stop packetbeat on emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            HostController.stop_packetbeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+        # Stop packetbeat on the kafka container
+        HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
+                                       ip=emulation_env_config.kafka_config.container.get_ips()[0])
+
+        # Stop packetbeat on the ELK container
+        HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
+                                       ip=emulation_env_config.elk_config.container.get_ips()[0])
+
+    @staticmethod
     def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -198,6 +247,27 @@ class HostController:
         # Configure filebeat on the ELK container
         HostController.config_filebeat(emulation_env_config=emulation_env_config,
                                        container=emulation_env_config.elk_config.container)
+
+    @staticmethod
+    def config_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and to setup the configuration of packetbeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        # Configure packetbeat on the emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            HostController.config_packetbeat(emulation_env_config=emulation_env_config, container=c)
+
+        # Configure packetbeat on the kafka container
+        HostController.config_packetbeat(emulation_env_config=emulation_env_config,
+                                         container=emulation_env_config.kafka_config.container)
+
+        # Configure packetbeat on the ELK container
+        HostController.config_packetbeat(emulation_env_config=emulation_env_config,
+                                         container=emulation_env_config.elk_config.container)
 
     @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -226,27 +296,58 @@ class HostController:
                     time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
     @staticmethod
-    def start_filebeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def start_filebeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
         to start the Host manager and filebeat
 
         :param emulation_env_config: the emulation env config
         :param ip: IP of the container
+        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
-
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        if initial_start:
+            node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
+            if not node_beats_config.start_filebeat_automatically:
+                return
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
-            ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
+            ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.filebeat_running:
             Logger.__call__().get_logger().info(
-                f"Filebeat is not running on {ip}, starting it.")
+                f"Filebeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_filebeat(stub=stub)
+
+    @staticmethod
+    def start_packetbeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to start the Host manager and packetbeat
+
+        :param emulation_env_config: the emulation env config
+        :param ip: IP of the container
+        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        if initial_start:
+            node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
+            if not node_beats_config.start_packetbeat_automatically:
+                return
+        host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
+            ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
+        if not host_monitor_dto.packetbeat_running:
+            Logger.__call__().get_logger().info(
+                f"Packetbeat is not running on {ips[0]}, starting it.")
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+                csle_collector.host_manager.query_host_manager.start_packetbeat(stub=stub)
 
     @staticmethod
     def config_filebeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
@@ -280,6 +381,32 @@ class HostController:
                 filebeat_modules=node_beats_config.filebeat_modules,
                 reload_enabled=emulation_env_config.beats_config.reload_enabled,
                 kafka=node_beats_config.kafka_input)
+
+    @staticmethod
+    def config_packetbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
+        """
+        A method that sends a request to the HostManager on a specific container
+        to setup the packetbeat configuration
+
+        :param emulation_env_config: the emulation env config
+        :param container: the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{container.get_ips()[0]}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Configuring packetbeat on {container.get_ips()[0]}.")
+            csle_collector.host_manager.query_host_manager.config_packetbeat(
+                stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
+                kibana_port=emulation_env_config.elk_config.kibana_port,
+                elastic_ip=emulation_env_config.elk_config.container.get_ips()[0],
+                elastic_port=emulation_env_config.elk_config.elastic_port,
+                num_elastic_shards=emulation_env_config.beats_config.num_elastic_shards)
 
     @staticmethod
     def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
@@ -338,6 +465,25 @@ class HostController:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             Logger.__call__().get_logger().info(f"Stopping filebeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_filebeat(stub=stub)
+
+    @staticmethod
+    def stop_packetbeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific container to stop packetbeat
+
+        :param emulation_env_config: the emulation env config
+        :param ip: the IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Stopping packetbeat on {ip}.")
+            csle_collector.host_manager.query_host_manager.stop_packetbeat(stub=stub)
 
     @staticmethod
     def get_host_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
@@ -408,7 +554,7 @@ class HostController:
         for c in emulation_env_config.containers_config.containers:
             host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
                 ip=c.get_ips()[0], port=emulation_env_config.host_manager_config.host_manager_port,
-            failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
+                failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
             host_metrics_data_list.append(host_metrics_data)
 
         # Get log data from kafka container

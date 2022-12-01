@@ -8,7 +8,7 @@ class NodeBeatsConfig:
     """
 
     def __init__(self, ip: str, log_files_paths: List[str], filebeat_modules: List[str], kafka_input: bool = False,
-                 start_filebeat_automatically: bool = False):
+                 start_filebeat_automatically: bool = False, start_packetbeat_automatically: bool = False):
         """
         Intializes the DTO
 
@@ -18,12 +18,15 @@ class NodeBeatsConfig:
         :param kafka_input: boolean indicating whether the kafka log should be ingested from this node or not
         :param start_filebeat_automatically: boolean indicating whether filebeat should be started automatically
                                              when the emulation is started
+        :param start_packetbeat_automatically: boolean indicating whether packetbeat should be started automatically
+                                               when the emulation is started
         """
         self.ip = ip
         self.log_files_paths = log_files_paths
         self.filebeat_modules = filebeat_modules
         self.kafka_input = kafka_input
         self.start_filebeat_automatically = start_filebeat_automatically
+        self.start_packetbeat_automatically = start_packetbeat_automatically
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeBeatsConfig":
@@ -35,7 +38,8 @@ class NodeBeatsConfig:
         """
         obj = NodeBeatsConfig(
             ip=d["ip"], log_files_paths=d["log_files_paths"], filebeat_modules=d["filebeat_modules"],
-            kafka_input=d["kafka_input"], start_filebeat_automatically=d["start_filebeat_automatically"])
+            kafka_input=d["kafka_input"], start_filebeat_automatically=d["start_filebeat_automatically"],
+            start_packetbeat_automatically=d["start_packetbeat_automatically"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -48,6 +52,7 @@ class NodeBeatsConfig:
         d["filebeat_modules"] = self.filebeat_modules
         d["kafka_input"] = self.kafka_input
         d["start_filebeat_automatically"] = self.start_filebeat_automatically
+        d["start_packetbeat_automatically"] = self.start_packetbeat_automatically
         return d
 
     def __str__(self) -> str:
@@ -55,7 +60,8 @@ class NodeBeatsConfig:
         :return: a string representation of the object
         """
         return f"ip:{self.ip}, log_files_paths: {self.log_files_paths}, filebeat_modules: {self.filebeat_modules}, " \
-               f"kafka_input: {self.kafka_input}, start_filebeat_automatically: {self.start_filebeat_automatically}"
+               f"kafka_input: {self.kafka_input}, start_filebeat_automatically: {self.start_filebeat_automatically}, " \
+               f"start_packetbeat_automatically: {self.start_packetbeat_automatically}"
 
     def to_json_str(self) -> str:
         """

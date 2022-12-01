@@ -112,7 +112,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 31
+        steps = 33
         if no_traffic:
             steps = steps - 1
         if no_clients:
@@ -239,8 +239,18 @@ class EmulationEnvController:
         time.sleep(10)
 
         current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying packetbeats configurations --")
+        HostController.config_packetbeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        HostController.start_filebeats(emulation_env_config=emulation_env_config)
+        HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting packetbeats --")
+        HostController.start_packetbeats(emulation_env_config=emulation_env_config, initial_start=True)
         time.sleep(10)
 
         current_step += 1

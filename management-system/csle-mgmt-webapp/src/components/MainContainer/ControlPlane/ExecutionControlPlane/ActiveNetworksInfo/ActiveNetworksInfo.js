@@ -18,7 +18,9 @@ const ActiveNetworksInfo = (props) => {
                     aria-expanded={props.activeNetworksOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> Active networks </h5>
+                    <h5 className="semiTitle"> Active networks
+                        <i className="fa fa-podcast headerIcon" aria-hidden="true"></i>
+                    </h5>
                 </Button>
             </Card.Header>
             <Collapse in={props.activeNetworksOpen}>

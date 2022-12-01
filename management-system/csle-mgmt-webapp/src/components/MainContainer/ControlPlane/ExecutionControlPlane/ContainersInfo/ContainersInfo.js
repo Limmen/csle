@@ -8,6 +8,7 @@ import getIps from "../../../../Common/getIps";
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
 import ShellButton from "../ShellButton/ShellButton";
+import DockerImg from "./../../../Emulations/Emulation/Docker.png"
 import {CONTAINER_SUBRESOURCE, STOP_ALL_PROPERTY, START_ALL_PROPERTY} from "../../../../Common/constants";
 
 /**
@@ -24,6 +25,7 @@ const ContainersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> Docker container statuses
+                        <img src={DockerImg} alt="Docker" className="img-fluid headerIcon kafka"/>
                     </h5>
                 </Button>
             </Card.Header>

@@ -8,6 +8,7 @@ import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
 import getTopicsString from "../../../../Common/getTopicsString";
 import {KAFKA_MANAGER_SUBRESOURCE, KAFKA_SUBRESOURCE} from "../../../../Common/constants";
+import KafkaImg from "./../../../Emulations/Emulation/Kafka.png"
 
 /**
  * Subcomponent of the /control-plane page that contains information about kafka managers
@@ -23,6 +24,7 @@ const KafkaManagersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> Kafka managers
+                        <img src={KafkaImg} alt="Kafka" className="img-fluid headerIcon kafka"/>
                     </h5>
                 </Button>
             </Card.Header>

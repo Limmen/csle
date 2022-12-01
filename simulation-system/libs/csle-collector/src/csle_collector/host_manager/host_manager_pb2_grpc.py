@@ -50,6 +50,21 @@ class HostManagerStub(object):
                 request_serializer=host__manager__pb2.ConfigFilebeatMsg.SerializeToString,
                 response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
+        self.stopPacketbeat = channel.unary_unary(
+                '/HostManager/stopPacketbeat',
+                request_serializer=host__manager__pb2.StopPacketbeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.startPacketbeat = channel.unary_unary(
+                '/HostManager/startPacketbeat',
+                request_serializer=host__manager__pb2.StartPacketbeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.configPacketbeat = channel.unary_unary(
+                '/HostManager/configPacketbeat',
+                request_serializer=host__manager__pb2.ConfigPacketbeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
 
 
 class HostManagerServicer(object):
@@ -98,6 +113,24 @@ class HostManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopPacketbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startPacketbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def configPacketbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_HostManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -134,6 +167,21 @@ def add_HostManagerServicer_to_server(servicer, server):
             'configFilebeat': grpc.unary_unary_rpc_method_handler(
                     servicer.configFilebeat,
                     request_deserializer=host__manager__pb2.ConfigFilebeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'stopPacketbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopPacketbeat,
+                    request_deserializer=host__manager__pb2.StopPacketbeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'startPacketbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startPacketbeat,
+                    request_deserializer=host__manager__pb2.StartPacketbeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'configPacketbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.configPacketbeat,
+                    request_deserializer=host__manager__pb2.ConfigPacketbeatMsg.FromString,
                     response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
     }
@@ -262,6 +310,57 @@ class HostManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/HostManager/configFilebeat',
             host__manager__pb2.ConfigFilebeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopPacketbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/stopPacketbeat',
+            host__manager__pb2.StopPacketbeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startPacketbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/startPacketbeat',
+            host__manager__pb2.StartPacketbeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def configPacketbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/configPacketbeat',
+            host__manager__pb2.ConfigPacketbeatMsg.SerializeToString,
             host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

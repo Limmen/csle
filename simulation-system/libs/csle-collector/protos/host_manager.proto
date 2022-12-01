@@ -9,6 +9,9 @@ service HostManager {
   rpc stopFilebeat(StopFilebeatMsg) returns (HostStatusDTO) {}
   rpc startFilebeat(StartFilebeatMsg) returns (HostStatusDTO) {}
   rpc configFilebeat(ConfigFilebeatMsg) returns (HostStatusDTO) {}
+  rpc stopPacketbeat(StopPacketbeatMsg) returns (HostStatusDTO) {}
+  rpc startPacketbeat(StartPacketbeatMsg) returns (HostStatusDTO) {}
+  rpc configPacketbeat(ConfigPacketbeatMsg) returns (HostStatusDTO) {}
 }
 
 // Message that the client sends to stop the HostMonitor
@@ -43,6 +46,21 @@ message ConfigFilebeatMsg {
   repeated string log_files_paths = 12;
 }
 
+// Message that the client sends to stop packetbeat
+message StopPacketbeatMsg {}
+
+// Message that the client sends to start packetbeat
+message StartPacketbeatMsg {}
+
+// Message that the client sends to set the packetbeat configuration
+message ConfigPacketbeatMsg {
+  string kibana_ip = 1;
+  int32 kibana_port = 2;
+  string elastic_ip = 3;
+  int32 elastic_port = 4;
+  int32 num_elastic_shards = 5;
+}
+
 // Message that the client sends to get the status of the HostMonitor
 message GetHostStatusMsg {}
 
@@ -50,6 +68,7 @@ message GetHostStatusMsg {}
 message HostStatusDTO {
   bool monitor_running = 1;
   bool filebeat_running = 2;
+  bool packetbeat_running = 3;
 }
 
 // Message that the client sends to extract the Host metrics from given timestamps

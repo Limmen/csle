@@ -24,7 +24,9 @@ const ClientManagersInfo = (props) => {
                     aria-expanded={props.clientManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> Client managers</h5>
+                    <h5 className="semiTitle"> Client managers
+                        <i className="fa fa-users headerIcon" aria-hidden="true"></i>
+                    </h5>
                 </Button>
             </Card.Header>
             <Collapse in={props.clientManagersOpen}>

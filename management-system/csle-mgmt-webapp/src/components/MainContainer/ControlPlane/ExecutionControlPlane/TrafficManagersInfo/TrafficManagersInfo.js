@@ -25,7 +25,9 @@ const TrafficManagersInfo = (props) => {
                     aria-expanded={props.trafficManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> Traffic managers </h5>
+                    <h5 className="semiTitle"> Traffic managers
+                        <i className="fa fa-chrome headerIcon" aria-hidden="true"></i>
+                    </h5>
                 </Button>
             </Card.Header>
             <Collapse in={props.trafficManagersOpen}>

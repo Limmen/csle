@@ -12,6 +12,7 @@ import {
     OSSEC_IDS_MONITOR_SUBRESOURCE,
     STOP_ALL_PROPERTY,
     START_ALL_PROPERTY} from "../../../../Common/constants";
+import OssecImg from "./../../../Emulations/Emulation/Ossec.png"
 
 /**
  * Subcomponent of the /control-plane page that contains information about OSSEC IDS managers
@@ -27,6 +28,7 @@ const OSSECIDSManagersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> OSSEC IDS Managers
+                        <img src={OssecImg} alt="OSSEC" className="img-fluid headerIcon kafka"/>
                     </h5>
                 </Button>
             </Card.Header>

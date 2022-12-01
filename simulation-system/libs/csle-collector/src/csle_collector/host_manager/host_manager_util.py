@@ -304,7 +304,7 @@ class HostManagerUtil:
         if kafka:
             filebeat_config[constants.FILEBEAT.INPUTS_PROPERTY].append(
                 {
-                    constants.BEATS.TYPE_PROPERTY: constants.BEATS.FILESTREAM_PROPERTY,
+                    constants.BEATS.TYPE_PROPERTY: constants.BEATS.KAFKA_PROPERTY,
                     constants.BEATS.ENABLED_PROPERTY: True,
                     constants.BEATS.GROUP_ID_PROPERTY: constants.FILEBEAT.FILEBEAT_GROUP_ID,
                     constants.BEATS.TOPICS_PROPERTY: kafka_topics,
@@ -470,3 +470,101 @@ class HostManagerUtil:
             }
         ]
         return system_config
+
+    @staticmethod
+    def packetbeat_config(kibana_ip: str, kibana_port: int, elastic_ip: str, elastic_port: int,
+                          num_elastic_shards: int) -> Dict[str, Any]:
+        """
+        Generates the packetbeat.yml config
+
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :return: the filebeat configuration dict
+        """
+        packetbeat_config = {}
+        packetbeat_config[constants.PACKETBEAT.INTERFACES_TYPE_PROPERTY] = constants.PACKETBEAT.AF_PACKET_PROPERTY
+        packetbeat_config[constants.PACKETBEAT.INTERFACES_DEVICE_PROPERTY] = constants.PACKETBEAT.ANY_DEVICE_PROPERTY
+        packetbeat_config[constants.PACKETBEAT.FLOWS] = {
+            constants.PACKETBEAT.TIMEOUT_PROPERTY: "30s",
+            constants.PACKETBEAT.PERIOD_PROPERTY: "10s"
+        }
+        packetbeat_config[constants.PACKETBEAT.PROTOCOLS] = [
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.ICMP_PROTOCOL,
+                constants.BEATS.ENABLED_PROPERTY: True
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.AMQP_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.AMQP_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.CASSANDRA_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.CASSANDRA_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.DHCPV4_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.DHCPV4_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.DNS_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.DNS_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.HTTP_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.HTTP_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.MEMCACHE_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.MEMCACHE_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.MYSQL_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.MYSQL_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.PGSQL_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.PGSQL_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.REDIS_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.REDIS_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.THRIFT_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.THRIFT_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.MONGODB_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.MONGODB_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.NFS_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.NFS_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.TLS_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.TLS_PORTS
+            },
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.PACKETBEAT.SIP_PROTOCOL,
+                constants.PACKETBEAT.PORTS_PROPERTY: constants.PACKETBEAT.SIP_PORTS
+            }
+        ]
+        packetbeat_config[constants.BEATS.SETUP_TEMPLATE_SETTINGS_PROPERTY] = {
+            constants.BEATS.INDEX_NUM_SHARDS_PROPERTY: num_elastic_shards
+        }
+        packetbeat_config[constants.BEATS.SETUP_KIBANA_PROPERTY] = {
+            constants.BEATS.HOST_PROPERTY: f"{kibana_ip}:{kibana_port}"
+        }
+        packetbeat_config[constants.BEATS.ELASTIC_OUTPUT_PROPERTY] = {
+            constants.BEATS.HOSTS_PROPERTY: [f"{elastic_ip}:{elastic_port}"]
+        }
+        packetbeat_config[constants.BEATS.PROCESSORS_PROPERTY] = {
+            constants.BEATS.ADD_HOST_METADATA_PROPERTY: {
+                constants.BEATS.WHEN_NOT_CONTAIN_TAGS_PROPERTY: constants.BEATS.FORWARDED_PROPERTY
+            }
+        }
+        return packetbeat_config

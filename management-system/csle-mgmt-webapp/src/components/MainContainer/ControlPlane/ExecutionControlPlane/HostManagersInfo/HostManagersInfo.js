@@ -25,7 +25,9 @@ const HostManagersInfo = (props) => {
                     aria-expanded={props.hostManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> Host managers </h5>
+                    <h5 className="semiTitle"> Host managers
+                        <i className="fa fa-server headerIcon" aria-hidden="true"></i>
+                    </h5>
                 </Button>
             </Card.Header>
             <Collapse in={props.hostManagersOpen}>

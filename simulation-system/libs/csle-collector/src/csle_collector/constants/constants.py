@@ -40,7 +40,7 @@ class BEATS:
     ID_PROPERTY = "id"
     ENABLED_PROPERTY = "enabled"
     PATHS_PROPERTY = "paths"
-    PATH_PROPERTY = "paths"
+    PATH_PROPERTY = "path"
 
 
 class FILEBEAT:
@@ -70,6 +70,57 @@ class FILEBEAT:
     FILEBEAT_STATUS = "sudo service filebeat status"
     FILEBEAT_START = "sudo service filebeat start"
     FILEBEAT_STOP = "sudo service filebeat stop"
+
+
+class PACKETBEAT:
+    """
+    Constants related to Packetbeat
+    """
+    FILEBEAT_GROUP_ID = "packetbeat"
+    CONFIG_DIR = "/etc/packetbeat/"
+    CONFIG_FILE = "/etc/packetbeat/packetbeat.yml"
+    SETUP_CMD = "packetbeat setup -e"
+    PACKETBEAT_STATUS = "sudo service packetbeat status"
+    PACKETBEAT_START = "sudo service packetbeat start"
+    PACKETBEAT_STOP = "sudo service packetbeat stop"
+    INTERFACES_TYPE_PROPERTY = "packetbeat.interfaces.type"
+    AF_PACKET_PROPERTY = "af_packet"
+    ANY_DEVICE_PROPERTY = "any"
+    INTERFACES_DEVICE_PROPERTY = "packetbeat.interfaces.device"
+    FLOWS = "packetbeat.flows"
+    TIMEOUT_PROPERTY = "timeout"
+    PERIOD_PROPERTY = "period"
+    PROTOCOLS = "packetbeat.protocols"
+    ICMP_PROTOCOL = "icmp"
+    AMQP_PROTOCOL = "amqp"
+    PORTS_PROPERTY = "ports"
+    AMQP_PORTS=[5672]
+    CASSANDRA_PROTOCOL = "cassandra"
+    CASSANDRA_PORTS=[9042]
+    DHCPV4_PROTOCOL = "dhcpv4"
+    DHCPV4_PORTS=[67,68]
+    DNS_PROTOCOL = "dns"
+    DNS_PORTS=[53]
+    HTTP_PROTOCOL = "http"
+    HTTP_PORTS=[80,8080,8000,5000,8002]
+    MEMCACHE_PROTOCOL = "memcache"
+    MEMCACHE_PORTS=[11211]
+    MYSQL_PROTOCOL = "mysql"
+    MYSQL_PORTS=[3306,3307]
+    PGSQL_PROTOCOL = "pgsql"
+    PGSQL_PORTS=[5432]
+    REDIS_PROTOCOL = "redis"
+    REDIS_PORTS=[6379]
+    THRIFT_PROTOCOL = "thrift"
+    THRIFT_PORTS=[9090]
+    MONGODB_PROTOCOL = "mongodb"
+    MONGODB_PORTS=[27017]
+    NFS_PROTOCOL = "nfs"
+    NFS_PORTS=[2049]
+    TLS_PROTOCOL = "tls"
+    TLS_PORTS=[443,993,995,5223,8443,8883,9243]
+    SIP_PROTOCOL = "sip"
+    SIP_PORTS = [9243]
 
 
 class GRPC:

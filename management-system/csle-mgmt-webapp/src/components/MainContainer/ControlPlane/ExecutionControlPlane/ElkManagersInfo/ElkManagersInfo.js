@@ -17,6 +17,7 @@ import {
     ELK_MANAGER_SUBRESOURCE,
     ELASTIC_SUBRESOURCE, HTTP_PREFIX
 } from "../../../../Common/constants";
+import ElasticImg from "./../../../Emulations/Emulation/Elastic.png"
 
 /**
  * Subcomponent of the /control-plane page that contains information about ELK managers
@@ -56,6 +57,7 @@ const ElkManagersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> ELK Managers
+                        <img src={ElasticImg} alt="Elastic" className="img-fluid headerIcon elastic"/>
                     </h5>
                 </Button>
             </Card.Header>

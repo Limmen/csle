@@ -143,3 +143,60 @@ def get_host_metrics(
             failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
     host_metrics_dto = stub.getHostMetrics(get_host_metrics_msg, timeout=timeout)
     return host_metrics_dto
+
+
+def start_packetbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to start packetbeat
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    start_packetbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.StartPacketbeatMsg()
+    host_dto = stub.startPacketbeat(start_packetbeat_msg, timeout=timeout)
+    return host_dto
+
+
+def stop_packetbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to stop packetbeat
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    stop_packetbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.StopPacketbeatMsg()
+    host_dto = stub.stopPacketbeat(stop_packetbeat_msg, timeout=timeout)
+    return host_dto
+
+
+def config_packetbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        kibana_ip: str, kibana_port: int, elastic_ip: str,
+        elastic_port: int, num_elastic_shards: int,
+        timeout=constants.GRPC.CONFIG_TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to update the packetbeat configuration
+
+    :param kibana_ip: the IP of Kibana where the data should be visualized
+    :param kibana_port: the port of Kibana where the data should be visualized
+    :param elastic_ip: the IP of elastic where the data should be shipped
+    :param elastic_port: the port of elastic where the data should be shipped
+    :param num_elastic_shards: the number of elastic shards
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    config_packetbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.ConfigPacketbeatMsg(
+            kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip,
+            elastic_port=elastic_port, num_elastic_shards=num_elastic_shards)
+    host_dto = stub.configPacketbeat(config_packetbeat_msg, timeout=timeout)
+    return host_dto

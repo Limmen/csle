@@ -11,6 +11,8 @@ import {
     SNORT_IDS_MANAGER_SUBRESOURCE,
     SNORT_IDS_SUBRESOURCE
 } from "../../../../Common/constants";
+import SnortImg from "./../../../Emulations/Emulation/Snort.png"
+
 /**
  * Subcomponent of the /control-plane page that contains information about Snort IDS managers
  */
@@ -25,6 +27,7 @@ const SnortIDSManagersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> Snort IDS Managers
+                        <img src={SnortImg} alt="Snort" className="img-fluid headerIcon elastic"/>
                     </h5>
                 </Button>
             </Card.Header>

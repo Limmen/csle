@@ -409,7 +409,9 @@ const LogsAdmin = (props) => {
                         aria-expanded={statsManagerLogsOpen}
                         variant="link"
                     >
-                        <h5 className="semiTitle"> Docker stats manager logs </h5>
+                        <h5 className="semiTitle"> Docker stats manager logs
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
                     </Button>
                 </Card.Header>
                 <Collapse in={statsManagerLogsOpen}>
@@ -432,7 +434,9 @@ const LogsAdmin = (props) => {
                         aria-expanded={grafanaLogsOpen}
                         variant="link"
                     >
-                        <h5 className="semiTitle"> Grafana logs </h5>
+                        <h5 className="semiTitle"> Grafana logs
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
                     </Button>
                 </Card.Header>
                 <Collapse in={grafanaLogsOpen}>
@@ -455,7 +459,9 @@ const LogsAdmin = (props) => {
                         aria-expanded={prometheusLogsOpen}
                         variant="link"
                     >
-                        <h5 className="semiTitle"> Prometheus logs </h5>
+                        <h5 className="semiTitle"> Prometheus logs
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
                     </Button>
                 </Card.Header>
                 <Collapse in={prometheusLogsOpen}>
@@ -478,7 +484,9 @@ const LogsAdmin = (props) => {
                         aria-expanded={cadvisorLogsOpen}
                         variant="link"
                     >
-                        <h5 className="semiTitle"> cAdvisor logs </h5>
+                        <h5 className="semiTitle"> cAdvisor logs
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
                     </Button>
                 </Card.Header>
                 <Collapse in={cadvisorLogsOpen}>
@@ -501,7 +509,9 @@ const LogsAdmin = (props) => {
                         aria-expanded={nodeExporterLogsOpen}
                         variant="link"
                     >
-                        <h5 className="semiTitle"> Node exporter logs </h5>
+                        <h5 className="semiTitle"> Node exporter logs
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
                     </Button>
                 </Card.Header>
                 <Collapse in={nodeExporterLogsOpen}>
@@ -524,7 +534,9 @@ const LogsAdmin = (props) => {
                         aria-expanded={csleLogsOpen}
                         variant="link"
                     >
-                        <h5 className="semiTitle"> CSLE Log files </h5>
+                        <h5 className="semiTitle"> CSLE Log files
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
                     </Button>
                 </Card.Header>
                 <Collapse in={csleLogsOpen}>

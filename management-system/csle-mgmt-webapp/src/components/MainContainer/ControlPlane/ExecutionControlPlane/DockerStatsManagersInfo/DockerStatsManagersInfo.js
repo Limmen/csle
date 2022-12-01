@@ -7,6 +7,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
 import {DOCKER_STATS_MANAGER_SUBRESOURCE, DOCKER_STATS_MONITOR_SUBRESOURCE} from "../../../../Common/constants";
+import DockerImg from "./../../../Emulations/Emulation/Docker.png"
 /**
  * Subcomponent of the /control-plane page that contains information about Docker stats managers
  */
@@ -21,6 +22,7 @@ const DockerStatsManagersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> Docker Statistics Managers
+                        <img src={DockerImg} alt="Docker" className="img-fluid headerIcon kafka"/>
                     </h5>
                 </Button>
             </Card.Header>

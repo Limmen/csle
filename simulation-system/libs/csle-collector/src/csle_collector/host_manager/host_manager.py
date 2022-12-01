@@ -114,8 +114,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         self.host_monitor_thread.start()
         logging.info("Started the HostMonitor thread")
         filebeat_status = HostManagerServicer._get_filebeat_status()
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=True,
-                                                                          filebeat_running=filebeat_status)
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_status=packetbeat_status)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -131,8 +133,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             self.host_monitor_thread.running = False
         logging.info("Host monitor stopped")
         filebeat_running = HostManagerServicer._get_filebeat_status()
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=False,
-                                                                          filebeat_running=filebeat_running)
+                                                                          filebeat_running=filebeat_running,
+                                                                          packetbeat_running=packetbeat_status)
 
     def startFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StartFilebeatMsg,
                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -149,8 +153,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         monitor_running = False
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
-                                                                          filebeat_running=True)
+                                                                          filebeat_running=True,
+                                                                          packetbeat_running=packetbeat_status)
 
     def stopFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StopFilebeatMsg,
                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -167,8 +173,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         monitor_running = False
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
-                                                                          filebeat_running=False)
+                                                                          filebeat_running=False,
+                                                                          packetbeat_running=packetbeat_status)
 
     def configFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigFilebeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -197,8 +205,77 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
         filebeat_running = HostManagerServicer._get_filebeat_status()
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
-                                                                          filebeat_running=filebeat_running)
+                                                                          filebeat_running=filebeat_running,
+                                                                          packetbeat_running=packetbeat_status)
+
+    def startPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartPacketbeatMsg,
+                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Starts packetbeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info("Starting packetbeat")
+        HostManagerServicer._start_packetbeat()
+        logging.info("Started packetbeat")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_running=True)
+
+    def stopPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopPacketbeatMsg,
+                     context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Stops packetbeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info("Stopping packetbeat")
+        HostManagerServicer._stop_packetbeat()
+        logging.info("Packetbeat stopped")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_running=False)
+
+    def configPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigPacketbeatMsg,
+                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Updates the configuration of packetbeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info(f"Updating the packetbeat configuration,"
+                     f"kibana_ip : {request.kibana_ip}, kibana_port: {request.kibana_port}, "
+                     f"elastic_ip: {request.elastic_ip}, elastic_port: {request.elastic_port}, "
+                     f"num_elastic_shards: {request.num_elastic_shards}, reload_enabled: {request.reload_enabled}")
+        HostManagerServicer._set_packetbeat_config(
+            kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
+            elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
+            num_elastic_shards=request.num_elastic_shards)
+        logging.info("Packetbeat configuration updated")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        filebeat_running = HostManagerServicer._get_filebeat_status()
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_running,
+                                                                          packetbeat_running=packetbeat_status)
 
     def getHostStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostStatusMsg,
                       context: grpc.ServicerContext) \
@@ -214,8 +291,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
         filebeat_running = HostManagerServicer._get_filebeat_status()
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
-                                                                          filebeat_running=filebeat_running)
+                                                                          filebeat_running=filebeat_running,
+                                                                          packetbeat_running=packetbeat_status)
 
     @staticmethod
     def _get_filebeat_status() -> bool:
@@ -410,6 +489,64 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         HostManagerUtil.write_yaml_config(config=kafka_module_config,
                                           path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
                                                f"{constants.FILEBEAT.KAFKA_MODULE}")
+
+    @staticmethod
+    def _get_packetbeat_status() -> bool:
+        """
+        Utility method to get the status of packetbeat
+
+        :return: status of filebeat
+        """
+        logging.info(f"Getting packetbeat status with command: {constants.PACKETBEAT.PACKETBEAT_STATUS}")
+        output = subprocess.run(constants.PACKETBEAT.PACKETBEAT_STATUS.split(" "), capture_output=True, text=True)
+        packetbeat_running = not ("not" in output.stdout)
+        logging.info(f"Got packetbeat status, output:{output.stdout}, err output: {output.stderr} ")
+        return packetbeat_running
+
+    @staticmethod
+    def _start_packetbeat() -> None:
+        """
+        Utility method to start packetbeat
+
+        :return: None
+        """
+        logging.info(f"Starting packetbeat with command: {constants.PACKETBEAT.PACKETBEAT_START}")
+        output = subprocess.run(constants.FILEBEAT.FILEBEAT_START.split(" "), capture_output=True, text=True)
+        logging.info(f"Started packetbeat, stdout:{output.stdout}, stderr: {output.stderr}")
+
+    @staticmethod
+    def _stop_packetbeat() -> None:
+        """
+        Utility method to stop packetbeat
+
+        :return: None
+        """
+        logging.info(f"Stopping packetbeat with command: {constants.PACKETBEAT.PACKETBEAT_STOP}")
+        output = subprocess.run(constants.PACKETBEAT.PACKETBEAT_STOP.split(" "), capture_output=True, text=True)
+        logging.info(f"Stopped packetbeat, output:{output.stdout}, err output: {output.stderr} ")
+
+    @staticmethod
+    def _set_packetbeat_config(kibana_ip: str, kibana_port: int, elastic_ip: str, elastic_port: int,
+                               num_elastic_shards: int) -> None:
+        """
+        Updates the packetbeat configuration file
+
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :return: None
+        """
+        packetbeat_config = HostManagerUtil.packetbeat_config(
+            kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip, elastic_port=elastic_port,
+            num_elastic_shards=num_elastic_shards)
+
+        logging.info(f"Updating packetbeat config: \n{packetbeat_config}")
+        HostManagerUtil.write_yaml_config(config=packetbeat_config, path=constants.PACKETBEAT.CONFIG_FILE)
+        logging.info(f"Running packetbeat setup command: {constants.PACKETBEAT.SETUP_CMD}")
+        output = subprocess.run(constants.PACKETBEAT.SETUP_CMD.split(" "), capture_output=True, text=True)
+        logging.info(f"Stdout of the setup command: {output.stdout}, stderr of the setup command: {output.stderr}")
 
 
 def serve(port: int = 50049, log_dir: str = "/", max_workers: int = 10,
