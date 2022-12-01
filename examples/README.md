@@ -2,6 +2,8 @@
 
 This directory contains example scripts for using CSLE. 
 
+## Contents
+
 - Data collection: [./data_collection](data_collection): this directory contains example scripts for data collection (e.g. collecting traces).
 - Training: [./training](training): this directory contains example scripts for training policies.
 - System identification: [./system_identification](data_collection): this directory contains example scripts for system identification.

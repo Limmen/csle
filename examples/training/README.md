@@ -6,6 +6,8 @@ This directory contains example scripts for system policy training in CSLE.
 <img src="./../../docs/img/rl.png" width="300">
 </p>
 
+## Contents
+
 - Bayesian Optimization: [./bayes_opt](bayes_opt): this directory contains example scripts for optimizing policies using Bayesian Optimization
 - Cross Entropy: [./cross_entropy](cross_entropy): this directory contains example scripts for optimizing policies using the Cross-Entropy method
 - Differential Evolution: [./differential_evolution](differential_evolution): this directory contains example scripts for optimizing policies using differential evolution.

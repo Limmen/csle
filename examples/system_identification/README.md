@@ -6,6 +6,8 @@ This directory contains example scripts for system identification in CSLE.
 <img src="./../../docs/img/system_identification.png" width="600">
 </p>
 
+## Contents
+
 - Empirical: [./empirical](empirical): this directory contains example scripts for system identification based on maximum-likelihood estimation
 - Expectation Maximization: [./expectation_maximization](expectation_maximization): this directory contains example scripts for system identification based on expectation maximization
 - Gaussian Processes: [./gp](gp): this directory contains example scripts for system identification based on Gaussian Processes

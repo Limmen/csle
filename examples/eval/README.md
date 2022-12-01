@@ -2,6 +2,8 @@
 
 This directory contains example scripts for evaluating learned defender policies in an emulation  
 
+## Contents
+
 - Stopping Game POMDP: [./stopping_game_pomdp_defender](stopping_game_pomdp_defender): this directory contains example scripts for evaluating defenderp policies in the stopping POMDP of [https://ieeexplore.ieee.org/document/9779345](https://ieeexplore.ieee.org/document/9779345).
 
 ## Author & Maintainer
