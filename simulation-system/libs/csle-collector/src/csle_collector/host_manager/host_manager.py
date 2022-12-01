@@ -115,9 +115,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Started the HostMonitor thread")
         filebeat_status = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=True,
                                                                           filebeat_running=filebeat_status,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -134,9 +136,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Host monitor stopped")
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=False,
                                                                           filebeat_running=filebeat_running,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     def startFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StartFilebeatMsg,
                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -154,9 +158,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=True,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     def stopFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StopFilebeatMsg,
                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -174,9 +180,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=False,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     def configFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigFilebeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -206,9 +214,87 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             monitor_running = self.host_monitor_thread.running
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=filebeat_running,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
+
+    def startMetricbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartMetricbeatMsg,
+                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Starts metricbeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info("Starting metricbeat")
+        HostManagerServicer._start_metricbeat()
+        logging.info("Started metricbeat")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=True)
+
+    def stopMetricbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopMetricbeatMsg,
+                     context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Stops metricbeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info("Stopping metricbeat")
+        HostManagerServicer._stop_metricbeat()
+        logging.info("Metricbeat stopped")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=False)
+
+    def configMetricbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigMetricbeatMsg,
+                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Updates the configuration of metricbeat
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info(f"Updating the metricbeat configuration, "                     
+                     f"kibana_ip : {request.kibana_ip}, kibana_port: {request.kibana_port}, "
+                     f"elastic_ip: {request.elastic_ip}, elastic_port: {request.elastic_port}, "
+                     f"num_elastic_shards: {request.num_elastic_shards}, reload_enabled: {request.reload_enabled}, "
+                     f"kafka_ip: {request.kafka_ip}, kafka_port: {request.kafka_port}, "
+                     f"metricbeat_modules: {request.metricbeat_modules}")
+        HostManagerServicer._set_metricbeat_config(
+            kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
+            elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
+            num_elastic_shards=request.num_elastic_shards, reload_enabled=request.reload_enabled,
+            kafka_ip=request.kafka_ip, kafka_port=request.kafka_port, metricbeat_modules=request.metricbeat_modules)
+        logging.info("Metricbeat configuration updated")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        filebeat_running = HostManagerServicer._get_filebeat_status()
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_running,
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     def startPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartPacketbeatMsg,
                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -226,9 +312,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
         filebeat_status = HostManagerServicer._get_filebeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=filebeat_status,
-                                                                          packetbeat_running=True)
+                                                                          packetbeat_running=True,
+                                                                          metricbeat_running=metricbeat_status)
 
     def stopPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopPacketbeatMsg,
                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -246,9 +334,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             monitor_running = self.host_monitor_thread.running
         filebeat_status = HostManagerServicer._get_filebeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=filebeat_status,
-                                                                          packetbeat_running=False)
+                                                                          packetbeat_running=False,
+                                                                          metricbeat_running=metricbeat_status)
 
     def configPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigPacketbeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -262,7 +352,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Updating the packetbeat configuration,"
                      f"kibana_ip : {request.kibana_ip}, kibana_port: {request.kibana_port}, "
                      f"elastic_ip: {request.elastic_ip}, elastic_port: {request.elastic_port}, "
-                     f"num_elastic_shards: {request.num_elastic_shards}, reload_enabled: {request.reload_enabled}")
+                     f"num_elastic_shards: {request.num_elastic_shards}")
         HostManagerServicer._set_packetbeat_config(
             kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
             elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
@@ -273,9 +363,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             monitor_running = self.host_monitor_thread.running
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=filebeat_running,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     def getHostStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostStatusMsg,
                       context: grpc.ServicerContext) \
@@ -292,9 +384,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             monitor_running = self.host_monitor_thread.running
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
         return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
                                                                           filebeat_running=filebeat_running,
-                                                                          packetbeat_running=packetbeat_status)
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status)
 
     @staticmethod
     def _get_filebeat_status() -> bool:
@@ -362,17 +456,17 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                           kafka_topics=kafka_topics)
         for module in filebeat_modules:
             if module == constants.FILEBEAT.SYSTEM_MODULE:
-                HostManagerUtil.filebeat_system_module_config()
+                HostManagerServicer.set_filebeat_system_module_config()
             elif module == constants.FILEBEAT.SNORT_MODULE:
-                HostManagerUtil.filebeat_snort_module_config()
+                HostManagerServicer.set_filebeat_snort_module_config()
             elif module == constants.FILEBEAT.KAFKA_MODULE:
-                HostManagerUtil.filebeat_kafka_module_config()
+                HostManagerServicer.set_filebeat_kafka_module_config()
             elif module == constants.FILEBEAT.KIBANA_MODULE:
-                HostManagerUtil.filebeat_kibana_module_config()
+                HostManagerServicer.set_filebeat_kibana_module_config()
             elif module == constants.FILEBEAT.ELASTICSEARCH_MODULE:
-                HostManagerUtil.filebeat_elasticsearch_module_config()
+                HostManagerServicer.set_filebeat_elasticsearch_module_config()
             elif module == constants.FILEBEAT.LOGSTASH_MODULE:
-                HostManagerUtil.filebeat_logstash_module_config()
+                HostManagerServicer.set_filebeat_logstash_module_config()
             else:
                 logging.warning(f"Filebeat module: {module} not recognized")
 
@@ -380,6 +474,85 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         HostManagerUtil.write_yaml_config(config=filebeat_config, path=constants.FILEBEAT.CONFIG_FILE)
         logging.info(f"Running filebeat setup command: {constants.FILEBEAT.SETUP_CMD}")
         output = subprocess.run(constants.FILEBEAT.SETUP_CMD.split(" "), capture_output=True, text=True)
+        logging.info(f"Stdout of the setup command: {output.stdout}, stderr of the setup command: {output.stderr}")
+
+    @staticmethod
+    def _get_metricbeat_status() -> bool:
+        """
+        Utility method to get the status of metricbeat
+
+        :return: status of metricbeat
+        """
+        logging.info(f"Getting metricbeat status with command: {constants.METRICBEAT.METRICBEAT_STATUS}")
+        output = subprocess.run(constants.METRICBEAT.METRICBEAT_STATUS.split(" "), capture_output=True, text=True)
+        metricbeat_running = not ("not" in output.stdout)
+        logging.info(f"Got metricbeat status, output:{output.stdout}, err output: {output.stderr} ")
+        return metricbeat_running
+
+    @staticmethod
+    def _start_metricbeat() -> None:
+        """
+        Utility method to start metricbeat
+
+        :return: None
+        """
+        logging.info(f"Starting metricbeat with command: {constants.METRICBEAT.METRICBEAT_START}")
+        output = subprocess.run(constants.METRICBEAT.METRICBEAT_START.split(" "), capture_output=True, text=True)
+        logging.info(f"Started metricbeat, stdout:{output.stdout}, stderr: {output.stderr}")
+
+    @staticmethod
+    def _stop_metricbeat() -> None:
+        """
+        Utility method to stop metricbeat
+
+        :return: None
+        """
+        logging.info(f"Stopping metricbeat with command: {constants.METRICBEAT.METRICBEAT_STOP}")
+        output = subprocess.run(constants.METRICBEAT.METRICBEAT_STOP.split(" "), capture_output=True, text=True)
+        logging.info(f"Stopped metricbeat, output:{output.stdout}, err output: {output.stderr} ")
+
+    @staticmethod
+    def _set_metricbeat_config(
+            kibana_ip: str, kibana_port: int, elastic_ip: str, elastic_port: int, num_elastic_shards: int,
+            metricbeat_modules: List[str], kafka_ip: str, kafka_port: int, reload_enabled: bool = False) -> None:
+        """
+        Updates the metricbeat configuration file
+
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :param reload_enabled: whether automatic reload of modules should be enabled
+        :param metricbeat_modules: list of metricbeat modules to enable
+        :param kafka_ip: the ip of the kafka server
+        :param kafka_port: the port of the kafka server
+        :return: None
+        """
+        metricbeat_config = HostManagerUtil.metricbeat_config(
+            kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip, elastic_port=elastic_port,
+            num_elastic_shards=num_elastic_shards, reload_enabled=reload_enabled)
+        for module in metricbeat_modules:
+            if module == constants.METRICBEAT.SYSTEM_MODULE:
+                HostManagerServicer.set_metricbeat_system_module_config()
+            elif module == constants.METRICBEAT.LINUX_MODULE:
+                HostManagerServicer.set_metricbeat_linux_module_config()
+            elif module == constants.METRICBEAT.KAFKA_MODULE:
+                HostManagerServicer.set_metricbeat_kafka_module_config(kafka_ip=kafka_ip, kafka_port=kafka_port)
+            elif module == constants.METRICBEAT.KIBANA_MODULE:
+                HostManagerServicer.set_metricbeat_kibana_module_config(kibana_ip=kibana_ip, kibana_port=kibana_port)
+            elif module == constants.METRICBEAT.ELASTICSEARCH_MODULE:
+                HostManagerServicer.set_metricbeat_elasticsearch_module_config(elastic_ip=elastic_ip,
+                                                                               elastic_port=elastic_port)
+            elif module == constants.METRICBEAT.LOGSTASH_MODULE:
+                HostManagerServicer.set_metricbeat_logstash_module_config(logstash_ip=elastic_ip, logstash_port=elastic_port)
+            else:
+                logging.warning(f"Metricbeat module: {module} not recognized")
+
+        logging.info(f"Updating metricbeat config: \n{metricbeat_config}")
+        HostManagerUtil.write_yaml_config(config=metricbeat_config, path=constants.METRICBEAT.CONFIG_FILE)
+        logging.info(f"Running metricbeat setup command: {constants.METRICBEAT.SETUP_CMD}")
+        output = subprocess.run(constants.METRICBEAT.SETUP_CMD.split(" "), capture_output=True, text=True)
         logging.info(f"Stdout of the setup command: {output.stdout}, stderr of the setup command: {output.stderr}")
 
     @staticmethod
@@ -547,6 +720,130 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Running packetbeat setup command: {constants.PACKETBEAT.SETUP_CMD}")
         output = subprocess.run(constants.PACKETBEAT.SETUP_CMD.split(" "), capture_output=True, text=True)
         logging.info(f"Stdout of the setup command: {output.stdout}, stderr of the setup command: {output.stderr}")
+
+    @staticmethod
+    def set_metricbeat_system_module_config() -> None:
+        """
+        Updates the metricbeat system module configuration
+
+        :return: None
+        """
+        logging.info(f"Enabling system module with command: "
+                     f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.SYSTEM_MODULE)}")
+        output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
+            constants.METRICBEAT.SYSTEM_MODULE).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
+        system_module_config = HostManagerUtil.metricbeat_system_module_config()
+        logging.info(f"Updating metricbeat system module config: \n{system_module_config}")
+        HostManagerUtil.write_yaml_config(config=system_module_config,
+                                          path=f"{constants.METRICBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.METRICBEAT.SYSTEM_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_metricbeat_linux_module_config() -> None:
+        """
+        Updates the metricbeat system module configuration
+
+        :return: None
+        """
+        logging.info(f"Enabling linux module with command: "
+                     f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.LINUX_MODULE)}")
+        output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
+            constants.METRICBEAT.LINUX_MODULE).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
+        linux_module_config = HostManagerUtil.metricbeat_linux_module_config()
+        logging.info(f"Updating metricbeat linux module config: \n{linux_module_config}")
+        HostManagerUtil.write_yaml_config(config=linux_module_config,
+                                          path=f"{constants.METRICBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.METRICBEAT.LINUX_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_metricbeat_kafka_module_config(kafka_ip: str, kafka_port: int) -> None:
+        """
+        Updates the metricbeat kafka module configuration
+
+        :param kafka_ip: ip of the kafka server
+        :param kafka_port: port of the kafka server
+        :return: None
+        """
+        logging.info(f"Enabling kafka module with command: "
+                     f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.KAFKA_MODULE)}")
+        output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
+            constants.METRICBEAT.KAFKA_MODULE).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
+        kafka_module_config = HostManagerUtil.metricbeat_kafka_module_config(kafka_ip=kafka_ip, kafka_port=kafka_port)
+        logging.info(f"Updating metricbeat kafka module config: \n{kafka_module_config}")
+        HostManagerUtil.write_yaml_config(config=kafka_module_config,
+                                          path=f"{constants.METRICBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.METRICBEAT.KAFKA_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_metricbeat_elasticsearch_module_config(elastic_ip: str, elastic_port: int) -> None:
+        """
+        Updates the metricbeat elastic module configuration
+
+        :param elastic_ip: ip of the elastic server
+        :param elastic_port: port of the elastic server
+        :return: None
+        """
+        logging.info(f"Enabling elasticsearch module with command: "
+                     f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.ELASTICSEARCH_MODULE)}")
+        output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
+            constants.METRICBEAT.ELASTICSEARCH_MODULE).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
+        elasticsearch_module_config = HostManagerUtil.metricbeat_elasticsearch_module_config(elastic_ip=elastic_ip,
+                                                                                             elastic_port=elastic_port)
+        logging.info(f"Updating metricbeat elasticsearch module config: \n{elasticsearch_module_config}")
+        HostManagerUtil.write_yaml_config(config=elasticsearch_module_config,
+                                          path=f"{constants.METRICBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.METRICBEAT.ELASTICSEARCH_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_metricbeat_kibana_module_config(kibana_ip: str, kibana_port: int) -> None:
+        """
+        Updates the metricbeat kibana module configuration
+
+        :param kibana_ip: ip of the kibana server
+        :param kibana_port: port of the kibana server
+        :return: None
+        """
+        logging.info(f"Enabling Kibana module with command: "
+                     f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.KIBANA_MODULE)}")
+        output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
+            constants.METRICBEAT.KIBANA_MODULE).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
+        kibana_module_config = HostManagerUtil.metricbeat_kibana_module_config(
+            kibana_ip=kibana_ip, kibana_port=kibana_port)
+        logging.info(f"Updating metricbeat kibana module config: \n{kibana_module_config}")
+        HostManagerUtil.write_yaml_config(config=kibana_module_config,
+                                          path=f"{constants.METRICBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.METRICBEAT.KIBANA_MODULE_CONFIG_FILE}")
+
+    @staticmethod
+    def set_metricbeat_logstash_module_config(logstash_ip: str, logstash_port: int) -> None:
+        """
+        Updates the metricbeat logstas module configuration
+
+        :param logstash_ip: ip of the logstash server
+        :param logstash_port: port of the logstash server
+        :return: None
+        """
+        logging.info(f"Enabling Logstash module with command: "
+                     f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.LOGSTASH_MODULE)}")
+        output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
+            constants.METRICBEAT.LOGSTASH_MODULE).split(" "), capture_output=True, text=True)
+        logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
+        logstash_module_config = HostManagerUtil.metricbeat_logstash_module_config(logstash_ip=logstash_ip,
+                                                                                   logstash_port=logstash_port)
+        logging.info(f"Updating metricbeat logstash module config: \n{logstash_module_config}")
+        HostManagerUtil.write_yaml_config(config=logstash_module_config,
+                                          path=f"{constants.METRICBEAT.MODULES_CONFIG_DIR}"
+                                               f"{constants.METRICBEAT.LOGSTASH_MODULE_CONFIG_FILE}")
 
 
 def serve(port: int = 50049, log_dir: str = "/", max_workers: int = 10,

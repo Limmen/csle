@@ -41,6 +41,8 @@ class BEATS:
     ENABLED_PROPERTY = "enabled"
     PATHS_PROPERTY = "paths"
     PATH_PROPERTY = "path"
+    PERIOD_PROPERTY = "period"
+    METRICSETS_PROPERTY = "metricsets"
 
 
 class FILEBEAT:
@@ -89,7 +91,6 @@ class PACKETBEAT:
     INTERFACES_DEVICE_PROPERTY = "packetbeat.interfaces.device"
     FLOWS = "packetbeat.flows"
     TIMEOUT_PROPERTY = "timeout"
-    PERIOD_PROPERTY = "period"
     PROTOCOLS = "packetbeat.protocols"
     ICMP_PROTOCOL = "icmp"
     AMQP_PROTOCOL = "amqp"
@@ -121,6 +122,48 @@ class PACKETBEAT:
     TLS_PORTS=[443,993,995,5223,8443,8883,9243]
     SIP_PROTOCOL = "sip"
     SIP_PORTS = [9243]
+
+
+class METRICBEAT:
+    """
+    Constants related to Metricbeat
+    """
+    CONFIG_DIR = "/etc/metricbeat/"
+    CONFIG_FILE = "/etc/metricbeat/metricbeat.yml"
+    SETUP_CMD = "metricbeat setup -e"
+    ELASTICSEARCH_MODULE = "elasticsearch"
+    KIBANA_MODULE = "kibana"
+    SYSTEM_MODULE = "system"
+    LINUX_MODULE = "system"
+    KAFKA_MODULE = "kafka"
+    LOGSTASH_MODULE = "logstash"
+    ENABLE_MODULE_CMD = "metricbeat modules enable {}"
+    MODULES_CONFIG_DIR = "/etc/metricbeat/modules.d/"
+    SNORT_MODULE_CONFIG_FILE = "snort.yml"
+    LOGSTASH_MODULE_CONFIG_FILE = "logstash.yml"
+    KIBANA_MODULE_CONFIG_FILE = "kibana.yml"
+    SYSTEM_MODULE_CONFIG_FILE = "system.yml"
+    LINUX_MODULE_CONFIG_FILE = "linux.yml"
+    KAFKA_MODULE_CONFIG_FILE = "kafka.yml"
+    ELASTICSEARCH_MODULE_CONFIG_FILE = "elasticsearch.yml"
+    MODULES_PROPERTY = "metricbeat.config.modules"
+    METRICBEAT_STATUS = "sudo service metricbeat status"
+    METRICBEAT_START = "sudo service metricbeat start"
+    METRICBEAT_STOP = "sudo service metricbeat stop"
+    PROCESSES_PROPERTY = "processes"
+    CPU_METRICS_PROPERTY = "cpu.metrics"
+    CORE_METRICS_PROPERTY = "core.metrics"
+    PERCENTAGES_PROPERTY = "percentages"
+    NORMALIZED_PERCENTAGES_PROPERTY = "normalized_percentages_property"
+    CPU_METRIC = "cpu"
+    LOAD_METRIC = "load"
+    MEMORY_METRIC = "memory"
+    NETWORK_METRIC = "network"
+    PROCESS_METRIC = "process"
+    PROCESS_SUMMARY_METRIC = "process_summary"
+    SOCKET_SUMMARY_METRIC = "socket_summary"
+    PAGEINFO_METRIC = "pageinfo"
+    SUMMARY_METRIC = "memory"
 
 
 class GRPC:

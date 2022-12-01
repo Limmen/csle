@@ -489,7 +489,7 @@ class HostManagerUtil:
         packetbeat_config[constants.PACKETBEAT.INTERFACES_DEVICE_PROPERTY] = constants.PACKETBEAT.ANY_DEVICE_PROPERTY
         packetbeat_config[constants.PACKETBEAT.FLOWS] = {
             constants.PACKETBEAT.TIMEOUT_PROPERTY: "30s",
-            constants.PACKETBEAT.PERIOD_PROPERTY: "10s"
+            constants.BEATS.PERIOD_PROPERTY: "10s"
         }
         packetbeat_config[constants.PACKETBEAT.PROTOCOLS] = [
             {
@@ -568,3 +568,155 @@ class HostManagerUtil:
             }
         }
         return packetbeat_config
+
+    @staticmethod
+    def metricbeat_config(kibana_ip: str, kibana_port: int, elastic_ip: str,
+                        elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> Dict[str, Any]:
+        """
+        Generates the metricbeat.yml config
+
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :param reload_enabled: whether automatic reload of modules should be enabled
+        :return: the metricbeat configuration dict
+        """
+        metricbeat_config = {}
+        metricbeat_config[constants.METRICBEAT.MODULES_PROPERTY] = {
+            constants.BEATS.PATH_PROPERTY: f"{constants.METRICBEAT.MODULES_CONFIG_DIR}*.yml",
+            constants.BEATS.RELOAD_ENABLED_PROPERTY: reload_enabled
+        }
+        metricbeat_config[constants.BEATS.SETUP_TEMPLATE_SETTINGS_PROPERTY] = {
+            constants.BEATS.INDEX_NUM_SHARDS_PROPERTY: num_elastic_shards
+        }
+        metricbeat_config[constants.BEATS.SETUP_KIBANA_PROPERTY] = {
+            constants.BEATS.HOST_PROPERTY: f"{kibana_ip}:{kibana_port}"
+        }
+        metricbeat_config[constants.BEATS.ELASTIC_OUTPUT_PROPERTY] = {
+            constants.BEATS.HOSTS_PROPERTY: [f"{elastic_ip}:{elastic_port}"]
+        }
+        metricbeat_config[constants.BEATS.PROCESSORS_PROPERTY] = {
+            constants.BEATS.ADD_HOST_METADATA_PROPERTY: {
+                constants.BEATS.WHEN_NOT_CONTAIN_TAGS_PROPERTY: constants.BEATS.FORWARDED_PROPERTY
+            }
+        }
+        return metricbeat_config
+
+    @staticmethod
+    def metricbeat_elasticsearch_module_config(elastic_ip: str, elastic_port: int) -> List[Dict[str, Any]]:
+        """
+        :return: the elasticsearch metricbeat module config
+        """
+        elastic_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.FILEBEAT.ELASTICSEARCH_MODULE,
+                constants.BEATS.PERIOD_PROPERTY: "10s",
+                constants.BEATS.HOSTS_PROPERTY: [f"{elastic_ip}:{elastic_port}"]
+            }
+        ]
+        return elastic_config
+
+    @staticmethod
+    def metricbeat_kibana_module_config(kibana_ip: str, kibana_port: int) -> List[Dict[str, Any]]:
+        """
+        Creates the kibana metricbeat module configuration
+
+        :param kibana_ip: the kibana host IP
+        :param kibana_port: the kibana host port
+        :return: the kibana metricbeat module config
+        """
+        kibana_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.METRICBEAT.KIBANA_MODULE,
+                constants.BEATS.PERIOD_PROPERTY: "10s",
+                constants.BEATS.HOSTS_PROPERTY: [f"{kibana_ip}:{kibana_port}"]
+            }
+        ]
+        return kibana_config
+
+    @staticmethod
+    def metricbeat_logstash_module_config(logstash_ip: str, logstash_port: int) -> List[Dict[str, Any]]:
+        """
+        Creates the logstash metricbeat module configuration
+
+        :param logstash_ip: the kibana host IP
+        :param logstash_port: the kibana host port
+        :return: the kibana metricbeat module config
+        """
+        logstash_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.METRICBEAT.LOGSTASH_MODULE,
+                constants.BEATS.PERIOD_PROPERTY: "10s",
+                constants.BEATS.HOSTS_PROPERTY: [f"{logstash_ip}:{logstash_port}"]
+            }
+        ]
+        return logstash_config
+
+    @staticmethod
+    def metricbeat_kafka_module_config(kafka_ip: str, kafka_port: int) -> List[Dict[str, Any]]:
+        """
+        Creates the kafka metricbeat module configuration
+
+        :param kafka_ip: the kibana host IP
+        :param kafka_port: the kibana host port
+        :return: the kafka metricbeat module config
+        """
+        kafka_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.METRICBEAT.KAFKA_MODULE,
+                constants.BEATS.PERIOD_PROPERTY: "10s",
+                constants.BEATS.HOSTS_PROPERTY: [f"{kafka_ip}:{kafka_port}"]
+            }
+        ]
+        return kafka_config
+
+    @staticmethod
+    def metricbeat_system_module_config() -> List[Dict[str, Any]]:
+        """
+        Creates the system metricbeat module configuration
+
+        :return: the system metricbeat module config
+        """
+        system_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.METRICBEAT.SYSTEM_MODULE,
+                constants.BEATS.PERIOD_PROPERTY: "10s",
+                constants.BEATS.METRICSETS_PROPERTY: [
+                    constants.METRICBEAT.CPU_METRIC,
+                    constants.METRICBEAT.LOAD_METRIC,
+                    constants.METRICBEAT.MEMORY_METRIC,
+                    constants.METRICBEAT.NETWORK_METRIC,
+                    constants.METRICBEAT.PROCESS_METRIC,
+                    constants.METRICBEAT.PROCESS_SUMMARY_METRIC,
+                    constants.METRICBEAT.SOCKET_SUMMARY_METRIC
+                ],
+                constants.BEATS.ENABLED_PROPERTY: True,
+                constants.METRICBEAT.PROCESSES_PROPERTY: [".*"],
+                constants.METRICBEAT.CPU_METRICS_PROPERTY: [constants.METRICBEAT.PERCENTAGES_PROPERTY,
+                                                            constants.METRICBEAT.NORMALIZED_PERCENTAGES_PROPERTY],
+                constants.METRICBEAT.CORE_METRICS_PROPERTY: [constants.METRICBEAT.PERCENTAGES_PROPERTY]
+            }
+        ]
+        return system_config
+
+    @staticmethod
+    def metricbeat_linux_module_config() -> List[Dict[str, Any]]:
+        """
+        Creates the linux metricbeat module configuration
+
+        :return: the linux metricbeat module config
+        """
+        linux_config = [
+            {
+                constants.BEATS.MODULE_PROPERTY: constants.METRICBEAT.LINUX_MODULE,
+                constants.BEATS.PERIOD_PROPERTY: "10s",
+                constants.BEATS.METRICSETS_PROPERTY: {
+                    constants.METRICBEAT.PAGEINFO_METRIC,
+                    constants.METRICBEAT.SUMMARY_METRIC
+                },
+                constants.BEATS.ENABLED_PROPERTY: True
+            }
+        ]
+        return linux_config

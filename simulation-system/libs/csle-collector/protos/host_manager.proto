@@ -12,6 +12,9 @@ service HostManager {
   rpc stopPacketbeat(StopPacketbeatMsg) returns (HostStatusDTO) {}
   rpc startPacketbeat(StartPacketbeatMsg) returns (HostStatusDTO) {}
   rpc configPacketbeat(ConfigPacketbeatMsg) returns (HostStatusDTO) {}
+  rpc stopMetricbeat(StopMetricbeatMsg) returns (HostStatusDTO) {}
+  rpc startMetricbeat(StartMetricbeatMsg) returns (HostStatusDTO) {}
+  rpc configMetricbeat(ConfigMetricbeatMsg) returns (HostStatusDTO) {}
 }
 
 // Message that the client sends to stop the HostMonitor
@@ -61,6 +64,24 @@ message ConfigPacketbeatMsg {
   int32 num_elastic_shards = 5;
 }
 
+// Message that the client sends to stop metricbeat
+message StopMetricbeatMsg {}
+
+// Message that the client sends to start metricbeat
+message StartMetricbeatMsg {}
+
+// Message that the client sends to set the metricbeat configuration
+message ConfigMetricbeatMsg {
+  string kibana_ip = 1;
+  int32 kibana_port = 2;
+  string elastic_ip = 3;
+  int32 elastic_port = 4;
+  int32 num_elastic_shards = 5;
+  string kafka_ip = 6;
+  int32 kafka_port = 7;
+  bool reload_enabled = 8;
+}
+
 // Message that the client sends to get the status of the HostMonitor
 message GetHostStatusMsg {}
 
@@ -69,6 +90,7 @@ message HostStatusDTO {
   bool monitor_running = 1;
   bool filebeat_running = 2;
   bool packetbeat_running = 3;
+  bool metricbeat_running = 4;
 }
 
 // Message that the client sends to extract the Host metrics from given timestamps

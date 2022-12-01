@@ -7,18 +7,24 @@ class NodeBeatsConfig:
     A DTO object representing the beats configuration of an individual container in an emulation
     """
 
-    def __init__(self, ip: str, log_files_paths: List[str], filebeat_modules: List[str], kafka_input: bool = False,
-                 start_filebeat_automatically: bool = False, start_packetbeat_automatically: bool = False):
+    def __init__(self, ip: str, log_files_paths: List[str], filebeat_modules: List[str],
+                 metricbeat_modules: List[str],
+                 kafka_input: bool = False,
+                 start_filebeat_automatically: bool = False, start_packetbeat_automatically: bool = False,
+                 start_metricbeat_automatically: bool = False):
         """
         Intializes the DTO
 
         :param ip: the ip of the nod
         :param log_files_paths: list of log files to ingest to elastic through filebeat
         :param filebeat_modules: list of filebeat modules to enable
+        :param metricbeat_modules: list of metricbeat modules to enable
         :param kafka_input: boolean indicating whether the kafka log should be ingested from this node or not
         :param start_filebeat_automatically: boolean indicating whether filebeat should be started automatically
                                              when the emulation is started
         :param start_packetbeat_automatically: boolean indicating whether packetbeat should be started automatically
+                                               when the emulation is started
+        :param start_metricbeat_automatically: boolean indicating whether metricbeat should be started automatically
                                                when the emulation is started
         """
         self.ip = ip
@@ -27,6 +33,8 @@ class NodeBeatsConfig:
         self.kafka_input = kafka_input
         self.start_filebeat_automatically = start_filebeat_automatically
         self.start_packetbeat_automatically = start_packetbeat_automatically
+        self.metricbeat_modules = metricbeat_modules
+        self.start_metricbeat_automatically = start_metricbeat_automatically
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeBeatsConfig":
@@ -39,7 +47,9 @@ class NodeBeatsConfig:
         obj = NodeBeatsConfig(
             ip=d["ip"], log_files_paths=d["log_files_paths"], filebeat_modules=d["filebeat_modules"],
             kafka_input=d["kafka_input"], start_filebeat_automatically=d["start_filebeat_automatically"],
-            start_packetbeat_automatically=d["start_packetbeat_automatically"])
+            start_packetbeat_automatically=d["start_packetbeat_automatically"],
+            metricbeat_modules=d["metricbeat_modules"],
+            start_metricbeat_automatically = d["start_metricbeat_automatically"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -53,6 +63,8 @@ class NodeBeatsConfig:
         d["kafka_input"] = self.kafka_input
         d["start_filebeat_automatically"] = self.start_filebeat_automatically
         d["start_packetbeat_automatically"] = self.start_packetbeat_automatically
+        d["metricbeat_modules"] = self.metricbeat_modules
+        d["start_metricbeat_automatically"] = self.start_metricbeat_automatically
         return d
 
     def __str__(self) -> str:
@@ -61,7 +73,9 @@ class NodeBeatsConfig:
         """
         return f"ip:{self.ip}, log_files_paths: {self.log_files_paths}, filebeat_modules: {self.filebeat_modules}, " \
                f"kafka_input: {self.kafka_input}, start_filebeat_automatically: {self.start_filebeat_automatically}, " \
-               f"start_packetbeat_automatically: {self.start_packetbeat_automatically}"
+               f"start_packetbeat_automatically: {self.start_packetbeat_automatically}, " \
+               f"metricbeat_modules: {self.metricbeat_modules}, " \
+               f"start_metricbeat_automatically: {self.start_metricbeat_automatically}"
 
     def to_json_str(self) -> str:
         """

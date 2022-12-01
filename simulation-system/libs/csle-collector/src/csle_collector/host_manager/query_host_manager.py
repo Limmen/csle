@@ -200,3 +200,66 @@ def config_packetbeat(
             elastic_port=elastic_port, num_elastic_shards=num_elastic_shards)
     host_dto = stub.configPacketbeat(config_packetbeat_msg, timeout=timeout)
     return host_dto
+
+
+def start_metricbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to start metricbeat
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    start_metricbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.StartMetricbeatMsg()
+    host_dto = stub.startMetricbeat(start_metricbeat_msg, timeout=timeout)
+    return host_dto
+
+
+def stop_metricbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to stop metricbeat
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    stop_metricbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.StopMetricbeatMsg()
+    host_dto = stub.stopMetricbeat(stop_metricbeat_msg, timeout=timeout)
+    return host_dto
+
+
+def config_metricbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        kibana_ip: str, kibana_port: int, elastic_ip: str,
+        elastic_port: int, num_elastic_shards: int, kafka_ip: str,
+        kafka_port: int, metricbeat_modules: List[str], reload_enabled: bool = False,
+        timeout=constants.GRPC.CONFIG_TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to update the metricbeat configuration
+
+    :param kibana_ip: the IP of Kibana where the data should be visualized
+    :param kibana_port: the port of Kibana where the data should be visualized
+    :param elastic_ip: the IP of elastic where the data should be shipped
+    :param elastic_port: the port of elastic where the data should be shipped
+    :param num_elastic_shards: the number of elastic shards
+    :param reload_enabled: whether automatic reload of modules should be enabled
+    :param kafka_port: the kafka server port
+    :param kafka_ip: the kafka server ip
+    :param metricbeat_modules: a list of metricbeat modules to enable
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    config_metricbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.ConfigMetricbeatMsg(
+            kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip,
+            elastic_port=elastic_port, num_elastic_shards=num_elastic_shards, reload_enabled=reload_enabled,
+            kafka_port=kafka_port, kafka_ip=kafka_ip, metricbeat_modules=metricbeat_modules)
+    host_dto = stub.configMetricbeat(config_metricbeat_msg, timeout=timeout)
+    return host_dto
