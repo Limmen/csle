@@ -1,6 +1,10 @@
 # CSLE System Identification Examples
 
-This directory contains example scripts for system identification in CSLE.  
+This directory contains example scripts for system identification in CSLE.
+
+<p align="center">
+<img src="./../../docs/img/system_identification.png" width="250">
+</p>
 
 - Empirical: [./empirical](empirical): this directory contains example scripts for system identification based on maximum-likelihood estimation
 - Expectation Maximization: [./expectation_maximization](expectation_maximization): this directory contains example scripts for system identification based on expectation maximization
