@@ -3,7 +3,7 @@
 This directory contains example scripts for system identification in CSLE.
 
 <p align="center">
-<img src="./../../docs/img/system_identification.png" width="500">
+<img src="./../../docs/img/system_identification.png" width="1000">
 </p>
 
 - Empirical: [./empirical](empirical): this directory contains example scripts for system identification based on maximum-likelihood estimation
