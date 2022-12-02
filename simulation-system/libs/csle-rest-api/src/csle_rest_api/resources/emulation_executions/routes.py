@@ -1410,7 +1410,7 @@ def start_stop_traffic_generator(execution_id: int):
                     emulation_env_config=execution.emulation_env_config,
                     node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
                         ip=ip),
-                    container=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip))
+                    container=execution.emulation_env_config.get_container_from_ip(ip=ip))
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1476,7 +1476,7 @@ def start_stop_filebeat(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_filebeat(
                     emulation_env_config=execution.emulation_env_config,
-                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+                    ips=execution.emulation_env_config.get_container_from_ip(ip=ip).get_ips())
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1542,7 +1542,7 @@ def start_stop_packetbeat(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_packetbeat(
                     emulation_env_config=execution.emulation_env_config,
-                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+                    ips=execution.emulation_env_config.get_container_from_ip(ip=ip).get_ips())
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1608,7 +1608,7 @@ def start_stop_metricbeat(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_metricbeat(
                     emulation_env_config=execution.emulation_env_config,
-                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+                    ips=execution.emulation_env_config.get_container_from_ip(ip=ip).get_ips())
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1674,7 +1674,7 @@ def start_stop_heartbeat(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_heartbeat(
                     emulation_env_config=execution.emulation_env_config,
-                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+                    ips=execution.emulation_env_config.get_container_from_ip(ip=ip).get_ips())
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

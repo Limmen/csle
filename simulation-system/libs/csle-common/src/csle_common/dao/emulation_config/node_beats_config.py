@@ -125,4 +125,9 @@ class NodeBeatsConfig:
         """
         config = self.copy()
         config.ip = GeneralUtil.replace_first_octet_of_ip(ip=config.ip, ip_first_octet=ip_first_octet)
+        heartbeat_hosts_to_monitor = []
+        for host in self.heartbeat_hosts_to_monitor:
+            heartbeat_hosts_to_monitor.append(GeneralUtil.replace_first_octet_of_ip(ip=host,
+                                                                                    ip_first_octet=ip_first_octet))
+        config.heartbeat_hosts_to_monitor = heartbeat_hosts_to_monitor
         return config

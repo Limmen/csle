@@ -1,9 +1,10 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 import socket
 import paramiko
 from confluent_kafka import Producer
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
@@ -295,6 +296,22 @@ class EmulationEnvConfig:
             if c.name in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 return True
         return False
+
+    def get_container_from_ip(self, ip: str) -> Union[NodeContainerConfig, None]:
+        """
+        Utility function for getting a container with a specific IP
+
+        :param ip: the ip of the container
+        :return: the container with the given ip or None
+        """
+        if ip in self.kafka_config.container.get_ips():
+            return self.kafka_config.container
+        if ip in self.elk_config.container.get_ips():
+            return self.elk_config.container
+        for c in self.containers_config.containers:
+            if ip in c.get_ips():
+                return c
+        return None
 
     def __str__(self) -> str:
         """

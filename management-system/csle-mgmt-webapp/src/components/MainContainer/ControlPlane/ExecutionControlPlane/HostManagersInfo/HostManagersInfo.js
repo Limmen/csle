@@ -151,7 +151,7 @@ const HostManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
-                                <tr key={`${HOST_MONITOR_SUBRESOURCE}-${index}`}>
+                                <tr key={`${HOST_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>Host Manager</td>
                                     <td>{props.hostManagersInfo.ips[index]}</td>
                                     <td>{props.hostManagersInfo.ports[index]}</td>
