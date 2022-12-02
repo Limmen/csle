@@ -69,7 +69,9 @@ const DQNPolicy = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> General Information about the policy </h5>
+                            <h5 className="semiTitle"> General Information about the policy
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -122,7 +124,9 @@ const DQNPolicy = (props) => {
                             aria-expanded={hParamsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Hyperparameters </h5>
+                            <h5 className="semiTitle"> Hyperparameters
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={hParamsOpen}>
@@ -159,7 +163,9 @@ const DQNPolicy = (props) => {
                             aria-expanded={neuralNetworkDetailsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Neural network architecture </h5>
+                            <h5 className="semiTitle"> Neural network architecture
+                                <i className="fa fa-sitemap headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={neuralNetworkDetailsOpen}>
@@ -198,7 +204,9 @@ const DQNPolicy = (props) => {
                             aria-expanded={actionsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Actions </h5>
+                            <h5 className="semiTitle"> Actions
+                                <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={actionsOpen}>

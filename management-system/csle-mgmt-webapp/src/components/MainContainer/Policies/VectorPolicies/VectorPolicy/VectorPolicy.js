@@ -68,7 +68,9 @@ const VectorPolicy = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> General Information about the policy </h5>
+                            <h5 className="semiTitle"> General Information about the policy
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -117,7 +119,10 @@ const VectorPolicy = (props) => {
                             aria-expanded={actionsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Actions </h5>
+                            <h5 className="semiTitle">
+                                Actions
+                                <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={actionsOpen}>
@@ -151,7 +156,9 @@ const VectorPolicy = (props) => {
                             aria-expanded={policyOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Policy </h5>
+                            <h5 className="semiTitle"> Policy
+                                <i className="fa fa-list headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={policyOpen}>
