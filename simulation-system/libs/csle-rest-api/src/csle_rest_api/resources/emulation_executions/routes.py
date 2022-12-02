@@ -1420,3 +1420,201 @@ def start_stop_traffic_generator(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_filebeat(execution_id: int):
+    """
+    The /emulation-executions/id/filebeat resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop filebeat of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            if ip == api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Stopping all filebeats on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.stop_filebeats(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Stopping filebeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.stop_filebeat(emulation_env_config=execution.emulation_env_config, ip=ip)
+        if start:
+            if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Starting all filebeats on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.start_filebeats(emulation_env_config=execution.emulation_env_config,
+                                               initial_start=False)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Starting filebeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.start_filebeat(
+                    emulation_env_config=execution.emulation_env_config,
+                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_packetbeat(execution_id: int):
+    """
+    The /emulation-executions/id/packetbeat resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop packetbeat of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            if ip == api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Stopping all packetbeats on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.stop_packetbeats(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Stopping packetbeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.stop_packetbeat(emulation_env_config=execution.emulation_env_config, ip=ip)
+        if start:
+            if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Starting all packetbeats on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.start_packetbeats(emulation_env_config=execution.emulation_env_config,
+                                               initial_start=False)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Starting packetbeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.start_packetbeat(
+                    emulation_env_config=execution.emulation_env_config,
+                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_metricbeat(execution_id: int):
+    """
+    The /emulation-executions/id/metricbeat resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop metricbeat of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            if ip == api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Stopping all metricbeats on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.stop_metricbeats(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Stopping metricbeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.stop_metricbeat(emulation_env_config=execution.emulation_env_config, ip=ip)
+        if start:
+            if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Starting all metricbeats on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.start_metricbeats(emulation_env_config=execution.emulation_env_config,
+                                                 initial_start=False)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Starting metricbeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                HostController.start_metricbeat(
+                    emulation_env_config=execution.emulation_env_config,
+                    ips=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip).get_ips())
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE

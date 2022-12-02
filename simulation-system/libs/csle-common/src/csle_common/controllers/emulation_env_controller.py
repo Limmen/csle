@@ -112,7 +112,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 33
+        steps = 35
         if no_traffic:
             steps = steps - 1
         if no_clients:
@@ -156,7 +156,7 @@ class EmulationEnvController:
         OVSController.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
         EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
@@ -164,7 +164,7 @@ class EmulationEnvController:
         OVSController.apply_ovs_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
         EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
@@ -233,10 +233,10 @@ class EmulationEnvController:
         HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
-        HostController.config_filebeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
+        # HostController.config_filebeats(emulation_env_config=emulation_env_config)
+        # time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying packetbeats configurations --")
@@ -244,13 +244,23 @@ class EmulationEnvController:
         time.sleep(10)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying metricbeats configurations --")
+        HostController.config_metricbeats(emulation_env_config=emulation_env_config)
         time.sleep(10)
+
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
+        # HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
+        # time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting packetbeats --")
         HostController.start_packetbeats(emulation_env_config=emulation_env_config, initial_start=True)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting metricbeats --")
+        HostController.start_metricbeats(emulation_env_config=emulation_env_config, initial_start=True)
         time.sleep(10)
 
         current_step += 1
