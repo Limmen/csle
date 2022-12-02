@@ -10,7 +10,8 @@ import {
     HOST_MONITOR_SUBRESOURCE,
     HOST_MANAGER_SUBRESOURCE,
     START_ALL_PROPERTY,
-    STOP_ALL_PROPERTY} from "../../../../Common/constants";
+    STOP_ALL_PROPERTY, FILEBEAT_SUBRESOURCE, PACKETBEAT_SUBRESOURCE, METRICBEAT_SUBRESOURCE
+} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about host managers
@@ -65,7 +66,60 @@ const HostManagersInfo = (props) => {
                             name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
+                        <div className="aggregateActionsContainer beatsAllActions">
+                            <span className="aggregateActions">Stop all filebeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${FILEBEAT_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                                running={true} entity={FILEBEAT_SUBRESOURCE}
+                                name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+                            <span className="aggregateActions">Start all filebeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${FILEBEAT_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                                running={false} entity={FILEBEAT_SUBRESOURCE}
+                                name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+
+                            <span className="aggregateActions">Stop all packetbeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${PACKETBEAT_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                                running={true} entity={PACKETBEAT_SUBRESOURCE}
+                                name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+                            <span className="aggregateActions">Start all packetbeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${PACKETBEAT_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                                running={false} entity={PACKETBEAT_SUBRESOURCE}
+                                name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+
+                            <span className="aggregateActions">Stop all metricbeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${METRICBEAT_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                                running={true} entity={METRICBEAT_SUBRESOURCE}
+                                name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+                            <span className="aggregateActions">Start all metricbeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${METRICBEAT_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                                running={false} entity={METRICBEAT_SUBRESOURCE}
+                                name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+                        </div>
                     </div>
+
                     <div className="table-responsive">
                         <Table striped bordered hover>
                             <thead>
@@ -106,15 +160,87 @@ const HostManagersInfo = (props) => {
                                     <td>Host monitor thread</td>
                                     <td>{props.hostManagersInfo.ips[index]}</td>
                                     <td></td>
-                                    {props.activeStatus(status.running)}
+                                    {props.activeStatus(status.monitor_running)}
                                     <td>
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
                                                 `${HOST_MONITOR_SUBRESOURCE}-`
                                                 + `${props.hostManagersInfo.ips[index]}`)}
-                                            running={status.running}
+                                            running={status.monitor_running}
                                             entity={HOST_MONITOR_SUBRESOURCE}
                                             name={HOST_MONITOR_SUBRESOURCE}
+                                            ip={props.hostManagersInfo.ips[index]}
+                                            startOrStop={props.startOrStop}
+                                        />
+                                        <LogsButton name={props.hostManagersInfo.ips[index]}
+                                                    entity={HOST_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
+                            {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
+                                <tr key={`${FILEBEAT_SUBRESOURCE}-${index}`}>
+                                    <td>Filebeat</td>
+                                    <td>{props.hostManagersInfo.ips[index]}</td>
+                                    <td></td>
+                                    {props.activeStatus(status.filebeat_running)}
+                                    <td>
+                                        <SpinnerOrButton
+                                            loading={props.loadingEntities.includes(
+                                                `${FILEBEAT_SUBRESOURCE}-`
+                                                + `${props.hostManagersInfo.ips[index]}`)}
+                                            running={status.filebeat_running}
+                                            entity={FILEBEAT_SUBRESOURCE}
+                                            name={FILEBEAT_SUBRESOURCE}
+                                            ip={props.hostManagersInfo.ips[index]}
+                                            startOrStop={props.startOrStop}
+                                        />
+                                        <LogsButton name={props.hostManagersInfo.ips[index]}
+                                                    entity={HOST_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
+                            {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
+                                <tr key={`${PACKETBEAT_SUBRESOURCE}-${index}`}>
+                                    <td>Packetbeat</td>
+                                    <td>{props.hostManagersInfo.ips[index]}</td>
+                                    <td></td>
+                                    {props.activeStatus(status.packetbeat_running)}
+                                    <td>
+                                        <SpinnerOrButton
+                                            loading={props.loadingEntities.includes(
+                                                `${PACKETBEAT_SUBRESOURCE}-`
+                                                + `${props.hostManagersInfo.ips[index]}`)}
+                                            running={status.packetbeat_running}
+                                            entity={PACKETBEAT_SUBRESOURCE}
+                                            name={PACKETBEAT_SUBRESOURCE}
+                                            ip={props.hostManagersInfo.ips[index]}
+                                            startOrStop={props.startOrStop}
+                                        />
+                                        <LogsButton name={props.hostManagersInfo.ips[index]}
+                                                    entity={HOST_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
+                            {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
+                                <tr key={`${METRICBEAT_SUBRESOURCE}-${index}`}>
+                                    <td>Metricbeat</td>
+                                    <td>{props.hostManagersInfo.ips[index]}</td>
+                                    <td></td>
+                                    {props.activeStatus(status.metricbeat_running)}
+                                    <td>
+                                        <SpinnerOrButton
+                                            loading={props.loadingEntities.includes(
+                                                `${METRICBEAT_SUBRESOURCE}-`
+                                                + `${props.hostManagersInfo.ips[index]}`)}
+                                            running={status.metricbeat_running}
+                                            entity={METRICBEAT_SUBRESOURCE}
+                                            name={METRICBEAT_SUBRESOURCE}
                                             ip={props.hostManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
@@ -131,7 +257,8 @@ const HostManagersInfo = (props) => {
                 </div>
             </Collapse>
         </Card>
-    );
+    )
+        ;
 }
 
 HostManagersInfo.propTypes = {};

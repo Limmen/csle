@@ -191,6 +191,8 @@ class HostManagerUtil:
         d = {}
         d["monitor_running"] = host_dto.monitor_running
         d["filebeat_running"] = host_dto.filebeat_running
+        d["packetbeat_running"] = host_dto.packetbeat_running
+        d["metricbeat_running"] = host_dto.metricbeat_running
         return d
 
     @staticmethod
@@ -204,6 +206,8 @@ class HostManagerUtil:
         host_dto = csle_collector.host_manager.host_manager_pb2.HostStatusDTO()
         host_dto.monitor_running = d["monitor_running"]
         host_dto.filebeat_running = d["filebeat_running"]
+        host_dto.packetbeat_running = d["packetbeat_running"]
+        host_dto.metricbeat_running = d["metricbeat_running"]
         return host_dto
 
     @staticmethod
@@ -269,6 +273,8 @@ class HostManagerUtil:
         host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostStatusDTO()
         host_monitor_dto.monitor_running = False
         host_monitor_dto.filebeat_running = False
+        host_monitor_dto.packetbeat_running = False
+        host_monitor_dto.metricbeat_running = False
         return host_monitor_dto
 
     @staticmethod
