@@ -193,6 +193,7 @@ class HostManagerUtil:
         d["filebeat_running"] = host_dto.filebeat_running
         d["packetbeat_running"] = host_dto.packetbeat_running
         d["metricbeat_running"] = host_dto.metricbeat_running
+        d["heartbeat_running"] = host_dto.heartbeat_running
         return d
 
     @staticmethod
@@ -208,6 +209,7 @@ class HostManagerUtil:
         host_dto.filebeat_running = d["filebeat_running"]
         host_dto.packetbeat_running = d["packetbeat_running"]
         host_dto.metricbeat_running = d["metricbeat_running"]
+        host_dto.heartbeat_running = d["heartbeat_running"]
         return host_dto
 
     @staticmethod
@@ -275,6 +277,7 @@ class HostManagerUtil:
         host_monitor_dto.filebeat_running = False
         host_monitor_dto.packetbeat_running = False
         host_monitor_dto.metricbeat_running = False
+        host_monitor_dto.heartbeat_running = False
         return host_monitor_dto
 
     @staticmethod

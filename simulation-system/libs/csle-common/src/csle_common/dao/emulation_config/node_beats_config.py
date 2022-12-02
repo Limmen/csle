@@ -8,10 +8,10 @@ class NodeBeatsConfig:
     """
 
     def __init__(self, ip: str, log_files_paths: List[str], filebeat_modules: List[str],
-                 metricbeat_modules: List[str],
+                 metricbeat_modules: List[str], heartbeat_hosts_to_monitor: List[str],
                  kafka_input: bool = False,
                  start_filebeat_automatically: bool = False, start_packetbeat_automatically: bool = False,
-                 start_metricbeat_automatically: bool = False):
+                 start_metricbeat_automatically: bool = False, start_heartbeat_automatically: bool = False):
         """
         Intializes the DTO
 
@@ -19,12 +19,15 @@ class NodeBeatsConfig:
         :param log_files_paths: list of log files to ingest to elastic through filebeat
         :param filebeat_modules: list of filebeat modules to enable
         :param metricbeat_modules: list of metricbeat modules to enable
+        :param heartbeat_hosts_to_monitor: list of hosts to monitor with heartbeat
         :param kafka_input: boolean indicating whether the kafka log should be ingested from this node or not
         :param start_filebeat_automatically: boolean indicating whether filebeat should be started automatically
                                              when the emulation is started
         :param start_packetbeat_automatically: boolean indicating whether packetbeat should be started automatically
                                                when the emulation is started
         :param start_metricbeat_automatically: boolean indicating whether metricbeat should be started automatically
+                                               when the emulation is started
+        :param start_heartbeat_automatically: boolean indicating whether heartbeat should be started automatically
                                                when the emulation is started
         """
         self.ip = ip
@@ -35,6 +38,8 @@ class NodeBeatsConfig:
         self.start_packetbeat_automatically = start_packetbeat_automatically
         self.metricbeat_modules = metricbeat_modules
         self.start_metricbeat_automatically = start_metricbeat_automatically
+        self.start_heartbeat_automatically = start_heartbeat_automatically
+        self.heartbeat_hosts_to_monitor = heartbeat_hosts_to_monitor
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeBeatsConfig":
@@ -49,7 +54,9 @@ class NodeBeatsConfig:
             kafka_input=d["kafka_input"], start_filebeat_automatically=d["start_filebeat_automatically"],
             start_packetbeat_automatically=d["start_packetbeat_automatically"],
             metricbeat_modules=d["metricbeat_modules"],
-            start_metricbeat_automatically = d["start_metricbeat_automatically"])
+            start_metricbeat_automatically = d["start_metricbeat_automatically"],
+            start_heartbeat_automatically = d["start_heartbeat_automatically"],
+            heartbeat_hosts_to_monitor = d["heartbeat_hosts_to_monitor"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -65,6 +72,8 @@ class NodeBeatsConfig:
         d["start_packetbeat_automatically"] = self.start_packetbeat_automatically
         d["metricbeat_modules"] = self.metricbeat_modules
         d["start_metricbeat_automatically"] = self.start_metricbeat_automatically
+        d["start_heartbeat_automatically"] = self.start_heartbeat_automatically
+        d["heartbeat_hosts_to_monitor"] = self.heartbeat_hosts_to_monitor
         return d
 
     def __str__(self) -> str:
@@ -75,7 +84,9 @@ class NodeBeatsConfig:
                f"kafka_input: {self.kafka_input}, start_filebeat_automatically: {self.start_filebeat_automatically}, " \
                f"start_packetbeat_automatically: {self.start_packetbeat_automatically}, " \
                f"metricbeat_modules: {self.metricbeat_modules}, " \
-               f"start_metricbeat_automatically: {self.start_metricbeat_automatically}"
+               f"start_metricbeat_automatically: {self.start_metricbeat_automatically}," \
+               f"start_heartbeat_automatically: {self.start_heartbeat_automatically}," \
+               f"heartbeat_hosts_to_monitor: {self.heartbeat_hosts_to_monitor}"
 
     def to_json_str(self) -> str:
         """

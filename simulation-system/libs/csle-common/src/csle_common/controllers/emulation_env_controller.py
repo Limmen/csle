@@ -112,7 +112,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 35
+        steps = 37
         if no_traffic:
             steps = steps - 1
         if no_clients:
@@ -249,6 +249,11 @@ class EmulationEnvController:
         time.sleep(10)
 
         current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying heartbeats configurations --")
+        HostController.config_heartbeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
         HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
         time.sleep(10)
@@ -261,6 +266,11 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting metricbeats --")
         HostController.start_metricbeats(emulation_env_config=emulation_env_config, initial_start=True)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting heartbeats --")
+        HostController.start_heartbeats(emulation_env_config=emulation_env_config, initial_start=True)
         time.sleep(10)
 
         current_step += 1

@@ -729,7 +729,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Updating filebeat kibana module config: \n{kibana_module_config}")
         HostManagerUtil.write_yaml_config(config=kibana_module_config,
                                           path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
-                                               f"{constants.FILEBEAT.KIBANA_MODULE}")
+                                               f"{constants.FILEBEAT.KIBANA_MODULE_CONFIG_FILE}")
 
     @staticmethod
     def set_filebeat_system_module_config() -> None:
@@ -747,7 +747,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Updating filebeat system module config: \n{system_module_config}")
         HostManagerUtil.write_yaml_config(config=system_module_config,
                                           path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
-                                               f"{constants.FILEBEAT.SYSTEM_MODULE}")
+                                               f"{constants.FILEBEAT.SYSTEM_MODULE_CONFIG_FILE}")
 
     @staticmethod
     def set_filebeat_kafka_module_config() -> None:
@@ -765,7 +765,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Updating filebeat kafka module config: \n{kafka_module_config}")
         HostManagerUtil.write_yaml_config(config=kafka_module_config,
                                           path=f"{constants.FILEBEAT.MODULES_CONFIG_DIR}"
-                                               f"{constants.FILEBEAT.KAFKA_MODULE}")
+                                               f"{constants.FILEBEAT.KAFKA_MODULE_CONFIG_FILE}")
 
     @staticmethod
     def _get_packetbeat_status() -> bool:

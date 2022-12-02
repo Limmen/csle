@@ -210,6 +210,30 @@ class HostController:
                                         initial_start=initial_start)
 
     @staticmethod
+    def start_heartbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and heartbeat
+
+        :param emulation_env_config: the emulation env config
+        :param initial_start: boolean indicating whether this method is called on emulation initialization or not
+        :return: None
+        """
+        # Start heartbeat on emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            HostController.start_heartbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
+                                            initial_start=initial_start)
+
+        # Start heartbeat on the Kafka container
+        HostController.start_heartbeat(emulation_env_config=emulation_env_config,
+                                        ips=emulation_env_config.kafka_config.container.get_ips(),
+                                        initial_start=initial_start)
+        # Start heartbeat on the ELK container
+        HostController.start_heartbeat(emulation_env_config=emulation_env_config,
+                                        ips=emulation_env_config.elk_config.container.get_ips(),
+                                        initial_start=initial_start)
+
+    @staticmethod
     def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -273,6 +297,27 @@ class HostController:
                                        ip=emulation_env_config.elk_config.container.get_ips()[0])
 
     @staticmethod
+    def stop_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and to stop heartbeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        # Stop heartbeat on emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            HostController.stop_heartbeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+        # Stop heartbeat on the kafka container
+        HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
+                                       ip=emulation_env_config.kafka_config.container.get_ips()[0])
+
+        # Stop heartbeat on the ELK container
+        HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
+                                       ip=emulation_env_config.elk_config.container.get_ips()[0])
+
+    @staticmethod
     def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -333,6 +378,27 @@ class HostController:
 
         # Configure metricbeat on the ELK container
         HostController.config_metricbeat(emulation_env_config=emulation_env_config,
+                                         container=emulation_env_config.elk_config.container)
+
+    @staticmethod
+    def config_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and to setup the configuration of heartbeat
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        # Configure heartbeat on the emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            HostController.config_heartbeat(emulation_env_config=emulation_env_config, container=c)
+
+        # Configure heartbeat on the kafka container
+        HostController.config_heartbeat(emulation_env_config=emulation_env_config,
+                                         container=emulation_env_config.kafka_config.container)
+
+        # Configure heartbeat on the ELK container
+        HostController.config_heartbeat(emulation_env_config=emulation_env_config,
                                          container=emulation_env_config.elk_config.container)
 
     @staticmethod
@@ -443,6 +509,33 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_metricbeat(stub=stub)
 
     @staticmethod
+    def start_heartbeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to start the Host manager and heartbeat
+
+        :param emulation_env_config: the emulation env config
+        :param ip: IP of the container
+        :param initial_start: boolean indicating whether this method is called on emulation initialization or not
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        if initial_start:
+            node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
+            if not node_beats_config.start_heartbeat_automatically:
+                return
+        host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
+            ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
+        if not host_monitor_dto.heartbeat_running:
+            Logger.__call__().get_logger().info(
+                f"Heartbeat is not running on {ips[0]}, starting it.")
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+                csle_collector.host_manager.query_host_manager.start_heartbeat(stub=stub)
+
+    @staticmethod
     def config_filebeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
         """
         A method that sends a request to the HostManager on a specific container
@@ -530,6 +623,33 @@ class HostController:
                 kafka_port=emulation_env_config.kafka_config.kafka_port,
                 metricbeat_modules=node_beats_config.metricbeat_modules,
                 reload_enabled=emulation_env_config.beats_config.reload_enabled)
+
+    @staticmethod
+    def config_heartbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
+        """
+        A method that sends a request to the HostManager on a specific container
+        to setup the heartbeat configuration
+
+        :param emulation_env_config: the emulation env config
+        :param container: the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{container.get_ips()[0]}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Configuring heartbeat on {container.get_ips()[0]}.")
+            csle_collector.host_manager.query_host_manager.config_heartbeat(
+                stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
+                kibana_port=emulation_env_config.elk_config.kibana_port,
+                elastic_ip=emulation_env_config.elk_config.container.get_ips()[0],
+                elastic_port=emulation_env_config.elk_config.elastic_port,
+                num_elastic_shards=emulation_env_config.beats_config.num_elastic_shards,
+                hosts_to_monitor=node_beats_config.heartbeat_hosts_to_monitor)
 
     @staticmethod
     def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
@@ -626,6 +746,25 @@ class HostController:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             Logger.__call__().get_logger().info(f"Stopping metricbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_metricbeat(stub=stub)
+
+    @staticmethod
+    def stop_heartbeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific container to stop heartbeat
+
+        :param emulation_env_config: the emulation env config
+        :param ip: the IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Stopping heartbeat on {ip}.")
+            csle_collector.host_manager.query_host_manager.stop_heartbeat(stub=stub)
 
     @staticmethod
     def get_host_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
