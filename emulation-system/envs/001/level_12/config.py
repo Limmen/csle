@@ -2981,12 +2981,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
                                           collector_constants.FILEBEAT.SNORT_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -2999,12 +2999,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3017,12 +3017,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3035,12 +3035,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3053,12 +3053,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3071,12 +3071,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3089,12 +3089,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3107,12 +3107,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3128,13 +3128,13 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
                                           collector_constants.FILEBEAT.KAFKA_MODULE],
-                        kafka_input=True, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=True, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE,
                                             collector_constants.FILEBEAT.KAFKA_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3152,15 +3152,15 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                                           collector_constants.FILEBEAT.ELASTICSEARCH_MODULE,
                                           collector_constants.FILEBEAT.KIBANA_MODULE,
                                           collector_constants.FILEBEAT.LOGSTASH_MODULE], kafka_input=False,
-                        start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE,
                                             collector_constants.FILEBEAT.ELASTICSEARCH_MODULE,
                                             collector_constants.FILEBEAT.KIBANA_MODULE,
                                             collector_constants.FILEBEAT.LOGSTASH_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3183,12 +3183,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3202,12 +3202,12 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=True,
-                        start_packetbeat_automatically=True,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=True,
-                        start_heartbeat_automatically=True,
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
                         heartbeat_hosts_to_monitor=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
