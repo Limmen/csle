@@ -173,7 +173,7 @@ class HostController:
         """
         # Start packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_filebeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
+            HostController.start_packetbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
                                           initial_start=initial_start)
 
         # Start packetbeat on the Kafka container

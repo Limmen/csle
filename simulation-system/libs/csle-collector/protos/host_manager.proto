@@ -80,6 +80,7 @@ message ConfigMetricbeatMsg {
   string kafka_ip = 6;
   int32 kafka_port = 7;
   bool reload_enabled = 8;
+  repeated string metricbeat_modules = 12;
 }
 
 // Message that the client sends to get the status of the HostMonitor

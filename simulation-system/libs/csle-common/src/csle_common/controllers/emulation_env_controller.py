@@ -233,10 +233,10 @@ class EmulationEnvController:
         HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
-        # HostController.config_filebeats(emulation_env_config=emulation_env_config)
-        # time.sleep(10)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
+        HostController.config_filebeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying packetbeats configurations --")
@@ -248,10 +248,10 @@ class EmulationEnvController:
         HostController.config_metricbeats(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        # HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
-        # time.sleep(10)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
+        HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
+        time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting packetbeats --")
