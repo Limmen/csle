@@ -478,7 +478,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         HostManagerServicer._set_heartbeat_config(
             kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
             elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
-            num_elastic_shards=request.num_elastic_shards, hosts_to_monitor=request.hosts_to_monitor)
+            num_elastic_shards=request.num_elastic_shards, hosts_to_monitor=list(request.hosts_to_monitor))
         logging.info("Heartbeat configuration updated")
         monitor_running = False
         if self.host_monitor_thread is not None:
@@ -1000,7 +1000,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         """
         heartbeat_config = HostManagerUtil.heartbeat_config(
             kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip, elastic_port=elastic_port,
-            num_elastic_shards=num_elastic_shards, hosts_to_monitor=hosts_to_monitor)
+            num_elastic_shards=num_elastic_shards, hosts_to_monitor=list(hosts_to_monitor))
         logging.info(f"Updating heartbeat config: \n{heartbeat_config}")
         HostManagerUtil.write_yaml_config(config=heartbeat_config, path=constants.HEARTBEAT.CONFIG_FILE)
         logging.info(f"Running heartbeat setup command: {constants.HEARTBEAT.SETUP_CMD}")

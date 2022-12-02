@@ -221,6 +221,7 @@ const Header = (props) => {
                         overlay={props.renderRegisterTooltip}>
                         <NavLink className="nav-link navtablabel largeFont" to={REGISTER_PAGE_RESOURCE}>
                             Register
+                            <i className="fa fa-user headerIcon" aria-hidden="true"></i>
                         </NavLink>
                     </OverlayTrigger>
                 </li>

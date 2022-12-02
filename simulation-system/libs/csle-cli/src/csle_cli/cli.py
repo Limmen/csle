@@ -84,12 +84,12 @@ def attacker_shell_complete(ctx, param, incomplete) -> List[str]:
     return emulations
 
 
-@click.command("attacker", help="emulation-name id")
+@click.command("attacker", help="emulation-name execution-id")
 @click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", type=str, shell_complete=attacker_shell_complete)
 def attacker(emulation: str, id: int = -1) -> None:
     """
-    Opens an attacker shell in the given emulation
+    Opens an attacker shell in the given emulation execution
 
     :param emulation: the emulation name
     :return: None
@@ -601,18 +601,23 @@ def stop(entity: str, id: int = -1) -> None:
                 click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
-@click.argument('port', default=50046, type=int, shell_complete=stop_shell_complete)
+@click.argument('max_workers', default=10, type=int)
+@click.argument('log_file', default="docker_statsmanager.log", type=str)
+@click.argument('log_dir', default="/var/log/csle", type=str)
+@click.argument('port', default=50046, type=int)
 @click.command("statsmanager", help="port")
-def statsmanager(port: int) -> None:
+def statsmanager(port: int, log_file: str, log_dir: str, max_workers: int) -> None:
     """
     Starts the statsmanager locally
 
     :param port: the port that the statsmanager will listen to
+    :param log_file: extra parameter for starting the docker stats manager
+    :param log_dir: extra parameter for starting the docker stats manager
+    :param max_workers: extra parameter for starting the docker stats manager
     :return: None
     """
     import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
-
-    docker_stats_manager.serve(port=port)
+    docker_stats_manager.serve(port=port, log_file_name=log_file, log_dir=log_dir, max_workers=max_workers)
 
 
 def trainingjob_shell_complete(ctx, param, incomplete) -> List[str]:
@@ -756,7 +761,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
           log_file: str, log_dir: str, max_workers: int) -> None:
     """
-    Starts a container or all containers
+    Starts an entity, e.g. a container or the management system
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image

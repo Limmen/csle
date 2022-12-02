@@ -69,6 +69,7 @@ class MGMT_WEBAPP:
     FILEBEAT_SUBRESOURCE = "filebeat"
     PACKETBEAT_SUBRESOURCE = "packetbeat"
     METRICBEAT_SUBRESOURCE = "metricbeat"
+    HEARTBEAT_SUBRESOURCE = "heartbeat"
     DOCKER_STATS_MANAGER_SUBRESOURCE = "docker-stats-manager"
     DOCKER_STATS_MONITOR_SUBRESOURCE = "docker-stats-monitor"
     CREATE_SUBRESOURCE = "create"

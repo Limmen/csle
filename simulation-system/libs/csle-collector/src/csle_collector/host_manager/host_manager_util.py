@@ -2,6 +2,7 @@ from typing import Dict, Any, List, Union
 import datetime
 import subprocess
 import yaml
+import logging
 import csle_collector.constants.constants as constants
 from csle_collector.host_manager.failed_login_attempt import FailedLoginAttempt
 from csle_collector.host_manager.successful_login import SuccessfulLogin
@@ -349,6 +350,7 @@ class HostManagerUtil:
         :param path: the path to write the file to
         :return: None
         """
+        logging.info(f"Writing configuration file to path: {path}")
         with open(path, 'w') as file:
             yaml.dump(config, file)
 

@@ -10,7 +10,8 @@ import {
     HOST_MONITOR_SUBRESOURCE,
     HOST_MANAGER_SUBRESOURCE,
     START_ALL_PROPERTY,
-    STOP_ALL_PROPERTY, FILEBEAT_SUBRESOURCE, PACKETBEAT_SUBRESOURCE, METRICBEAT_SUBRESOURCE
+    STOP_ALL_PROPERTY, FILEBEAT_SUBRESOURCE, PACKETBEAT_SUBRESOURCE, METRICBEAT_SUBRESOURCE,
+    HEARTBEAT_SUBRESOURCE
 } from "../../../../Common/constants";
 
 /**
@@ -100,7 +101,8 @@ const HostManagersInfo = (props) => {
                                 name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                                 startOrStop={props.startOrStop}
                             />
-
+                        </div>
+                        <div className="aggregateActionsContainer beatsAllActions">
                             <span className="aggregateActions">Stop all metricbeats:</span>
                             <SpinnerOrButton
                                 loading={props.loadingEntities.includes(
@@ -114,6 +116,22 @@ const HostManagersInfo = (props) => {
                                 loading={props.loadingEntities.includes(
                                     `${METRICBEAT_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
                                 running={false} entity={METRICBEAT_SUBRESOURCE}
+                                name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+                            <span className="aggregateActions">Stop all heartbeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${HEARTBEAT_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                                running={true} entity={HEARTBEAT_SUBRESOURCE}
+                                name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
+                                startOrStop={props.startOrStop}
+                            />
+                            <span className="aggregateActions">Start all heartbeats:</span>
+                            <SpinnerOrButton
+                                loading={props.loadingEntities.includes(
+                                    `${HEARTBEAT_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                                running={false} entity={HEARTBEAT_SUBRESOURCE}
                                 name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                                 startOrStop={props.startOrStop}
                             />
@@ -241,6 +259,31 @@ const HostManagersInfo = (props) => {
                                             running={status.metricbeat_running}
                                             entity={METRICBEAT_SUBRESOURCE}
                                             name={METRICBEAT_SUBRESOURCE}
+                                            ip={props.hostManagersInfo.ips[index]}
+                                            startOrStop={props.startOrStop}
+                                        />
+                                        <LogsButton name={props.hostManagersInfo.ips[index]}
+                                                    entity={HOST_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
+
+                            {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
+                                <tr key={`${HEARTBEAT_SUBRESOURCE}-${index}`}>
+                                    <td>Heartbeat</td>
+                                    <td>{props.hostManagersInfo.ips[index]}</td>
+                                    <td></td>
+                                    {props.activeStatus(status.heartbeat_running)}
+                                    <td>
+                                        <SpinnerOrButton
+                                            loading={props.loadingEntities.includes(
+                                                `${HEARTBEAT_SUBRESOURCE}-`
+                                                + `${props.hostManagersInfo.ips[index]}`)}
+                                            running={status.heartbeat_running}
+                                            entity={HEARTBEAT_SUBRESOURCE}
+                                            name={HEARTBEAT_SUBRESOURCE}
                                             ip={props.hostManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />

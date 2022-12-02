@@ -47,7 +47,12 @@ import {
     TOKEN_QUERY_PARAM,
     EMULATION_QUERY_PARAM,
     EXECUTION_ID_QUERY_PARAM,
-    LOGIN_PAGE_RESOURCE, EMULATION_EXECUTIONS_RESOURCE, HTTP_REST_POST
+    LOGIN_PAGE_RESOURCE,
+    EMULATION_EXECUTIONS_RESOURCE,
+    HTTP_REST_POST,
+    FILEBEAT_SUBRESOURCE,
+    PACKETBEAT_SUBRESOURCE,
+    METRICBEAT_SUBRESOURCE, HEARTBEAT_SUBRESOURCE
 } from "../../../Common/constants";
 
 /**
@@ -177,7 +182,9 @@ const ExecutionControlPlane = (props) => {
             entity === SNORT_IDS_MONITOR_SUBRESOURCE){
             setSnortIDSManagersInfo(response.snort_ids_managers_info)
         }
-        if(entity === HOST_MANAGER_SUBRESOURCE || entity === HOST_MONITOR_SUBRESOURCE){
+        if(entity === HOST_MANAGER_SUBRESOURCE || entity === HOST_MONITOR_SUBRESOURCE ||
+            entity === FILEBEAT_SUBRESOURCE || entity === PACKETBEAT_SUBRESOURCE ||
+            entity === METRICBEAT_SUBRESOURCE || entity === HEARTBEAT_SUBRESOURCE){
             setHostManagersInfo(response.host_managers_info)
         }
         if(entity === TRAFFIC_MANAGER_SUBRESOURCE || entity === TRAFFIC_GENERATOR_SUBRESOURCE){
