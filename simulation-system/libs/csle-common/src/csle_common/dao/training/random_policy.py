@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Optional
+from typing import Union, List, Dict, Optional, Tuple
 import random
 import numpy as np
 from csle_common.dao.training.agent_type import AgentType
@@ -34,6 +34,16 @@ class RandomPolicy(Policy):
         """
         action = random.choice(self.actions)
         return action.id
+
+    def _defender_action(self, o: Union[List[Union[int, float]], int, float]) -> Tuple[Union[int, float], float]:
+        """
+        Selects the next defender action
+
+        :param o: the input observation
+        :return: the next action and its probability
+        """
+        action = random.choice(self.actions)
+        return action.id, self.probability(o=o, a=action.id)
 
     def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
         """
