@@ -582,7 +582,7 @@ class HostManagerUtil:
 
     @staticmethod
     def metricbeat_config(kibana_ip: str, kibana_port: int, elastic_ip: str,
-                        elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> Dict[str, Any]:
+                          elastic_port: int, num_elastic_shards: int, reload_enabled: bool = False) -> Dict[str, Any]:
         """
         Generates the metricbeat.yml config
 

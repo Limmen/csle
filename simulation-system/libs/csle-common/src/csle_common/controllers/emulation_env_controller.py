@@ -234,11 +234,6 @@ class EmulationEnvController:
         time.sleep(10)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying heartbeats configurations --")
-        HostController.config_heartbeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
         HostController.config_filebeats(emulation_env_config=emulation_env_config)
         time.sleep(10)
@@ -251,6 +246,11 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying metricbeats configurations --")
         HostController.config_metricbeats(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying heartbeats configurations --")
+        HostController.config_heartbeats(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1

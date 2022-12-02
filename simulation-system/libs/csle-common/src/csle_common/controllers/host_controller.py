@@ -174,16 +174,16 @@ class HostController:
         # Start packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
             HostController.start_packetbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
-                                          initial_start=initial_start)
+                                            initial_start=initial_start)
 
         # Start packetbeat on the Kafka container
         HostController.start_packetbeat(emulation_env_config=emulation_env_config,
-                                      ips=emulation_env_config.kafka_config.container.get_ips(),
-                                      initial_start=initial_start)
+                                        ips=emulation_env_config.kafka_config.container.get_ips(),
+                                        initial_start=initial_start)
         # Start packetbeat on the ELK container
         HostController.start_packetbeat(emulation_env_config=emulation_env_config,
-                                      ips=emulation_env_config.elk_config.container.get_ips(),
-                                      initial_start=initial_start)
+                                        ips=emulation_env_config.elk_config.container.get_ips(),
+                                        initial_start=initial_start)
 
     @staticmethod
     def start_metricbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -198,7 +198,7 @@ class HostController:
         # Start packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
             HostController.start_metricbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
-                                          initial_start=initial_start)
+                                            initial_start=initial_start)
 
         # Start metricbeat on the Kafka container
         HostController.start_metricbeat(emulation_env_config=emulation_env_config,
@@ -222,16 +222,16 @@ class HostController:
         # Start heartbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
             HostController.start_heartbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
-                                            initial_start=initial_start)
+                                           initial_start=initial_start)
 
         # Start heartbeat on the Kafka container
         HostController.start_heartbeat(emulation_env_config=emulation_env_config,
-                                        ips=emulation_env_config.kafka_config.container.get_ips(),
-                                        initial_start=initial_start)
+                                       ips=emulation_env_config.kafka_config.container.get_ips(),
+                                       initial_start=initial_start)
         # Start heartbeat on the ELK container
         HostController.start_heartbeat(emulation_env_config=emulation_env_config,
-                                        ips=emulation_env_config.elk_config.container.get_ips(),
-                                        initial_start=initial_start)
+                                       ips=emulation_env_config.elk_config.container.get_ips(),
+                                       initial_start=initial_start)
 
     @staticmethod
     def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -311,11 +311,11 @@ class HostController:
 
         # Stop heartbeat on the kafka container
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                      ip=emulation_env_config.kafka_config.container.get_ips()[0])
 
         # Stop heartbeat on the ELK container
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                      ip=emulation_env_config.elk_config.container.get_ips()[0])
 
     @staticmethod
     def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -395,11 +395,11 @@ class HostController:
 
         # Configure heartbeat on the kafka container
         HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                         container=emulation_env_config.kafka_config.container)
+                                        container=emulation_env_config.kafka_config.container)
 
         # Configure heartbeat on the ELK container
         HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                         container=emulation_env_config.elk_config.container)
+                                        container=emulation_env_config.elk_config.container)
 
     @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -579,7 +579,6 @@ class HostController:
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
-        node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
 
         # Open a gRPC session
         with grpc.insecure_channel(

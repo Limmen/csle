@@ -1,5 +1,5 @@
 csle-common==0.0.7
-csle-collector==0.0.98
+csle-collector==0.0.99
 csle-attacker==0.0.7
 csle-defender==0.0.7
 csle-system-identification==0.0.7

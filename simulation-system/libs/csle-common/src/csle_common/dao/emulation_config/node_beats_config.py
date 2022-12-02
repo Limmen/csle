@@ -54,9 +54,9 @@ class NodeBeatsConfig:
             kafka_input=d["kafka_input"], start_filebeat_automatically=d["start_filebeat_automatically"],
             start_packetbeat_automatically=d["start_packetbeat_automatically"],
             metricbeat_modules=d["metricbeat_modules"],
-            start_metricbeat_automatically = d["start_metricbeat_automatically"],
-            start_heartbeat_automatically = d["start_heartbeat_automatically"],
-            heartbeat_hosts_to_monitor = d["heartbeat_hosts_to_monitor"])
+            start_metricbeat_automatically=d["start_metricbeat_automatically"],
+            start_heartbeat_automatically=d["start_heartbeat_automatically"],
+            heartbeat_hosts_to_monitor=d["heartbeat_hosts_to_monitor"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

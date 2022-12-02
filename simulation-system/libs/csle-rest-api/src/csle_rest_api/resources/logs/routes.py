@@ -13,7 +13,6 @@ from csle_common.dao.emulation_config.config import Config
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.emulation_util import EmulationUtil
 
-
 # Creates a blueprint "sub application" of the main REST app
 logs_bp = Blueprint(
     api_constants.MGMT_WEBAPP.LOGS_RESOURCE, __name__,
@@ -753,4 +752,3 @@ def elk_logs():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-

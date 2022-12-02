@@ -415,7 +415,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           heartbeat_running=heartbeat_status)
 
     def startHeartbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartHeartbeatMsg,
-                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Starts heartbeat
 
@@ -439,7 +439,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           heartbeat_running=True)
 
     def stopHeartbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopHeartbeatMsg,
-                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Stops heartbeat
 
@@ -463,7 +463,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           heartbeat_running=False)
 
     def configHeartbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigHeartbeatMsg,
-                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Updates the configuration of heartbeat
 
@@ -788,7 +788,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :return: None
         """
         logging.info(f"Starting packetbeat with command: {constants.PACKETBEAT.PACKETBEAT_START}")
-        output = subprocess.run(constants.FILEBEAT.FILEBEAT_START.split(" "), capture_output=True, text=True)
+        output = subprocess.run(constants.PACKETBEAT.PACKETBEAT_START.split(" "), capture_output=True, text=True)
         logging.info(f"Started packetbeat, stdout:{output.stdout}, stderr: {output.stderr}")
 
     @staticmethod
@@ -835,8 +835,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Enabling system module with command: "
                      f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.SYSTEM_MODULE)}")
         output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
-            constants.METRICBEAT.SYSTEM_MODULE).split(" "),
-                                capture_output=True, text=True)
+            constants.METRICBEAT.SYSTEM_MODULE).split(" "), capture_output=True, text=True)
         logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         system_module_config = HostManagerUtil.metricbeat_system_module_config()
         logging.info(f"Updating metricbeat system module config: \n{system_module_config}")
@@ -854,8 +853,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Enabling linux module with command: "
                      f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.LINUX_MODULE)}")
         output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
-            constants.METRICBEAT.LINUX_MODULE).split(" "),
-                                capture_output=True, text=True)
+            constants.METRICBEAT.LINUX_MODULE).split(" "), capture_output=True, text=True)
         logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         linux_module_config = HostManagerUtil.metricbeat_linux_module_config()
         logging.info(f"Updating metricbeat linux module config: \n{linux_module_config}")
@@ -875,8 +873,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Enabling kafka module with command: "
                      f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.KAFKA_MODULE)}")
         output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
-            constants.METRICBEAT.KAFKA_MODULE).split(" "),
-                                capture_output=True, text=True)
+            constants.METRICBEAT.KAFKA_MODULE).split(" "), capture_output=True, text=True)
         logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         kafka_module_config = HostManagerUtil.metricbeat_kafka_module_config(kafka_ip=kafka_ip, kafka_port=kafka_port)
         logging.info(f"Updating metricbeat kafka module config: \n{kafka_module_config}")
@@ -896,8 +893,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Enabling elasticsearch module with command: "
                      f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.ELASTICSEARCH_MODULE)}")
         output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
-            constants.METRICBEAT.ELASTICSEARCH_MODULE).split(" "),
-                                capture_output=True, text=True)
+            constants.METRICBEAT.ELASTICSEARCH_MODULE).split(" "), capture_output=True, text=True)
         logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         elasticsearch_module_config = HostManagerUtil.metricbeat_elasticsearch_module_config(elastic_ip=elastic_ip,
                                                                                              elastic_port=elastic_port)
@@ -918,8 +914,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Enabling Kibana module with command: "
                      f"{constants.METRICBEAT.ENABLE_MODULE_CMD.format(constants.METRICBEAT.KIBANA_MODULE)}")
         output = subprocess.run(constants.METRICBEAT.ENABLE_MODULE_CMD.format(
-            constants.METRICBEAT.KIBANA_MODULE).split(" "),
-                                capture_output=True, text=True)
+            constants.METRICBEAT.KIBANA_MODULE).split(" "), capture_output=True, text=True)
         logging.info(f"Module enabled, output: {output.stdout}, err output: {output.stderr}")
         kibana_module_config = HostManagerUtil.metricbeat_kibana_module_config(
             kibana_ip=kibana_ip, kibana_port=kibana_port)

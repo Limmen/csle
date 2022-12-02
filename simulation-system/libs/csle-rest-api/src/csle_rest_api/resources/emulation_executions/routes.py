@@ -21,7 +21,6 @@ from csle_common.controllers.host_controller import HostController
 from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
-
 # Creates a blueprint "sub application" of the main REST app
 emulation_executions_bp = Blueprint(
     api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE, __name__,
@@ -1536,7 +1535,7 @@ def start_stop_packetbeat(execution_id: int):
                     f"Starting all packetbeats on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_packetbeats(emulation_env_config=execution.emulation_env_config,
-                                               initial_start=False)
+                                                 initial_start=False)
             else:
                 Logger.__call__().get_logger().info(
                     f"Starting packetbeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
@@ -1668,7 +1667,7 @@ def start_stop_heartbeat(execution_id: int):
                     f"Starting all heartbeats on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_heartbeats(emulation_env_config=execution.emulation_env_config,
-                                                 initial_start=False)
+                                                initial_start=False)
             else:
                 Logger.__call__().get_logger().info(
                     f"Starting heartbeat with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
