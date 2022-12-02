@@ -220,7 +220,10 @@ const SystemIdentificationJob = (props) => {
                             aria-expanded={logsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Logs: {props.job.log_file_path} </h5>
+                            <h5 className="semiTitle">
+                                Logs: {props.job.log_file_path}
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={logsOpen}>
@@ -264,7 +267,10 @@ const SystemIdentificationJob = (props) => {
                                 aria-expanded={generalInfoOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle"> General Information about the system identification job</h5>
+                                <h5 className="semiTitle">
+                                    General Information about the system identification job
+                                    <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={generalInfoOpen}>
@@ -325,7 +331,10 @@ const SystemIdentificationJob = (props) => {
                                 aria-expanded={hyperparametersOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle"> Hyperparameters</h5>
+                                <h5 className="semiTitle">
+                                    Hyperparameters
+                                    <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={hyperparametersOpen}>

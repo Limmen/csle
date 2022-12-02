@@ -80,6 +80,21 @@ class HostManagerStub(object):
                 request_serializer=host__manager__pb2.ConfigMetricbeatMsg.SerializeToString,
                 response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
+        self.stopHeartbeat = channel.unary_unary(
+                '/HostManager/stopHeartbeat',
+                request_serializer=host__manager__pb2.StopHeartbeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.startHeartbeat = channel.unary_unary(
+                '/HostManager/startHeartbeat',
+                request_serializer=host__manager__pb2.StartHeartbeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.configHeartbeat = channel.unary_unary(
+                '/HostManager/configHeartbeat',
+                request_serializer=host__manager__pb2.ConfigHeartbeatMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
 
 
 class HostManagerServicer(object):
@@ -164,6 +179,24 @@ class HostManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopHeartbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startHeartbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def configHeartbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_HostManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -230,6 +263,21 @@ def add_HostManagerServicer_to_server(servicer, server):
             'configMetricbeat': grpc.unary_unary_rpc_method_handler(
                     servicer.configMetricbeat,
                     request_deserializer=host__manager__pb2.ConfigMetricbeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'stopHeartbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHeartbeat,
+                    request_deserializer=host__manager__pb2.StopHeartbeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'startHeartbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startHeartbeat,
+                    request_deserializer=host__manager__pb2.StartHeartbeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'configHeartbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.configHeartbeat,
+                    request_deserializer=host__manager__pb2.ConfigHeartbeatMsg.FromString,
                     response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
     }
@@ -460,6 +508,57 @@ class HostManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/HostManager/configMetricbeat',
             host__manager__pb2.ConfigMetricbeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHeartbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/stopHeartbeat',
+            host__manager__pb2.StopHeartbeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startHeartbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/startHeartbeat',
+            host__manager__pb2.StartHeartbeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def configHeartbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/configHeartbeat',
+            host__manager__pb2.ConfigHeartbeatMsg.SerializeToString,
             host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

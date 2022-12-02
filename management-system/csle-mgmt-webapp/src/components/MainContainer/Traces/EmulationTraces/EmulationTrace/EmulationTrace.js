@@ -141,7 +141,9 @@ const EmulationTrace = (props) => {
                             aria-expanded={attackerActionsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Attacker actions </h5>
+                            <h5 className="semiTitle"> Attacker actions
+                                <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={attackerActionsOpen}>
@@ -189,7 +191,9 @@ const EmulationTrace = (props) => {
                             aria-expanded={defenderActionsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Defender actions </h5>
+                            <h5 className="semiTitle"> Defender actions
+                                <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={defenderActionsOpen}>
@@ -238,7 +242,9 @@ const EmulationTrace = (props) => {
                             aria-expanded={attackerObservationsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Attacker observations </h5>
+                            <h5 className="semiTitle"> Attacker observations
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={attackerObservationsOpen}>
@@ -281,7 +287,9 @@ const EmulationTrace = (props) => {
                             aria-expanded={defenderObservationsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Defender observations </h5>
+                            <h5 className="semiTitle"> Defender observations
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={defenderObservationsOpen}>

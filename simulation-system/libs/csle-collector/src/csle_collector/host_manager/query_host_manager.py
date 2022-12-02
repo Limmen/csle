@@ -263,3 +263,61 @@ def config_metricbeat(
             kafka_port=kafka_port, kafka_ip=kafka_ip, metricbeat_modules=metricbeat_modules)
     host_dto = stub.configMetricbeat(config_metricbeat_msg, timeout=timeout)
     return host_dto
+
+
+def start_heartbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to start heartbeat
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    start_heartbeat_msg = csle_collector.host_manager.host_manager_pb2.StartHeartbeatMsg()
+    host_dto = stub.startHeartbeat(start_heartbeat_msg, timeout=timeout)
+    return host_dto
+
+
+def stop_heartbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to stop heartbeat
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    stop_heartbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.StopHeartbeatMsg()
+    host_dto = stub.stopHeartbeat(stop_heartbeat_msg, timeout=timeout)
+    return host_dto
+
+
+def config_heartbeat(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        kibana_ip: str, kibana_port: int, elastic_ip: str,
+        elastic_port: int, num_elastic_shards: int,
+        hosts_to_monitor: List[str], timeout=constants.GRPC.CONFIG_TIMEOUT_SECONDS) \
+        -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to update the heartbeat configuration
+
+    :param kibana_ip: the IP of Kibana where the data should be visualized
+    :param kibana_port: the port of Kibana where the data should be visualized
+    :param elastic_ip: the IP of elastic where the data should be shipped
+    :param elastic_port: the port of elastic where the data should be shipped
+    :param num_elastic_shards: the number of elastic shards
+    :param hosts_to_monitor: list of hosts to monitor with heartbeats
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    config_heartbeat_msg = \
+        csle_collector.host_manager.host_manager_pb2.ConfigHeartbeatMsg(
+            kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip,
+            elastic_port=elastic_port, num_elastic_shards=num_elastic_shards, hosts_to_monitor=hosts_to_monitor)
+    host_dto = stub.configHeartbeat(config_heartbeat_msg, timeout=timeout)
+    return host_dto

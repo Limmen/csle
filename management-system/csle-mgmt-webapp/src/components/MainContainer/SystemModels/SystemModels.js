@@ -932,7 +932,10 @@ const SystemModels = (props) => {
                                     aria-expanded={deltaProbsOpen}
                                     variant="link"
                                 >
-                                    <h5 className="cardHeaderDists">Conditional Distributions</h5>
+                                    <h5 className="cardHeaderDists">
+                                        Conditional Distributions
+                                        <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                                    </h5>
                                 </Button>
                             </Card.Header>
                             <Collapse in={deltaProbsOpen}>
@@ -966,6 +969,7 @@ const SystemModels = (props) => {
                                 >
                                     <h5 className="cardHeaderDists">
                                         Descriptive statistics
+                                        <i className="fa fa-table headerIcon" aria-hidden="true"></i>
                                     </h5>
                                 </Button>
                             </Card.Header>

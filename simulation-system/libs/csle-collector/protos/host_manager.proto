@@ -15,6 +15,9 @@ service HostManager {
   rpc stopMetricbeat(StopMetricbeatMsg) returns (HostStatusDTO) {}
   rpc startMetricbeat(StartMetricbeatMsg) returns (HostStatusDTO) {}
   rpc configMetricbeat(ConfigMetricbeatMsg) returns (HostStatusDTO) {}
+  rpc stopHeartbeat(StopHeartbeatMsg) returns (HostStatusDTO) {}
+  rpc startHeartbeat(StartHeartbeatMsg) returns (HostStatusDTO) {}
+  rpc configHeartbeat(ConfigHeartbeatMsg) returns (HostStatusDTO) {}
 }
 
 // Message that the client sends to stop the HostMonitor
@@ -92,6 +95,7 @@ message HostStatusDTO {
   bool filebeat_running = 2;
   bool packetbeat_running = 3;
   bool metricbeat_running = 4;
+  bool heartbeat_running = 5;
 }
 
 // Message that the client sends to extract the Host metrics from given timestamps
@@ -110,4 +114,21 @@ message HostMetricsDTO {
   int32 num_users = 6;
   string ip = 7;
   float timestamp = 8;
+}
+
+
+// Message that the client sends to stop heartbeat
+message StopHeartbeatMsg {}
+
+// Message that the client sends to start heartbeat
+message StartHeartbeatMsg {}
+
+// Message that the client sends to set the heartbeat configuration
+message ConfigHeartbeatMsg {
+  string kibana_ip = 1;
+  int32 kibana_port = 2;
+  string elastic_ip = 3;
+  int32 elastic_port = 4;
+  int32 num_elastic_shards = 5;;
+  repeated string hosts_to_monitor = 6;
 }

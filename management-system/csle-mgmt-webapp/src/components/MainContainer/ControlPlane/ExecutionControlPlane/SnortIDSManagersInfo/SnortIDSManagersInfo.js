@@ -26,7 +26,7 @@ const SnortIDSManagersInfo = (props) => {
                     aria-expanded={props.snortManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> Snort IDS Managers
+                    <h5 className="semiTitle"> Snort IDS managers
                         <img src={SnortImg} alt="Snort" className="img-fluid headerIcon elastic"/>
                     </h5>
                 </Button>

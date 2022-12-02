@@ -56,7 +56,7 @@ const ElkManagersInfo = (props) => {
                     aria-expanded={props.elkManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> ELK Managers
+                    <h5 className="semiTitle"> ELK managers
                         <img src={ElasticImg} alt="Elastic" className="img-fluid headerIcon elastic"/>
                     </h5>
                 </Button>

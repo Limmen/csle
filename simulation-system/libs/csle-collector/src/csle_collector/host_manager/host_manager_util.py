@@ -726,3 +726,43 @@ class HostManagerUtil:
             }
         ]
         return linux_config
+
+    @staticmethod
+    def heartbeat_config(kibana_ip: str, kibana_port: int, elastic_ip: str, elastic_port: int,
+                         num_elastic_shards: int, hosts_to_monitor: List[str]) -> Dict[str, Any]:
+        """
+        Generates the heartbeat.yml config
+
+        :param kibana_ip: the IP of Kibana where the data should be visualized
+        :param kibana_port: the port of Kibana where the data should be visualized
+        :param elastic_ip: the IP of elastic where the data should be shipped
+        :param elastic_port: the port of elastic where the data should be shipped
+        :param num_elastic_shards: the number of elastic shards
+        :param hosts_to_monitor: a list of host IP addresses to monitor
+        :return: the heartbeat configuration dict
+        """
+        heartbeat_config = {}
+        heartbeat_config[constants.HEARTBEAT.HEARTBEAT_MONITORS_PROPERTY] = [
+            {
+                constants.BEATS.TYPE_PROPERTY: constants.HEARTBEAT.ICMP_MONITOR_TYPE,
+                constants.HEARTBEAT.SCHEDULE_PROPERTY: '*/5 * * * * * *',
+                constants.BEATS.HOSTS_PROPERTY: hosts_to_monitor,
+                constants.BEATS.ID_PROPERTY: constants.HEARTBEAT.CSLE_MONITOR_SERVICE_ID,
+                constants.BEATS.NAME_PROPERTY: constants.HEARTBEAT.CSLE_MONITOR_SERVICE_NAME
+            }
+        ]
+        heartbeat_config[constants.BEATS.SETUP_TEMPLATE_SETTINGS_PROPERTY] = {
+            constants.BEATS.INDEX_NUM_SHARDS_PROPERTY: num_elastic_shards
+        }
+        heartbeat_config[constants.BEATS.SETUP_KIBANA_PROPERTY] = {
+            constants.BEATS.HOST_PROPERTY: f"{kibana_ip}:{kibana_port}"
+        }
+        heartbeat_config[constants.BEATS.ELASTIC_OUTPUT_PROPERTY] = {
+            constants.BEATS.HOSTS_PROPERTY: [f"{elastic_ip}:{elastic_port}"]
+        }
+        heartbeat_config[constants.BEATS.PROCESSORS_PROPERTY] = {
+            constants.BEATS.ADD_HOST_METADATA_PROPERTY: {
+                constants.BEATS.WHEN_NOT_CONTAIN_TAGS_PROPERTY: constants.BEATS.FORWARDED_PROPERTY
+            }
+        }
+        return heartbeat_config

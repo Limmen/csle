@@ -655,7 +655,9 @@ const EmulationStatistics = (props) => {
                                     aria-expanded={deltaCountsOpen}
                                     variant="link"
                                 >
-                                    <h5 className="cardHeaderDists">Delta value count distributions</h5>
+                                    <h5 className="cardHeaderDists">Delta value count distributions
+                                        <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                                    </h5>
                                 </Button>
                             </Card.Header>
                             <Collapse in={deltaCountsOpen}>
@@ -687,7 +689,9 @@ const EmulationStatistics = (props) => {
                                     aria-expanded={initialCountsOpen}
                                     variant="link"
                                 >
-                                    <h5 className="cardHeaderDists">Initial value count distributions</h5>
+                                    <h5 className="cardHeaderDists">Initial value count distributions
+                                        <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                                    </h5>
                                 </Button>
                             </Card.Header>
                             <Collapse in={initialCountsOpen}>
@@ -719,7 +723,9 @@ const EmulationStatistics = (props) => {
                                     aria-expanded={deltaProbsOpen}
                                     variant="link"
                                 >
-                                    <h5 className="cardHeaderDists">Delta value probability distributions</h5>
+                                    <h5 className="cardHeaderDists">Delta value probability distributions
+                                        <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                                    </h5>
                                 </Button>
                             </Card.Header>
                             <Collapse in={deltaProbsOpen}>
@@ -753,6 +759,7 @@ const EmulationStatistics = (props) => {
                                 >
                                     <h5 className="cardHeaderDists">
                                         Initial value probability distributions
+                                        <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
                                     </h5>
                                 </Button>
                             </Card.Header>
@@ -787,6 +794,7 @@ const EmulationStatistics = (props) => {
                                 >
                                     <h5 className="cardHeaderDists">
                                         Descriptive statistics
+                                        <i className="fa fa-table headerIcon" aria-hidden="true"></i>
                                     </h5>
                                 </Button>
                             </Card.Header>

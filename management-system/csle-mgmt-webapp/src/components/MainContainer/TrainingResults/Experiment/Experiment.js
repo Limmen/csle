@@ -176,7 +176,10 @@ const Experiment = (props) => {
                             aria-expanded={logsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Logs: {props.experiment.log_file_path} </h5>
+                            <h5 className="semiTitle">
+                                Logs: {props.experiment.log_file_path}
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={logsOpen}>
@@ -213,7 +216,10 @@ const Experiment = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> General information about the training run </h5>
+                            <h5 className="semiTitle">
+                                General information about the training run
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -275,7 +281,10 @@ const Experiment = (props) => {
                             aria-expanded={hyperparametersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Hyperparameters </h5>
+                            <h5 className="semiTitle">
+                                Hyperparameters
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={hyperparametersOpen}>
@@ -312,7 +321,9 @@ const Experiment = (props) => {
                             aria-expanded={randomSeedsAndOutputsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Random seeds and output directories </h5>
+                            <h5 className="semiTitle"> Random seeds and output directories
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={randomSeedsAndOutputsOpen}>
@@ -347,7 +358,9 @@ const Experiment = (props) => {
                             aria-expanded={metricPlotsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Metric plots </h5>
+                            <h5 className="semiTitle"> Metric plots
+                                <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={metricPlotsOpen}>
@@ -395,7 +408,9 @@ const Experiment = (props) => {
                             aria-expanded={metricTablesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Metric tables </h5>
+                            <h5 className="semiTitle"> Metric tables
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={metricTablesOpen}>
@@ -448,7 +463,10 @@ const Experiment = (props) => {
                             aria-expanded={policiesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Learned policies </h5>
+                            <h5 className="semiTitle">
+                                Learned policies
+                                <i className="fa fa-list-ul headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={policiesOpen}>

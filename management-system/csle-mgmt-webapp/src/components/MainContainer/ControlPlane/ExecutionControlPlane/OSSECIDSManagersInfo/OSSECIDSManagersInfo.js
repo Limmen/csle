@@ -27,7 +27,7 @@ const OSSECIDSManagersInfo = (props) => {
                     aria-expanded={props.ossecIdsManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> OSSEC IDS Managers
+                    <h5 className="semiTitle"> OSSEC IDS managers
                         <img src={OssecImg} alt="OSSEC" className="img-fluid headerIcon kafka"/>
                     </h5>
                 </Button>

@@ -38,6 +38,7 @@ class BEATS:
     TOPICS_PROPERTY = "topics"
     GROUP_ID_PROPERTY = "group_id"
     ID_PROPERTY = "id"
+    NAME_PROPERTY = "name"
     ENABLED_PROPERTY = "enabled"
     PATHS_PROPERTY = "paths"
     PATH_PROPERTY = "path"
@@ -164,6 +165,23 @@ class METRICBEAT:
     SOCKET_SUMMARY_METRIC = "socket_summary"
     PAGEINFO_METRIC = "pageinfo"
     SUMMARY_METRIC = "memory"
+
+
+class HEARTBEAT:
+    """
+    Constants related to heartbeat
+    """
+    CONFIG_DIR = "/etc/heartbeat/"
+    CONFIG_FILE = "/etc/heartbeat/heartbeat.yml"
+    SETUP_CMD = "heartbeat setup -e"
+    HEARTBEAT_STATUS = "sudo service heartbeat status"
+    HEARTBEAT_START = "sudo service heartbeat start"
+    HEARTBEAT_STOP = "sudo service heartbeat stop"
+    SCHEDULE_PROPERTY = "schedule"
+    ICMP_MONITOR_TYPE = "icmp"
+    HEARTBEAT_MONITORS_PROPERTY = "heartbeat.monitors"
+    CSLE_MONITOR_SERVICE_NAME = "csle-topology-connection-service"
+    CSLE_MONITOR_SERVICE_ID = "csle-topology-connection-service-id"
 
 
 class GRPC:

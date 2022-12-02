@@ -21,7 +21,7 @@ const DockerStatsManagersInfo = (props) => {
                     aria-expanded={props.dockerStatsManagersOpen}
                     variant="link"
                 >
-                    <h5 className="semiTitle"> Docker Statistics Managers
+                    <h5 className="semiTitle"> Docker statistics managers
                         <img src={DockerImg} alt="Docker" className="img-fluid headerIcon kafka"/>
                     </h5>
                 </Button>

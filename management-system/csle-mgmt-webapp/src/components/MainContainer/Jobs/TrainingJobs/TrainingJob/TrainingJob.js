@@ -268,7 +268,10 @@ const TrainingJob = (props) => {
                             aria-expanded={logsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Logs: {props.job.log_file_path} </h5>
+                            <h5 className="semiTitle">
+                                Logs: {props.job.log_file_path}
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={logsOpen}>
@@ -324,7 +327,10 @@ const TrainingJob = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> General information about the training job </h5>
+                            <h5 className="semiTitle">
+                                General information about the training job
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -397,7 +403,10 @@ const TrainingJob = (props) => {
                             aria-expanded={hyperparametersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Hyperparameters</h5>
+                            <h5 className="semiTitle">
+                                Hyperparameters
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={hyperparametersOpen}>
@@ -434,7 +443,10 @@ const TrainingJob = (props) => {
                             aria-expanded={metricPlotsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Metric plots </h5>
+                            <h5 className="semiTitle">
+                                Metric plots
+                                <i className="fa fa-bar-chart headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={metricPlotsOpen}>
@@ -475,7 +487,10 @@ const TrainingJob = (props) => {
                             aria-expanded={metricTablesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Metric tables </h5>
+                            <h5 className="semiTitle">
+                                Metric tables
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={metricTablesOpen}>
@@ -526,7 +541,10 @@ const TrainingJob = (props) => {
                             aria-expanded={simulationTracesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Last {props.job.num_cached_traces} simulation traces</h5>
+                            <h5 className="semiTitle">
+                                Last {props.job.num_cached_traces} simulation traces
+                                <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={simulationTracesOpen}>

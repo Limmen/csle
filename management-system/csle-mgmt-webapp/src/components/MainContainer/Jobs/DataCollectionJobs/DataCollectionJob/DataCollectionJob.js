@@ -295,7 +295,10 @@ const DataCollectionJob = (props) => {
                             aria-expanded={logsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Logs: {props.job.log_file_path} </h5>
+                            <h5 className="semiTitle">
+                                Logs: {props.job.log_file_path}
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={logsOpen}>
@@ -344,7 +347,10 @@ const DataCollectionJob = (props) => {
                                 aria-expanded={generalInfoOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle"> General Information about the data collection job</h5>
+                                <h5 className="semiTitle">
+                                    General Information about the data collection job
+                                    <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={generalInfoOpen}>
@@ -417,7 +423,10 @@ const DataCollectionJob = (props) => {
                                 aria-expanded={attackerActionSequenceOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Attacker action sequence</h5>
+                                <h5 className="semiTitle">
+                                    Attacker action sequence
+                                    <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={attackerActionSequenceOpen}>
@@ -465,7 +474,9 @@ const DataCollectionJob = (props) => {
                                 aria-expanded={defenderActionSequenceOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle"> Defender action sequence</h5>
+                                <h5 className="semiTitle"> Defender action sequence
+                                    <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={defenderActionSequenceOpen}>
@@ -513,7 +524,10 @@ const DataCollectionJob = (props) => {
                                 aria-expanded={tracesOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle"> Last {props.job.num_cached_traces} Emulation traces </h5>
+                                <h5 className="semiTitle">
+                                    Last {props.job.num_cached_traces} emulation traces
+                                    <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={tracesOpen}>
