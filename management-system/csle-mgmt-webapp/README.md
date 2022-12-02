@@ -1,7 +1,9 @@
 # CSLE Management System Web UI
 
 This directory contains the CSLE management system UI, which is implemented in 
-JavaScript and is based on React.
+JavaScript and is based on React. 
+
+Tested with node v16.13.1.
 
 ## Available Scripts
 

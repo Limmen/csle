@@ -10,7 +10,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-import getIpString from "../../../../Common/getIpString";
+import convertListToCommaSeparatedString from "../../../../Common/convertListToCommaSeparatedString";
 import serverIp from "../../../../Common/serverIp";
 import serverPort from "../../../../Common/serverPort";
 import {
@@ -161,7 +161,7 @@ const DataCollectionJob = (props) => {
                 ips.push(attacker_machines[i].ips[j])
             }
         }
-        return getIpString(ips)
+        return convertListToCommaSeparatedString(ips)
     }
 
     const getCompromisedNodesIps = (attacker_machines) => {
@@ -173,7 +173,7 @@ const DataCollectionJob = (props) => {
                 }
             }
         }
-        return getIpString(ips)
+        return convertListToCommaSeparatedString(ips)
     }
 
     const startOrStopButton = () => {
@@ -455,7 +455,7 @@ const DataCollectionJob = (props) => {
                                                 <td>{a_action.cmds}</td>
                                                 <td>{a_action.descr}</td>
                                                 <td>{a_action.execution_time}</td>
-                                                <td>{getIpString(a_action.ips)}</td>
+                                                <td>{convertListToCommaSeparatedString(a_action.ips)}</td>
                                                 <td>{a_action.index}</td>
                                                 <td>{getAttackerActionOutcome(a_action.action_outcome)}</td>
                                             </tr>)}
@@ -505,7 +505,7 @@ const DataCollectionJob = (props) => {
                                                 <td>{a_action.cmds}</td>
                                                 <td>{a_action.descr}</td>
                                                 <td>{a_action.execution_time}</td>
-                                                <td>{getIpString(a_action.ips)}</td>
+                                                <td>{convertListToCommaSeparatedString(a_action.ips)}</td>
                                                 <td>{a_action.index}</td>
                                                 <td>{getDefenderActionOutcome(a_action.action_outcome)}</td>
                                             </tr>)}

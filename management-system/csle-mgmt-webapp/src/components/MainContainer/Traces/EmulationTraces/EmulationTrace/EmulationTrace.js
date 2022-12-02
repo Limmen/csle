@@ -7,7 +7,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import './EmulationTrace.css';
 import Collapse from 'react-bootstrap/Collapse'
-import getIpString from "../../../../Common/getIpString";
+import convertListToCommaSeparatedString from "../../../../Common/convertListToCommaSeparatedString";
 
 /**
  * Component representing the /emulation-traces/id resource
@@ -85,7 +85,7 @@ const EmulationTrace = (props) => {
                 ips.push(attacker_machines[i].ips[j])
             }
         }
-        return getIpString(ips)
+        return convertListToCommaSeparatedString(ips)
     }
 
     const getCompromisedNodesIps = (attacker_machines) => {
@@ -97,7 +97,7 @@ const EmulationTrace = (props) => {
                 }
             }
         }
-        return getIpString(ips)
+        return convertListToCommaSeparatedString(ips)
     }
 
     const RenderActions = (props) => {
@@ -172,7 +172,7 @@ const EmulationTrace = (props) => {
                                             <td>{a_action.cmds}</td>
                                             <td>{a_action.descr}</td>
                                             <td>{a_action.execution_time}</td>
-                                            <td>{getIpString(a_action.ips)}</td>
+                                            <td>{convertListToCommaSeparatedString(a_action.ips)}</td>
                                             <td>{a_action.index}</td>
                                             <td>{getAttackerActionOutcome(a_action.action_outcome)}</td>
                                         </tr>
@@ -222,7 +222,7 @@ const EmulationTrace = (props) => {
                                             <td>{a_action.cmds}</td>
                                             <td>{a_action.descr}</td>
                                             <td>{a_action.execution_time}</td>
-                                            <td>{getIpString(a_action.ips)}</td>
+                                            <td>{convertListToCommaSeparatedString(a_action.ips)}</td>
                                             <td>{a_action.index}</td>
                                             <td>{getDefenderActionOutcome(a_action.action_outcome)}</td>
                                         </tr>

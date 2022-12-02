@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
-import getTopicsString from "../../../../Common/getTopicsString";
+import convertListToCommaSeparatedString from "../../../../Common/convertListToCommaSeparatedString";
 import {KAFKA_MANAGER_SUBRESOURCE, KAFKA_SUBRESOURCE} from "../../../../Common/constants";
 import KafkaImg from "./../../../Emulations/Emulation/Kafka.png"
 
@@ -73,7 +73,7 @@ const KafkaManagersInfo = (props) => {
                                     </td>
                                     <td>{props.kafkaManagersInfo.ips[index]}</td>
                                     <td>{props.kafkaPort}</td>
-                                    <td>{getTopicsString(status.topics)}</td>
+                                    <td>{convertListToCommaSeparatedString(status.topics)}</td>
                                     {props.activeStatus(status.running)}
                                     <td>
                                         <SpinnerOrButton
