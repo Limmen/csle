@@ -236,9 +236,9 @@ class EmulationEnvConfig:
                 SSHUtil.execute_ssh_cmds(cmds=["ls > /dev/null"], conn=self.connections[hacker_ip])
             except Exception as e:
                 Logger.__call__().get_logger().info(f"Reconnecting attacker, {str(e), repr(e)}")
-                self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
+                self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=False)
         else:
-            self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
+            self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=False)
         return self.connections[hacker_ip]
 
     def cleanup(self):

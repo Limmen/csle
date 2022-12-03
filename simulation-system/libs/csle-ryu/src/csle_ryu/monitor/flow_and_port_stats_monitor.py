@@ -250,7 +250,7 @@ class NorthBoundRestAPIController(ControllerBase):
         return Response(content_type='application/json', text=response_body)
 
     @route('controller_app', constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
-    def start_producer(self, req, **kwargs) -> None:
+    def start_producer(self, req, **kwargs):
         """
         Starts the Kafka producer that sends flow and port statistics
 

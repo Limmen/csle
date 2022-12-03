@@ -51,24 +51,19 @@ class EmulationUtil:
 
     @staticmethod
     def log_measured_action_time(total_time, action: EmulationAttackerAction,
-                                 emulation_env_config: EmulationEnvConfig) -> None:
+                                 emulation_env_config: EmulationEnvConfig, create_producer: bool = False) -> None:
         """
         Logs the measured time of an action to Kafka
 
         :param total_time: the total time of executing the action
         :param action: the action
         :param emulation_env_config: the environment config
-        :param ip: ip
-        :param user: user
-        :param service: service
-        :param conn: conn
-        :param dir: dir
-        :param machine_ips: machine_ips
+        :param create_producer: boolean flag whether to create a producer from the csle-admin
         :return: None
         """
         action.execution_time = total_time
         record = action.to_kafka_record()
-        if emulation_env_config.producer is None:
+        if emulation_env_config.producer is None and create_producer:
             emulation_env_config.create_producer()
         emulation_env_config.producer.produce(collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME, record)
         emulation_env_config.producer.poll(0)
@@ -200,7 +195,7 @@ class EmulationUtil:
 
     @staticmethod
     def connect_admin(emulation_env_config: EmulationEnvConfig, ip: str,
-                      create_producer: bool = True) -> None:
+                      create_producer: bool = False) -> None:
         """
         Connects the admin agent
 
