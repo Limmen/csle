@@ -162,10 +162,11 @@ To make a new Docker release, do the following:
 
 1. Edit the `VERSION` variable in [./emulation-system/base_images/Makefile](./emulation-system/base_images/Makefile)
 2. Edit the `VERSION` variable in [./emulation-system/derived_images/Makefile](./emulation-system/derived_images/Makefile)
-3. Edit the `version` parameters in all environment configurations at [./emulation-system/envs](./emulation-system/envs)
-4. Build the images (`cd emulation-system/; make build`)
-5. Push the images (`cd emulation-system/; make push`)
-6. Install the new emulation environments (`cd emulation-system/; make emulations`)
+3. Edit the versions of the base images in the Dockerfiles inside [./emulation-system/derived_images/](./emulation-system/derived_images/)
+4. Edit the `version` parameters in all environment configurations at [./emulation-system/envs](./emulation-system/envs)
+5. Build the images (`cd emulation-system/; make build`)
+6. Push the images (`cd emulation-system/; make push`)
+7. Install the new emulation environments (`cd emulation-system/; make emulations`)
 
 ### GitHub Releases
 
