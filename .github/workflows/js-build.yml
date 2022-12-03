@@ -9,6 +9,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '17.3.0'
-      - run: cd management-system/csle-mgmt-webapp/; npm install;
+      - run: cd management-system/csle-mgmt-webapp/; npm install --force;
       - run: cd management-system/csle-mgmt-webapp/; npm run build;
       - run: cd management-system/csle-mgmt-webapp/; npm test;
