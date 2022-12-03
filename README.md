@@ -53,18 +53,15 @@ Documentation, installation instructions, and usage examples are available [here
 
 Kim Hammar <kimham@kth.se>
 
+## Copyright and license
+
 <p align="center">
+<a href="./LICENSE.md">Creative Commons</a>
+(C) 2020-2022, Kim Hammar
 <img src="docs/img/kth_logo.png" width="10%", height="10%">
 <img src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
 </p>
 
-## Copyright and license
-
-[LICENSE](LICENSE.md)
-
-Creative Commons
-
-(C) 2020-2022, Kim Hammar
 
 ## See also
 
