@@ -51,7 +51,7 @@ from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
 
-def default_config(name: str, network_id: int = 6, level: int = 6, version: str = "0.0.1") -> EmulationEnvConfig:
+def default_config(name: str, network_id: int = 3, level: int = 3, version: str = "0.0.2") -> EmulationEnvConfig:
     """
     Returns the default configuration of the emulation environment
 
@@ -71,11 +71,10 @@ def default_config(name: str, network_id: int = 6, level: int = 6, version: str 
     kafka_cfg = default_kafka_config(network_id=network_id, level=level, version=version)
     services_cfg = default_services_config(network_id=network_id)
     descr = "An emulation environment with a set of nodes that run common networked services " \
-            "such as SSH, FTP, Telnet, IRC, Kafka," \
-            " etc. Some of the services are vulnerable to simple dictionary attacks " \
-            "as they use weak passwords." \
-            "The task of an attacker agent is to identify the vulnerabilities and exploit " \
-            "them and discover hidden flags" \
+            "such as SSH, FTP, Telnet, IRC, Kafka, etc. Some of the services are " \
+            "vulnerable to simple dictionary attacks as they use weak passwords." \
+            "The task of an attacker agent is to identify the vulnerabilities and exploit them and " \
+            "discover hidden flags" \
             "on the nodes. Conversely, the task of the defender is to harden the defense " \
             "of the nodes and to detect the" \
             "attacker."
@@ -178,7 +177,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -229,8 +229,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}",
-                            os=constants.CONTAINER_OS.ROUTER_2_OS,
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_1}",
+                            os=constants.CONTAINER_OS.ROUTER_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                                  ContainerNetwork(
@@ -338,7 +338,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH2,
+                                     interface=constants.NETWORKING.ETH1,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -405,7 +405,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH2,
+                                     interface=constants.NETWORKING.ETH1,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -481,7 +481,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH2,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -612,7 +612,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                                  f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -790,7 +790,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_9",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.9{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}.9"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -880,7 +881,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -910,7 +912,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -940,7 +943,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -970,7 +974,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"7{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -1000,7 +1005,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.8{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"8{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -1030,7 +1036,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.8{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"8{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -1060,7 +1067,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.8{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}."
+                                                 f"8{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
@@ -1347,7 +1355,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
     node_resources_configurations = [
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_1-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.ROUTER_1}_1-{constants.CSLE.LEVEL}{level}",
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
@@ -1365,23 +1373,22 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
                  )),
-                (
-                    f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                    f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.10",
-                    NodeNetworkConfig(
-                        interface=constants.NETWORKING.ETH1,
-                        limit_packets_queue=30000, packet_delay_ms=2,
-                        packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
-                        packet_delay_distribution=PacketDelayDistributionType.PARETO,
-                        packet_loss_type=PacketLossType.GEMODEL,
-                        loss_gemodel_p=0.02, loss_gemodel_r=0.97,
-                        loss_gemodel_k=0.98, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.02,
-                        packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
-                        packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
-                        packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
-                        rate_limit_mbit=100, packet_overhead_bytes=0,
-                        cell_overhead_bytes=0
-                    ))]),
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                 f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.10",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH1,
+                     limit_packets_queue=30000, packet_delay_ms=2,
+                     packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.02, loss_gemodel_r=0.97,
+                     loss_gemodel_k=0.98, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.02,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=100, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))]),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.SSH_1}_1-{constants.CSLE.LEVEL}{level}",
@@ -1495,8 +1502,8 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      cell_overhead_bytes=0
                  ))]),
         NodeResourcesConfig(
-            container_name=f"{constants.CSLE.NAME}-"f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-"
-                           f"{constants.CSLE.LEVEL}{level}",
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}{level}",
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -2156,7 +2163,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     :return: the Topology configuration
     """
     node_1 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.ROUTER_2}_1",
+        hostname=f"{constants.CONTAINER_IMAGES.ROUTER_1}_1",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
@@ -3733,7 +3740,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     """
     traffic_generators = [
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_2]
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
                           traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
@@ -3893,8 +3900,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
                           traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
-                          ),
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
@@ -3931,7 +3937,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb=0.025, mu=1, client_manager_port=50044, num_commands=2, client_time_step_len_seconds=1,
+        lamb=0.025, mu=1, client_manager_port=50044, num_commands=2, client_time_step_len_seconds=15,
         time_scaling_factor=0.01, period_scaling_factor=20,
         client_manager_log_dir="/", client_manager_log_file="client_manager.log", client_manager_max_workers=10)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
@@ -4100,8 +4106,8 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
     ]
 
     config = KafkaConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
-                         version=version, kafka_port=9092, kafka_manager_port=50051, time_step_len_seconds=15,
-                         kafka_manager_log_file="kafka_manager.log",
+                         version=version, kafka_port=9092, kafka_manager_port=50051,
+                         time_step_len_seconds=15, kafka_manager_log_file="kafka_manager.log",
                          kafka_manager_log_dir="/", kafka_manager_max_workers=10)
     return config
 
@@ -4839,7 +4845,7 @@ def default_services_config(network_id: int) -> ServicesConfig:
 
 def default_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List[EmulationAttackerAction]]:
     """
-    Generates default static attacker sequences config
+    Generates default subnetmasks config
 
     :param subnetmasks: list of subnet masks for the emulation
     :return: the default static attacker sequences configuration
@@ -5007,7 +5013,7 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
 
 def default_beats_config(network_id: int) -> BeatsConfig:
     """
-    Generates default beats config
+    Generates the default beats config
 
     :param network_id: the network id
     :return: the beats configuration
@@ -5016,9 +5022,9 @@ def default_beats_config(network_id: int) -> BeatsConfig:
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
-                                          collector_constants.FILEBEAT.SNORT_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False, start_packetbeat_automatically=False,
+                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
                         start_metricbeat_automatically=False,
@@ -5035,7 +5041,8 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False, start_packetbeat_automatically=False,
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
                         metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
                                             collector_constants.METRICBEAT.LINUX_MODULE],
                         start_metricbeat_automatically=False,
@@ -5229,7 +5236,8 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                        log_files_paths=["/*.log",
+                        log_files_paths=["/host_manager.log", "/traffic_manager.log",
+                                         "/ossec_ids_manager.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
@@ -5373,7 +5381,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14",
-                        log_files_paths=["/*.log",
+                        log_files_paths=["/host_manager.log", "/traffic_manager.log", "ossec_ids_manager.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
@@ -5797,7 +5805,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-level6-001", network_id=6, level=6, version="0.0.1")
+    config = default_config(name="csle-level3-002", network_id=3, level=3, version="0.0.2")
     ExperimentUtil.write_emulation_config_file(config, ExperimentUtil.default_emulation_config_path())
 
     if args.install:

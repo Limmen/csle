@@ -530,7 +530,8 @@ class EmulationEnvController:
             ContainerController.start_container(name=c.get_full_name())
 
     @staticmethod
-    def run_container(image: str, name: str, memory: int = 4, num_cpus: int = 1, create_network: bool = True) -> None:
+    def run_container(image: str, name: str, memory: int = 4, num_cpus: int = 1, create_network: bool = True,
+                      version: str = "0.0.1") -> None:
         """
         Runs a given container
 
@@ -539,9 +540,11 @@ class EmulationEnvController:
         :param memory: memory in GB
         :param num_cpus: number of CPUs to allocate
         :param create_network: whether to create a virtual network or not
+        :param version: the version tag
         :return: None
         """
-        Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle_{name}-001")
+        Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle_{name}-"
+                                            f"{version.replace('.','')}")
         if create_network:
             net_id = random.randint(128, 254)
             sub_net_id = random.randint(2, 254)
@@ -551,14 +554,14 @@ class EmulationEnvController:
             ContainerController.create_network(name=net_name,
                                                subnetmask=f"55.{net_id}.0.0/16",
                                                existing_network_names=[])
-            cmd = f"docker container run -dt --name csle_{name}-001 " \
+            cmd = f"docker container run -dt --name csle_{name}-{version.replace('.','')} " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--network={net_name} --ip {ip} --publish-all=true " \
                   f"--memory={memory}G --cpus={num_cpus} " \
                   f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --cap-add=SYS_NICE {image}"
         else:
-            cmd = f"docker container run -dt --name csle-{name}-001 " \
+            cmd = f"docker container run -dt --name csle-{name}-{version.replace('.','')} " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm --net=none " \
                   f"--publish-all=true " \

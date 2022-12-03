@@ -817,18 +817,19 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
                     click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
-def run_image(image: str, name: str, create_network: bool = True) -> bool:
+def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
     """
     Runs a container with a given image
 
     :param image: the image of the container
     :param name: the name that the container will be assigned
     :param create_network: whether to create a virtual network or not
+    :param version: the version tag
     :return: True if it was started successfully, False otherwise
     """
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
     try:
-        EmulationEnvController.run_container(image=image, name=name, create_network=create_network)
+        EmulationEnvController.run_container(image=image, name=name, create_network=create_network, version=version)
         return True
     except Exception:
         return False

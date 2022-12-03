@@ -71,11 +71,11 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
 
 def run() -> None:
     """
-    Runs two static action sequences in the emulation csle-level9-001
+    Runs two static action sequences in the emulation csle-level9-002
 
     :return: None
     """
-    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level9-001")
+    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level9-002")
     emulation_env_config = executions[0].emulation_env_config
     assert emulation_env_config is not None
     assert ContainerController.is_emulation_running(emulation_env_config=emulation_env_config) is True

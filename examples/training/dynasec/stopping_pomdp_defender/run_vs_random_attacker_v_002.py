@@ -59,7 +59,7 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
 
 if __name__ == '__main__':
     emulation_executions = [
-        MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-001")
+        MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-002")
     ]
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(

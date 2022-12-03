@@ -24,15 +24,15 @@ ip addr flush dev eth0 # Flush interface
 ip addr add 192.168.128.5/24 dev br0 # move IP to an OVS internal device br0
 ip link # check link status
 
-sudo ovs-docker add-port br0 eth0 csle-host_vlan_1_1-001 --ipaddress="55.41.78.5/24" # add container csle-host_vlan_1_1-001 to OVS and eth0
+sudo ovs-docker add-port br0 eth0 csle-host_vlan_1_1-002 --ipaddress="55.41.78.5/24" # add container csle-host_vlan_1_1-002 to OVS and eth0
 # NOTE that the /24 is crucial, otherwise the container cannot communicate
-sudo ovs-docker set-vlan br0 eth0 csle-host_vlan_1_1-001 1 # set VLAN on the container
+sudo ovs-docker set-vlan br0 eth0 csle-host_vlan_1_1-002 1 # set VLAN on the container
 
 # Example setup that works for communication between host and 2 containers through OVS:
 sudo ovs-vsctl add-br ovs-br1
 sudo ifconfig ovs-br1 173.16.1.1 netmask 255.255.255.0 up
-sudo ovs-docker add-port ovs-br1 eth0 csle-test2-001 --ipaddress=173.16.1.2/24 --gateway=173.16.1.1
-sudo ovs-docker add-port ovs-br1 eth0 csle-test1-001 --ipaddress=173.16.1.3/24 --gateway=173.16.1.1
+sudo ovs-docker add-port ovs-br1 eth0 csle-test2-002 --ipaddress=173.16.1.2/24 --gateway=173.16.1.1
+sudo ovs-docker add-port ovs-br1 eth0 csle-test1-002 --ipaddress=173.16.1.3/24 --gateway=173.16.1.1
 
 sudo ovs-ofctl add-flow ovs-br2 ip,nw_dst=8.8.8.8,action=output:prov-to-int
 # Note that you can add several IPs to an OVS switch by creating multiple ports and assigning IPs to them.

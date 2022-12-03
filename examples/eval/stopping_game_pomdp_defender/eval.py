@@ -8,8 +8,8 @@ from csle_common.dao.training.agent_type import AgentType
 
 
 def test_env():
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     config = simulation_env_config.simulation_env_input_config
     env = gym.make(simulation_env_config.gym_env_name, config=config)
     tspsa_policy = MultiThresholdStoppingPolicy(theta=[0.9, 0.7, 0.5], simulation_name=simulation_env_config.name,

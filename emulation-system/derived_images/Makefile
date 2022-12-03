@@ -1,5 +1,5 @@
 DOCKERHUB_USER=kimham
-VERSION=0.0.1
+VERSION=0.0.2
 
 .PHONY: all build rm_image \
 	ftp_1 ftp_2 hacker_kali_1 honeypot_1 honeypot_2 ssh_1 ssh_2 ssh_3 telnet_1 telnet_2 telnet_3 router_1 \

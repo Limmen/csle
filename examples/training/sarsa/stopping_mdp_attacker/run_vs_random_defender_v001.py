@@ -9,7 +9,7 @@ from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-001")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
     simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
         player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
