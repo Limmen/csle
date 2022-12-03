@@ -57,7 +57,7 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
 
         :return: None
         """
-        if self.chain_host in self.server.tunnels_dict:
+        if self.server.chain_host in self.server.tunnels_dict:
             del self.server.tunnels_dict[self.server.chain_host]
         self.server.shutdown()
         time.sleep(0.5)  # wait for server to shutdown
