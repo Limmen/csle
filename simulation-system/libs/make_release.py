@@ -5,34 +5,34 @@ import subprocess
 
 RELEASE_CONFIG = {
     "csle-ryu": {
-        "new_version": "'0.0.27'",
+        "new_version": "'0.0.28'",
     },
     "csle-collector": {
-        "new_version": "'0.0.101'",
+        "new_version": "'0.0.102'",
     },
     "csle-common": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "csle-attacker": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "csle-defender": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "csle-system-identification": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "gym-csle-stopping-game": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "csle-agents": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "csle-rest-api": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     },
     "csle-cli": {
-        "new_version": "'0.0.9'",
+        "new_version": "'0.0.10'",
     }
 }
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             version_file_contents = f.read()
         with io.open(f"{lib}/src/{lib.replace('-', '_')}/__version__.py", 'w', encoding='utf-8') as f:
             version_file_contents = version_file_contents.replace(versions["old_version"], versions["new_version"])
-            f.write(version_file_contents)
+            f.write(version_file_contents + "\n")
 
     for lib, versions in RELEASE_CONFIG.items():
         versions["old_version"] = versions["old_version"].replace("'", "").replace('"', "").replace("\n", '')
