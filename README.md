@@ -54,9 +54,10 @@ Documentation, installation instructions, and usage examples are available [here
 Kim Hammar <kimham@kth.se>
 
 <p align="center">
-<img src="docs/img/kth_logo.png" width="40%", height="40%">
-<img src="docs/img/cdis_logo_transparent.png" width="40%", height="40%">
+<img src="docs/img/kth_logo.png" width="10%", height="10%">
+<img src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
 </p>
+
 ## Copyright and license
 
 [LICENSE](LICENSE.md)
