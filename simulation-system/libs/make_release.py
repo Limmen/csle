@@ -60,8 +60,8 @@ if __name__ == '__main__':
             f.write(version_file_contents)
 
     for lib, versions in RELEASE_CONFIG.items():
-        versions["old_version"] = versions["old_version"].replace("'", "").replace('"', "")
-        versions["new_version"] = versions["new_version"].replace("'", "").replace('"', "")
+        versions["old_version"] = versions["old_version"].replace("'", "").replace('"', "").replace("\n", '')
+        versions["new_version"] = versions["new_version"].replace("'", "").replace('"', "").replace("\n", '')
 
     # Update requirements.txt files
     print("Updating requirements.txt files")
