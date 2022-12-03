@@ -1,5 +1,5 @@
 # OS
-# Debian GNU/Linux 8 (wheezy)
+# Ubuntu 20
 FROM kimham/csle_ubuntu_20_base:0.0.1
 USER root
 
@@ -11,8 +11,8 @@ SHELL ["/bin/bash", "-c"]
 ADD docker_files/shellshock_base/docker/packages /packages
 RUN dpkg -i /packages/*
 ADD docker_files/shellshock_base/docker/vulnerable /usr/lib/cgi-bin/
-ADD docker_files/shellshock_base/docker/index.html /var/www
-RUN chown www-data:www-data /var/www/index.html
+ADD docker_files/shellshock_base/docker/index.html /var/www/html
+RUN chown www-data:www-data /var/www/html/index.html
 ADD docker_files/shellshock_base/docker/main.sh /main.sh
 RUN mv /etc/apache2/envvars /etc/apache2/envvars.backup
 ADD docker_files/common/apache_envvars /etc/apache2/envvars

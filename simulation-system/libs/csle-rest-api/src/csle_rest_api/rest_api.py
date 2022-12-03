@@ -64,7 +64,6 @@ from csle_rest_api.resources.logs.routes import logs_bp
 from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
 from csle_rest_api.web_sockets.container_terminal.container_terminal import get_container_terminal_bp
 import csle_rest_api.constants.constants as api_constants
-from csle_rest_api.util.ssh_tunnels_garbage_collector import SSHTunnelsGarbageCollector
 
 
 def create_app(static_folder: str):
