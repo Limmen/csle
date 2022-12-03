@@ -872,7 +872,8 @@ class EmulationEnvController:
         tunnel_thread = ForwardTunnelThread(
             local_port=local_port,
             remote_host=execution.emulation_env_config.elk_config.container.get_ips()[0],
-            remote_port=execution.emulation_env_config.elk_config.kibana_port, transport=agent_transport)
+            remote_port=execution.emulation_env_config.elk_config.kibana_port, transport=agent_transport,
+            tunnels_dict=tunnels_dict)
         tunnel_thread.start()
         tunnel_thread_dict = {}
         tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY] = tunnel_thread

@@ -1,6 +1,7 @@
 from flask import Flask
 from . import socketio
 import csle_common.constants.constants as constants
+from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.config import Config
 from csle_rest_api.pages.emulations.routes import get_emulations_page_bp
 from csle_rest_api.pages.simulations.routes import get_simulations_page_bp
@@ -63,6 +64,7 @@ from csle_rest_api.resources.logs.routes import logs_bp
 from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
 from csle_rest_api.web_sockets.container_terminal.container_terminal import get_container_terminal_bp
 import csle_rest_api.constants.constants as api_constants
+from csle_rest_api.util.ssh_tunnels_garbage_collector import SSHTunnelsGarbageCollector
 
 
 def create_app(static_folder: str):
@@ -281,6 +283,6 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
     # {num_threads}'".split(' '))
     # gunicorn -b 0.0.0.0:5000 --workers 4 --threads num_threads module:app
     Config.set_config_parameters_from_config_file()
-    print(f"Starting web server, listening on port: {port}")
+    Logger.__call__().get_logger().info(f"Starting web server, listening on port: {port}")
     app = create_app(static_folder=static_folder)
     socketio.run(app, debug=False, port=port, host=host)

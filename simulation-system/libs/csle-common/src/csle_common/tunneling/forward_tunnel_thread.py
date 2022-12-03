@@ -9,7 +9,16 @@ class ForwardTunnelThread(threading.Thread):
     Thread that starts up a SSH tunnel that forwards a local port to a remote machine
     """
 
-    def __init__(self, local_port: int, remote_host: str, remote_port: int, transport):
+    def __init__(self, local_port: int, remote_host: str, remote_port: int, transport, tunnels_dict) -> None:
+        """
+        Initializes the thread
+
+        :param local_port: the local port for port-forwarding
+        :param remote_host: the remote host
+        :param remote_port: the remote port
+        :param transport: the transport protocol
+        :param tunnels_dict: the tunnels dict for garbage collection
+        """
         super().__init__()
         self.local_port = local_port
         self.remote_host = remote_host
@@ -19,11 +28,22 @@ class ForwardTunnelThread(threading.Thread):
         self.forward_server.ssh_transport = self.transport
         self.forward_server.chain_host = self.remote_host
         self.forward_server.chain_port = self.remote_port
+        self.forward_server.tunnels_dict = tunnels_dict
         self.daemon = True
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Starts the server
+
+        :return:
+        """
         self.forward_server.serve_forever()
 
-    def shutdown(self):
+    def shutdown(self) -> None:
+        """
+        Shutsdown the server
+
+        :return: None
+        """
         self.forward_server.shutdown()
         time.sleep(0.5)  # wait for server to shutdown

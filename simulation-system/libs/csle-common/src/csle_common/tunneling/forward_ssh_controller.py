@@ -1,4 +1,5 @@
 import select
+import time
 try:
     import SocketServer
 except ImportError:
@@ -11,7 +12,13 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
     """
     SSH Server for forwarding local port over a SSH tunnel
     """
-    def handle(self):
+
+    def handle(self) -> None:
+        """
+        Main loop for handing the SSH connection
+
+        :return: None
+        """
         try:
             chan = self.server.ssh_transport.open_channel(
                 constants.SSH.DIRECT_CHANNEL,
@@ -26,6 +33,7 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
                     except Exception as e:
                         if "Connection reset by peer" not in str(e):
                             Logger.__call__().get_logger().warning(f"forward SSH exception: {str(e)}, {repr(e)}")
+                            self.cleanup()
                         data = []
                     if len(data) == 0:
                         break
@@ -41,3 +49,15 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
         except Exception as e:
             if "Transport endpoint" not in str(e):
                 Logger.__call__().get_logger().warning(f"forward SSH exception2, {str(e)}, {repr(e)}")
+                self.cleanup()
+
+    def cleanup(self) -> None:
+        """
+        Utility method for cleaning up the SSH tunnel
+
+        :return: None
+        """
+        if self.chain_host in self.server.tunnels_dict:
+            del self.server.tunnels_dict[self.server.chain_host]
+        self.server.shutdown()
+        time.sleep(0.5)  # wait for server to shutdown
