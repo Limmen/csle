@@ -1,6 +1,8 @@
 name: js-build
 run-name: ${{ github.actor }} js build
-on: [push]
+on:
+  - push
+  - pull_request
 jobs:
   linter:
     runs-on: ubuntu-latest
