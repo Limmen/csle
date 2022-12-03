@@ -707,7 +707,7 @@ const Monitoring = (props) => {
             if (props.loadingSelectedEmulationExecution || props.loadingMonitoringData) {
                 return (
                     <h3>
-                        <span className="spinnerLabel"> Fetching execution... </span>
+                        <span className="spinnerLabel"> Fetching monitoring data... </span>
                         <Spinner animation="border" role="status">
                             <span className="visually-hidden"></span>
                         </Spinner>

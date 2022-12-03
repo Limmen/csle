@@ -64,6 +64,13 @@ class ReadEmulationStatisticsUtil:
             host_metrics[c.get_full_name()] = []
             ossec_host_ids_metrics[c.get_full_name()] = []
 
+        host_metrics[emulation_env_config.kafka_config.container.get_full_name()] = []
+        docker_host_stats[emulation_env_config.kafka_config.container.get_full_name()] = []
+        ossec_host_ids_metrics[emulation_env_config.kafka_config.container.get_full_name()] = []
+        host_metrics[emulation_env_config.elk_config.container.get_full_name()] = []
+        docker_host_stats[emulation_env_config.elk_config.container.get_full_name()] = []
+        ossec_host_ids_metrics[emulation_env_config.elk_config.container.get_full_name()] = []
+
         topic_names = [collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.DEFENDER_ACTIONS_TOPIC_NAME,
@@ -121,13 +128,13 @@ class ReadEmulationStatisticsUtil:
                         agg_docker_stats.append(DockerStats.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME:
                         metrics = HostMetrics.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.containers_config.get_container_from_ip(metrics.ip)
+                        c = emulation_env_config.get_container_from_ip(metrics.ip)
                         host_metrics[c.get_full_name()].append(metrics)
                         host_metrics_counter += 1
                         total_host_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME:
                         metrics = OSSECIdsAlertCounters.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.containers_config.get_container_from_ip(metrics.ip)
+                        c = emulation_env_config.get_container_from_ip(metrics.ip)
                         ossec_host_ids_metrics[c.get_full_name()].append(metrics)
                         ossec_host_metrics_counter += 1
                         total_ossec_metrics.append(metrics)
@@ -137,7 +144,7 @@ class ReadEmulationStatisticsUtil:
                         defender_actions.append(EmulationDefenderAction.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME:
                         stats = DockerStats.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.containers_config.get_container_from_ip(stats.ip)
+                        c = emulation_env_config.get_container_from_ip(stats.ip)
                         docker_host_stats[c.get_full_name()].append(stats)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME:
                         snort_ids_metrics.append(SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode()))
