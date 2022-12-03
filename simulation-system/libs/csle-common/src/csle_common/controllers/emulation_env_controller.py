@@ -772,12 +772,12 @@ class EmulationEnvController:
                       f"{emulation_env_config.sdn_controller_config.container.get_full_name()} " \
                       f"{constants.COMMANDS.PING} " \
                       f"{ovs_sw.ip} -c 5 &"
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
                 Logger.__call__().get_logger().info(f"Ping {ovs_sw.ip} to {ovs_sw.controller_ip}")
                 cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {ovs_sw.container_name} {constants.COMMANDS.PING} " \
                       f"{ovs_sw.controller_ip} -c 5 &"
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
         # Ping containers to switches
         for c1 in emulation_env_config.containers_config.containers:
@@ -786,7 +786,7 @@ class EmulationEnvController:
                     Logger.__call__().get_logger().info(f"Ping {c1.get_ips()[0]} to {ip}")
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {c1.get_full_name()} {constants.COMMANDS.PING} " \
                           f"{ip} -c 5 &"
-                    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+                    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
     @staticmethod
     def get_execution_info(execution: EmulationExecution) -> EmulationExecutionInfo:
