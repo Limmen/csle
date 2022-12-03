@@ -1,0 +1,14 @@
+name: js-build
+run-name: ${{ github.actor }} js build
+on: [push]
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '17.3.0'
+      - run: cd management-system/csle-mgmt-webapp/; npm install;
+      - run: cd management-system/csle-mgmt-webapp/; npm run build;
+      - run: cd management-system/csle-mgmt-webapp/; npm test;
