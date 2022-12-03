@@ -167,6 +167,7 @@ csle start | stop nodeexporter
 - `csle-defender`
 - `csle-system-identification`
 - `gym-csle-stopping-game`
+- `csle-agents`
 
 ## Development Requirements
 

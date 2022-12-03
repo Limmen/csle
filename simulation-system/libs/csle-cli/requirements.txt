@@ -5,3 +5,4 @@ csle-attacker==0.0.9
 csle-defender==0.0.9
 csle-system-identification==0.0.9
 gym-csle-stopping-game==0.0.9
+csle-agents==0.0.9
