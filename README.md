@@ -57,6 +57,8 @@ Kim Hammar <kimham@kth.se>
 
 <p align="center">
 <a href="./LICENSE.md">Creative Commons</a>
+</p>
+<p align="center">
 (C) 2020-2022, Kim Hammar
 </p>
 <p align="center">
