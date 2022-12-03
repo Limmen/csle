@@ -40,7 +40,6 @@ import {
     IP_QUERY_PARAM
 } from "../../Common/constants";
 import getIps from "../../Common/getIps";
-import ControlPlaneImg from "../ControlPlane/ControlPlane.png";
 
 /**
  * Component representing the /container-terminal-page

@@ -20,7 +20,6 @@ import {
     WS_CONNECT_MSG, WS_DISCONNECT_MSG, WS_HOST_TERMINAL_INPUT_MSG,
     WS_HOST_TERMINAL_NAMESPACE, WS_HOST_TERMINAL_OUTPUT_MSG, WS_RESIZE_MSG
 } from "../../Common/constants";
-import ContainerTerminalImg from "../ContainerTerminal/ContainerTerminal.png";
 
 /**
  * Component representing the /host-terminal-page
