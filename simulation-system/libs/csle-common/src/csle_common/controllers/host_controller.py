@@ -40,6 +40,11 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config,
                                           ip=emulation_env_config.elk_config.container.get_ips()[0])
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start host manager on SDN controller container
+            HostController.start_host_manager(emulation_env_config=emulation_env_config,
+                                              ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
     @staticmethod
     def start_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
         """
@@ -97,6 +102,11 @@ class HostController:
         HostController.stop_host_manager(emulation_env_config=emulation_env_config,
                                          ip=emulation_env_config.elk_config.container.get_ips()[0])
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop host manager on the SDN controller container
+            HostController.stop_host_manager(emulation_env_config=emulation_env_config,
+                                             ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
     @staticmethod
     def stop_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
         """
@@ -136,6 +146,12 @@ class HostController:
         # Start host monitor on the ELK container
         HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
                                                  ip=emulation_env_config.elk_config.container.get_ips()[0])
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start host monitor on the SDN controller container
+            HostController.start_host_monitor_thread(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
 
     @staticmethod
     def start_filebeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -185,6 +201,12 @@ class HostController:
                                         ips=emulation_env_config.elk_config.container.get_ips(),
                                         initial_start=initial_start)
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start packetbeat on the SDN controller container
+            HostController.start_packetbeat(emulation_env_config=emulation_env_config,
+                                            ips=emulation_env_config.sdn_controller_config.container.get_ips(),
+                                            initial_start=initial_start)
+
     @staticmethod
     def start_metricbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
         """
@@ -208,6 +230,12 @@ class HostController:
         HostController.start_metricbeat(emulation_env_config=emulation_env_config,
                                         ips=emulation_env_config.elk_config.container.get_ips(),
                                         initial_start=initial_start)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start metricbeat on the SDN controller container
+            HostController.start_metricbeat(emulation_env_config=emulation_env_config,
+                                            ips=emulation_env_config.sdn_controller_config.container.get_ips(),
+                                            initial_start=initial_start)
 
     @staticmethod
     def start_heartbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -233,6 +261,12 @@ class HostController:
                                        ips=emulation_env_config.elk_config.container.get_ips(),
                                        initial_start=initial_start)
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start heartbeat on the SDN controller container
+            HostController.start_heartbeat(emulation_env_config=emulation_env_config,
+                                           ips=emulation_env_config.sdn_controller_config.container.get_ips(),
+                                           initial_start=initial_start)
+
     @staticmethod
     def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -253,6 +287,11 @@ class HostController:
         # Stop filebeat on the ELK container
         HostController.stop_filebeat(emulation_env_config=emulation_env_config,
                                      ip=emulation_env_config.elk_config.container.get_ips()[0])
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop filebeat on the SDN controller container
+            HostController.stop_filebeat(emulation_env_config=emulation_env_config,
+                                         ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
 
     @staticmethod
     def stop_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -275,6 +314,11 @@ class HostController:
         HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
                                        ip=emulation_env_config.elk_config.container.get_ips()[0])
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop packetbeat on the SDN controller container
+            HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
+                                           ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
     @staticmethod
     def stop_metricbeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -295,6 +339,11 @@ class HostController:
         # Stop metricbeat on the ELK container
         HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
                                        ip=emulation_env_config.elk_config.container.get_ips()[0])
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop metricbeat on the SDN controller container
+            HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
+                                           ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
 
     @staticmethod
     def stop_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -317,6 +366,11 @@ class HostController:
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
                                       ip=emulation_env_config.elk_config.container.get_ips()[0])
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop heartbeat on the SDN controller container
+            HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
+                                          ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
     @staticmethod
     def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -337,6 +391,11 @@ class HostController:
         # Configure filebeat on the ELK container
         HostController.config_filebeat(emulation_env_config=emulation_env_config,
                                        container=emulation_env_config.elk_config.container)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Configure filebeat on the SDN controller container
+            HostController.config_filebeat(emulation_env_config=emulation_env_config,
+                                           container=emulation_env_config.sdn_controller_config.container)
 
     @staticmethod
     def config_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -359,6 +418,11 @@ class HostController:
         HostController.config_packetbeat(emulation_env_config=emulation_env_config,
                                          container=emulation_env_config.elk_config.container)
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Configure packetbeat on the SDN controller container
+            HostController.config_packetbeat(emulation_env_config=emulation_env_config,
+                                             container=emulation_env_config.sdn_controller_config.container)
+
     @staticmethod
     def config_metricbeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -380,6 +444,11 @@ class HostController:
         HostController.config_metricbeat(emulation_env_config=emulation_env_config,
                                          container=emulation_env_config.elk_config.container)
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Configure metricbeat on the SDN controller container
+            HostController.config_metricbeat(emulation_env_config=emulation_env_config,
+                                             container=emulation_env_config.sdn_controller_config.container)
+
     @staticmethod
     def config_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -400,6 +469,11 @@ class HostController:
         # Configure heartbeat on the ELK container
         HostController.config_heartbeat(emulation_env_config=emulation_env_config,
                                         container=emulation_env_config.elk_config.container)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Configure heartbeat on the SDN controller container
+            HostController.config_heartbeat(emulation_env_config=emulation_env_config,
+                                            container=emulation_env_config.sdn_controller_config.container)
 
     @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -670,6 +744,12 @@ class HostController:
         HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
                                                 ip=emulation_env_config.elk_config.container.get_ips()[0])
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop host monitor threads on the SDN controller container
+            HostController.stop_host_monitor_thread(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
     @staticmethod
     def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
         """
@@ -795,6 +875,13 @@ class HostController:
             port=emulation_env_config.host_manager_config.host_manager_port)
         statuses.append((status, emulation_env_config.elk_config.container.get_ips()[0]))
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Get status of SDN controller container
+            status = HostController.get_host_monitor_thread_status_by_port_and_ip(
+                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                port=emulation_env_config.host_manager_config.host_manager_port)
+            statuses.append((status, emulation_env_config.sdn_controller_config.container.get_ips()[0]))
+
         return statuses
 
     @staticmethod
@@ -851,6 +938,14 @@ class HostController:
             failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
         host_metrics_data_list.append(host_metrics_data)
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Get log data from SDN controller container
+            host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
+                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                port=emulation_env_config.host_manager_config.host_manager_port,
+                failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
+            host_metrics_data_list.append(host_metrics_data)
+
         return host_metrics_data_list
 
     @staticmethod
@@ -894,6 +989,10 @@ class HostController:
         # Get ip of ELK container
         ips.append(emulation_env_config.elk_config.container.get_ips()[0])
 
+        if emulation_env_config.sdn_controller_config is not None:
+            # Get ip of SDN controller container
+            ips.append(emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
         return ips
 
     @staticmethod
@@ -915,6 +1014,10 @@ class HostController:
 
         # Get port of ELK container
         ports.append(emulation_env_config.host_manager_config.host_manager_port)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Get port of SDN controller container
+            ports.append(emulation_env_config.host_manager_config.host_manager_port)
 
         return ports
 

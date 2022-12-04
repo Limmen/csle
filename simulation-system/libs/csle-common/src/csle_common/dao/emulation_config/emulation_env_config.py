@@ -308,6 +308,8 @@ class EmulationEnvConfig:
             return self.kafka_config.container
         if ip in self.elk_config.container.get_ips():
             return self.elk_config.container
+        if self.sdn_controller_config is not None and ip in self.sdn_controller_config.container.get_ips():
+            return self.sdn_controller_config.container
         for c in self.containers_config.containers:
             if ip in c.get_ips():
                 return c

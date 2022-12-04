@@ -89,6 +89,8 @@ class EmulationEnvController:
         ips = list(map(lambda x: x.get_ips()[0], emulation_env_config.containers_config.containers))
         ips.append(emulation_env_config.kafka_config.container.get_ips()[0])
         ips.append(emulation_env_config.elk_config.container.get_ips()[0])
+        if emulation_env_config.sdn_controller_config is not None:
+            ips.append(emulation_env_config.sdn_controller_config.container.get_ips()[0])
         for ip in ips:
             Logger.__call__().get_logger().info(f"Installing csle-collector version "
                                                 f"{emulation_env_config.csle_collector_version} on node: {ip}")
@@ -490,7 +492,7 @@ class EmulationEnvController:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
             container_resources: NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
-            name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
+            name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \

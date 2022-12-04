@@ -1,5 +1,5 @@
-name: js-build
-run-name: ${{ github.actor }} js build
+name: js-management-system-build
+run-name: ${{ github.actor }} js-management-system-build
 on:
   - push
   - pull_request
