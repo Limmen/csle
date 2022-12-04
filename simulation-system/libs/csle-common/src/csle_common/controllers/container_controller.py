@@ -23,6 +23,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
+from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.controllers.management_system_controller import ManagementSystemController
 
 
@@ -387,19 +388,21 @@ class ContainerController:
                                                     f"with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
-        ContainerController.connect_kafka_container_to_network(kafka_config=emulation_env_config.kafka_config)
-        ContainerController.connect_elk_container_to_network(elk_config=emulation_env_config.elk_config)
+        ContainerController.connect_container_to_network(container=emulation_env_config.kafka_config.container)
+        ContainerController.connect_container_to_network(container=emulation_env_config.elk_config.container)
+        if emulation_env_config.sdn_controller_config is not None:
+            ContainerController.connect_container_to_network(
+                container=emulation_env_config.sdn_controller_config.container)
 
     @staticmethod
-    def connect_kafka_container_to_network(kafka_config: KafkaConfig) -> None:
+    def connect_container_to_network(container: NodeContainerConfig) -> None:
         """
-        Connect a running kafka container to networks
+        Connect a running container to networks
 
-        :param kafka_config: the kafka config
+        :param container: the container to connect
         :return: None
         """
-        c = kafka_config.container
-        container_name = c.get_full_name()
+        container_name = container.get_full_name()
         # Disconnect from none
         cmd = f"docker network disconnect none {container_name}"
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
@@ -407,32 +410,7 @@ class ContainerController:
         # Wait a few seconds before connecting
         time.sleep(2)
 
-        for ip_net in c.ips_and_networks:
-            ip, net = ip_net
-            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
-                  f"{container_name}"
-            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
-                                                f"with ip: {ip}")
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-
-    @staticmethod
-    def connect_elk_container_to_network(elk_config: ElkConfig) -> None:
-        """
-        Connect a running elk container to networks
-
-        :param elk_config: the ELK config
-        :return: None
-        """
-        c = elk_config.container
-        container_name = c.get_full_name()
-        # Disconnect from none
-        cmd = f"docker network disconnect none {container_name}"
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-
-        # Wait a few seconds before connecting
-        time.sleep(2)
-
-        for ip_net in c.ips_and_networks:
+        for ip_net in container.ips_and_networks:
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
