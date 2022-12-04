@@ -22,8 +22,8 @@ import {
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
     SDN_CONTROLLERS_RESOURCE,
-    EMULATIONS_RESOURCE,
-    EXECUTIONS_SUBRESOURCE,
+    EMULATION_EXECUTIONS_RESOURCE,
+    EMULATION_QUERY_PARAM,
     IDS_QUERY_PARAM
 } from "../../Common/constants";
 
@@ -31,23 +31,28 @@ import {
  * Component representing the /sdn-controllers-page
  */
 const SDNControllers = (props) => {
-    const [emulationIds, setEmulationIds] = useState([]);
-    const [selectedEmulationId, setSelectedEmulationId] = useState(null);
-    const [selectedEmulation, setSelectedEmulation] = useState(null);
+    const [emulationExecutionsWithSdnControllersIds, setEmulationExecutionsWithSdnControllersIds] = useState(
+        []);
+    const [selectedEmulationExecutionWithSdnControllerId, setSelectedEmulationExecutionWithSdnControllerId] = useState(
+        null);
+    const [selectedEmulationExecutionWithSdnController, setSelectedEmulationExecutionWithSdnController] = useState(
+        null);
     const [loading, setLoading] = useState(true);
-    const [loadingSelectedEmulation, setLoadingSelectedEmulation] = useState(true);
+    const [loadingSelectedEmulationExecution, setLoadingSelectedEmulationExecution] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
+    const [filteredEmulationExecutionWithSdnControllerIds,
+        setFilteredEmulationExecutionWithSdnControllerIds] = useState([]);
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
-    const fetchEmulation = useCallback((emulation_id) => {
+    const fetchEmulationExecutionWithSdnController = useCallback((id_obj) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}` +
-            + `/${EXECUTIONS_SUBRESOURCE}/${emulation_id.exec_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+                + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
+                + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -68,13 +73,13 @@ const SDNControllers = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedEmulation(response)
-                setLoadingSelectedEmulation(false)
+                setSelectedEmulationExecutionWithSdnController(response)
+                setLoadingSelectedEmulationExecution(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const fetchEmulationIds = useCallback(() => {
+    const fetchEmulationExecutionsWithSdnControllersIds = useCallback(() => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${SDN_CONTROLLERS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -98,44 +103,41 @@ const SDNControllers = (props) => {
                 if(response === null) {
                     return
                 }
-                const emulationIds = response.map((id_obj, index) => {
-                    var lbl = "ID: " + id_obj.id + ", name: " + id_obj.emulation + ", ip: " + id_obj.ip
+                const emulationExecutionIds = response.map((id_obj, index) => {
                     return {
-                        value: id_obj.id,
-                        running: id_obj.running,
-                        exec_id: id_obj.exec_id,
-                        label: lbl
+                        value: id_obj,
+                        label: `ID: ${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
-                setEmulationIds(emulationIds)
-                setFilteredEmulationsIds(emulationIds)
+                setEmulationExecutionsWithSdnControllersIds(emulationExecutionIds)
+                setFilteredEmulationExecutionWithSdnControllerIds(emulationExecutionIds)
                 setLoading(false)
-                if (emulationIds.length > 0) {
-                    setSelectedEmulationId(emulationIds[0])
-                    fetchEmulation(emulationIds[0])
-                    setLoadingSelectedEmulation(true)
+                if (emulationExecutionIds.length > 0) {
+                    setSelectedEmulationExecutionWithSdnControllerId(emulationExecutionIds[0])
+                    fetchEmulationExecutionWithSdnController(emulationExecutionIds[0])
+                    setLoadingSelectedEmulationExecution(true)
                 } else {
-                    setLoadingSelectedEmulation(false)
-                    setSelectedEmulation(null)
+                    setLoadingSelectedEmulationExecution(false)
+                    setSelectedEmulationExecutionWithSdnController(null)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchEmulation, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, fetchEmulationExecutionWithSdnController, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     useEffect(() => {
         setLoading(true)
-        fetchEmulationIds();
-    }, [fetchEmulationIds]);
+        fetchEmulationExecutionsWithSdnControllersIds();
+    }, [fetchEmulationExecutionsWithSdnControllersIds]);
 
-    const updateSelectedEmulationId = (selectedId) => {
-        setSelectedEmulationId(selectedId)
-        fetchEmulation(selectedId)
-        setLoadingSelectedEmulation(true)
+    const updateSelectedEmulationExecutionWithSdnControllerId = (selectedId) => {
+        setSelectedEmulationExecutionWithSdnControllerId(selectedId)
+        fetchEmulationExecutionWithSdnController(selectedId)
+        setLoadingSelectedEmulationExecution(true)
     }
 
     const refresh = () => {
         setLoading(true)
-        fetchEmulationIds()
+        fetchEmulationExecutionsWithSdnControllersIds()
     }
 
     const info = () => {
@@ -148,26 +150,26 @@ const SDNControllers = (props) => {
 
     const searchChange = (event) => {
         var searchVal = event.target.value
-        const filteredEmsIds = emulationIds.filter(em => {
+        const filteredEmsIds = emulationExecutionsWithSdnControllersIds.filter(em => {
             return searchFilter(em, searchVal)
         });
-        setFilteredEmulationsIds(filteredEmsIds)
+        setFilteredEmulationExecutionWithSdnControllerIds(filteredEmsIds)
 
         var selectedEmulationRemoved = false
-        if (!loadingSelectedEmulation && filteredEmsIds.length > 0) {
+        if (!loadingSelectedEmulationExecution && filteredEmsIds.length > 0) {
             for (let i = 0; i < filteredEmsIds.length; i++) {
-                if (selectedEmulation !== null && selectedEmulation !== undefined &&
-                    selectedEmulation.id === filteredEmsIds[i].value) {
+                if (selectedEmulationExecutionWithSdnController !== null && selectedEmulationExecutionWithSdnController !== undefined &&
+                    selectedEmulationExecutionWithSdnController.id === filteredEmsIds[i].value) {
                     selectedEmulationRemoved = true
                 }
             }
             if (!selectedEmulationRemoved) {
-                setSelectedEmulationId(filteredEmsIds[0])
-                fetchEmulation(filteredEmsIds[0])
-                setLoadingSelectedEmulation(true)
+                setSelectedEmulationExecutionWithSdnControllerId(filteredEmsIds[0])
+                fetchEmulationExecutionWithSdnController(filteredEmsIds[0])
+                setLoadingSelectedEmulationExecution(true)
             }
         } else {
-            setSelectedEmulation(null)
+            setSelectedEmulationExecutionWithSdnController(null)
         }
     }
 
@@ -178,9 +180,9 @@ const SDNControllers = (props) => {
         350
     );
 
-    const EmulationAccordion = (props) => {
-        if (props.loadingSelectedEmulation || props.selectedEmulation === null || props.selectedEmulation === undefined) {
-            if (props.loadingSelectedEmulation) {
+    const SDNControllerAccordion = (props) => {
+        if (props.loadingSelectedEmulationExecution || props.selectedEmulationExecutionWithSdnController === null || props.selectedEmulationExecutionWithSdnController === undefined) {
+            if (props.loadingSelectedEmulationExecution) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching SDN Controller information... </span>
@@ -200,8 +202,10 @@ const SDNControllers = (props) => {
                         SDN Controller Configuration:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <SDNController emulation={props.selectedEmulation}
-                                       wrapper={wrapper} key={props.selectedEmulation.name}
+                        <SDNController execution={props.selectedEmulationExecutionWithSdnController}
+                                       wrapper={wrapper} key={props.selectedEmulationExecutionWithSdnController.name}
+                                       sessionData={props.sessionData}
+                                       setSessionData={props.setSessionData}
                         />
                     </Accordion>
                 </div>
@@ -209,8 +213,8 @@ const SDNControllers = (props) => {
         }
     }
 
-    const SelectEmulationOrSpinner = (props) => {
-        if (!props.loading && props.emulationIds.length === 0) {
+    const SelectEmulationExecutionWithSdnControllerOrSpinner = (props) => {
+        if (!props.loading && props.emulationExecutionWithSdnControllerIds.length === 0) {
             return (
                 <div>
                     <span className="emptyText">No SDN controllers are available</span>
@@ -244,11 +248,11 @@ const SDNControllers = (props) => {
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedEmulationId}
-                                defaultValue={props.selectedEmulationId}
-                                options={props.emulationIds}
-                                onChange={updateSelectedEmulationId}
-                                placeholder="Select emulation"
+                                value={props.selectedEmulationExecutionWithSdnControllerId}
+                                defaultValue={props.selectedEmulationExecutionWithSdnControllerId}
+                                options={props.emulationExecutionWithSdnControllerIds}
+                                onChange={updateSelectedEmulationExecutionWithSdnControllerId}
+                                placeholder="Select emulation execution"
                             />
                         </div>
                     </div>
@@ -324,9 +328,10 @@ const SDNControllers = (props) => {
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectEmulationOrSpinner loading={loading}
-                                                  emulationIds={filteredEmulationsIds}
-                                                  selectedEmulationId={selectedEmulationId}
+                        <SelectEmulationExecutionWithSdnControllerOrSpinner
+                            loading={loading}
+                            emulationExecutionWithSdnControllerIds={filteredEmulationExecutionWithSdnControllerIds}
+                            selectedEmulationExecutionWithSdnControllerId={selectedEmulationExecutionWithSdnControllerId}
                         />
                     </h4>
                 </div>
@@ -348,8 +353,12 @@ const SDNControllers = (props) => {
                     </Form>
                 </div>
             </div>
-            <EmulationAccordion loadingSelectedEmulation={loadingSelectedEmulation}
-                                selectedEmulation={selectedEmulation}/>
+            <SDNControllerAccordion
+                loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}
+                selectedEmulationExecutionWithSdnController={selectedEmulationExecutionWithSdnController}
+                sessionData={props.sessionData}
+                setSessionData={setSessionData}
+            />
         </div>
     );
 }

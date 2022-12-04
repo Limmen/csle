@@ -9,12 +9,16 @@ import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 import {
     HTTP_PREFIX,
     HTTP_REST_GET,
     EMULATIONS_RESOURCE,
     SWITCHES_SUBRESOURCE,
-    EXECUTIONS_SUBRESOURCE
+    EXECUTIONS_SUBRESOURCE,
+    LOGIN_PAGE_RESOURCE,
+    TOKEN_QUERY_PARAM
 } from "../../../Common/constants";
 
 /**
@@ -35,12 +39,16 @@ const SDNController = (props) => {
     const ip = serverIp
     const port = serverPort
     const loading = false
+    const alert = useAlert();
+    const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}` +
-            `/${EXECUTIONS_SUBRESOURCE}/${exec_id}/${SWITCHES_SUBRESOURCE}`,
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}` +
+                `/${EXECUTIONS_SUBRESOURCE}/${exec_id}/${SWITCHES_SUBRESOURCE}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -48,7 +56,15 @@ const SDNController = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
                 setSwitches(response)
             })
@@ -56,8 +72,8 @@ const SDNController = (props) => {
     }, [ip, port]);
 
     useEffect(() => {
-        fetchSwitches(props.emulation.id, props.emulation.execution_id)
-    }, [fetchSwitches, props.emulation.id, props.emulation.execution_id]);
+        fetchSwitches(props.execution.emulation_env_config.id, props.execution.ip_first_octet)
+    }, [fetchSwitches, props.execution.emulation_env_config.id, props.execution.ip_first_octet]);
 
     const getSpinnerOrCircle = (emulation) => {
         if (loading) {
@@ -103,11 +119,12 @@ const SDNController = (props) => {
     }
 
     const getId = () => {
-        return <span>{props.emulation.id}</span>
+        return <span>{props.execution.emulation_env_config.id}</span>
     }
 
     const SdnControllerConfig = (props) => {
-        if (props.emulation.sdn_controller_config === null || props.emulation.sdn_controller_config === undefined) {
+        if (props.execution.emulation_env_config.sdn_controller_config === null ||
+            props.execution.emulation_env_config.sdn_controller_config === undefined) {
             return (<span> </span>)
         } else {
             return (
@@ -138,13 +155,13 @@ const SDNController = (props) => {
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>{props.emulation.sdn_controller_config.container.full_name_str}</td>
-                                    <td>{props.emulation.sdn_controller_config.container.os}</td>
-                                    <td>{getIps(props.emulation.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
-                                    <td>{props.emulation.sdn_controller_config.controller_module_name}</td>
-                                    <td>{props.emulation.sdn_controller_config.controller_port}</td>
-                                    <td>{props.emulation.sdn_controller_config.controller_web_api_port}</td>
-                                    <td>{props.emulation.sdn_controller_config.time_step_len_seconds}</td>
+                                    <td>{props.execution.emulation_env_config.sdn_controller_config.container.full_name_str}</td>
+                                    <td>{props.execution.emulation_env_config.sdn_controller_config.container.os}</td>
+                                    <td>{getIps(props.execution.emulation_env_config.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
+                                    <td>{props.execution.emulation_env_config.sdn_controller_config.controller_module_name}</td>
+                                    <td>{props.execution.emulation_env_config.sdn_controller_config.controller_port}</td>
+                                    <td>{props.execution.emulation_env_config.sdn_controller_config.controller_web_api_port}</td>
+                                    <td>{props.execution.emulation_env_config.sdn_controller_config.time_step_len_seconds}</td>
                                 </tr>
                                 </tbody>
                             </Table>
@@ -156,19 +173,21 @@ const SDNController = (props) => {
     }
 
     return (
-        <Card key={props.emulation.name} ref={props.wrapper}>
+        <Card key={props.execution.emulation_env_config.name} ref={props.wrapper}>
             <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey={props.emulation.name} className="mgHeader">
-                    <span className="subnetTitle">ID: {getId()}, emulation name: {props.emulation.name}</span>
+                <Accordion.Toggle as={Button} variant="link"
+                                  eventKey={props.execution.emulation_env_config.name} className="mgHeader">
+                    <span className="subnetTitle">ID: {getId()},
+                        emulation name: {props.execution.emulation_env_config.name}</span>
                     Controller
-                    IPs: {getIps(props.emulation.sdn_controller_config.container.ips_and_networks).join(", ")},
-                    Status: {getStatus(props.emulation)}
-                    {getSpinnerOrCircle(props.emulation)}
+                    IPs: {getIps(props.execution.emulation_env_config.sdn_controller_config.container.ips_and_networks).join(", ")},
+                    Status: {getStatus(props.execution.emulation_env_config)}
+                    {getSpinnerOrCircle(props.execution.emulation_env_config)}
                 </Accordion.Toggle>
             </Card.Header>
-            <Accordion.Collapse eventKey={props.emulation.name}>
+            <Accordion.Collapse eventKey={props.execution.emulation_env_config.name}>
                 <Card.Body>
-                    <SdnControllerConfig emulation={props.emulation}/>
+                    <SdnControllerConfig execution={props.execution}/>
                     <Card>
                         <Card.Header>
                             <Button
@@ -194,15 +213,16 @@ const SDNController = (props) => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {props.emulation.ovs_config.switch_configs.map((switch_config, index) =>
-                                        <tr key={switch_config.container_name + "-" + index}>
-                                            <td>{switch_config.container_name}</td>
-                                            <td>{switch_config.controler_ip}</td>
-                                            <td>{switch_config.controller_port}</td>
-                                            <td>{switch_config.controller_transport_protocol}</td>
-                                            <td>{switch_config.ip}</td>
-                                            <td>{switch_config.openflow_protocols.join(", ")}</td>
-                                        </tr>
+                                    {props.execution.emulation_env_config.ovs_config.switch_configs.map(
+                                        (switch_config, index) =>
+                                            <tr key={switch_config.container_name + "-" + index}>
+                                                <td>{switch_config.container_name}</td>
+                                                <td>{switch_config.controler_ip}</td>
+                                                <td>{switch_config.controller_port}</td>
+                                                <td>{switch_config.controller_transport_protocol}</td>
+                                                <td>{switch_config.ip}</td>
+                                                <td>{switch_config.openflow_protocols.join(", ")}</td>
+                                            </tr>
                                     )}
                                     </tbody>
                                 </Table>

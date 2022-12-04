@@ -180,7 +180,7 @@ const Emulation = (props) => {
     }
 
     const SdnControllerConfig = (props) => {
-        if (props.emulation.sdn_controller_config === null || props.emulation.sdn_controller_config === undefined) {
+        if (props.execution.sdn_controller_config === null || props.execution.sdn_controller_config === undefined) {
             return (<span> </span>)
         } else {
             return (
@@ -212,13 +212,13 @@ const Emulation = (props) => {
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>{props.emulation.sdn_controller_config.container.full_name_str}</td>
-                                        <td>{props.emulation.sdn_controller_config.container.os}</td>
-                                        <td>{getIps(props.emulation.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
-                                        <td>{props.emulation.sdn_controller_config.controller_module_name}</td>
-                                        <td>{props.emulation.sdn_controller_config.controller_port}</td>
-                                        <td>{props.emulation.sdn_controller_config.controller_web_api_port}</td>
-                                        <td>{props.emulation.sdn_controller_config.time_step_len_seconds}</td>
+                                        <td>{props.execution.sdn_controller_config.container.full_name_str}</td>
+                                        <td>{props.execution.sdn_controller_config.container.os}</td>
+                                        <td>{getIps(props.execution.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
+                                        <td>{props.execution.sdn_controller_config.controller_module_name}</td>
+                                        <td>{props.execution.sdn_controller_config.controller_port}</td>
+                                        <td>{props.execution.sdn_controller_config.controller_web_api_port}</td>
+                                        <td>{props.execution.sdn_controller_config.time_step_len_seconds}</td>
                                     </tr>
                                     </tbody>
                                 </Table>

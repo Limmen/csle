@@ -20,7 +20,8 @@ def sdn_controllers():
     """
     The /sdn-controllers resource.
 
-    :return: A list of sdn-controllers or a list of ids of the policies or deletes the policies
+    :return: A list of emulation executions with sdn-controllers
+             or a list of ids of the executions
     """
     requires_admin = False
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
@@ -32,15 +33,12 @@ def sdn_controllers():
     if ids is not None and ids:
         return sdn_controllers_ids()
 
-    emulations = MetastoreFacade.list_emulations()
-    rc_emulations = ContainerController.list_running_emulations()
-    response_dicts = []
-    for em in emulations:
-        if em.sdn_controller_config is not None:
-            if em.name in rc_emulations:
-                em.running = True
-            response_dicts.append(em.to_dict())
-    response = jsonify(response_dicts)
+    all_executions = MetastoreFacade.list_emulation_executions()
+    emulation_execution_dicts = []
+    for exec in all_executions:
+        if exec.emulation_env_config.sdn_controller_config is not None:
+            emulation_execution_dicts.append(exec.to_dict())
+    response = jsonify(emulation_execution_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 
@@ -49,23 +47,17 @@ def sdn_controllers_ids():
     """
     :return: An HTTP response with all sdn controllers ids
     """
-    emulations = MetastoreFacade.list_emulations()
+    ex_ids = MetastoreFacade.list_emulation_execution_ids()
     rc_emulations = ContainerController.list_running_emulations()
     response_dicts = []
-    for em in emulations:
-        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
-        if em.sdn_controller_config is not None:
-            running = False
-            if em.name in rc_emulations:
-                running = True
-            for exec in executions:
+    for tup in ex_ids:
+        if tup[1] in rc_emulations:
+            exec = MetastoreFacade.get_emulation_execution(ip_first_octet=tup[0], emulation_name=tup[1])
+            if exec.emulation_env_config.sdn_controller_config is not None:
                 response_dicts.append({
-                    api_constants.MGMT_WEBAPP.ID_PROPERTY: em.id,
-                    api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: em.name,
-                    api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
-                    api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                        exec.emulation_env_config.sdn_controller_config.container.get_ips()[0],
-                    api_constants.MGMT_WEBAPP.EXEC_ID_PROPERTY: exec.ip_first_octet
+                    api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                    api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                    api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: True
                 })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
