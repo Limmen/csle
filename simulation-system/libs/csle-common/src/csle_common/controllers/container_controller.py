@@ -22,8 +22,6 @@ from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
-from csle_common.dao.emulation_config.elk_config import ElkConfig
-from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.controllers.management_system_controller import ManagementSystemController
 
 
