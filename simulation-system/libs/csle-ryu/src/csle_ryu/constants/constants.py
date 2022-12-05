@@ -1,6 +1,6 @@
-
 INSTALL = "sudo /root/miniconda3/bin/pip install -U --no-cache-dir csle-ryu "
 LATEST_VERSION = "latest"
+
 
 class RYU:
     """
@@ -42,6 +42,11 @@ class RYU:
     STATS_METER_CONFIG_RESOURCE = "/stats/meterconfig"
     STATS_METER_FEATURES_RESOURCE = "/stats/meterfeatures"
     STATS_ROLE_RESOURCE = "/stats/role"
+    TIME_STEP_LEN_SECONDS = "time_step_len_seconds"
+    PRODUCER_RUNNING = "producer_running"
+    KAFKA_CONF = "kafka_conf"
+    WSGI = "wsgi"
+    CONTROLLER_APP = "controller_app"
 
 
 class CONTROLLERS:
@@ -50,31 +55,3 @@ class CONTROLLERS:
     """
     LEARNING_SWITCH_CONTROLLER = "learning_switch_controller"
     LEARNING_SWITCH_STP_CONTROLLER = "learning_switch_stp_controller"
-
-
-class TOPIC_NAMES:
-    """
-    Topic names for SDN statistics
-    """
-    OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME = "openflow_flow_agg_stats_topic"
-    OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic"
-    OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic"
-    AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_flow_stats_per_switch_topic"
-    AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_port_stats_per_switch_topic"
-
-
-class KAFKA:
-    """
-    String constants for managing Kafka
-    """
-    KAFKA_STATUS = "service kafka status"
-    KAFKA_STOP = "service kafka stop"
-    KAFKA_START = "service kafka start"
-    RETENTION_MS_CONFIG_PROPERTY = "retention.ms"
-    BOOTSTRAP_SERVERS_PROPERTY = "bootstrap.servers"
-    CLIENT_ID_PROPERTY = "client.id"
-    GROUP_ID_PROPERTY = "group.id"
-    AUTO_OFFSET_RESET_PROPERTY = "auto.offset.reset"
-    EARLIEST_OFFSET = "earliest"
-    PORT = 9092
-    TIME_STEP_LEN_SECONDS = "time_step_len_seconds"

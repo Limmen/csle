@@ -5,34 +5,34 @@ import subprocess
 
 RELEASE_CONFIG = {
     "csle-ryu": {
-        "new_version": "'0.0.29'",
+        "new_version": "'0.0.32'",
     },
     "csle-collector": {
-        "new_version": "'0.0.103'",
+        "new_version": "'0.0.106'",
     },
     "csle-common": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "csle-attacker": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "csle-defender": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "csle-system-identification": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "gym-csle-stopping-game": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "csle-agents": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "csle-rest-api": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     },
     "csle-cli": {
-        "new_version": "'0.0.11'",
+        "new_version": "'0.0.14'",
     }
 }
 

@@ -13,6 +13,7 @@ from ryu.app.wsgi import ControllerBase
 from ryu.app.wsgi import Response
 from ryu.app.wsgi import route
 from ryu.app.wsgi import WSGIApplication
+import csle_collector.constants.constants as collector_constants
 import csle_ryu.constants.constants as constants
 from csle_ryu.dao.flow_statistic import FlowStatistic
 from csle_ryu.dao.port_statistic import PortStatistic
@@ -31,7 +32,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
 
     # Include WSGI context for the northbound API
     # Specifyies Ryu's WSGI-compatible Web server clas to use
-    _CONTEXTS = {'wsgi': WSGIApplication}
+    _CONTEXTS = {constants.RYU.WSGI: WSGIApplication}
 
     def __init__(self, *args, **kwargs):
         """
@@ -56,8 +57,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
 
         # Acquires the the WSGIApplication to register the controller class
         self.logger.info("Registering CSLE Northbound REST API Controller")
-        wsgi = kwargs['wsgi']
-        wsgi.register(NorthBoundRestAPIController, {"controller_app": self})
+        wsgi = kwargs[constants.RYU.WSGI]
+        wsgi.register(NorthBoundRestAPIController, {constants.RYU.CONTROLLER_APP: self})
 
     @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER, DEAD_DISPATCHER])
     def _state_change_handler(self, ev) -> None:
@@ -94,9 +95,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         while True:
             if self.producer_running:
                 for dp in self.datapaths.values():
-                    self.logger.info("Monitor sending request")
                     self._request_stats(dp)
-                    self.logger.info(f"id: {dp.id}")
                     response = requests.get(f"http://"
                                             f"localhost:8080{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
                     aggflows = json.loads(response.content)[str(dp.id)][0]
@@ -104,10 +103,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                                                      total_num_bytes=aggflows["byte_count"],
                                                      total_num_packets=aggflows["packet_count"],
                                                      total_num_flows=aggflows["flow_count"])
-                    self.logger.info(f"Monitor received agg flow stat, producer running: {self.producer_running}")
                     if self.producer_running:
-                        self.logger.info(f"PRODUCING!")
-                        self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
+                        self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
                                               agg_flow_stat.to_kafka_record())
                         self.producer.poll(0)
             hub.sleep(self.time_step_len_seconds)
@@ -159,16 +156,15 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 eth_dst = flow.match['eth_dst']
             flow_statistic_dto = FlowStatistic(
                 timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
-                out_port=flow.instructions[0].actions[0].kafka_port, dst_mac_address=eth_dst,
+                out_port=flow.instructions[0].actions[0].port, dst_mac_address=eth_dst,
                 num_packets=flow.packet_count,
                 num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec,
                 duration_seconds=flow.duration_sec,
                 hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
                 cookie=flow.cookie
             )
-            self.logger.info(f"Received Flow Statistics DTO, producer running: {self.producer_running}")
             if self.producer_running:
-                self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME,
+                self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME,
                                       flow_statistic_dto.to_kafka_record())
                 self.producer.poll(0)
                 flow_stats.append(flow_statistic_dto)
@@ -176,7 +172,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         if self.producer_running and len(flow_stats) > 0:
             avg_flow_stats = AvgFlowStatistic.average_flow_statistics(
                 timestamp=ts, datapath_id=flow_stats[0].datapath_id, flow_statistics=flow_stats)
-            self.producer.produce(constants.TOPIC_NAMES.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
+            self.producer.produce(collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
                                   avg_flow_stats.to_kafka_record())
             self.producer.poll(0)
 
@@ -207,9 +203,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 num_collisions=port.collisions, duration_nanoseconds=port.duration_nsec,
                 duration_seconds=port.duration_sec
             )
-            self.logger.info(f"Received Port Statistics DTO, producer running;: {self.producer_running}")
             if self.producer_running:
-                self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_PORT_STATS_TOPIC_NAME,
+                self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME,
                                       port_statistics_dto.to_kafka_record())
                 self.producer.poll(0)
                 port_stats.append(port_statistics_dto)
@@ -217,7 +212,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         if self.producer_running and len(port_stats) > 0:
             avg_flow_stats = AvgPortStatistic.average_port_statistics(
                 timestamp=ts, datapath_id=port_stats[0].datapath_id, port_statistics=port_stats)
-            self.producer.produce(constants.TOPIC_NAMES.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
+            self.producer.produce(collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
                                   avg_flow_stats.to_kafka_record())
             self.producer.poll(0)
 
@@ -236,11 +231,11 @@ class NorthBoundRestAPIController(ControllerBase):
 
     def __init__(self, req, link, data, **config):
         super(NorthBoundRestAPIController, self).__init__(req, link, data, **config)
-        self.controller_app = data["controller_app"]  # These names has to match!
+        self.controller_app = data[constants.RYU.CONTROLLER_APP]  # These names have to match!
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
 
-    @route('controller_app', constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE, methods=['GET'])
+    @route(constants.RYU.CONTROLLER_APP, constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE, methods=['GET'])
     def producer_status(self, req, **kwargs):
         """
         Gets the status of the Kafka producer
@@ -249,12 +244,12 @@ class NorthBoundRestAPIController(ControllerBase):
         :param kwargs: the WSGI arguments
         :return: the REST API response
         """
-        response_body = json.dumps({"kafka_conf": self.controller_app.kafka_conf,
-                                    "producer_running": self.controller_app.producer_running,
-                                    "time_step_len_seconds": self.controller_app.time_step_len_seconds})
+        response_body = json.dumps({constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
+                                    constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
+                                    constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
         return Response(content_type='application/json', text=response_body)
 
-    @route('controller_app', constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
+    @route(constants.RYU.CONTROLLER_APP, constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
     def start_producer(self, req, **kwargs):
         """
         Starts the Kafka producer that sends flow and port statistics
@@ -267,21 +262,22 @@ class NorthBoundRestAPIController(ControllerBase):
             kafka_conf = req.json if req.body else {}
         except ValueError:
             raise Response(status=400)
-        if constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY in kafka_conf \
-                and constants.KAFKA.TIME_STEP_LEN_SECONDS in kafka_conf:
+        if collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY in kafka_conf \
+                and constants.RYU.TIME_STEP_LEN_SECONDS in kafka_conf:
             self.controller_app.kafka_conf = {
-                constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_conf[constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY],
-                constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
+                collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_conf[
+                    collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY],
+                collector_constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
             self.controller_app.logger.info(f"Starting Kafka producer with conf: {self.controller_app.kafka_conf}")
             self.controller_app.producer_running = True
             self.controller_app.producer = Producer(**self.controller_app.kafka_conf)
-            self.controller_app.time_step_len_seconds = kafka_conf[constants.KAFKA.TIME_STEP_LEN_SECONDS]
+            self.controller_app.time_step_len_seconds = kafka_conf[constants.RYU.TIME_STEP_LEN_SECONDS]
             body = json.dumps(self.controller_app.kafka_conf)
             return Response(content_type='application/json', text=body, status=200)
         else:
             return Response(status=500)
 
-    @route('controller_app', constants.RYU.STOP_PRODUCER_HTTP_RESOURCE, methods=['POST'])
+    @route(constants.RYU.CONTROLLER_APP, constants.RYU.STOP_PRODUCER_HTTP_RESOURCE, methods=['POST'])
     def stop_producer(self, req, **kwargs):
         """
         Stops the Kafka producer that sends flow and port statistics
@@ -294,7 +290,7 @@ class NorthBoundRestAPIController(ControllerBase):
         self.controller_app.kafka_conf = {}
         self.controller_app.producer_running = False
         self.controller_app.producer = None
-        response_body = json.dumps({"kafka_conf": self.controller_app.kafka_conf,
-                                    "producer_running": self.controller_app.producer_running,
-                                    "time_step_len_seconds": self.controller_app.time_step_len_seconds})
+        response_body = json.dumps({constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
+                                    constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
+                                    constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
         return Response(content_type='application/json', text=response_body, status=200)

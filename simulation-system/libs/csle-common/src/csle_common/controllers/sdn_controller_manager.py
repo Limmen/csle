@@ -3,6 +3,7 @@ import time
 import json
 import requests
 import csle_common.constants.constants as constants
+import csle_collector.constants.constants as collector_constants
 import csle_ryu.constants.constants as ryu_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
@@ -69,13 +70,9 @@ class SDNControllerManager:
                     ip=emulation_env_config.sdn_controller_config.container.get_ips()[0]))
 
             if constants.COMMANDS.SEARCH_SDN_CONTROLLER not in str(o):
-                Logger.__call__().get_logger().info(
-                    "Starting SDN controller manager node "
-                    f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
-
-                # Stop old background job if running
                 cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
                        constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.SDN_CONTROLLER_FILE_NAME)
+                # Stop old background job if running
                 o, e, _ = EmulationUtil.execute_ssh_cmd(
                     cmd=cmd,
                     conn=emulation_env_config.get_connection(
@@ -86,6 +83,9 @@ class SDNControllerManager:
                     emulation_env_config.sdn_controller_config.controller_port,
                     emulation_env_config.sdn_controller_config.controller_web_api_port,
                     emulation_env_config.sdn_controller_config.controller_module_name)
+                Logger.__call__().get_logger().info(
+                    "Starting SDN controller manager node "
+                    f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]} with cmd: {cmd}")
                 o, e, _ = EmulationUtil.execute_ssh_cmd(
                     cmd=cmd,
                     conn=emulation_env_config.get_connection(
@@ -114,8 +114,8 @@ class SDNControllerManager:
         response = requests.put(
             f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{controller_ip}:{controller_web_port}"
             f"{ryu_constants.RYU.START_PRODUCER_HTTP_RESOURCE}",
-            data=json.dumps({ryu_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_ip,
-                             ryu_constants.KAFKA.TIME_STEP_LEN_SECONDS: time_step_len}))
+            data=json.dumps({collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_ip,
+                             ryu_constants.RYU.TIME_STEP_LEN_SECONDS: time_step_len}))
         assert response.status_code == 200
         Logger.__call__().get_logger().info("Kafka producer started successfully")
 

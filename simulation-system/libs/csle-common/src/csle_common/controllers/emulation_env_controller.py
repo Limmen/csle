@@ -126,7 +126,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 37
+        steps = 36
         if no_traffic:
             steps = steps - 1
         if no_clients:
@@ -151,11 +151,6 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
         EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
-        SDNControllerManager.connect_sdn_controller_to_network(
-            sdn_controller_config=emulation_env_config.sdn_controller_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
