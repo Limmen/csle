@@ -20,6 +20,7 @@ import {
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM
 } from "../../../Common/constants";
+import OpenFlowImg from "./OpenFlow.png"
 
 /**
  * Component representing the /sdn-controllers/id resource
@@ -38,10 +39,10 @@ const SDNController = (props) => {
     const [portsOpen, setPortsOpen] = useState(false);
     const ip = serverIp
     const port = serverPort
-    const loading = false
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
+    console.log(props.execution)
 
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
@@ -75,41 +76,6 @@ const SDNController = (props) => {
         fetchSwitches(props.execution.emulation_env_config.id, props.execution.ip_first_octet)
     }, [fetchSwitches, props.execution.emulation_env_config.id, props.execution.ip_first_octet]);
 
-    const getSpinnerOrCircle = (emulation) => {
-        if (loading) {
-            return (<Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-            />)
-        }
-        if (emulation.running) {
-            return (
-                <svg id="svg-1" height="15px" width="15px" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"
-                     version="1.1">
-                    <circle r="15" cx="15" cy="15" fill="green"></circle>
-                </svg>
-            )
-        } else {
-            return (
-                <svg id="svg-1" height="15px" width="15px" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"
-                     version="1.1">
-                    <circle r="15" cx="15" cy="15" fill="red"></circle>
-                </svg>
-            )
-        }
-    }
-
-    const getStatus = (emulation) => {
-        if (emulation.running) {
-            return "running"
-        } else {
-            return "stopped"
-        }
-    }
-
     const getIps = (ips_and_networks) => {
         const ips = []
         for (let i = 0; i < ips_and_networks.length; i++) {
@@ -136,7 +102,9 @@ const SDNController = (props) => {
                             aria-expanded={generalInfoOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">General information</h5>
+                            <h5 className="semiTitle">General information
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
@@ -180,9 +148,7 @@ const SDNController = (props) => {
                     <span className="subnetTitle">ID: {getId()},
                         emulation name: {props.execution.emulation_env_config.name}</span>
                     Controller
-                    IPs: {getIps(props.execution.emulation_env_config.sdn_controller_config.container.ips_and_networks).join(", ")},
-                    Status: {getStatus(props.execution.emulation_env_config)}
-                    {getSpinnerOrCircle(props.execution.emulation_env_config)}
+                    IPs: {getIps(props.execution.emulation_env_config.sdn_controller_config.container.ips_and_networks).join(", ")}
                 </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey={props.execution.emulation_env_config.name}>
@@ -196,7 +162,10 @@ const SDNController = (props) => {
                                 aria-expanded={ovsSwitchesOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Open vSwitch switches configurations </h5>
+                                <h5 className="semiTitle">
+                                    Open vSwitch switches configurations
+                                    <i className="fa fa-code headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={ovsSwitchesOpen}>
@@ -238,7 +207,10 @@ const SDNController = (props) => {
                                 aria-expanded={activeSwitchesOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Active Open flow switches </h5>
+                                <h5 className="semiTitle">
+                                    Active Open flow switches
+                                    <img src={OpenFlowImg} alt="OpenFlow switches" className="img-fluid headerIcon kafka"/>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={activeSwitchesOpen}>

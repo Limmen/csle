@@ -49,7 +49,6 @@ const Emulation = (props) => {
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
     const [beatsOpen, setBeatsOpen] = useState(false);
-    console.log(props.emulation)
 
     const emulation = props.emulation
 
@@ -180,7 +179,7 @@ const Emulation = (props) => {
     }
 
     const SdnControllerConfig = (props) => {
-        if (props.execution.sdn_controller_config === null || props.execution.sdn_controller_config === undefined) {
+        if (props.emulation.sdn_controller_config === null || props.emulation.sdn_controller_config === undefined) {
             return (<span> </span>)
         } else {
             return (
@@ -192,7 +191,9 @@ const Emulation = (props) => {
                             aria-expanded={sdnControllerConfigOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">SDN Controller Config</h5>
+                            <h5 className="semiTitle">SDN Controller Config
+                                <i className="fa fa-sitemap headerIcon" aria-hidden="true"></i>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={sdnControllerConfigOpen}>
@@ -212,13 +213,13 @@ const Emulation = (props) => {
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>{props.execution.sdn_controller_config.container.full_name_str}</td>
-                                        <td>{props.execution.sdn_controller_config.container.os}</td>
-                                        <td>{getIps(props.execution.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
-                                        <td>{props.execution.sdn_controller_config.controller_module_name}</td>
-                                        <td>{props.execution.sdn_controller_config.controller_port}</td>
-                                        <td>{props.execution.sdn_controller_config.controller_web_api_port}</td>
-                                        <td>{props.execution.sdn_controller_config.time_step_len_seconds}</td>
+                                        <td>{props.emulation.sdn_controller_config.container.full_name_str}</td>
+                                        <td>{props.emulation.sdn_controller_config.container.os}</td>
+                                        <td>{getIps(props.emulation.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
+                                        <td>{props.emulation.sdn_controller_config.controller_module_name}</td>
+                                        <td>{props.emulation.sdn_controller_config.controller_port}</td>
+                                        <td>{props.emulation.sdn_controller_config.controller_web_api_port}</td>
+                                        <td>{props.emulation.sdn_controller_config.time_step_len_seconds}</td>
                                     </tr>
                                     </tbody>
                                 </Table>
