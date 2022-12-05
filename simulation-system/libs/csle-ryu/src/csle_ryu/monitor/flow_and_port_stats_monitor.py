@@ -94,6 +94,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         while True:
             if self.producer_running:
                 for dp in self.datapaths.values():
+                    self.logger.info("Monitor sending request")
                     self._request_stats(dp)
                     self.logger.info(f"id: {dp.id}")
                     response = requests.get(f"http://"
@@ -103,7 +104,9 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                                                      total_num_bytes=aggflows["byte_count"],
                                                      total_num_packets=aggflows["packet_count"],
                                                      total_num_flows=aggflows["flow_count"])
+                    self.logger.info(f"Monitor received agg flow stat, producer running: {self.producer_running}")
                     if self.producer_running:
+                        self.logger.info(f"PRODUCING!")
                         self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
                                               agg_flow_stat.to_kafka_record())
                         self.producer.poll(0)
@@ -163,6 +166,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
                 cookie=flow.cookie
             )
+            self.logger.info(f"Received Flow Statistics DTO, producer running: {self.producer_running}")
             if self.producer_running:
                 self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME,
                                       flow_statistic_dto.to_kafka_record())
@@ -203,6 +207,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 num_collisions=port.collisions, duration_nanoseconds=port.duration_nsec,
                 duration_seconds=port.duration_sec
             )
+            self.logger.info(f"Received Port Statistics DTO, producer running;: {self.producer_running}")
             if self.producer_running:
                 self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_PORT_STATS_TOPIC_NAME,
                                       port_statistics_dto.to_kafka_record())

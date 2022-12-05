@@ -43,7 +43,8 @@ class EmulationEnvConfig:
                  docker_stats_manager_config: DockerStatsManagerConfig, elk_config: ElkConfig,
                  beats_config: BeatsConfig,
                  level: int, version: str, execution_id: int,
-                 csle_collector_version: str = collector_constants.LATEST_VERSION):
+                 csle_collector_version: str = collector_constants.LATEST_VERSION,
+                 csle_ryu_version: str = collector_constants.LATEST_VERSION):
         """
         Initializes the object
 
@@ -70,6 +71,7 @@ class EmulationEnvConfig:
         :param version: the version of the emulation
         :param execution_id: the execution id of the emulation
         :param csle_collector_version: the version of the CSLE collector library
+        :param csle_collector_version: the version of the CSLE Ryu library
         """
         self.name = name
         self.descr = descr
@@ -102,6 +104,7 @@ class EmulationEnvConfig:
         self.elk_config = elk_config
         self.beats_config = beats_config
         self.csle_collector_version = csle_collector_version
+        self.csle_ryu_version = csle_ryu_version
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -133,7 +136,7 @@ class EmulationEnvConfig:
             snort_ids_manager_config=SnortIDSManagerConfig.from_dict(d["snort_ids_manager_config"]),
             docker_stats_manager_config=DockerStatsManagerConfig.from_dict(d["docker_stats_manager_config"]),
             elk_config=ElkConfig.from_dict(d["elk_config"]), csle_collector_version=d["csle_collector_version"],
-            beats_config=BeatsConfig.from_dict(d["beats_config"])
+            beats_config=BeatsConfig.from_dict(d["beats_config"]), csle_ryu_version=d["csle_ryu_version"]
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -179,6 +182,7 @@ class EmulationEnvConfig:
         d["elk_config"] = self.elk_config.to_dict()
         d["csle_collector_version"] = self.csle_collector_version
         d["beats_config"] = self.beats_config.to_dict()
+        d["csle_ryu_version"] = self.csle_ryu_version
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "",
@@ -330,7 +334,8 @@ class EmulationEnvConfig:
                f"snort_ids_manager_config: {self.snort_ids_manager_config}, " \
                f"ossec_ids_manager_config: {self.ossec_ids_manager_config}, " \
                f"docker_stats_manager_config: {self.docker_stats_manager_config}, elk_config: {self.elk_config}," \
-               f" csle_collector_version: {self.csle_collector_version}, beats_config: {self.beats_config}"
+               f" csle_collector_version: {self.csle_collector_version}, beats_config: {self.beats_config}," \
+               f" csle_ryu_version: {self.csle_ryu_version}"
 
     def get_all_ips(self) -> List[str]:
         """

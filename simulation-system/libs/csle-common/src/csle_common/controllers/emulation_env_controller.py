@@ -4,6 +4,7 @@ import subprocess
 import random
 import paramiko
 import csle_collector.constants.constants as collector_constants
+import csle_ryu.constants.constants as ryu_constants
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -80,9 +81,9 @@ class EmulationEnvController:
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
-    def install_csle_collector_library(emulation_env_config: EmulationEnvConfig):
+    def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig):
         """
-        Installs the latest csle-collector library on all nodes
+        Installs the latest csle-collector and csle-ryu libraries on all nodes
 
         :return:
         """
@@ -101,6 +102,17 @@ class EmulationEnvController:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(2)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+            time.sleep(2)
+            Logger.__call__().get_logger().info(f"Installing csle-ryu version "
+                                                f"{emulation_env_config.csle_ryu_version} on node: {ip}")
+            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+            cmd = ryu_constants.INSTALL
+            if emulation_env_config.csle_ryu_version != ryu_constants.LATEST_VERSION:
+                cmd = cmd + f"=={emulation_env_config.csle_ryu_version}"
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+            time.sleep(2)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
 
     @staticmethod
@@ -134,7 +146,7 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
-        EmulationEnvController.install_csle_collector_library(emulation_env_config=emulation_env_config)
+        EmulationEnvController.install_csle_collector_and_ryu_libraries(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")

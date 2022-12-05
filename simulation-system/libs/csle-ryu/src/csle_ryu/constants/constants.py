@@ -1,9 +1,12 @@
 
+INSTALL = "sudo /root/miniconda3/bin/pip install -U --no-cache-dir csle-ryu "
+LATEST_VERSION = "latest"
 
 class RYU:
     """
     String constants related to RYU
     """
+
     CONTROLLERS_PREFIX = "csle_ryu.controllers."
     OFCTL_REST_APP = "ryu.app.ofctl_rest"
     OFCTL_REST_QOS_APP = "ryu.app.rest_qos"
