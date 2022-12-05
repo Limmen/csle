@@ -4,7 +4,6 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
-import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
@@ -18,7 +17,8 @@ import {
     SWITCHES_SUBRESOURCE,
     EXECUTIONS_SUBRESOURCE,
     LOGIN_PAGE_RESOURCE,
-    TOKEN_QUERY_PARAM
+    TOKEN_QUERY_PARAM,
+    SDN_CONTROLLER_LOCAL_PORT
 } from "../../../Common/constants";
 import OpenFlowImg from "./OpenFlow.png"
 
@@ -28,6 +28,7 @@ import OpenFlowImg from "./OpenFlow.png"
 const SDNController = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [switches, setSwitches] = useState([]);
+    const [localSdnControllerWebApiPort, setLocalSdnControllerWebApiPort] = useState(-1);
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [activeSwitchesOpen, setActiveSwitchesOpen] = useState(false);
     const [flowsOpen, setFlowsOpen] = useState(false);
@@ -42,7 +43,6 @@ const SDNController = (props) => {
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
-    console.log(props.execution)
 
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
@@ -67,7 +67,8 @@ const SDNController = (props) => {
                 return res.json()
             })
             .then(response => {
-                setSwitches(response)
+                setSwitches(response[SWITCHES_SUBRESOURCE])
+                setLocalSdnControllerWebApiPort(response[SDN_CONTROLLER_LOCAL_PORT])
             })
             .catch(error => console.log("error:" + error))
     }, [ip, port]);
@@ -128,7 +129,12 @@ const SDNController = (props) => {
                                     <td>{getIps(props.execution.emulation_env_config.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
                                     <td>{props.execution.emulation_env_config.sdn_controller_config.controller_module_name}</td>
                                     <td>{props.execution.emulation_env_config.sdn_controller_config.controller_port}</td>
-                                    <td>{props.execution.emulation_env_config.sdn_controller_config.controller_web_api_port}</td>
+                                    <td>
+                                        <a href={`${HTTP_PREFIX}${ip}:${localSdnControllerWebApiPort}`}
+                                           target="_blank" rel="noopener noreferrer">
+                                            {props.execution.emulation_env_config.sdn_controller_config.controller_web_api_port}
+                                        </a>
+                                    </td>
                                     <td>{props.execution.emulation_env_config.sdn_controller_config.time_step_len_seconds}</td>
                                 </tr>
                                 </tbody>
@@ -209,7 +215,7 @@ const SDNController = (props) => {
                             >
                                 <h5 className="semiTitle">
                                     Active Open flow switches
-                                    <img src={OpenFlowImg} alt="OpenFlow switches" className="img-fluid headerIcon kafka"/>
+                                    <img src={OpenFlowImg} alt="OpenFlow switches" className="img-fluid headerIcon openFlow"/>
                                 </h5>
                             </Button>
                         </Card.Header>
@@ -264,7 +270,10 @@ const SDNController = (props) => {
                                 aria-expanded={flowsOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Flows</h5>
+                                <h5 className="semiTitle">
+                                    Flows
+                                    <i className="fa fa-sliders headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={flowsOpen}>
@@ -344,7 +353,10 @@ const SDNController = (props) => {
                                 aria-expanded={groupsOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Groups</h5>
+                                <h5 className="semiTitle">
+                                    Groups
+                                    <i className="fa fa-users headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={groupsOpen}>
@@ -419,7 +431,10 @@ const SDNController = (props) => {
                                 aria-expanded={metersOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Meters</h5>
+                                <h5 className="semiTitle">
+                                    Meters
+                                    <i className="fa fa-server headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={metersOpen}>
@@ -496,7 +511,10 @@ const SDNController = (props) => {
                                 aria-expanded={queuesOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Queues</h5>
+                                <h5 className="semiTitle">
+                                    Queues
+                                    <i className="fa fa-cloud headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={queuesOpen}>
@@ -548,7 +566,10 @@ const SDNController = (props) => {
                                 aria-expanded={rolesOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Roles</h5>
+                                <h5 className="semiTitle">
+                                    Roles
+                                    Users <i className="fa fa-user headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={rolesOpen}>
@@ -586,7 +607,10 @@ const SDNController = (props) => {
                                 aria-expanded={tablesOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Tables</h5>
+                                <h5 className="semiTitle">
+                                    Tables
+                                    <i className="fa fa-table headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={tablesOpen}>
@@ -656,7 +680,10 @@ const SDNController = (props) => {
                                 aria-expanded={portsOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle">Ports</h5>
+                                <h5 className="semiTitle">
+                                    Ports
+                                    <i className="fa fa-sitemap headerIcon" aria-hidden="true"></i>
+                                </h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={portsOpen}>

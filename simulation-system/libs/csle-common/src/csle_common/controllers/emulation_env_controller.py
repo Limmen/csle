@@ -856,13 +856,16 @@ class EmulationEnvController:
         return execution_info
 
     @staticmethod
-    def create_kibana_tunnel(execution: EmulationExecution, tunnels_dict: Dict[str, Any], local_port: int) -> None:
+    def create_ssh_tunnel(tunnels_dict: Dict[str, Any], local_port: int,
+                          remote_port: int, remote_ip: str) -> None:
         """
-        Creates an SSH tunnel to forward the Kibana port of a container
+        Creates an SSH tunnel to forward the port of a container
 
         :param execution: the emulation execution
         :param tunnels_dict: a dict with existing tunnels
         :param local_port: the local port to forward
+        :param remote_port: the remote port to forward
+        :param remote_ip: the remote ip to forward
         :return: None
         """
         config = Config.get_current_confg()
@@ -870,17 +873,17 @@ class EmulationEnvController:
             Config.set_config_parameters_from_config_file()
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        conn.connect(execution.emulation_env_config.elk_config.container.get_ips()[0],
+        conn.connect(remote_ip,
                      username=config.ssh_admin_username, password=config.ssh_admin_password)
         conn.get_transport().set_keepalive(5)
         agent_transport = conn.get_transport()
         tunnel_thread = ForwardTunnelThread(
             local_port=local_port,
-            remote_host=execution.emulation_env_config.elk_config.container.get_ips()[0],
-            remote_port=execution.emulation_env_config.elk_config.kibana_port, transport=agent_transport,
+            remote_host=remote_ip,
+            remote_port=remote_port, transport=agent_transport,
             tunnels_dict=tunnels_dict)
         tunnel_thread.start()
         tunnel_thread_dict = {}
         tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY] = tunnel_thread
         tunnel_thread_dict[api_constants.MGMT_WEBAPP.PORT_PROPERTY] = local_port
-        tunnels_dict[execution.emulation_env_config.elk_config.container.get_ips()[0]] = tunnel_thread_dict
+        tunnels_dict[remote_ip] = tunnel_thread_dict

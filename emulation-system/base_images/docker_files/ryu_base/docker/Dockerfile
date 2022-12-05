@@ -11,4 +11,4 @@ ADD docker_files/common/ryu_controller.py /ryu_controller.py
 RUN chmod 777 /ryu_controller.py
 
 # Topology GUI HTML files
-ADD docker_files/ryu_base/html /root/miniconda3/lib/python3.7/site-packages/ryu/app/gui_topology/
+ADD docker_files/ryu_base/html /root/miniconda3/lib/python3.9/site-packages/ryu/app/gui_topology/html

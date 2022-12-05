@@ -1,3 +1,8 @@
+"""
+Constants for csle-rest-api
+"""
+
+
 class MGMT_WEBAPP:
     """
     Constants related to the management webapp
@@ -77,6 +82,7 @@ class MGMT_WEBAPP:
     HOST_TERMINAL_ALLOWED_SUBRESOURCE = "host-terminal-allowed"
     CONTAINER_SUBRESOURCE = "container"
     SWITCHES_SUBRESOURCE = "switches"
+    SDN_CONTROLLER_LOCAL_PORT = "sdn-controller-local-port"
     MONITOR_SUBRESOURCE = "monitor"
     EMULATION_EXECUTIONS_RESOURCE = "emulation-executions"
     EMULATION_TRACES_RESOURCE = "emulation-traces"
@@ -186,6 +192,8 @@ class MGMT_WEBAPP:
     GP_SYSTEM_MODEL_TYPE = "gp"
     KIBANA_TUNNELS_DICT = {}
     KIBANA_TUNNEL_BASE_PORT = 17000
+    RYU_TUNNELS_DICT = {}
+    RYU_TUNNEL_BASE_PORT = 18000
     WS_HOST_TERMINAL_NAMESPACE = "host-terminal"
     WS_CONTAINER_TERMINAL_NAMESPACE = "container-terminal"
     HOST_TERMINAL_FD = "host-terminal-fd"

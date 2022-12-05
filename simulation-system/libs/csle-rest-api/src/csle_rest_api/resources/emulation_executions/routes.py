@@ -128,14 +128,16 @@ def emulation_execution_info(execution_id: int):
         if execution.emulation_env_config.elk_config.container.get_ips()[0] \
                 not in api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT:
             try:
-                EmulationEnvController.create_kibana_tunnel(execution=execution,
-                                                            tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                                                            local_port=local_port)
+                EmulationEnvController.create_ssh_tunnel(
+                    tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                    local_port=local_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                    remote_ip=execution.emulation_env_config.elk_config.container.get_ips()[0])
             except Exception:
                 local_port = local_port + 100
-                EmulationEnvController.create_kibana_tunnel(execution=execution,
-                                                            tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                                                            local_port=local_port)
+                EmulationEnvController.create_ssh_tunnel(
+                    tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                    local_port=local_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                    remote_ip=execution.emulation_env_config.elk_config.container.get_ips()[0])
         else:
             tunnel_thread_dict = api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
                 execution.emulation_env_config.elk_config.container.get_ips()[0]]
@@ -145,9 +147,10 @@ def emulation_execution_info(execution_id: int):
                 tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY].shutdown()
                 del api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
                     execution.emulation_env_config.elk_config.container.get_ips()[0]]
-                EmulationEnvController.create_kibana_tunnel(execution=execution,
-                                                            tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                                                            local_port=local_port)
+                EmulationEnvController.create_ssh_tunnel(
+                    tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                    local_port=local_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                    remote_ip=execution.emulation_env_config.elk_config.container.get_ips()[0])
 
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         execution_info.elk_managers_info.local_kibana_port = local_port
