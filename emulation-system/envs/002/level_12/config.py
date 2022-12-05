@@ -243,17 +243,17 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                                 f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
+                                 f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                                          f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_2",
+                                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2"
-                                                 f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2"
+                                                 f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
+                                                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
                                      interface=constants.NETWORKING.ETH3,
-                                     bitmask=constants.RYU_CONTROLLER.BITMASK
+                                     bitmask=ryu_constants.RYU.BITMASK
                                  ))
                             ],
                             version=version, level=str(level),
@@ -281,17 +281,17 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                                 f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10",
+                                 f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                                          f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_3",
+                                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_3",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10"
-                                                 f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10"
+                                                 f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10",
+                                                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10",
                                      interface=constants.NETWORKING.ETH2,
-                                     bitmask=constants.RYU_CONTROLLER.BITMASK
+                                     bitmask=ryu_constants.RYU.BITMASK
                                  ))
                             ],
                             version=version, level=str(level),
@@ -319,17 +319,17 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                                 f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
+                                 f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                                          f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_4",
+                                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_4",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18"
-                                                 f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                                 f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18"
+                                                 f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
+                                                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
                                      interface=constants.NETWORKING.ETH2,
-                                     bitmask=constants.RYU_CONTROLLER.BITMASK
+                                     bitmask=ryu_constants.RYU.BITMASK
                                  ))
                             ],
                             version=version, level=str(level),
@@ -528,33 +528,33 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             ),
             ContainerNetwork(
                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                     f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_2",
+                     f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2"
-                            f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                            f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2"
+                            f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                              f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
-                bitmask=constants.RYU_CONTROLLER.BITMASK
+                              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
+                bitmask=ryu_constants.RYU.BITMASK
             ),
             ContainerNetwork(
                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                     f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_3",
+                     f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_3",
                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10"
-                            f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                            f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10"
+                            f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                              f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10",
-                bitmask=constants.RYU_CONTROLLER.BITMASK
+                              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10",
+                bitmask=ryu_constants.RYU.BITMASK
             ),
             ContainerNetwork(
                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                     f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_4",
+                     f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_4",
                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18"
-                            f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                            f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18"
+                            f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                              f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
-                bitmask=constants.RYU_CONTROLLER.BITMASK
+                              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
+                bitmask=ryu_constants.RYU.BITMASK
             )
         ]
     )
@@ -1278,20 +1278,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_2",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2"
-                                f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2"
+                                f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
-                    bitmask=constants.RYU_CONTROLLER.BITMASK
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
+                    bitmask=ryu_constants.RYU.BITMASK
                 )
             ),
             DefaultNetworkFirewallConfig(
@@ -1367,7 +1367,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             DefaultNetworkFirewallConfig(
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.3",
+                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
@@ -1475,26 +1475,26 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_3",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_3",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9"
-                                f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.9"
+                                f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9",
-                    bitmask=constants.RYU_CONTROLLER.BITMASK
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.9",
+                    bitmask=ryu_constants.RYU.BITMASK
                 )
             ),
             DefaultNetworkFirewallConfig(
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.11",
+                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
@@ -1602,26 +1602,26 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                   f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
+                   f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_4",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_4",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18"
-                                f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18"
+                                f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
-                    bitmask=constants.RYU_CONTROLLER.BITMASK
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
+                    bitmask=ryu_constants.RYU.BITMASK
                 )
             ),
             DefaultNetworkFirewallConfig(
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.19",
+                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
@@ -2213,18 +2213,18 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
 
     resources = NodeResourcesConfig(
         container_name=f"{constants.CSLE.NAME}-"
-                       f"{constants.CONTAINER_IMAGES.RYU_1}{constants.RYU_CONTROLLER.SUFFIX}-"
+                       f"{constants.CONTAINER_IMAGES.RYU_1}{ryu_constants.RYU.SUFFIX}-"
                        f"{constants.CSLE.LEVEL}{level}",
         num_cpus=min(8, multiprocessing.cpu_count()), available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.3",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.11",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.19",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
              None)
         ])
 
@@ -2253,18 +2253,18 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                           f"{constants.RYU_CONTROLLER.NETWORK_ID_FOURTH_OCTET}",
+                           f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_2",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}"
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}",
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}",
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             )
@@ -2624,36 +2624,36 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_1-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-               f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
+               f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                          f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}."
+                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}."
                           f"3",
-            controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT,
-            controller_transport_protocol=constants.RYU_CONTROLLER.DEFAULT_TRANSPORT_PROTOCOL,
+            controller_port=ryu_constants.RYU.DEFAULT_PORT,
+            controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
             openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_2-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-               f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10",
+               f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.10",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                          f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}."
+                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}."
                           f"11",
-            controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT,
-            controller_transport_protocol=constants.RYU_CONTROLLER.DEFAULT_TRANSPORT_PROTOCOL,
+            controller_port=ryu_constants.RYU.DEFAULT_PORT,
+            controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
             openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_3-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-               f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
+               f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                          f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}."
+                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}."
                           f"19",
-            controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT,
-            controller_transport_protocol=constants.RYU_CONTROLLER.DEFAULT_TRANSPORT_PROTOCOL,
+            controller_port=ryu_constants.RYU.DEFAULT_PORT,
+            controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
             openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
         )
     ])
@@ -2674,44 +2674,47 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         os=constants.CONTAINER_OS.RYU_1_OS,
         ips_and_networks=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.3",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                      f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_2",
+                      f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
                  subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                             f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2"
-                             f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                             f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2"
+                             f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                               f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
-                 bitmask=constants.RYU_CONTROLLER.BITMASK
+                               f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
+                 bitmask=ryu_constants.RYU.BITMASK,
+                 interface=constants.NETWORKING.ETH0
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.11",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                      f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_3",
+                      f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_3",
                  subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                             f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9"
-                             f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                             f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.9"
+                             f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                               f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9",
-                 bitmask=constants.RYU_CONTROLLER.BITMASK
+                               f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.9",
+                 bitmask=ryu_constants.RYU.BITMASK,
+                 interface=constants.NETWORKING.ETH1
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.19",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                      f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_4",
+                      f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_4",
                  subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                             f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18"
-                             f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                             f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18"
+                             f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                               f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
-                 bitmask=constants.RYU_CONTROLLER.BITMASK
+                               f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
+                 bitmask=ryu_constants.RYU.BITMASK,
+                 interface=constants.NETWORKING.ETH2
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_FOURTH_OCTET}",
+             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                       f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
@@ -2719,27 +2722,27 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                              f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                              f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                 interface=constants.NETWORKING.ETH1,
+                 interface=constants.NETWORKING.ETH3,
                  bitmask=constants.CSLE.CSLE_EDGE_BITMASK
              ))
         ],
         version=version, level=str(level),
-        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=constants.RYU_CONTROLLER.SUFFIX)
+        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=ryu_constants.RYU.SUFFIX)
 
     resources = NodeResourcesConfig(
         container_name=f"{constants.CSLE.NAME}-"
-                       f"{constants.CONTAINER_IMAGES.RYU_1}{constants.RYU_CONTROLLER.SUFFIX}-"
+                       f"{constants.CONTAINER_IMAGES.RYU_1}{ryu_constants.RYU.SUFFIX}-"
                        f"{constants.CSLE.LEVEL}{level}",
         num_cpus=min(8, multiprocessing.cpu_count()), available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.3",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.11",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.19",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
              None)
         ])
 
@@ -2748,62 +2751,62 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.3",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_2",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2"
-                                f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2"
+                                f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
-                    bitmask=constants.RYU_CONTROLLER.BITMASK
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.2",
+                    bitmask=ryu_constants.RYU.BITMASK
                 )
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.11",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_3",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_3",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9"
-                                f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.9"
+                                f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9",
-                    bitmask=constants.RYU_CONTROLLER.BITMASK
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.9",
+                    bitmask=ryu_constants.RYU.BITMASK
                 )
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.19",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
-                         f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}_4",
+                         f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_4",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18"
-                                f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
+                                f"{network_id}.{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18"
+                                f"{ryu_constants.RYU.SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-                                  f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
-                    bitmask=constants.RYU_CONTROLLER.BITMASK
+                                  f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.18",
+                    bitmask=ryu_constants.RYU.BITMASK
                 )
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                    f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                   f"{constants.RYU_CONTROLLER.NETWORK_ID_FOURTH_OCTET}",
+                   f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
@@ -2827,7 +2830,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
 
     sdn_controller_config = SDNControllerConfig(
         container=container, resources=resources, version=version, controller_type=SDNControllerType.RYU,
-        controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT, time_step_len_seconds=15,
+        controller_port=ryu_constants.RYU.DEFAULT_PORT, time_step_len_seconds=15,
         controller_web_api_port=8080, controller_module_name=ryu_constants.CONTROLLERS.LEARNING_SWITCH_CONTROLLER,
         firewall_config=firewall_config
     )
@@ -2993,7 +2996,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.5",
                         log_files_paths=["/*.log",
@@ -3011,7 +3017,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.8",
                         log_files_paths=["/*.log",
@@ -3029,7 +3038,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.41",
                         log_files_paths=["/*.log",
@@ -3047,7 +3059,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.42",
                         log_files_paths=["/*.log",
@@ -3065,7 +3080,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                         log_files_paths=["/*.log",
@@ -3083,7 +3101,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.3",
                         log_files_paths=["/*.log",
@@ -3101,7 +3122,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.31",
                         log_files_paths=["/*.log",
@@ -3119,7 +3143,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3140,9 +3167,20 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.254",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.191",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.2",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.3",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.21",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.79"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3165,6 +3203,9 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.254",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -3195,7 +3236,10 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.191",
@@ -3214,8 +3258,34 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ])
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
+                        ]),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                           f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
+                        log_files_paths=["/*.log",
+                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
+                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                            collector_constants.METRICBEAT.LINUX_MODULE],
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
+                        heartbeat_hosts_to_monitor=[
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
+                        ]),
     ]
     beats_conf = BeatsConfig(node_beats_configs=node_beats_configs, num_elastic_shards=1, reload_enabled=False)
     return beats_conf

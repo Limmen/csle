@@ -1630,19 +1630,6 @@ class STATIC_ATTACKERS:
     NOVICE = "novice"
 
 
-class RYU_CONTROLLER:
-    """
-    Constants related to the RYU Controller
-    """
-    NETWORK_ID_THIRD_OCTET = 252
-    NETWORK_ID_FOURTH_OCTET = 252
-    SUFFIX = "_1"
-    DEFAULT_PORT = 6633
-    DEFAULT_TRANSPORT_PROTOCOL = "tcp"
-    SUBNETMASK_SUFFIX = "/29"
-    BITMASK = "255.255.255.248"
-
-
 class OPENFLOW:
     """
     Constants related to OPENFLOW

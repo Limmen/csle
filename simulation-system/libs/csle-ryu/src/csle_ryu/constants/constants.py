@@ -47,6 +47,13 @@ class RYU:
     KAFKA_CONF = "kafka_conf"
     WSGI = "wsgi"
     CONTROLLER_APP = "controller_app"
+    NETWORK_ID_THIRD_OCTET = 252
+    NETWORK_ID_FOURTH_OCTET = 251
+    SUFFIX = "_1"
+    DEFAULT_PORT = 6633
+    DEFAULT_TRANSPORT_PROTOCOL = "tcp"
+    SUBNETMASK_SUFFIX = "/29"
+    BITMASK = "255.255.255.248"
 
 
 class CONTROLLERS:
@@ -55,3 +62,4 @@ class CONTROLLERS:
     """
     LEARNING_SWITCH_CONTROLLER = "learning_switch_controller"
     LEARNING_SWITCH_STP_CONTROLLER = "learning_switch_stp_controller"
+
