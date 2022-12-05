@@ -258,7 +258,7 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
     if em is not None and em.sdn_controller_config is not None:
         exec = MetastoreFacade.get_emulation_execution(ip_first_octet=exec_id, emulation_name=em.name)
         local_port = api_constants.MGMT_WEBAPP.RYU_TUNNEL_BASE_PORT + exec.ip_first_octet
-        if exec.emulation_env_config.elk_config.container.get_ips()[0] \
+        if exec.emulation_env_config.sdn_controller_config.container.get_ips()[0] \
                 not in api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT:
             try:
                 EmulationEnvController.create_ssh_tunnel(
@@ -275,13 +275,13 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
                     remote_ip=exec.emulation_env_config.sdn_controller_config.container.get_ips()[0])
         else:
             tunnel_thread_dict = api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT[
-                exec.emulation_env_config.elk_config.container.get_ips()[0]]
+                exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]]
             response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
                            f'{local_port}')
             if response.status_code != constants.HTTPS.OK_STATUS_CODE:
                 tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY].shutdown()
                 del api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT[
-                    exec.emulation_env_config.elk_config.container.get_ips()[0]]
+                    exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]]
                 EmulationEnvController.create_ssh_tunnel(
                     tunnels_dict=api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT,
                     local_port=local_port,
