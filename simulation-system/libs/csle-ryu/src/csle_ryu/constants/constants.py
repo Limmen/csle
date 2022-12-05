@@ -62,4 +62,3 @@ class CONTROLLERS:
     """
     LEARNING_SWITCH_CONTROLLER = "learning_switch_controller"
     LEARNING_SWITCH_STP_CONTROLLER = "learning_switch_stp_controller"
-
