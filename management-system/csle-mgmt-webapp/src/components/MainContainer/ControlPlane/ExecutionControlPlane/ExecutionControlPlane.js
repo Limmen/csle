@@ -95,6 +95,8 @@ const ExecutionControlPlane = (props) => {
     const [stoppedContainers, setStoppedContainers] = useState(props.info.stopped_containers);
     const [trafficManagersInfo, setTrafficManagersInfo] = useState(props.info.traffic_managers_info);
 
+    console.log(props.info)
+
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
@@ -244,13 +246,13 @@ const ExecutionControlPlane = (props) => {
     }
 
     const RyuManagersInfoOrEmpty = (props) => {
-        if (props.ryu_managers_info !== null && props.ryu_managers_info !== undefined) {
+        if (props.ryuManagersInfo !== null && props.ryuManagersInfo !== undefined) {
             return (
                 <RyuManagersInfo
                     setRyuManagersOpen={props.setRyuManagersOpen}
                     ryuManagersOpen={props.ryuManagersOpen}
                     loadingEntities={props.loadingEntities}
-                    clientManagersInfo={props.ryuManagersInfo}
+                    ryuManagersInfo={props.ryuManagersInfo}
                     getLogs={props.getLogs}
                     activeStatus={props.activeStatus}
                     startOrStop={props.startOrStop}
@@ -385,7 +387,7 @@ const ExecutionControlPlane = (props) => {
                     setRyuManagersOpen={setRyuManagersOpen}
                     ryuManagersOpen={ryuManagersOpen}
                     loadingEntities={loadingEntities}
-                    clientManagersInfo={ryuManagersInfo}
+                    ryuManagersInfo={ryuManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}

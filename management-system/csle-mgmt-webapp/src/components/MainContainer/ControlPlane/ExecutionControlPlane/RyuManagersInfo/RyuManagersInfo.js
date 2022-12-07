@@ -12,6 +12,7 @@ import {
     RYU_MANAGER_SUBRESOURCE,
     RYU_CONTROLLER_SUBRESOURCE
 } from "../../../../Common/constants";
+import ElasticImg from "../../../Emulations/Emulation/Elastic.png";
 
 /**
  * Subcomponent of the /control-plane page that contains information about Ryu managers
@@ -27,7 +28,7 @@ const RyuManagersInfo = (props) => {
                     variant="link"
                 >
                     <h5 className="semiTitle"> Ryu managers
-                        <i className="fa fa-users headerIcon" aria-hidden="true"></i>
+                        <img src={RyuImg} alt="Ryu" className="img-fluid headerIcon elastic"/>
                     </h5>
                 </Button>
             </Card.Header>
