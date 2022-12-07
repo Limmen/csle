@@ -215,6 +215,10 @@ RUN chmod 777 /elk_manager.py
 ADD docker_files/common/traffic_manager.py /traffic_manager.py
 RUN chmod 777 /traffic_manager.py
 
+# Ryu manager
+ADD docker_files/common/ryu_manager.py /ryu_manager.py
+RUN chmod 777 /ryu_manager.py
+
 # Beats
 RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.3.3-amd64.deb &&\
     dpkg -i filebeat-8.3.3-amd64.deb &&\

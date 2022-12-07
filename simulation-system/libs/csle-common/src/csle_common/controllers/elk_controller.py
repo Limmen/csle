@@ -230,7 +230,7 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping elasticsearch on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
@@ -251,7 +251,7 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting kibana on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping kibana on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
@@ -272,7 +272,7 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting logstash on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping logstash on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session

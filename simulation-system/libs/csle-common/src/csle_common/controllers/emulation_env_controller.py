@@ -847,6 +847,10 @@ class EmulationEnvController:
                                                 active_ips=active_ips)
         active_networks, inactive_networks = ContainerController.list_all_active_networks_for_emulation(
             emulation_env_config=execution.emulation_env_config)
+        ryu_managers_info = None
+        if execution.emulation_env_config.sdn_controller_config is not None:
+            ryu_managers_info = SDNControllerManager.get_ryu_managers_info(
+                emulation_env_config=execution.emulation_env_config, active_ips=active_ips)
         execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,
                                                 snort_ids_managers_info=snort_ids_managers_info,
                                                 ossec_ids_managers_info=ossec_ids_managers_info,
@@ -859,7 +863,8 @@ class EmulationEnvController:
                                                 active_networks=active_networks,
                                                 inactive_networks=inactive_networks,
                                                 elk_managers_info=elk_managers_info,
-                                                traffic_managers_info=traffic_managers_info)
+                                                traffic_managers_info=traffic_managers_info,
+                                                ryu_managers_info=ryu_managers_info)
         return execution_info
 
     @staticmethod

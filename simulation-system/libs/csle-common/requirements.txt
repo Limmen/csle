@@ -1,5 +1,5 @@
-csle-collector==0.0.107
-csle-ryu==0.0.33
+csle-collector==0.0.108
+csle-ryu==0.0.34
 gym==0.21
 pyglet==2.0.0
 numpy==1.23.5

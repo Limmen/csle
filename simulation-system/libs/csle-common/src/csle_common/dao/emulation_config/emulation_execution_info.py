@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
 from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManagersInfo
 from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
@@ -7,6 +7,7 @@ from csle_common.dao.emulation_config.client_managers_info import ClientManagers
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
+from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
@@ -22,7 +23,8 @@ class EmulationExecutionInfo:
                  docker_stats_managers_info: DockerStatsManagersInfo, running_containers: List[NodeContainerConfig],
                  stopped_containers: List[NodeContainerConfig], traffic_managers_info: TrafficManagersInfo,
                  active_networks: List[ContainerNetwork],
-                 inactive_networks: List[ContainerNetwork], elk_managers_info: ELKManagersInfo):
+                 inactive_networks: List[ContainerNetwork], elk_managers_info: ELKManagersInfo,
+                 ryu_managers_info: Union[None, RyuManagersInfo]):
         """
         Initializes the DTO
 
@@ -40,6 +42,7 @@ class EmulationExecutionInfo:
         :param active_networks: information about the active networks
         :param inactive_networks: information about the inactive networks
         :param elk_managers_info: information about the ELK managers
+        :param ryu_managers_info: information about the Ryu managers
         """
         self.emulation_name = emulation_name
         self.execution_id = execution_id
@@ -55,6 +58,7 @@ class EmulationExecutionInfo:
         self.inactive_networks = inactive_networks
         self.elk_managers_info = elk_managers_info
         self.traffic_managers_info = traffic_managers_info
+        self.ryu_managers_info = ryu_managers_info
 
     def __str__(self) -> str:
         """
@@ -70,7 +74,8 @@ class EmulationExecutionInfo:
                f"running_containers: {list(map(lambda x: str(x), self.running_containers))}, " \
                f"stopped_containers: {list(map(lambda x: str(x), self.stopped_containers))}, " \
                f"active_networks : {list(map(lambda x: str(x), self.active_networks))}, " \
-               f"inactive_networks : {list(map(lambda x: str(x), self.inactive_networks))}"
+               f"inactive_networks : {list(map(lambda x: str(x), self.inactive_networks))}," \
+               f"ryu_managers_info: {self.ryu_managers_info}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -91,6 +96,10 @@ class EmulationExecutionInfo:
         d["stopped_containers"] = list(map(lambda x: x.to_dict(), self.stopped_containers))
         d["active_networks"] = list(map(lambda x: x.to_dict(), self.active_networks))
         d["inactive_networks"] = list(map(lambda x: x.to_dict(), self.inactive_networks))
+        if self.ryu_managers_info is not None:
+            d["ryu_managers_info"] = self.ryu_managers_info.to_dict()
+        else:
+            d["ryu_managers_info"] = None
         return d
 
     @staticmethod
@@ -113,5 +122,6 @@ class EmulationExecutionInfo:
             running_containers=list(map(lambda x: x.from_dict(), d["running_containers"])),
             stopped_containers=list(map(lambda x: x.from_dict(), d["stopped_containers"])),
             active_networks=list(map(lambda x: x.from_dict(), d["active_networks"])),
-            inactive_networks=list(map(lambda x: x.from_dict(), d["inactive_networks"])))
+            inactive_networks=list(map(lambda x: x.from_dict(), d["inactive_networks"])),
+            ryu_managers_info=d["ryu_managers_info"])
         return dto

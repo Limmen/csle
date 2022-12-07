@@ -14,7 +14,9 @@ class SDNControllerConfig:
                  firewall_config: NodeFirewallConfig,
                  controller_port: int,
                  controller_type: SDNControllerType, controller_module_name: str, controller_web_api_port: int,
-                 time_step_len_seconds: int = 15, version: str = "0.0.1"):
+                 manager_log_file: str, manager_log_dir: str, manager_max_workers: int,
+                 time_step_len_seconds: int = 15, version: str = "0.0.1",
+                 manager_port: int = 50042):
         """
         Initializes the DTO
 
@@ -26,6 +28,10 @@ class SDNControllerConfig:
         :param time_step_len_seconds: the length of a time-step in the emulation (for monitoring)
         :param controller_module_name: the name of the controller Python module
         :param controller_web_api_port: the port to run the controller's web API
+        :param manager_log_dir: the directory to save log files of the manager
+        :param manager_log_file: the file name for the manager logs
+        :param manager_max_workers: the maximum number of gRPC workers of the manager
+        :param manager_port: the port of the manager
         :param version: the version
         """
         self.container = container
@@ -37,6 +43,10 @@ class SDNControllerConfig:
         self.controller_type = controller_type
         self.controller_module_name = controller_module_name
         self.controller_web_api_port = controller_web_api_port
+        self.manager_log_file = manager_log_file
+        self.manager_log_dir = manager_log_dir
+        self.manager_max_workers = manager_max_workers
+        self.manager_port = manager_port
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> Union["SDNControllerConfig", None]:
@@ -54,8 +64,9 @@ class SDNControllerConfig:
             time_step_len_seconds=d["time_step_len_seconds"],
             version=d["version"], controller_type=d["controller_type"], controller_port=d["controller_port"],
             controller_web_api_port=d["controller_web_api_port"], controller_module_name=d["controller_module_name"],
-            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
-        )
+            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"]), manager_port=d["manager_port"],
+            manager_log_dir=d["manager_log_dir"], manager_log_file=d["manager_log_file"],
+            manager_max_workers=d["manager_max_workers"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,6 +83,10 @@ class SDNControllerConfig:
         d["controller_module_name"] = self.controller_module_name
         d["controller_web_api_port"] = self.controller_web_api_port
         d["firewall_config"] = self.firewall_config.to_dict()
+        d["manager_port"] = self.manager_port
+        d["manager_log_file"] = self.manager_log_file
+        d["manager_log_dir"] = self.manager_log_dir
+        d["manager_max_workers"] = self.manager_max_workers
         return d
 
     def __str__(self) -> str:
@@ -82,7 +97,9 @@ class SDNControllerConfig:
                f"resources: {self.resources}, time step len: {self.time_step_len_seconds}, " \
                f"controller type: {self.controller_type}, controller_port: {self.controller_port}, " \
                f"version: {self.version}, controller_module_name: {self.controller_module_name}, " \
-               f"controller_web_api_port: {self.controller_web_api_port}, firewall_config: {self.firewall_config}"
+               f"controller_web_api_port: {self.controller_web_api_port}, firewall_config: {self.firewall_config}," \
+               f"manager_port: {self.manager_port}, manager_log_file: {self.manager_log_file}, " \
+               f"manager_log_dir: {self.manager_log_dir}, manager_max_workers: {self.manager_max_workers}"
 
     def to_json_str(self) -> str:
         """

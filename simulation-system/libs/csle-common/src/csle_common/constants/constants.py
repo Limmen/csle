@@ -828,6 +828,8 @@ class COMMANDS:
                           "--logfile {} --maxworkers {} &"
     START_ELK_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /elk_manager.py --port {} --logdir {} --logfile {} " \
                         "--maxworkers {} &"
+    START_RYU_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ryu_manager.py --port {} --logdir {} --logfile {} " \
+                        "--maxworkers {} &"
     START_SNORT_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /snort_ids_manager.py --port {} --logdir {} " \
                               "--logfile {} --maxworkers {} &"
     START_OSSEC_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ossec_ids_manager.py --port {} --logdir {} " \
@@ -840,6 +842,7 @@ class COMMANDS:
                            "--controller {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
     SEARCH_ELK_MANAGER = "/root/miniconda3/bin/python3 /elk_manager.py"
+    SEARCH_RYU_MANAGER = "/root/miniconda3/bin/python3 /ryu_manager.py"
     SEARCH_SNORT_IDS_MANAGER = "/root/miniconda3/bin/python3 /snort_ids_manager.py"
     SEARCH_OSSEC_IDS_MANAGER = "/root/miniconda3/bin/python3 /ossec_ids_manager.py"
     SEARCH_HOST_MANAGER = "/root/miniconda3/bin/python3 /host_manager.py"
@@ -1057,6 +1060,7 @@ class TRAFFIC_COMMANDS:
     CLIENT_MANAGER_FILE_NAME = "client_manager.py"
     KAFKA_MANAGER_FILE_NAME = "kafka_manager.py"
     ELK_MANAGER_FILE_NAME = "elk_manager.py"
+    RYU_MANAGER_FILE_NAME = "ryu_manager.py"
     SNORT_IDS_MANAGER_FILE_NAME = "snort_ids_manager.py"
     OSSEC_IDS_MANAGER_FILE_NAME = "ossec_ids_manager.py"
     HOST_MANAGER_FILE_NAME = "host_manager.py"
