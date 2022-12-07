@@ -51,7 +51,7 @@ from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 
 
-def default_config(name: str, network_id: int = 1, level: int = 1, version: str = "0.0.2") -> EmulationEnvConfig:
+def default_config(name: str, network_id: int = 1, level: int = 1, version: str = "0.0.3") -> EmulationEnvConfig:
     """
     Returns the default configuration of the emulation environment
 
@@ -1767,7 +1767,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-level1-002", network_id=1, level=1, version="0.0.2")
+    config = default_config(name="csle-level1-003", network_id=1, level=1, version="0.0.3")
     ExperimentUtil.write_emulation_config_file(config, ExperimentUtil.default_emulation_config_path())
 
     if args.install:

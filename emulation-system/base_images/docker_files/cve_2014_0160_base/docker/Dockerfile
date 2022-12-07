@@ -1,6 +1,6 @@
 # OS
 # Debian GNU/Linux 8 (jessie)
-FROM kimham/csle_debian_jessie_base:0.0.2
+FROM kimham/csle_debian_jessie_base:0.0.3
 USER root
 
 # Environment

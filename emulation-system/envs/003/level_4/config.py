@@ -51,7 +51,7 @@ from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
 
-def default_config(name: str, network_id: int = 4, level: int = 4, version: str = "0.0.2") -> EmulationEnvConfig:
+def default_config(name: str, network_id: int = 4, level: int = 4, version: str = "0.0.3") -> EmulationEnvConfig:
     """
     Returns the default configuration of the emulation environment
 
@@ -1776,7 +1776,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-level4-002", network_id=4, level=4, version="0.0.2")
+    config = default_config(name="csle-level4-003", network_id=4, level=4, version="0.0.3")
     ExperimentUtil.write_emulation_config_file(config, ExperimentUtil.default_emulation_config_path())
 
     if args.install:

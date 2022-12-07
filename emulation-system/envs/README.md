@@ -2,18 +2,18 @@
 
 This folder contains emulation environments.
 
-- Version: **002** [./002](002):
-  - *Level 1* [level_1](002/level_1): A simple infrastructure with 6 nodes and weak-password-vulnerabilities
-  - *Level 2* [level_2](002/level_2): An infrastructure with 12 nodes and weak-password-vulnerabilities
-  - *Level 3* [level_3](002/level_3): A complex infrastructure with 33 nodes and weak-password-vulnerabilities
-  - *Level 4* [level_4](002/level_4): A simple infrastructure with 6 nodes and weak-password-vulnerabilities and IDS monitoring
-  - *Level 5* [level_5](002/level_5): An infrastructure with 12 nodes and weak-password-vulnerabilities and IDS monitoring
-  - *Level 6* [level_6](002/level_6): A complex infrastructure with 33 nodes and weak-password-vulnerabilities and IDS monitoring
-  - *Level 7* [level_7](002/level_7): An infrastructure with 15 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
-  - *Level 8* [level_8](002/level_8): An infrastructure with 26 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
-  - *Level 9* [./level_9](002/level_9): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring
-  - *Level 10* [./level_10](002/level_10): An infrastructure with 16 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine Server RCE Exploit, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
-  - *Level 11* [./level_11](002/level_11): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring  
+- Version: **003** [./003](003):
+  - *Level 1* [level_1](003/level_1): A simple infrastructure with 6 nodes and weak-password-vulnerabilities
+  - *Level 2* [level_2](003/level_2): An infrastructure with 12 nodes and weak-password-vulnerabilities
+  - *Level 3* [level_3](003/level_3): A complex infrastructure with 33 nodes and weak-password-vulnerabilities
+  - *Level 4* [level_4](003/level_4): A simple infrastructure with 6 nodes and weak-password-vulnerabilities and IDS monitoring
+  - *Level 5* [level_5](003/level_5): An infrastructure with 12 nodes and weak-password-vulnerabilities and IDS monitoring
+  - *Level 6* [level_6](003/level_6): A complex infrastructure with 33 nodes and weak-password-vulnerabilities and IDS monitoring
+  - *Level 7* [level_7](003/level_7): An infrastructure with 15 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
+  - *Level 8* [level_8](003/level_8): An infrastructure with 26 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
+  - *Level 9* [./level_9](003/level_9): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring
+  - *Level 10* [./level_10](003/level_10): An infrastructure with 16 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine Server RCE Exploit, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
+  - *Level 11* [./level_11](003/level_11): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring  
 
 ## Useful commands:
 
