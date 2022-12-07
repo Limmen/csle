@@ -418,6 +418,11 @@ const Emulation = (props) => {
                                             <td>{emulation.csle_collector_version}</td>
                                         </tr>
                                         <tr>
+                                            <td>csle-ryu
+                                                version</td>
+                                            <td>{emulation.csle_ryu_version}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Configuration</td>
                                             <td>
                                                 <Button variant="link" className="dataDownloadLink"

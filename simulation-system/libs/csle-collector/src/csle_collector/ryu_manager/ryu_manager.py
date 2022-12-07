@@ -86,9 +86,10 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         :param context: the gRPC context
         :return: a clients DTO with the state of the ryu server
         """
-        logging.info("Stopping ryu")
         cmd = constants.RYU.STOP_RYU_CONTROLLER
-        os.system(cmd)
+        logging.info(f"Stopping ryu with command: {cmd}")
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+        logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
         return csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=False, monitor_running=False,
                                                                  port=self.ryu_port,
                                                                  web_port=self.ryu_web_port,
@@ -118,6 +119,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
             cmd = constants.RYU.STOP_RYU_CONTROLLER
             os.system(cmd)
             cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, request.controller)
+            logging.info(f"Starting RYU controller with command: {cmd}")
             result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             logging.info(f"Started RYU controller. Stdout: {result.stdout}, stderr: {result.stderr}")
 
@@ -139,7 +141,9 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         :param context: the gRPC context
         :return: a clients DTO with the state of the ryu server
         """
-        logging.info("Stopping ryu monitor")
+        logging.info(f"Stopping Ryu monitor, sending a request to: "
+                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
+                     f"{constants.RYU.STOP_PRODUCER_HTTP_RESOURCE}")
         ryu_running = self._get_ryu_status()
         if ryu_running:
             requests.post(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
@@ -161,7 +165,9 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         :param context: the gRPC context
         :return: a clients DTO with the state of the kafka server
         """
-        logging.info("Starting Ryu monitor")
+        logging.info("Starting Ryu monitor, sending a request to:"
+                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
+                     f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}")
         self.kafka_ip = request.kafka_ip
         self.kafka_port = request.kafka_port
         self.time_step_len = request.time_step_len
