@@ -8,7 +8,7 @@ RELEASE_CONFIG = {
         "new_version": "'0.0.36'",
     },
     "csle-collector": {
-        "new_version": "'0.0.113'",
+        "new_version": "'0.0.115'",
     },
     "csle-common": {
         "new_version": "'0.0.18'",

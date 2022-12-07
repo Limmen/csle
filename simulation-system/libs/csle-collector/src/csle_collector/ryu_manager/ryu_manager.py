@@ -41,9 +41,14 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         """
         cmd = constants.RYU.CHECK_IF_RYU_CONTROLLER_IS_RUNNING
         logging.info(f"Checking if Ryu controller is running by executing command: {cmd}")
-        output = subprocess.run(cmd.split(" "), capture_output=True, text=True).stdout
-        logging.info(f"Stdout: {output}")
-        running = constants.RYU.SEARCH_CONTROLLER in output
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        if stdout is not None:
+            stdout = stdout.decode()
+        if stderr is not None:
+            stderr = stderr.decode()
+        logging.info(f"Stdout: {stdout}, Stderr: {stderr}")
+        running = constants.RYU.SEARCH_CONTROLLER in stdout
         logging.info(f"Running: {running}")
         return running
 
