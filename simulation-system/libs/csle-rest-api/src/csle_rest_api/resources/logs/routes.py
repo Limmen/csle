@@ -8,6 +8,7 @@ import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_collector.constants.constants as collector_constants
+import csle_ryu.constants.constants as ryu_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.dao.emulation_config.config import Config
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -730,6 +731,105 @@ def elk_logs():
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
         path = collector_constants.ELK.ELK_LOG
+
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+        sftp_client = emulation_env_config.get_connection(ip=ip).open_sftp()
+        remote_file = sftp_client.open(path)
+        data = []
+        try:
+            data = remote_file.read()
+            data = data.decode()
+            data = data.split("\n")
+            data = data[-100:]
+        finally:
+            remote_file.close()
+
+        data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+        response = jsonify(data_dict)
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def ryu_manager_logs():
+    """
+    The /logs/ryu-manager resource.
+
+    :return: The logs of a Ryu manager with a specific IP
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
+        response = jsonify({})
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
+
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
+    if emulation is not None and ip is not None and execution_id is not None:
+        emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
+                                                                       emulation_name=emulation).emulation_env_config
+        path = (emulation_env_config.sdn_controller_config.manager_log_dir +
+                emulation_env_config.sdn_controller_config.manager_log_file)
+
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+        sftp_client = emulation_env_config.get_connection(ip=ip).open_sftp()
+        remote_file = sftp_client.open(path)
+        data = []
+        try:
+            data = remote_file.read()
+            data = data.decode()
+            data = data.split("\n")
+            data = data[-100:]
+        finally:
+            remote_file.close()
+
+        data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+        response = jsonify(data_dict)
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def ryu_controller_logs():
+    """
+    The /logs/ryu-controller resource.
+
+    :return: The logs of a Ryu controller with a specific IP
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
+        response = jsonify({})
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
+
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
+    if emulation is not None and ip is not None and execution_id is not None:
+        emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
+                                                                       emulation_name=emulation).emulation_env_config
+        path = f"/{ryu_constants.RYU.LOG_FILE}"
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)

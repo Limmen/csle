@@ -156,6 +156,7 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
         if emulation_env_config.sdn_controller_config is not None:
             SDNControllerManager.start_ryu(emulation_env_config=emulation_env_config)
+            time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")

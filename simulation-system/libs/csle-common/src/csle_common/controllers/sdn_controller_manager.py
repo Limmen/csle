@@ -162,6 +162,10 @@ class SDNControllerManager:
                 f'{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:'
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
+            Logger.__call__().get_logger().info(
+                f"Starting RYU, port: {emulation_env_config.sdn_controller_config.controller_port}, "
+                  f"web_port: {emulation_env_config.sdn_controller_config.controller_web_api_port}, "
+                  f"controller: {emulation_env_config.sdn_controller_config.controller_module_name}")
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.start_ryu(
                 stub, port=emulation_env_config.sdn_controller_config.controller_port,
                 web_port=emulation_env_config.sdn_controller_config.controller_web_api_port,

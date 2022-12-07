@@ -17,6 +17,7 @@ import KafkaManagersInfo from "./KafkaManagersInfo/KafkaManagersInfo";
 import OSSECIDSManagersInfo from "./OSSECIDSManagersInfo/OSSECIDSManagersInfo";
 import SnortIDSManagersInfo from "./SnortIDSManagersInfo/SnortIDSManagersInfo";
 import ElkManagersInfo from "./ElkManagersInfo/ElkManagersInfo";
+import RyuManagersInfo from "./RyuManagersInfo/RyuManagersInfo";
 import TrafficManagersInfo from "./TrafficManagersInfo/TrafficManagersInfo";
 import {
     HTTP_PREFIX,
@@ -52,7 +53,11 @@ import {
     HTTP_REST_POST,
     FILEBEAT_SUBRESOURCE,
     PACKETBEAT_SUBRESOURCE,
-    METRICBEAT_SUBRESOURCE, HEARTBEAT_SUBRESOURCE
+    METRICBEAT_SUBRESOURCE,
+    HEARTBEAT_SUBRESOURCE,
+    RYU_MANAGER_SUBRESOURCE,
+    RYU_MONITOR_SUBRESOURCE,
+    RYU_CONTROLLER_SUBRESOURCE
 } from "../../../Common/constants";
 
 /**
@@ -68,6 +73,7 @@ const ExecutionControlPlane = (props) => {
     const [ossecIdsManagersOpen, setOssecIdsManagersOpen] = useState(false);
     const [snortManagersOpen, setSnortManagersOpen] = useState(false);
     const [elkManagersOpen, setElkManagersOpen] = useState(false);
+    const [ryuManagersOpen, setRyuManagersOpen] = useState(false);
     const [trafficManagersOpen, setTrafficManagersOpen] = useState(false);
     const [loadingEntities, setLoadingEntities] = useState([]);
     const [showLogsModal, setShowLogsModal] = useState(false);
@@ -79,6 +85,7 @@ const ExecutionControlPlane = (props) => {
     const [clientManagersInfo, setClientManagersInfo] = useState(props.info.client_managers_info);
     const [dockerStatsManagersInfo, setDockerStatsManagersInfo] = useState(props.info.docker_stats_managers_info);
     const [elkManagersInfo, setElkManagersInfo] = useState(props.info.elk_managers_info);
+    const [ryuManagersInfo, setRyuManagersInfo] = useState(props.info.ryu_managers_info);
     const [hostManagersInfo, setHostManagersInfo] = useState(props.info.host_managers_info);
     const [inactiveNetworks, setInactiveNetworks] = useState(props.info.inactive_networks);
     const [kafkaManagersInfo, setkafkaManagersInfo] = useState(props.info.kafka_managers_info);
@@ -199,6 +206,10 @@ const ExecutionControlPlane = (props) => {
         if(entity === DOCKER_STATS_MANAGER_SUBRESOURCE || entity === DOCKER_STATS_MONITOR_SUBRESOURCE){
             setDockerStatsManagersInfo(response.docker_stats_managers_info)
         }
+        if(entity === RYU_MANAGER_SUBRESOURCE || entity === RYU_MONITOR_SUBRESOURCE
+            || entity === RYU_CONTROLLER_SUBRESOURCE){
+            setRyuManagersInfo(response.ryu_managers_info)
+        }
     }
 
     const activeStatus = (active) => {
@@ -230,6 +241,24 @@ const ExecutionControlPlane = (props) => {
         addLoadingEntity(entity + "-" + ip)
         startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
             start, stop, entity, name, ip)
+    }
+
+    const RyuManagersInfoOrEmpty = (props) => {
+        if (props.ryu_managers_info !== null && props.ryu_managers_info !== undefined) {
+            return (
+                <RyuManagersInfo
+                    setRyuManagersOpen={props.setRyuManagersOpen}
+                    ryuManagersOpen={props.ryuManagersOpen}
+                    loadingEntities={props.loadingEntities}
+                    clientManagersInfo={props.ryuManagersInfo}
+                    getLogs={props.getLogs}
+                    activeStatus={props.activeStatus}
+                    startOrStop={props.startOrStop}
+                />
+            )
+        } else {
+            return (<></>)
+        }
     }
 
     return (<Card key={props.execution.name} ref={props.wrapper}>
@@ -352,6 +381,15 @@ const ExecutionControlPlane = (props) => {
                     startOrStop={startOrStop}
                 />
 
+                <RyuManagersInfoOrEmpty
+                    setRyuManagersOpen={setRyuManagersOpen}
+                    ryuManagersOpen={ryuManagersOpen}
+                    loadingEntities={loadingEntities}
+                    clientManagersInfo={ryuManagersInfo}
+                    getLogs={getLogs}
+                    activeStatus={activeStatus}
+                    startOrStop={startOrStop}
+                />
 
             </Card.Body>
         </Accordion.Collapse>

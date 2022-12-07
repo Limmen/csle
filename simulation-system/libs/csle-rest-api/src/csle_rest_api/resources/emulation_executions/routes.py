@@ -17,6 +17,7 @@ from csle_common.controllers.kafka_controller import KafkaController
 from csle_common.controllers.elk_controller import ELKController
 from csle_common.controllers.snort_ids_controller import SnortIDSController
 from csle_common.controllers.ossec_ids_controller import OSSECIDSController
+from csle_common.controllers.sdn_controller_manager import SDNControllerManager
 from csle_common.controllers.host_controller import HostController
 from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -124,36 +125,71 @@ def emulation_execution_info(execution_id: int):
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        local_port = api_constants.MGMT_WEBAPP.KIBANA_TUNNEL_BASE_PORT + execution.ip_first_octet
+
+        # Create Kibana tunnel
+        local_kibana_port = api_constants.MGMT_WEBAPP.KIBANA_TUNNEL_BASE_PORT + execution.ip_first_octet
         if execution.emulation_env_config.elk_config.container.get_ips()[0] \
                 not in api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT:
             try:
                 EmulationEnvController.create_ssh_tunnel(
                     tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                    local_port=local_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                    local_port=local_kibana_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
                     remote_ip=execution.emulation_env_config.elk_config.container.get_ips()[0])
             except Exception:
-                local_port = local_port + 100
+                local_kibana_port = local_kibana_port + 100
                 EmulationEnvController.create_ssh_tunnel(
                     tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                    local_port=local_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                    local_port=local_kibana_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
                     remote_ip=execution.emulation_env_config.elk_config.container.get_ips()[0])
         else:
             tunnel_thread_dict = api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
                 execution.emulation_env_config.elk_config.container.get_ips()[0]]
             response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
-                           f'{local_port}')
+                           f'{local_kibana_port}')
             if response.status_code != constants.HTTPS.OK_STATUS_CODE:
                 tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY].shutdown()
                 del api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
                     execution.emulation_env_config.elk_config.container.get_ips()[0]]
                 EmulationEnvController.create_ssh_tunnel(
                     tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
-                    local_port=local_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                    local_port=local_kibana_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
                     remote_ip=execution.emulation_env_config.elk_config.container.get_ips()[0])
 
+        # Create Ryu tunnel
+        local_ryu_port = api_constants.MGMT_WEBAPP.RYU_TUNNEL_BASE_PORT + execution.ip_first_octet
+        if execution.emulation_env_config.sdn_controller_config is not None:
+            if execution.emulation_env_config.sdn_controller_config.container.get_ips()[0] \
+                    not in api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT:
+                try:
+                    EmulationEnvController.create_ssh_tunnel(
+                        tunnels_dict=api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT,
+                        local_port=local_ryu_port,
+                        remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                        remote_ip=execution.emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                except Exception:
+                    local_ryu_port = local_ryu_port + 100
+                    EmulationEnvController.create_ssh_tunnel(
+                        tunnels_dict=api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT,
+                        local_port=local_ryu_port,
+                        remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                        remote_ip=execution.emulation_env_config.sdn_controller_config.container.get_ips()[0])
+            else:
+                tunnel_thread_dict = api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT[
+                    execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]]
+                response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
+                               f'{local_ryu_port}')
+                if response.status_code != constants.HTTPS.OK_STATUS_CODE:
+                    tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY].shutdown()
+                    del api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT[
+                        execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]]
+                    EmulationEnvController.create_ssh_tunnel(
+                        tunnels_dict=api_constants.MGMT_WEBAPP.RYU_TUNNELS_DICT,
+                        local_port=local_ryu_port,
+                        remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                        remote_ip=execution.emulation_env_config.sdn_controller_config.container.get_ips()[0])
+
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
-        execution_info.elk_managers_info.local_kibana_port = local_port
+        execution_info.elk_managers_info.local_ryu_port = local_ryu_port
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response
@@ -1686,3 +1722,180 @@ def start_stop_heartbeat(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_ryu_manager(execution_id: int):
+    """
+    The /emulation-executions/id/ryu-manager resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the ryu manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+
+    json_data = json.loads(request.data)
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping Ryu manager: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            SDNControllerManager.stop_ryu_manager(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting Ryu manager: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            SDNControllerManager .start_ryu_manager(emulation_env_config=execution.emulation_env_config)
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_ryu_controller(execution_id: int):
+    """
+    The /emulation-executions/id/ryu-controller resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the RYU controller of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            if ip == api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Stopping the ryu controller on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.stop_ryu(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Stopping the ryu controller on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.stop_ryu(emulation_env_config=execution.emulation_env_config)
+        if start:
+            if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Starting the Ryu controller on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.start_ryu(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Starting the Ryu controller on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.start_ryu(emulation_env_config=execution.emulation_env_config)
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_ryu_monitor(execution_id: int):
+    """
+    The /emulation-executions/id/ryu-monitor resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the RYU monitor of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            if ip == api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Stopping the ryu monitor on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.stop_ryu_monitor(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Stopping the ryu monitor on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.stop_ryu_monitor(emulation_env_config=execution.emulation_env_config)
+        if start:
+            if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
+                Logger.__call__().get_logger().info(
+                    f"Starting the Ryu monitor on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.start_ryu_monitor(emulation_env_config=execution.emulation_env_config)
+            else:
+                Logger.__call__().get_logger().info(
+                    f"Starting the Ryu monitor on emulation: {execution.emulation_env_config.name}, "
+                    f"execution id: {execution.ip_first_octet}")
+                SDNControllerManager.start_ryu_monitor(emulation_env_config=execution.emulation_env_config)
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+

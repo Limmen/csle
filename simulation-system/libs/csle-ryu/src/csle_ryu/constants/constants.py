@@ -16,6 +16,7 @@ class RYU:
     APP_LISTS_ARG = "--app-lists"
     LOG_FILE_ARG = "--log-file"
     CONTROLLER_PORT_ARG = "--ofp-tcp-listen-port"
+    LOG_FILE = "csle_sdn_controller.log"
     WEB_APP_PORT_ARG = "--wsapi-port"
     RYU_MANAGER = "/root/miniconda3/bin/ryu-manager"
     PACKET_BUFFER_MAX_LEN = 512
@@ -38,8 +39,6 @@ class RYU:
     STATS_METER_CONFIG_RESOURCE = "/stats/meterconfig"
     STATS_METER_FEATURES_RESOURCE = "/stats/meterfeatures"
     STATS_ROLE_RESOURCE = "/stats/role"
-    PRODUCER_RUNNING = "producer_running"
-    KAFKA_CONF = "kafka_conf"
     WSGI = "wsgi"
     CONTROLLER_APP = "controller_app"
     NETWORK_ID_THIRD_OCTET = 252
@@ -55,6 +54,8 @@ class RYU:
     FLOW_COUNT = "flow_count"
     IN_PORT = "in_port"
     ETH_DST = "eth_dst"
+    PRODUCER_RUNNING = "producer_running"
+    KAFKA_CONF = "kafka_conf"
 
 
 class CONTROLLERS:

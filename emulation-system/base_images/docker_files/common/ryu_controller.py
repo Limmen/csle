@@ -9,7 +9,7 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--controller", help="the controller file name", type=str)
     args = parser.parse_args()
     cmd = f"{constants.RYU.RYU_MANAGER} {constants.RYU.CONTROLLER_PORT_ARG} {args.port} " \
-          f"{constants.RYU.LOG_FILE_ARG} /csle_sdn_controller.log {constants.RYU.WEB_APP_PORT_ARG} {args.webport} " \
+          f"{constants.RYU.LOG_FILE_ARG} /{constants.RYU.LOG_FILE} {constants.RYU.WEB_APP_PORT_ARG} {args.webport} " \
           f"{constants.RYU.APP_LISTS_ARG} " \
           f"{constants.RYU.OFCTL_REST_APP},{constants.RYU.OFCTL_REST_TOPOLOGY},{constants.RYU.OFCTL_WS_TOPOLOGY}," \
           f"{constants.RYU.OFCTL_GUI_TOPOLOGY},{constants.RYU.CONTROLLERS_PREFIX}{args.controller} " \

@@ -82,5 +82,5 @@ def start_ryu_monitor(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuM
     """
     start_ryu_monitor_msg = csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMonitorMsg(
         kafka_ip=kafka_ip, kafka_port=kafka_port, time_step_len=time_step_len)
-    ryu_dto = stub.startRyu(start_ryu_monitor_msg, timeout=timeout)
+    ryu_dto = stub.startRyuMonitor(start_ryu_monitor_msg, timeout=timeout)
     return ryu_dto

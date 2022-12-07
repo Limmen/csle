@@ -1,9 +1,9 @@
-csle-common==0.0.17
-csle-collector==0.0.110
-csle-attacker==0.0.17
-csle-defender==0.0.17
-csle-system-identification==0.0.17
-gym-csle-stopping-game==0.0.17
+csle-common==0.0.18
+csle-collector==0.0.113
+csle-attacker==0.0.18
+csle-defender==0.0.18
+csle-system-identification==0.0.18
+gym-csle-stopping-game==0.0.18
 stable-baselines3==1.6.2
 pulp==2.7.0
 bayesian-optimization==1.3.1

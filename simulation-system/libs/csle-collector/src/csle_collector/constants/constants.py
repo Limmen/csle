@@ -666,3 +666,5 @@ class RYU:
     STOP_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/stop"
     STATUS_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/status"
     TIME_STEP_LEN_SECONDS = "time_step_len_seconds"
+    PRODUCER_RUNNING = "producer_running"
+    KAFKA_CONF = "kafka_conf"
