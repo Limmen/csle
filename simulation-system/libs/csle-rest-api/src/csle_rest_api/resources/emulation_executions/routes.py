@@ -1763,7 +1763,7 @@ def start_stop_ryu_manager(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Starting Ryu manager: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            SDNControllerManager .start_ryu_manager(emulation_env_config=execution.emulation_env_config)
+            SDNControllerManager.start_ryu_manager(emulation_env_config=execution.emulation_env_config)
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1898,4 +1898,3 @@ def start_stop_ryu_monitor(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-
