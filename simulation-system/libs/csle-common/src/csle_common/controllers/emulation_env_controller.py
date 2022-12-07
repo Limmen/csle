@@ -154,7 +154,8 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
-        SDNControllerManager.start_controller(emulation_env_config=emulation_env_config)
+        if emulation_env_config.sdn_controller_config is not None:
+            SDNControllerManager.start_ryu(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
@@ -177,9 +178,9 @@ class EmulationEnvController:
         EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start Kafka producer at "
-                                            f"SDN controller --")
-        SDNControllerManager.start_controller_producer(emulation_env_config=emulation_env_config)
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller monitor --")
+        if emulation_env_config.sdn_controller_config is not None:
+            SDNControllerManager.start_ryu_monitor(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")

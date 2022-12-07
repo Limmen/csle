@@ -96,13 +96,14 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
             if self.producer_running:
                 for dp in self.datapaths.values():
                     self._request_stats(dp)
-                    response = requests.get(f"http://"
-                                            f"localhost:8080{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
+                    response = requests.get(f"{collector_constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{collector_constants.HTTP.LOCALHOST}:8080"
+                                            f"{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
                     aggflows = json.loads(response.content)[str(dp.id)][0]
                     agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=dp.id,
-                                                     total_num_bytes=aggflows["byte_count"],
-                                                     total_num_packets=aggflows["packet_count"],
-                                                     total_num_flows=aggflows["flow_count"])
+                                                     total_num_bytes=aggflows[constants.RYU.BYTE_COUNT],
+                                                     total_num_packets=aggflows[constants.RYU.PACKET_COUNT],
+                                                     total_num_flows=aggflows[constants.RYU.FLOW_COUNT])
                     if self.producer_running:
                         self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
                                               agg_flow_stat.to_kafka_record())
@@ -150,10 +151,10 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         for flow in body:
             in_port = -1
             eth_dst = -1
-            if "in_port" in flow.match:
-                in_port = flow.match['in_port']
-            if "eth_dst" in flow.match:
-                eth_dst = flow.match['eth_dst']
+            if constants.RYU.IN_PORT in flow.match:
+                in_port = flow.match[constants.RYU.IN_PORT]
+            if constants.RYU.ETH_DST in flow.match:
+                eth_dst = flow.match[constants.RYU.ETH_DST]
             flow_statistic_dto = FlowStatistic(
                 timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
                 out_port=flow.instructions[0].actions[0].port, dst_mac_address=eth_dst,
@@ -235,7 +236,8 @@ class NorthBoundRestAPIController(ControllerBase):
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
 
-    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE, methods=['GET'])
+    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE,
+           methods=[collector_constants.HTTP.GET])
     def producer_status(self, req, **kwargs):
         """
         Gets the status of the Kafka producer
@@ -248,9 +250,10 @@ class NorthBoundRestAPIController(ControllerBase):
             constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
             constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
             collector_constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
-        return Response(content_type='application/json', text=response_body)
+        return Response(content_type=collector_constants.HTTP.APPLICATION_JSON_TYPE, text=response_body)
 
-    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
+    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.START_PRODUCER_HTTP_RESOURCE,
+           methods=[collector_constants.HTTP.PUT])
     def start_producer(self, req, **kwargs):
         """
         Starts the Kafka producer that sends flow and port statistics
@@ -262,7 +265,7 @@ class NorthBoundRestAPIController(ControllerBase):
         try:
             kafka_conf = req.json if req.body else {}
         except ValueError:
-            raise Response(status=400)
+            raise Response(status=collector_constants.HTTP.BAD_REQUEST_RESPONSE_CODE)
         if collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY in kafka_conf \
                 and collector_constants.RYU.TIME_STEP_LEN_SECONDS in kafka_conf:
             self.controller_app.kafka_conf = {
@@ -274,11 +277,13 @@ class NorthBoundRestAPIController(ControllerBase):
             self.controller_app.producer = Producer(**self.controller_app.kafka_conf)
             self.controller_app.time_step_len_seconds = kafka_conf[collector_constants.RYU.TIME_STEP_LEN_SECONDS]
             body = json.dumps(self.controller_app.kafka_conf)
-            return Response(content_type='application/json', text=body, status=200)
+            return Response(content_type=collector_constants.HTTP.APPLICATION_JSON_TYPE, text=body,
+                            status=collector_constants.HTTP.OK_RESPONSE_CODE)
         else:
-            return Response(status=500)
+            return Response(status=collector_constants.HTTP.INTERNAL_SERVER_ERROR_RESPONSE_CODE)
 
-    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.STOP_PRODUCER_HTTP_RESOURCE, methods=['POST'])
+    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.STOP_PRODUCER_HTTP_RESOURCE,
+           methods=[collector_constants.HTTP.POST])
     def stop_producer(self, req, **kwargs):
         """
         Stops the Kafka producer that sends flow and port statistics
@@ -295,4 +300,5 @@ class NorthBoundRestAPIController(ControllerBase):
                                     constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
                                     collector_constants.RYU.TIME_STEP_LEN_SECONDS:
                                         self.controller_app.time_step_len_seconds})
-        return Response(content_type='application/json', text=response_body, status=200)
+        return Response(content_type=collector_constants.HTTP.APPLICATION_JSON_TYPE, text=response_body,
+                        status=collector_constants.HTTP.OK_RESPONSE_CODE)

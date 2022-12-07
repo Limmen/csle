@@ -25,7 +25,7 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
     """
 
     # Spanning tree protocol to use
-    _CONTEXTS = {'stplib': stplib.Stp}
+    _CONTEXTS = {constants.RYU.STPLIB: stplib.Stp}
 
     def __init__(self, *args, **kwargs):
         """
@@ -40,7 +40,7 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
         self.mac_to_port = {}
 
         # The spanning tree protocol version version
-        self.stp = kwargs['stplib']
+        self.stp = kwargs[constants.RYU.STPLIB]
 
         # Controller type
         self.controller_type = RYUControllerType.LEARNING_SWITCH_STP

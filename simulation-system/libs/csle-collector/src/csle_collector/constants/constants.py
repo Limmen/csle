@@ -12,6 +12,15 @@ class HTTP:
     Constants related to HTTP
     """
     HTTP_PROTOCOL_PREFIX = "http://"
+    LOCALHOST = "localost"
+    GET = "GET"
+    PUT = "PUT"
+    POST = "POST"
+    DELETE = "DELETE"
+    APPLICATION_JSON_TYPE = "application/json"
+    OK_RESPONSE_CODE = 200
+    INTERNAL_SERVER_ERROR_RESPONSE_CODE = 500
+    BAD_REQUEST_RESPONSE_CODE = 400
 
 
 class BEATS:

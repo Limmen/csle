@@ -49,6 +49,12 @@ class RYU:
     DEFAULT_TRANSPORT_PROTOCOL = "tcp"
     SUBNETMASK_SUFFIX = "/29"
     BITMASK = "255.255.255.248"
+    STPLIB = "stplib"
+    BYTE_COUNT = "byte_count"
+    PACKET_COUNT = "packet_count"
+    FLOW_COUNT = "flow_count"
+    IN_PORT = "in_port"
+    ETH_DST = "eth_dst"
 
 
 class CONTROLLERS:

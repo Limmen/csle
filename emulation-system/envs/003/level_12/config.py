@@ -2833,7 +2833,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         controller_port=ryu_constants.RYU.DEFAULT_PORT, time_step_len_seconds=15,
         controller_web_api_port=8080, controller_module_name=ryu_constants.CONTROLLERS.LEARNING_SWITCH_CONTROLLER,
         firewall_config=firewall_config, manager_port=50042, manager_max_workers=10, manager_log_dir="/",
-        manager_log_file = "ryu_manager.log")
+        manager_log_file="ryu_manager.log")
 
     return sdn_controller_config
 
