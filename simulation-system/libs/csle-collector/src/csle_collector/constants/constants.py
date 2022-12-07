@@ -7,6 +7,13 @@ LATEST_VERSION = "latest"
 INSTALL = "sudo /root/miniconda3/bin/pip install -U --no-cache-dir csle-collector "
 
 
+class HTTP:
+    """
+    Constants related to HTTP
+    """
+    HTTP_PROTOCOL_PREFIX = "http://"
+
+
 class BEATS:
     """
     Constants related to beats
@@ -221,6 +228,8 @@ class LOG_FILES:
     TRAFFIC_MANAGER_LOG_FILE = "traffic_manager.log"
     TRAFFIC_MANAGER_LOG_DIR = "/"
     KAFKA_LOG_FILE = "/usr/local/kafka/logs/server.log"
+    RYU_MANAGER_LOG_FILE = "ryu_manager.log"
+    RYU_MANAGER_LOG_DIR = "/"
 
 
 class TRAFFIC_GENERATOR:
@@ -228,11 +237,12 @@ class TRAFFIC_GENERATOR:
     Constants related to the traffic generator
     """
     START_TRAFFIC_GENERATOR_CMD = "sudo nohup /traffic_generator.sh &"
-    CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING = "ps -aux | grep traffic_generator"
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     CREATE_TRAFFIC_GENERATOR_FILE = "sudo touch /traffic_generator.sh"
     MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE = "sudo chmod 777 /traffic_generator.sh"
     REMOVE_OLD_TRAFFIC_GENERATOR_FILE = "sudo rm -f /traffic_generator.sh"
+    CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING = "ps -aux | grep traffic_generator"
+    STOP_TRAFFIC_GENERATOR = "sudo pkill -f traffic_generator.sh"
 
 
 class DOCKER_STATS:
@@ -631,3 +641,19 @@ class ELK:
     ELASTICSEARCH_LOG_DIR = "/var/log/elasticsearch/"
     LOGSTASH_LOG_DIR = "/var/log/logstash/"
     KIBANA_LOG_DIR = "/var/log/kibana/"
+
+
+class RYU:
+    """
+    String constants for managing Ryu
+    """
+    CHECK_IF_RYU_CONTROLLER_IS_RUNNING = "ps -aux | grep ryu_controller.py"
+    STOP_RYU_CONTROLLER = "sudo pkill -f ryu_controller.py"
+    RYU_CONTROLLER_FILENAME = "ryu_controller.py"
+    SEARCH_CONTROLLER = "/root/miniconda3/bin/python3 /ryu_controller.py"
+    START_RYU_CONTROLLER = "sudo nohup /root/miniconda3/bin/python3 /ryu_controller.py --port {} --webport {} " \
+                           "--controller {} &"
+    START_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/start"
+    STOP_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/stop"
+    STATUS_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/status"
+    TIME_STEP_LEN_SECONDS = "time_step_len_seconds"

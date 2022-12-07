@@ -18,35 +18,6 @@ class SDNControllerManager:
     """
 
     @staticmethod
-    def connect_sdn_controller_to_network(sdn_controller_config: SDNControllerConfig) -> None:
-        """
-        Connects the SDN controller to the Docker network
-
-        :param sdn_controller_config: the controller configuration
-        :return: None
-        """
-        if sdn_controller_config is None:
-            return
-
-        c = sdn_controller_config.container
-        container_name = c.get_full_name()
-        # Disconnect from none
-        cmd = f"docker network disconnect none {container_name}"
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-
-        # Wait a few seconds before connecting
-        time.sleep(2)
-
-        # Connect SDN controller
-        for ip_net in c.ips_and_networks:
-            ip, net = ip_net
-            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
-                  f"{container_name}"
-            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
-                                                f"with ip: {ip}")
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-
-    @staticmethod
     def start_controller(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Starts the SDN controller
@@ -113,9 +84,9 @@ class SDNControllerManager:
         controller_web_port = emulation_env_config.sdn_controller_config.controller_web_api_port
         response = requests.put(
             f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{controller_ip}:{controller_web_port}"
-            f"{ryu_constants.RYU.START_PRODUCER_HTTP_RESOURCE}",
+            f"{collector_constants.RYU.START_PRODUCER_HTTP_RESOURCE}",
             data=json.dumps({collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_ip,
-                             ryu_constants.RYU.TIME_STEP_LEN_SECONDS: time_step_len}))
+                             collector_constants.RYU.TIME_STEP_LEN_SECONDS: time_step_len}))
         assert response.status_code == 200
         Logger.__call__().get_logger().info("Kafka producer started successfully")
 

@@ -235,7 +235,7 @@ class NorthBoundRestAPIController(ControllerBase):
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
 
-    @route(constants.RYU.CONTROLLER_APP, constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE, methods=['GET'])
+    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE, methods=['GET'])
     def producer_status(self, req, **kwargs):
         """
         Gets the status of the Kafka producer
@@ -244,12 +244,13 @@ class NorthBoundRestAPIController(ControllerBase):
         :param kwargs: the WSGI arguments
         :return: the REST API response
         """
-        response_body = json.dumps({constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
-                                    constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
-                                    constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
+        response_body = json.dumps({
+            constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
+            constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
+            collector_constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
         return Response(content_type='application/json', text=response_body)
 
-    @route(constants.RYU.CONTROLLER_APP, constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
+    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
     def start_producer(self, req, **kwargs):
         """
         Starts the Kafka producer that sends flow and port statistics
@@ -263,7 +264,7 @@ class NorthBoundRestAPIController(ControllerBase):
         except ValueError:
             raise Response(status=400)
         if collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY in kafka_conf \
-                and constants.RYU.TIME_STEP_LEN_SECONDS in kafka_conf:
+                and collector_constants.RYU.TIME_STEP_LEN_SECONDS in kafka_conf:
             self.controller_app.kafka_conf = {
                 collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_conf[
                     collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY],
@@ -271,13 +272,13 @@ class NorthBoundRestAPIController(ControllerBase):
             self.controller_app.logger.info(f"Starting Kafka producer with conf: {self.controller_app.kafka_conf}")
             self.controller_app.producer_running = True
             self.controller_app.producer = Producer(**self.controller_app.kafka_conf)
-            self.controller_app.time_step_len_seconds = kafka_conf[constants.RYU.TIME_STEP_LEN_SECONDS]
+            self.controller_app.time_step_len_seconds = kafka_conf[collector_constants.RYU.TIME_STEP_LEN_SECONDS]
             body = json.dumps(self.controller_app.kafka_conf)
             return Response(content_type='application/json', text=body, status=200)
         else:
             return Response(status=500)
 
-    @route(constants.RYU.CONTROLLER_APP, constants.RYU.STOP_PRODUCER_HTTP_RESOURCE, methods=['POST'])
+    @route(constants.RYU.CONTROLLER_APP, collector_constants.RYU.STOP_PRODUCER_HTTP_RESOURCE, methods=['POST'])
     def stop_producer(self, req, **kwargs):
         """
         Stops the Kafka producer that sends flow and port statistics
@@ -292,5 +293,5 @@ class NorthBoundRestAPIController(ControllerBase):
         self.controller_app.producer = None
         response_body = json.dumps({constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
                                     constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
-                                    constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
+                                    collector_constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
         return Response(content_type='application/json', text=response_body, status=200)

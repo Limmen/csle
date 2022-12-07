@@ -128,7 +128,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
 def serve(port: int = 50051, log_dir: str = "/", max_workers: int = 10,
           log_file_name: str = "kafka_manager.log") -> None:
     """
-    Starts the gRPC server for managing clients
+    Starts the gRPC server for managing the kafka server
 
     :param port: the port that the server will listen to
     :param log_dir: the directory to write the log file

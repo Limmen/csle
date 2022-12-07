@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service RyuManager {
+  rpc getRyuStatus(GetRyuStatusMsg) returns (RyuDTO) {}
+  rpc stopRyu(StopRyuMsg) returns (RyuDTO) {}
+  rpc startRyu(StartRyuMsg) returns (RyuDTO) {}
+  rpc stopRyuMonitor(StopRyuMonitorMsg) returns (RyuDTO) {}
+  rpc startRyuMonitor(StartRyuMonitorMsg) returns (RyuDTO) {}
+}
+
+// Message that the client sends to stop Ryu
+message StopRyuMsg {}
+
+// Message that the client sends to start Ryu
+message StartRyuMsg {
+  int32 port = 1;
+  int32 web_port = 2;
+  string controller = 3;
+}
+
+// Message that the client sends to stop the Ryu monitor
+message StopRyuMonitorMsg {}
+
+// Message that the client sends to start the Ryu monitor
+message StartRyuMonitorMsg {
+  string kafka_ip = 1;
+  int32 kafka_port = 2;
+  int32 time_step_len = 3;
+}
+
+// Message that the client sends to extract the Ryu status
+message GetRyuStatusMsg {}
+
+// Message that the server returns when requested by the client, contains info about Ryu
+message RyuDTO {
+  bool ryu_running = 1;
+  bool monitor_running = 2;
+  int32 port = 3;
+  int32 web_port = 4;
+  string controller = 5;
+  string kafka_ip = 6;
+  int32 kafka_port = 7;
+  int32 time_step_len = 8;
+}

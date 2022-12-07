@@ -21,6 +21,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/host_manager/. ./protos/host_manager.proto
 python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ossec_ids_manager/. ./protos/ossec_ids_manager.proto
 python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/traffic_manager/. ./protos/traffic_manager.proto
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ryu_manager/. ./protos/ryu_manager.proto
 ```
 
 ## Requirements
@@ -31,6 +32,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 - `scipy` (for statistical models of client processes)
 - `confluent-kafka` (for interacting with Kafka)
 - `docker` (for interacting with Docker)
+- `requests` (for interacting with the Ryu Controller's web interface)
 
 ## Development Requirements
 

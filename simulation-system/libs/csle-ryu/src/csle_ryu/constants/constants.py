@@ -6,7 +6,6 @@ class RYU:
     """
     String constants related to RYU
     """
-
     CONTROLLERS_PREFIX = "csle_ryu.controllers."
     OFCTL_REST_APP = "ryu.app.ofctl_rest"
     OFCTL_REST_QOS_APP = "ryu.app.rest_qos"
@@ -21,9 +20,6 @@ class RYU:
     RYU_MANAGER = "/root/miniconda3/bin/ryu-manager"
     PACKET_BUFFER_MAX_LEN = 512
     NORTHBOUND_API_APP_NAME = "csle_api_app"
-    START_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/start"
-    STOP_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/stop"
-    STATUS_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/status"
     STATS_SWITCHES_RESOURCE = "/stats/switches"
     STATS_DESC_RESOURCE = "/stats/desc"
     STATS_FLOW_RESOURCE = "/stats/flow"
@@ -42,7 +38,6 @@ class RYU:
     STATS_METER_CONFIG_RESOURCE = "/stats/meterconfig"
     STATS_METER_FEATURES_RESOURCE = "/stats/meterfeatures"
     STATS_ROLE_RESOURCE = "/stats/role"
-    TIME_STEP_LEN_SECONDS = "time_step_len_seconds"
     PRODUCER_RUNNING = "producer_running"
     KAFKA_CONF = "kafka_conf"
     WSGI = "wsgi"
