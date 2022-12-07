@@ -70,6 +70,10 @@ class ReadEmulationStatisticsUtil:
         host_metrics[emulation_env_config.elk_config.container.get_full_name()] = []
         docker_host_stats[emulation_env_config.elk_config.container.get_full_name()] = []
         ossec_host_ids_metrics[emulation_env_config.elk_config.container.get_full_name()] = []
+        if emulation_env_config.sdn_controller_config is not None:
+            host_metrics[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
+            docker_host_stats[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
+            ossec_host_ids_metrics[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
 
         topic_names = [collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME,
