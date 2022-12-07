@@ -12,7 +12,6 @@ import {
     RYU_MANAGER_SUBRESOURCE,
     RYU_CONTROLLER_SUBRESOURCE
 } from "../../../../Common/constants";
-import ElasticImg from "../../../Emulations/Emulation/Elastic.png";
 
 /**
  * Subcomponent of the /control-plane page that contains information about Ryu managers
@@ -53,7 +52,7 @@ const RyuManagersInfo = (props) => {
                                     <td>{props.ryuManagersInfo.ips[index]}</td>
                                     <td>{props.ryuManagersInfo.ports[index]}</td>
                                     {props.activeStatus(props.ryuManagersInfo.ryu_managers_running[index])}
-                                    <td>{status.time_step_len_seconds}</td>
+                                    <td>{status.time_step_len}</td>
                                     <td>
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(`
@@ -74,9 +73,9 @@ const RyuManagersInfo = (props) => {
                                 <tr key={`${RYU_CONTROLLER_SUBRESOURCE}-${index}`}>
                                     <td>Ryu controller</td>
                                     <td>{props.ryuManagersInfo.ips[index]}</td>
-                                    <td></td>
+                                    <td>{status.port}</td>
                                     {props.activeStatus(status.ryu_running)}
-                                    <td>{status.time_step_len_seconds}</td>
+                                    <td>{status.time_step_len}</td>
                                     <td>
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
@@ -99,9 +98,9 @@ const RyuManagersInfo = (props) => {
                                 <tr key={`${RYU_MONITOR_SUBRESOURCE}-${index}`}>
                                     <td>Controller monitor</td>
                                     <td>{props.ryuManagersInfo.ips[index]}</td>
-                                    <td></td>
+                                    <td>{status.web_port}</td>
                                     {props.activeStatus(status.producer_active)}
-                                    <td>{status.time_step_len_seconds}</td>
+                                    <td>{status.time_step_len}</td>
                                     <td>
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(

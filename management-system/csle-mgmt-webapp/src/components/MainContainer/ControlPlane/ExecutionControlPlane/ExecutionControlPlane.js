@@ -95,8 +95,6 @@ const ExecutionControlPlane = (props) => {
     const [stoppedContainers, setStoppedContainers] = useState(props.info.stopped_containers);
     const [trafficManagersInfo, setTrafficManagersInfo] = useState(props.info.traffic_managers_info);
 
-    console.log(props.info)
-
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
