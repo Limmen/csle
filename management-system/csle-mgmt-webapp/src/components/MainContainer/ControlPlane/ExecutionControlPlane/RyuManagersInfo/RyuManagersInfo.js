@@ -101,7 +101,6 @@ const RyuManagersInfo = (props) => {
                                     <td>{props.ryuManagersInfo.ips[index]}</td>
                                     <td></td>
                                     {props.activeStatus(status.producer_active)}
-                                    <td></td>
                                     <td>{status.time_step_len_seconds}</td>
                                     <td>
                                         <SpinnerOrButton

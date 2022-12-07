@@ -281,6 +281,11 @@ class ContainerController:
             running_emulation_containers.append(emulation_env_config.elk_config.container)
         else:
             stopped_emulation_containers.append(emulation_env_config.elk_config.container)
+        if emulation_env_config.sdn_controller_config is not None:
+            if emulation_env_config.sdn_controller_config.container.full_name_str in running_containers_names:
+                running_emulation_containers.append(emulation_env_config.sdn_controller_config.container)
+            else:
+                stopped_emulation_containers.append(emulation_env_config.sdn_controller_config.container)
         return running_emulation_containers, stopped_emulation_containers
 
     @staticmethod

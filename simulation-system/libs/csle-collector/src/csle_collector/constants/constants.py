@@ -12,7 +12,7 @@ class HTTP:
     Constants related to HTTP
     """
     HTTP_PROTOCOL_PREFIX = "http://"
-    LOCALHOST = "localost"
+    LOCALHOST = "localhost"
     GET = "GET"
     PUT = "PUT"
     POST = "POST"

@@ -261,7 +261,7 @@ class SDNControllerManager:
                 running = True
             except Exception as e:
                 running = False
-                Logger.__call__().get_logger().debug(
+                Logger.__call__().get_logger().warn(
                     f"Could not fetch Ryu manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 ryu_managers_statuses.append(status)

@@ -5,7 +5,7 @@ import subprocess
 
 RELEASE_CONFIG = {
     "csle-ryu": {
-        "new_version": "'0.0.36'",
+        "new_version": "'0.0.37'",
     },
     "csle-collector": {
         "new_version": "'0.0.115'",
