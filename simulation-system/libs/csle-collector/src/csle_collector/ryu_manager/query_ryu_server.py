@@ -4,7 +4,7 @@ import csle_collector.constants.constants as constants
 
 
 def get_ryu_status(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub,
-                     timeout=constants.GRPC.TIMEOUT_SECONDS) \
+                   timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
     """
     Queries the server for the ryu server status
@@ -49,4 +49,38 @@ def start_ryu(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerSt
     start_ryu_msg = csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMsg(
         port=port, web_port=web_port, controller=controller)
     ryu_dto = stub.startRyu(start_ryu_msg, timeout=timeout)
+    return ryu_dto
+
+
+def stop_ryu_monitor(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub,
+                     timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+    """
+    Sends a request to the Ryu controller to stop the Ryu monitor
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a RyuDTO describing the status of the ryu controller
+    """
+    stop_ryu_monitor_msg = csle_collector.ryu_manager.ryu_manager_pb2.StopRyuMonitorMsg()
+    ryu_dto = stub.stopRyuMonitor(stop_ryu_monitor_msg, timeout=timeout)
+    return ryu_dto
+
+
+def start_ryu_monitor(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub,
+                      kafka_ip: str, kafka_port: int, time_step_len: int, timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+    """
+    Sends a request to the Ryu manager to start the Ryu controller
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param kafka_port: the port of Kafka to send data to
+    :param kafka_ip: the ip of Kafka to send data to
+    :param time_step_len: the time period for monitoring
+    :return: a RyuDTO describing the status of the ryu controller
+    """
+    start_ryu_monitor_msg = csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMonitorMsg(
+        kafka_ip=kafka_ip, kafka_port=kafka_port, time_step_len=time_step_len)
+    ryu_dto = stub.startRyu(start_ryu_monitor_msg, timeout=timeout)
     return ryu_dto

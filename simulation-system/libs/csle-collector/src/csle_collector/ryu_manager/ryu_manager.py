@@ -1,4 +1,3 @@
-import time
 import logging
 from concurrent import futures
 import grpc
@@ -55,7 +54,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         return running
 
     def getRyuStatus(self, request: csle_collector.ryu_manager.ryu_manager_pb2.GetRyuStatusMsg,
-                       context: grpc.ServicerContext) \
+                     context: grpc.ServicerContext) \
             -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Gets the state of the Ryu controller
@@ -79,7 +78,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         return ryu_dto
 
     def stopRyu(self, request: csle_collector.ryu_manager.ryu_manager_pb2.StopRyuMsg,
-                  context: grpc.ServicerContext):
+                context: grpc.ServicerContext):
         """
         Stops the Ryu controller
 
@@ -99,7 +98,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                                                                  time_step_len=self.time_step_len)
 
     def startRyu(self, request: csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMsg,
-                   context: grpc.ServicerContext) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+                 context: grpc.ServicerContext) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Starts the ryu server
 
@@ -132,7 +131,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         return ryu_dto
 
     def stopRyuMonitor(self, request: csle_collector.ryu_manager.ryu_manager_pb2.StopRyuMsg,
-                context: grpc.ServicerContext):
+                       context: grpc.ServicerContext):
         """
         Stops the Ryu monitor
 
@@ -154,7 +153,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                                                                  time_step_len=self.time_step_len)
 
     def startRyuMonitor(self, request: csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMsg,
-                 context: grpc.ServicerContext) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+                        context: grpc.ServicerContext) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Starts the ryu monitor
 
@@ -175,7 +174,8 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                 data=json.dumps({constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: self.kafka_ip,
                                  constants.RYU.TIME_STEP_LEN_SECONDS: self.time_step_len}))
             monitor_running = response.status_code == 200
-        ryu_dto = csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=ryu_running, monitor_running=monitor_running,
+        ryu_dto = csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=ryu_running,
+                                                                    monitor_running=monitor_running,
                                                                     port=self.ryu_port,
                                                                     web_port=self.ryu_web_port,
                                                                     controller=self.controller,

@@ -293,5 +293,6 @@ class NorthBoundRestAPIController(ControllerBase):
         self.controller_app.producer = None
         response_body = json.dumps({constants.RYU.KAFKA_CONF: self.controller_app.kafka_conf,
                                     constants.RYU.PRODUCER_RUNNING: self.controller_app.producer_running,
-                                    collector_constants.RYU.TIME_STEP_LEN_SECONDS: self.controller_app.time_step_len_seconds})
+                                    collector_constants.RYU.TIME_STEP_LEN_SECONDS:
+                                        self.controller_app.time_step_len_seconds})
         return Response(content_type='application/json', text=response_body, status=200)
