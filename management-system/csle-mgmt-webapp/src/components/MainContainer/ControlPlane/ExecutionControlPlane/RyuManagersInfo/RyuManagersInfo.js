@@ -13,7 +13,7 @@ import serverIp from "../../../../Common/serverIp";
 import {
     RYU_MONITOR_SUBRESOURCE,
     RYU_MANAGER_SUBRESOURCE,
-    RYU_CONTROLLER_SUBRESOURCE, HTTP_PREFIX, KIBANA_SUBRESOURCE
+    RYU_CONTROLLER_SUBRESOURCE, HTTP_PREFIX
 } from "../../../../Common/constants";
 
 /**
@@ -29,19 +29,23 @@ const RyuManagersInfo = (props) => {
     }
 
     const RyuWebButton = (props) => {
-        return (
-            <OverlayTrigger
-                placement="top"
-                delay={{show: 0, hide: 0}}
-                overlay={renderRyuTooltip}
-            >
-                <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
-                    <Button variant="light" className="startButton" size="sm">
-                        <img src={RyuImg} alt="Ryu" className="img-fluid elastic"/>
-                    </Button>
-                </a>
-            </OverlayTrigger>
-        )
+        if(props.running && props.port !== -1 && !props.loading) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRyuTooltip}
+                >
+                    <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
+                        <Button variant="light" className="startButton" size="sm">
+                            <img src={RyuImg} alt="Ryu" className="img-fluid elastic"/>
+                        </Button>
+                    </a>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
     }
 
     return (
@@ -111,6 +115,7 @@ const RyuManagersInfo = (props) => {
                                                 + `${props.ryuManagersInfo.ips[index]}`)}
                                             name={props.ryuManagersInfo.ips[index]}
                                             port={props.ryuManagersInfo.local_controller_web_port}
+                                            running={status.ryu_running}
                                         />
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
@@ -139,10 +144,10 @@ const RyuManagersInfo = (props) => {
                                     <td>
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
-                                                `${RYU_CONTROLLER_SUBRESOURCE}-`
+                                                `${RYU_MONITOR_SUBRESOURCE}-`
                                                 + `${props.ryuManagersInfo.ips[index]}`)}
                                             running={status.monitor_running}
-                                            entity={RYU_CONTROLLER_SUBRESOURCE} name={RYU_CONTROLLER_SUBRESOURCE}
+                                            entity={RYU_MONITOR_SUBRESOURCE} name={RYU_MONITOR_SUBRESOURCE}
                                             ip={props.ryuManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />

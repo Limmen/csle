@@ -32,19 +32,23 @@ const ElkManagersInfo = (props) => {
     }
 
     const KibanaButton = (props) => {
-        return (
-            <OverlayTrigger
-                placement="top"
-                delay={{show: 0, hide: 0}}
-                overlay={renderKibanaTooltip}
-            >
-                <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
-                    <Button variant="light" className="startButton" size="sm">
-                        <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
-                    </Button>
-                </a>
-            </OverlayTrigger>
-        )
+        if (props.running && props.port !== -1 && !props.loading){
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderKibanaTooltip}
+                >
+                    <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
+                        <Button variant="light" className="startButton" size="sm">
+                            <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
+                        </Button>
+                    </a>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
     }
 
     return (
@@ -189,6 +193,7 @@ const ElkManagersInfo = (props) => {
                                                 + `${props.elkManagersInfo.ips[index]}`)}
                                             name={props.elkManagersInfo.ips[index]}
                                             port={props.elkManagersInfo.local_kibana_port}
+                                            running={status.kibanaRunning}
                                         />
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(

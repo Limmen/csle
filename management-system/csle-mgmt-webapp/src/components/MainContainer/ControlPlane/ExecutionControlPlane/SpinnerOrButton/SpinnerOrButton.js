@@ -35,7 +35,7 @@ const SpinnerOrButton = (props) => {
                         <div className="react-confirm-alert-overlay">
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
-                                    <h1>Confirm deletion</h1>
+                                    <h1>Confirm action</h1>
                                     Are you sure you want to  {start ? "start": "stop"} the {entity} with IP: {ip}?
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
