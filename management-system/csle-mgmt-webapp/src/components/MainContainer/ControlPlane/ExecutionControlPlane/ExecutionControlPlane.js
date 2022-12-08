@@ -227,6 +227,8 @@ const ExecutionControlPlane = (props) => {
         }
         newLoadingEntities.push(entity)
         setLoadingEntities(newLoadingEntities)
+        console.log("loading entities:")
+        console.log(newLoadingEntities)
     }
 
     const getLogs = (ipOrName, entity) => {

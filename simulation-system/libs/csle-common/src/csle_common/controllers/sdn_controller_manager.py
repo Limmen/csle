@@ -81,7 +81,7 @@ class SDNControllerManager:
 
         # Stop background job
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
-               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.SDN_CONTROLLER_FILE_NAME)
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.RYU_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(
@@ -261,7 +261,7 @@ class SDNControllerManager:
                 running = True
             except Exception as e:
                 running = False
-                Logger.__call__().get_logger().warn(
+                Logger.__call__().get_logger().debug(
                     f"Could not fetch Ryu manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 ryu_managers_statuses.append(status)
