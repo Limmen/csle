@@ -8,17 +8,16 @@ import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
-import { useNavigate } from "react-router-dom";
-import { useAlert } from "react-alert";
+import {useNavigate} from "react-router-dom";
+import {useAlert} from "react-alert";
 import {
     HTTP_PREFIX,
     HTTP_REST_GET,
-    EMULATIONS_RESOURCE,
     SWITCHES_SUBRESOURCE,
-    EXECUTIONS_SUBRESOURCE,
+    EMULATION_QUERY_PARAM,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
-    SDN_CONTROLLER_LOCAL_PORT
+    SDN_CONTROLLER_LOCAL_PORT, EMULATION_EXECUTIONS_RESOURCE
 } from "../../../Common/constants";
 import OpenFlowImg from "./OpenFlow.png"
 
@@ -45,11 +44,11 @@ const SDNController = (props) => {
     const setSessionData = props.setSessionData
 
 
-    const fetchSwitches = useCallback((emulation_id, exec_id) => {
+    const fetchSwitches = useCallback((emulation_name, exec_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}` +
-                `/${EXECUTIONS_SUBRESOURCE}/${exec_id}/${SWITCHES_SUBRESOURCE}` +
-                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${exec_id}` +
+                `/${SWITCHES_SUBRESOURCE}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}&${EMULATION_QUERY_PARAM}=${emulation_name}`),
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -58,7 +57,7 @@ const SDNController = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
@@ -74,7 +73,7 @@ const SDNController = (props) => {
     }, [ip, port]);
 
     useEffect(() => {
-        fetchSwitches(props.execution.emulation_env_config.id, props.execution.ip_first_octet)
+        fetchSwitches(props.execution.emulation_env_config.name, props.execution.ip_first_octet)
     }, [fetchSwitches, props.execution.emulation_env_config.id, props.execution.ip_first_octet]);
 
     const getIps = (ips_and_networks) => {
@@ -215,7 +214,8 @@ const SDNController = (props) => {
                             >
                                 <h5 className="semiTitle">
                                     Active Open flow switches
-                                    <img src={OpenFlowImg} alt="OpenFlow switches" className="img-fluid headerIcon openFlow"/>
+                                    <img src={OpenFlowImg} alt="OpenFlow switches"
+                                         className="img-fluid headerIcon openFlow"/>
                                 </h5>
                             </Button>
                         </Card.Header>

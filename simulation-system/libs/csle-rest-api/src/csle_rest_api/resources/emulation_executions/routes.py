@@ -2,8 +2,8 @@
 Routes and sub-resources for the /emulation-executions resource
 """
 import time
-
 from flask import Blueprint, jsonify, request
+import requests
 from requests import get
 import json
 from csle_common.logging.log import Logger
@@ -21,6 +21,7 @@ from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 from csle_common.controllers.sdn_controller_manager import SDNControllerManager
 from csle_common.controllers.host_controller import HostController
 from csle_common.controllers.management_system_controller import ManagementSystemController
+import csle_ryu.constants.constants as ryu_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
@@ -1995,3 +1996,150 @@ def start_stop_ryu_monitor(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<execution_id>'
+                               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}',
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def get_sdn_switches_of_execution(execution_id: int):
+    """
+    The /emulation-executions/id/switches resource. Gets SDN switches of a given execution of a given emulation.
+
+    :param execution_id: the id of the execution
+    :return: The sought for switches if they exist
+    """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+
+    response_data = {}
+    if execution is not None and execution.emulation_env_config.sdn_controller_config is not None:
+        local_ryu_port = create_ryu_tunnel(execution=execution)
+        if int(execution.ip_first_octet) == int(execution_id):
+            response = requests.get(
+                f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                f"{ryu_constants.RYU.STATS_SWITCHES_RESOURCE}")
+            switches = json.loads(response.content)
+            switches_dicts = []
+            for dpid in switches:
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_DESC_RESOURCE}/{dpid}")
+                sw_dict = {}
+                sw_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY] = dpid
+                sw_dict[api_constants.MGMT_WEBAPP.DESC_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_FLOW_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.FLOWS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY] = json.loads(response.content)[str(dpid)][0]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_TABLE_RESOURCE}/{dpid}")
+                tables = json.loads(response.content)[str(dpid)]
+                tables = list(filter(lambda x: x[api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY] > 0, tables))
+                filtered_table_ids = list(map(lambda x: x[api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY], tables))
+                sw_dict[api_constants.MGMT_WEBAPP.TABLES_PROPERTY] = tables
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_TABLE_FEATURES_RESOURCE}/{dpid}")
+                tablefeatures = json.loads(response.content)[str(dpid)]
+                tablefeatures = list(filter(
+                    lambda x: x[api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY] in filtered_table_ids, tablefeatures))
+                sw_dict[api_constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY] = tablefeatures
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_PORT_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.PORT_STATS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_PORT_DESC_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_QUEUE_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.QUEUES_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_QUEUE_CONFIG_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] = \
+                    json.loads(response.content)[str(dpid)][0]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_GROUP_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.GROUPS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_GROUP_DESC_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_GROUP_FEATURES_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] = \
+                    json.loads(response.content)[str(dpid)][0]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_METER_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.METERS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_METER_CONFIG_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] = \
+                    json.loads(response.content)[str(dpid)]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_METER_FEATURES_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] = \
+                    json.loads(response.content)[str(dpid)][0]
+                response = requests.get(
+                    f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                    f"{execution.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                    f"{execution.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                    f"{ryu_constants.RYU.STATS_ROLE_RESOURCE}/{dpid}")
+                sw_dict[api_constants.MGMT_WEBAPP.ROLES_PROPERTY] = json.loads(response.content)[str(dpid)][0]
+                switches_dicts.append(sw_dict)
+            response_data = {}
+            response_data[api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE] = switches_dicts
+            response_data[api_constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT] = local_ryu_port
+    response = jsonify(response_data)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
