@@ -21,8 +21,6 @@ import {
  */
 const RyuManagersInfo = (props) => {
     const ip = serverIp;
-    console.log("ryu, loading entities:")
-    console.log(props.loadingEntities)
 
     const renderRyuTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -84,8 +82,8 @@ const RyuManagersInfo = (props) => {
                                     <td>{status.time_step_len}</td>
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes(`
-                                            ${RYU_MANAGER_SUBRESOURCE}-${props.ryuManagersInfo.ips[index]}`)}
+                                            loading={props.loadingEntities.includes(
+                                                `${RYU_MANAGER_SUBRESOURCE}-${props.ryuManagersInfo.ips[index]}`)}
                                             running={props.ryuManagersInfo.ryu_managers_running[index]}
                                             entity={RYU_MANAGER_SUBRESOURCE}
                                             name={RYU_MANAGER_SUBRESOURCE}
@@ -117,7 +115,7 @@ const RyuManagersInfo = (props) => {
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
                                                 `${RYU_CONTROLLER_SUBRESOURCE}-`
-                                                +`${props.ryuManagersInfo.ips[index]}`)}
+                                                + `${props.ryuManagersInfo.ips[index]}`)}
                                             running={status.ryu_running}
                                             entity={RYU_CONTROLLER_SUBRESOURCE}
                                             name={RYU_CONTROLLER_SUBRESOURCE}
@@ -142,7 +140,7 @@ const RyuManagersInfo = (props) => {
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
                                                 `${RYU_CONTROLLER_SUBRESOURCE}-`
-                                                +`${props.ryuManagersInfo.ips[index]}`)}
+                                                + `${props.ryuManagersInfo.ips[index]}`)}
                                             running={status.monitor_running}
                                             entity={RYU_CONTROLLER_SUBRESOURCE} name={RYU_CONTROLLER_SUBRESOURCE}
                                             ip={props.ryuManagersInfo.ips[index]}

@@ -71,7 +71,6 @@ const SpinnerOrButton = (props) => {
             Start
         </Tooltip>)
     }
-
     if (props.loading) {
         return (<Spinner
             as="span"
