@@ -7,16 +7,43 @@ import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
 import RyuImg from './Ryu.png'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import serverIp from "../../../../Common/serverIp";
 import {
     RYU_MONITOR_SUBRESOURCE,
     RYU_MANAGER_SUBRESOURCE,
-    RYU_CONTROLLER_SUBRESOURCE
+    RYU_CONTROLLER_SUBRESOURCE, HTTP_PREFIX, KIBANA_SUBRESOURCE
 } from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about Ryu managers
  */
 const RyuManagersInfo = (props) => {
+    const ip = serverIp;
+
+    const renderRyuTooltip = (props) => {
+        return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            View Ryu's web interface
+        </Tooltip>)
+    }
+
+    const RyuWebButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="top"
+                delay={{show: 0, hide: 0}}
+                overlay={renderRyuTooltip}
+            >
+                <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
+                    <Button variant="light" className="startButton" size="sm">
+                        <img src={RyuImg} alt="Ryu" className="img-fluid elastic"/>
+                    </Button>
+                </a>
+            </OverlayTrigger>
+        )
+    }
+
     return (
         <Card className="subCard">
             <Card.Header>
@@ -77,6 +104,13 @@ const RyuManagersInfo = (props) => {
                                     {props.activeStatus(status.ryu_running)}
                                     <td>{status.time_step_len}</td>
                                     <td>
+                                        <RyuWebButton
+                                            loading={props.loadingEntities.includes(
+                                                `${RYU_CONTROLLER_SUBRESOURCE}-`
+                                                + `${props.ryuManagersInfo.ips[index]}`)}
+                                            name={props.ryuManagersInfo.ips[index]}
+                                            port={props.ryuManagersInfo.local_controller_web_port}
+                                        />
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
                                                 `${RYU_CONTROLLER_SUBRESOURCE}-`

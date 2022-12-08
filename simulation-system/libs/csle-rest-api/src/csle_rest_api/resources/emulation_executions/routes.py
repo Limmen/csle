@@ -189,7 +189,7 @@ def emulation_execution_info(execution_id: int):
                         remote_ip=execution.emulation_env_config.sdn_controller_config.container.get_ips()[0])
 
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
-        execution_info.elk_managers_info.local_ryu_port = local_ryu_port
+        execution_info.ryu_managers_info.local_controller_web_port = local_ryu_port
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response
