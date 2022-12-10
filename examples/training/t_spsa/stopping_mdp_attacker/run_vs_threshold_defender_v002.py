@@ -38,7 +38,7 @@ if __name__ == '__main__':
                 value=0.101, name=constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             constants.T_SPSA.L: HParam(value=3, name=constants.T_SPSA.L,
-                                              descr="the number of stop actions"),
+                                       descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=20,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),

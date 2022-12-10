@@ -41,7 +41,7 @@ if __name__ == '__main__':
                 value=10000, name=agents_constants.T_FP.N_2,
                 descr="the number of self-play training iterations of T-FP"),
             constants.T_SPSA.L: HParam(value=3, name=constants.T_SPSA.L,
-                                              descr="the number of stop actions"),
+                                       descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=1,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),

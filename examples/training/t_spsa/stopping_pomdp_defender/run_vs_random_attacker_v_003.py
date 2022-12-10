@@ -18,7 +18,7 @@ if __name__ == '__main__':
         log_every=1,
         hparams={
             constants.T_SPSA.N: HParam(value=200, name=constants.T_SPSA.N,
-                                              descr="the number of training iterations"),
+                                       descr="the number of training iterations"),
             constants.T_SPSA.c: HParam(
                 value=10, name=constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
@@ -38,7 +38,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             constants.T_SPSA.THETA1: HParam(value=[-4], name=constants.T_SPSA.THETA1,
-                                                   descr="initial thresholds"),
+                                            descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(

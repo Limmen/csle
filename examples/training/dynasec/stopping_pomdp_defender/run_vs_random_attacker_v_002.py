@@ -72,9 +72,9 @@ if __name__ == '__main__':
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor gamma"),
             constants.T_SPSA.THETA1: HParam(value=[2, 0, -2], name=constants.T_SPSA.THETA1,
-                                                   descr="initial thresholds"),
+                                            descr="initial thresholds"),
             constants.T_SPSA.N: HParam(value=30, name=constants.T_SPSA.N,
-                                              descr="the number of training iterations"),
+                                       descr="the number of training iterations"),
             constants.T_SPSA.c: HParam(
                 value=10, name=constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA"),

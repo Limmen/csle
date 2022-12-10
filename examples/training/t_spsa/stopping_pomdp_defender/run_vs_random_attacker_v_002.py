@@ -19,7 +19,7 @@ if __name__ == '__main__':
         log_every=1,
         hparams={
             constants.T_SPSA.N: HParam(value=200, name=constants.T_SPSA.N,
-                                              descr="the number of training iterations"),
+                                       descr="the number of training iterations"),
             constants.T_SPSA.c: HParam(
                 value=10, name=constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
