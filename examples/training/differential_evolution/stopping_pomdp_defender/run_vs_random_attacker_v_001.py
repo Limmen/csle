@@ -18,13 +18,13 @@ if __name__ == '__main__':
         agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=15, name=agents_constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=15, name=constants.T_SPSA.N,
                                                               descr="the number of training iterations"),
             agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=3, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.DIFFERENTIAL_EVOLUTION.THETA1: HParam(value=[-3, -3, -3],
-                                                                   name=agents_constants.T_SPSA.THETA1,
+                                                                   name=constants.T_SPSA.THETA1,
                                                                    descr="initial thresholds"),
             agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE: HParam(
                 value=10, name=agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE,

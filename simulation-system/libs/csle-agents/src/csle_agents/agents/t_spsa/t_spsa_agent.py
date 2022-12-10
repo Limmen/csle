@@ -18,6 +18,7 @@ from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+import csle_common.constants.constants as constants
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -73,7 +74,7 @@ class TSPSAAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+        for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
@@ -81,7 +82,7 @@ class TSPSAAgent(BaseAgent):
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
+            exp_result.all_metrics[seed][constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = []
@@ -89,14 +90,14 @@ class TSPSAAgent(BaseAgent):
                 agents_constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.START_POINT_CORRECT] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT] = []
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
+            exp_result.all_metrics[seed][constants.T_SPSA.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
-                    exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+                for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
+                    exp_result.all_metrics[seed][constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
-                        exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
+                    for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
+                        exp_result.all_metrics[seed][constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -107,7 +108,7 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
@@ -205,10 +206,10 @@ class TSPSAAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
-                agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
-                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
+        return [constants.T_SPSA.a, constants.T_SPSA.c, constants.T_SPSA.LAMBDA,
+                constants.T_SPSA.A, constants.T_SPSA.EPSILON, constants.T_SPSA.N,
+                constants.T_SPSA.L, constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
+                constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
     def spsa(self, exp_result: ExperimentResult, seed: int,
@@ -222,9 +223,9 @@ class TSPSAAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        L = self.experiment_config.hparams[agents_constants.T_SPSA.L].value
-        if agents_constants.T_SPSA.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.T_SPSA.THETA1].value
+        L = self.experiment_config.hparams[constants.T_SPSA.L].value
+        if constants.T_SPSA.THETA1 in self.experiment_config.hparams:
+            theta = self.experiment_config.hparams[constants.T_SPSA.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 theta = TSPSAAgent.initial_theta(L=L)
@@ -245,16 +246,16 @@ class TSPSAAgent(BaseAgent):
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
+        exp_result.all_metrics[seed][constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
 
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.T_SPSA.N].value
-        a = self.experiment_config.hparams[agents_constants.T_SPSA.a].value
-        c = self.experiment_config.hparams[agents_constants.T_SPSA.c].value
-        A = self.experiment_config.hparams[agents_constants.T_SPSA.A].value
-        lamb = self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA].value
-        epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
-        gradient_batch_size = self.experiment_config.hparams[agents_constants.T_SPSA.GRADIENT_BATCH_SIZE].value
+        N = self.experiment_config.hparams[constants.T_SPSA.N].value
+        a = self.experiment_config.hparams[constants.T_SPSA.a].value
+        c = self.experiment_config.hparams[constants.T_SPSA.c].value
+        A = self.experiment_config.hparams[constants.T_SPSA.A].value
+        lamb = self.experiment_config.hparams[constants.T_SPSA.LAMBDA].value
+        epsilon = self.experiment_config.hparams[constants.T_SPSA.EPSILON].value
+        gradient_batch_size = self.experiment_config.hparams[constants.T_SPSA.GRADIENT_BATCH_SIZE].value
 
         for i in range(N):
             # Step sizes and perturbation size
@@ -299,8 +300,8 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
+            exp_result.all_metrics[seed][constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
+            exp_result.all_metrics[seed][constants.T_SPSA.THRESHOLDS].append(
                 TSPSAAgent.round_vec(policy.thresholds()))
 
             # Log stop distribution
@@ -345,7 +346,7 @@ class TSPSAAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))

@@ -17,7 +17,7 @@ if __name__ == '__main__':
         agent_type=AgentType.BAYESIAN_OPTIMIZATION,
         log_every=1,
         hparams={
-            agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=50, name=agents_constants.T_SPSA.N,
+            agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=50, name=constants.T_SPSA.N,
                                                              descr="the number of training iterations"),
             agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,

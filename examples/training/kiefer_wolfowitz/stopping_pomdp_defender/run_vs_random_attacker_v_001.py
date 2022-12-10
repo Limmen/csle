@@ -17,7 +17,7 @@ if __name__ == '__main__':
         agent_type=AgentType.KIEFER_WOLFOWITZ,
         log_every=1,
         hparams={
-            agents_constants.KIEFER_WOLFOWITZ.N: HParam(value=50, name=agents_constants.T_SPSA.N,
+            agents_constants.KIEFER_WOLFOWITZ.N: HParam(value=50, name=constants.T_SPSA.N,
                                                         descr="the number of training iterations"),
             agents_constants.KIEFER_WOLFOWITZ.L: HParam(value=3, name=agents_constants.KIEFER_WOLFOWITZ.L,
                                                         descr="the number of stop actions"),
@@ -32,8 +32,8 @@ if __name__ == '__main__':
                                                              descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
-            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
-                value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+            constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
+                value=1, name=constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,

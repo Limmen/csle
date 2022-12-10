@@ -69,25 +69,6 @@ class PPO:
     MLP_POLICY = "MlpPolicy"
 
 
-class T_SPSA:
-    """
-    String constants related to T-SPSA
-    """
-    a = "a"
-    c = "c"
-    LAMBDA = "lambda"
-    A = "A"
-    EPSILON = "epsilon"
-    N = "N"
-    L = "L"
-    THETA1 = "theta1"
-    THETAS = "thetas"
-    THRESHOLDS = "thresholds"
-    GRADIENT_BATCH_SIZE = "gradient_batch_size"
-    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
-    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
-
-
 class T_FP:
     """
     String constants related to T-FP

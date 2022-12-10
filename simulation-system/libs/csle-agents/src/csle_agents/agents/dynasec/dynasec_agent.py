@@ -7,6 +7,7 @@ import sys
 import numpy as np
 import threading
 import gym_csle_stopping_game.constants.constants as env_constants
+import csle_common.constants.constants as constants
 from csle_system_identification.emulator import Emulator
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
@@ -458,7 +459,7 @@ class PolicyEvaluationThread(threading.Thread):
                     exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                                  env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     metrics_dict[seed][
@@ -511,7 +512,7 @@ class PolicyEvaluationThread(threading.Thread):
                     exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                                  env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     metrics_dict[seed][
@@ -649,26 +650,26 @@ class DynaSecAgent(BaseAgent):
         :return: the experiment configuration for SPSA training
         """
         hparams = {
-            agents_constants.T_SPSA.N: self.experiment_config.hparams[agents_constants.T_SPSA.N],
-            agents_constants.T_SPSA.c: self.experiment_config.hparams[agents_constants.T_SPSA.c],
-            agents_constants.T_SPSA.a: self.experiment_config.hparams[agents_constants.T_SPSA.a],
-            agents_constants.T_SPSA.A: self.experiment_config.hparams[agents_constants.T_SPSA.A],
-            agents_constants.T_SPSA.LAMBDA: self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA],
-            agents_constants.T_SPSA.EPSILON: self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON],
-            agents_constants.T_SPSA.L: self.experiment_config.hparams[agents_constants.T_SPSA.L],
+            constants.T_SPSA.N: self.experiment_config.hparams[constants.T_SPSA.N],
+            constants.T_SPSA.c: self.experiment_config.hparams[constants.T_SPSA.c],
+            constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
+            constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
+            constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
+            constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
+            constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],
             agents_constants.COMMON.EVAL_BATCH_SIZE: self.experiment_config.hparams[
                 agents_constants.COMMON.EVAL_BATCH_SIZE],
             agents_constants.COMMON.CONFIDENCE_INTERVAL: self.experiment_config.hparams[
                 agents_constants.COMMON.CONFIDENCE_INTERVAL],
             agents_constants.COMMON.MAX_ENV_STEPS: self.experiment_config.hparams[
                 agents_constants.COMMON.MAX_ENV_STEPS],
-            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE],
+            constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
+                constants.T_SPSA.GRADIENT_BATCH_SIZE],
             agents_constants.COMMON.RUNNING_AVERAGE: self.experiment_config.hparams[
                 agents_constants.COMMON.RUNNING_AVERAGE],
             agents_constants.COMMON.GAMMA: self.experiment_config.hparams[
                 agents_constants.COMMON.GAMMA],
-            agents_constants.T_SPSA.THETA1: self.experiment_config.hparams[agents_constants.T_SPSA.THETA1]
+            constants.T_SPSA.THETA1: self.experiment_config.hparams[constants.T_SPSA.THETA1]
         }
         return ExperimentConfig(
             output_dir=str(self.experiment_config.output_dir),
@@ -749,7 +750,7 @@ class DynaSecAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
                                        env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
 
-        for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+        for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
             exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
@@ -774,10 +775,10 @@ class DynaSecAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN_BASELINE] = []
             exp_result.all_metrics[seed][agents_constants.DYNASEC.CLIENTS_ARRIVAL_RATE] = []
             exp_result.all_metrics[seed][agents_constants.DYNASEC.STATIC_ATTACKER_TYPE] = []
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
+            exp_result.all_metrics[seed][constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
+            exp_result.all_metrics[seed][constants.T_SPSA.THRESHOLDS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
@@ -787,12 +788,12 @@ class DynaSecAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
-                    exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+                for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
+                    exp_result.all_metrics[seed][constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
-                        exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
+                    for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
+                        exp_result.all_metrics[seed][constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -840,7 +841,7 @@ class DynaSecAgent(BaseAgent):
                 agents_constants.COMMON.BASELINE_PREFIX +
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
                 exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
@@ -1122,12 +1123,12 @@ class DynaSecAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
             metrics_dict[seed][
                 agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
-        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(
+        exp_result.all_metrics[seed][constants.T_SPSA.THETAS].append(
             metrics_dict[seed][
-                agents_constants.T_SPSA.THETAS][-1])
-        exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
+                constants.T_SPSA.THETAS][-1])
+        exp_result.all_metrics[seed][constants.T_SPSA.THRESHOLDS].append(
             metrics_dict[seed][
-                agents_constants.T_SPSA.THRESHOLDS][-1])
+                constants.T_SPSA.THRESHOLDS][-1])
         exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
             metrics_dict[seed][
                 env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
@@ -1143,7 +1144,7 @@ class DynaSecAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
             metrics_dict[seed][
                 agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
-        for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+        for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                 metrics_dict[seed][
                     env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
@@ -1223,10 +1224,10 @@ class DynaSecAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
-                agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
-                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
+        return [constants.T_SPSA.a, constants.T_SPSA.c, constants.T_SPSA.LAMBDA,
+                constants.T_SPSA.A, constants.T_SPSA.EPSILON, constants.T_SPSA.N,
+                constants.T_SPSA.L, constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
+                constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE,
                 system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
                 system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,

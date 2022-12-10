@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Union, Optional
 import random
 import numpy as np
-import csle_agents.constants.constants as agent_constants
+import csle_common.constants.constants as constants
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.simulation_config.state import State
@@ -275,7 +275,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                         stop_dist.append(round(prob, 3))
                     else:
                         stop_dist.append(round(1 - prob, 3))
-                distributions[agent_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = stop_dist
+                distributions[constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = stop_dist
         else:
             defender_stop_space = np.linspace(0, 1, num=100)
             for s in self.states:
@@ -288,7 +288,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                                 stop_dist.append(round(prob, 3))
                             else:
                                 stop_dist.append(round(1 - prob, 3))
-                            distributions[agent_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] \
+                            distributions[constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] \
                                 = stop_dist
 
         return distributions

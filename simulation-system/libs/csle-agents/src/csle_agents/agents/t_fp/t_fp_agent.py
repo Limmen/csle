@@ -18,6 +18,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_common.dao.training.policy import Policy
+import csle_common.constants.constants as constants
 from csle_agents.agents.base.base_agent import BaseAgent
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
@@ -81,7 +82,7 @@ class TFPAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+        for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
@@ -90,7 +91,7 @@ class TFPAgent(BaseAgent):
                 f"and {self.attacker_simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
+            exp_result.all_metrics[seed][constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_DEFENDER_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_DEFENDER_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_ATTACKER_RETURN] = []
@@ -103,11 +104,11 @@ class TFPAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_EXPLOITABILITY] = []
             exp_result.all_metrics[seed][agents_constants.T_FP.DEFENDER_THRESHOLDS] = []
             exp_result.all_metrics[seed][agents_constants.T_FP.ATTACKER_THRESHOLDS] = []
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
-                exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
+                exp_result.all_metrics[seed][constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             for s in self.simulation_env_config.state_space_config.states:
-                for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
-                    exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
+                for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
+                    exp_result.all_metrics[seed][constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
                                                  + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -118,7 +119,7 @@ class TFPAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
@@ -183,21 +184,21 @@ class TFPAgent(BaseAgent):
 
         # Initialize policies
         defender_policy = MixedMultiThresholdStoppingPolicy(
-            Theta=np.zeros((self.experiment_config.hparams[agents_constants.T_SPSA.L].value,)).tolist(),
+            Theta=np.zeros((self.experiment_config.hparams[constants.T_SPSA.L].value,)).tolist(),
             simulation_name=self.defender_simulation_env_config.name,
             states=self.defender_simulation_env_config.state_space_config.states,
             player_type=PlayerType.DEFENDER,
-            L=self.defender_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            L=self.defender_experiment_config.hparams[constants.T_SPSA.L].value,
             actions=self.defender_simulation_env_config.joint_action_space_config.action_spaces[
                 self.defender_experiment_config.player_idx].actions,
             experiment_config=self.defender_experiment_config, avg_R=-1,
             agent_type=AgentType.T_FP)
         attacker_policy = MixedMultiThresholdStoppingPolicy(
-            Theta=np.zeros((2, self.experiment_config.hparams[agents_constants.T_SPSA.L].value)).tolist(),
+            Theta=np.zeros((2, self.experiment_config.hparams[constants.T_SPSA.L].value)).tolist(),
             simulation_name=self.attacker_simulation_env_config.name,
             states=self.attacker_simulation_env_config.state_space_config.states,
             player_type=PlayerType.ATTACKER,
-            L=self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            L=self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
             actions=self.attacker_simulation_env_config.joint_action_space_config.action_spaces[
                 self.attacker_experiment_config.player_idx].actions,
             experiment_config=self.attacker_experiment_config, avg_R=-1,
@@ -205,27 +206,27 @@ class TFPAgent(BaseAgent):
 
         # Update average policies with initial thresholds
         # initial_attacker_thresholds = [
-        #     [[0]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
-        #      [0]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+        #     [[0]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
+        #      [0]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
         #      ]*10
         # ]
         initial_attacker_thresholds = []
         initial_defender_thresholds = []
         initial_attacker_thresholds.append(
-            [[0] * self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
-             [1] * self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+            [[0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
+             [1] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
              ]
         )
         initial_defender_thresholds.append(
-            [0] * self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
+            [0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value)
         # for i in range(1):
         #     initial_attacker_thresholds.append(
-        #         [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
-        #          [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+        #         [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
+        #          [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
         #          ]
         #     )
         #     initial_defender_thresholds.append(
-        #         [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
+        #         [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value)
 
         attacker_policy.update_Theta(new_thresholds=initial_attacker_thresholds)
         defender_policy.update_Theta(new_thresholds=initial_defender_thresholds)
@@ -327,7 +328,7 @@ class TFPAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     round(strategy_profile_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
@@ -386,7 +387,7 @@ class TFPAgent(BaseAgent):
         defender_policy = MultiThresholdStoppingPolicy(
             theta=defender_thresholds, simulation_name=self.simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
-            player_type=PlayerType.DEFENDER, L=self.defender_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            player_type=PlayerType.DEFENDER, L=self.defender_experiment_config.hparams[constants.T_SPSA.L].value,
             actions=self.defender_simulation_env_config.joint_action_space_config.action_spaces[
                 self.defender_experiment_config.player_idx].actions, experiment_config=self.defender_experiment_config,
             avg_R=-1, agent_type=AgentType.NONE)
@@ -432,7 +433,7 @@ class TFPAgent(BaseAgent):
         attacker_policy = MultiThresholdStoppingPolicy(
             theta=theta, simulation_name=self.simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
-            player_type=PlayerType.ATTACKER, L=self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            player_type=PlayerType.ATTACKER, L=self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
             actions=self.attacker_simulation_env_config.joint_action_space_config.action_spaces[
                 self.attacker_experiment_config.player_idx].actions, experiment_config=self.attacker_experiment_config,
             avg_R=-1, agent_type=AgentType.NONE)
@@ -553,8 +554,8 @@ class TFPAgent(BaseAgent):
         thresholds = policy.thresholds()
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
         attacker_thresholds = [
-            thresholds[0:self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value],
-            thresholds[self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value:]
+            thresholds[0:self.attacker_experiment_config.hparams[constants.T_SPSA.L].value],
+            thresholds[self.attacker_experiment_config.hparams[constants.T_SPSA.L].value:]
         ]
         return attacker_thresholds, val
 
@@ -562,11 +563,11 @@ class TFPAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
-                agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
-                agents_constants.T_SPSA.L, agents_constants.T_FP.THETA1_ATTACKER, agents_constants.T_FP.THETA1_DEFENDER,
+        return [constants.T_SPSA.a, constants.T_SPSA.c, constants.T_SPSA.LAMBDA,
+                constants.T_SPSA.A, constants.T_SPSA.EPSILON, constants.T_SPSA.N,
+                constants.T_SPSA.L, agents_constants.T_FP.THETA1_ATTACKER, agents_constants.T_FP.THETA1_DEFENDER,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
-                agents_constants.T_FP.N_2, agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+                agents_constants.T_FP.N_2, constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL, agents_constants.COMMON.RUNNING_AVERAGE,
                 agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS,
                 agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS]
@@ -591,27 +592,27 @@ class TFPAgent(BaseAgent):
         :return: the experiment configuration for learning a best response of the defender
         """
         hparams = {
-            agents_constants.T_SPSA.N: self.experiment_config.hparams[agents_constants.T_SPSA.N],
-            agents_constants.T_SPSA.c: self.experiment_config.hparams[agents_constants.T_SPSA.c],
-            agents_constants.T_SPSA.a: self.experiment_config.hparams[agents_constants.T_SPSA.a],
-            agents_constants.T_SPSA.A: self.experiment_config.hparams[agents_constants.T_SPSA.A],
-            agents_constants.T_SPSA.LAMBDA: self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA],
-            agents_constants.T_SPSA.EPSILON: self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON],
-            agents_constants.T_SPSA.L: self.experiment_config.hparams[agents_constants.T_SPSA.L],
+            constants.T_SPSA.N: self.experiment_config.hparams[constants.T_SPSA.N],
+            constants.T_SPSA.c: self.experiment_config.hparams[constants.T_SPSA.c],
+            constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
+            constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
+            constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
+            constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
+            constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],
             agents_constants.COMMON.EVAL_BATCH_SIZE: self.experiment_config.hparams[
                 agents_constants.COMMON.EVAL_BATCH_SIZE],
             agents_constants.COMMON.CONFIDENCE_INTERVAL: self.experiment_config.hparams[
                 agents_constants.COMMON.CONFIDENCE_INTERVAL],
             agents_constants.COMMON.MAX_ENV_STEPS: self.experiment_config.hparams[
                 agents_constants.COMMON.MAX_ENV_STEPS],
-            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE],
+            constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
+                constants.T_SPSA.GRADIENT_BATCH_SIZE],
             agents_constants.COMMON.RUNNING_AVERAGE: self.experiment_config.hparams[
                 agents_constants.COMMON.RUNNING_AVERAGE],
             agents_constants.COMMON.GAMMA: self.experiment_config.hparams[agents_constants.COMMON.GAMMA]
         }
         if agents_constants.T_FP.THETA1_DEFENDER in self.experiment_config.hparams:
-            hparams[agents_constants.T_SPSA.THETA1] = \
+            hparams[constants.T_SPSA.THETA1] = \
                 self.experiment_config.hparams[agents_constants.T_FP.THETA1_DEFENDER]
         return ExperimentConfig(
             output_dir=str(self.root_output_dir),
@@ -627,28 +628,28 @@ class TFPAgent(BaseAgent):
         :return: the experiment configuration for learning a best response of the attacker
         """
         hparams = {
-            agents_constants.T_SPSA.N: self.experiment_config.hparams[agents_constants.T_SPSA.N],
-            agents_constants.T_SPSA.c: self.experiment_config.hparams[agents_constants.T_SPSA.c],
-            agents_constants.T_SPSA.a: self.experiment_config.hparams[agents_constants.T_SPSA.a],
-            agents_constants.T_SPSA.A: self.experiment_config.hparams[agents_constants.T_SPSA.A],
-            agents_constants.T_SPSA.LAMBDA: self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA],
-            agents_constants.T_SPSA.EPSILON: self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON],
-            agents_constants.T_SPSA.L: self.experiment_config.hparams[agents_constants.T_SPSA.L],
+            constants.T_SPSA.N: self.experiment_config.hparams[constants.T_SPSA.N],
+            constants.T_SPSA.c: self.experiment_config.hparams[constants.T_SPSA.c],
+            constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
+            constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
+            constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
+            constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
+            constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],
             agents_constants.COMMON.EVAL_BATCH_SIZE: self.experiment_config.hparams[
                 agents_constants.COMMON.EVAL_BATCH_SIZE],
             agents_constants.COMMON.CONFIDENCE_INTERVAL: self.experiment_config.hparams[
                 agents_constants.COMMON.CONFIDENCE_INTERVAL],
             agents_constants.COMMON.MAX_ENV_STEPS: self.experiment_config.hparams[
                 agents_constants.COMMON.MAX_ENV_STEPS],
-            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE],
+            constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
+                constants.T_SPSA.GRADIENT_BATCH_SIZE],
             agents_constants.COMMON.RUNNING_AVERAGE: self.experiment_config.hparams[
                 agents_constants.COMMON.RUNNING_AVERAGE],
             agents_constants.COMMON.GAMMA: self.experiment_config.hparams[
                 agents_constants.COMMON.GAMMA]
         }
         if agents_constants.T_FP.THETA1_ATTACKER in self.experiment_config.hparams:
-            hparams[agents_constants.T_SPSA.THETA1] = \
+            hparams[constants.T_SPSA.THETA1] = \
                 self.experiment_config.hparams[agents_constants.T_FP.THETA1_ATTACKER]
         return ExperimentConfig(
             output_dir=str(self.root_output_dir),

@@ -17,7 +17,7 @@ if __name__ == '__main__':
         agent_type=AgentType.CROSS_ENTROPY,
         log_every=1,
         hparams={
-            agents_constants.CROSS_ENTROPY.N: HParam(value=50, name=agents_constants.T_SPSA.N,
+            agents_constants.CROSS_ENTROPY.N: HParam(value=50, name=constants.T_SPSA.N,
                                                      descr="the number of training iterations"),
             agents_constants.CROSS_ENTROPY.L: HParam(value=3, name=agents_constants.CROSS_ENTROPY.L,
                                                      descr="the number of stop actions"),

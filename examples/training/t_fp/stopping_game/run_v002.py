@@ -19,28 +19,28 @@ if __name__ == '__main__':
         random_seeds=[399, 98912], agent_type=AgentType.T_FP,
         log_every=1, br_log_every=5000,
         hparams={
-            agents_constants.T_SPSA.N: HParam(
-                value=100, name=agents_constants.T_SPSA.N,
+            constants.T_SPSA.N: HParam(
+                value=100, name=constants.T_SPSA.N,
                 descr="the number of training iterations to learn best response with T-SPSA"),
-            agents_constants.T_SPSA.c: HParam(
-                value=10, name=agents_constants.T_SPSA.c,
+            constants.T_SPSA.c: HParam(
+                value=10, name=constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA for best-response learning"),
-            agents_constants.T_SPSA.a: HParam(
-                value=1, name=agents_constants.T_SPSA.a,
+            constants.T_SPSA.a: HParam(
+                value=1, name=constants.T_SPSA.a,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA for best-response learning"),
-            agents_constants.T_SPSA.A: HParam(
-                value=100, name=agents_constants.T_SPSA.A,
+            constants.T_SPSA.A: HParam(
+                value=100, name=constants.T_SPSA.A,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA for best-response learning"),
-            agents_constants.T_SPSA.LAMBDA: HParam(
-                value=0.602, name=agents_constants.T_SPSA.LAMBDA,
+            constants.T_SPSA.LAMBDA: HParam(
+                value=0.602, name=constants.T_SPSA.LAMBDA,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA for best-response learning"),
-            agents_constants.T_SPSA.EPSILON: HParam(
-                value=0.101, name=agents_constants.T_SPSA.EPSILON,
+            constants.T_SPSA.EPSILON: HParam(
+                value=0.101, name=constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA for best-response learning"),
             agents_constants.T_FP.N_2: HParam(
                 value=10000, name=agents_constants.T_FP.N_2,
                 descr="the number of self-play training iterations of T-FP"),
-            agents_constants.T_SPSA.L: HParam(value=3, name=agents_constants.T_SPSA.L,
+            constants.T_SPSA.L: HParam(value=3, name=constants.T_SPSA.L,
                                               descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=1,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
@@ -53,8 +53,8 @@ if __name__ == '__main__':
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
-            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
-                value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+            constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
+                value=1, name=constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=40, name=agents_constants.COMMON.RUNNING_AVERAGE,
