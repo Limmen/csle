@@ -27,8 +27,8 @@ if __name__ == '__main__':
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cuda:1",
-                                                   name=constants.NEURAL_NETWORKS.DEVICE,
-                                                   descr="the device to train on (cpu or cuda:x)"),
+                                                     name=constants.NEURAL_NETWORKS.DEVICE,
+                                                     descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
             agents_constants.DQN.MAX_GRAD_NORM: HParam(

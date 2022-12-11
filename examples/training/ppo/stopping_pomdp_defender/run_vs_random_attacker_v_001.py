@@ -31,8 +31,8 @@ if __name__ == '__main__':
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
-                                                   name=constants.NEURAL_NETWORKS.DEVICE,
-                                                   descr="the device to train on (cpu or cuda:x)"),
+                                                     name=constants.NEURAL_NETWORKS.DEVICE,
+                                                     descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                 value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
                 descr="the nunmber of parallel environments for training"),
