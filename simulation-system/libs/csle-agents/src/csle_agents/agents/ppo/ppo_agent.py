@@ -8,6 +8,7 @@ from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import BaseCallback
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -112,14 +113,14 @@ class PPOAgent(BaseAgent):
 
             # Create PPO Agent
             policy_kwargs = dict(
-                net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
-                          ] * self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value)
+                net_arch=[self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
+                          ] * self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value)
             model = PPO(
                 agents_constants.PPO.MLP_POLICY, env, verbose=0, policy_kwargs=policy_kwargs,
                 n_steps=self.experiment_config.hparams[agents_constants.PPO.STEPS_BETWEEN_UPDATES].value,
                 batch_size=self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value,
                 learning_rate=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value,
-                seed=seed, device=self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value,
+                seed=seed, device=self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value,
                 gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value,
                 gae_lambda=self.experiment_config.hparams[agents_constants.PPO.GAE_LAMBDA].value,
                 clip_range=self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE].value,
@@ -190,14 +191,15 @@ class PPOAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER, agents_constants.COMMON.NUM_HIDDEN_LAYERS,
+        return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 agents_constants.PPO.STEPS_BETWEEN_UPDATES,
                 agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
                 agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
                 agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
                 agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
-                agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.DEVICE,
+                agents_constants.COMMON.EVAL_BATCH_SIZE, constants.NEURAL_NETWORKS.DEVICE,
                 agents_constants.COMMON.SAVE_EVERY]
 
 

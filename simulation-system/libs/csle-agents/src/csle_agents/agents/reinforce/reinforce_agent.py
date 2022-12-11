@@ -6,6 +6,7 @@ import os
 import torch
 import numpy as np
 import gym_csle_stopping_game.constants.constants as env_constants
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -19,7 +20,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
-from csle_agents.common.fnn_w_softmax import FNNwithSoftmax
+from csle_common.models.fnn_w_softmax import FNNwithSoftmax
 
 
 class ReinforceAgent(BaseAgent):
@@ -185,8 +186,8 @@ class ReinforceAgent(BaseAgent):
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE,
                 agents_constants.COMMON.LEARNING_RATE_DECAY_RATE, agents_constants.COMMON.LEARNING_RATE_EXP_DECAY,
-                agents_constants.COMMON.NUM_HIDDEN_LAYERS, agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER,
-                agents_constants.COMMON.ACTIVATION_FUNCTION, agents_constants.COMMON.OPTIMIZER]
+                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS, constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION, agents_constants.COMMON.OPTIMIZER]
 
     def reinforce(self, exp_result: ExperimentResult, seed: int,
                   training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
@@ -206,13 +207,13 @@ class ReinforceAgent(BaseAgent):
         policy_network = FNNwithSoftmax(
             input_dim=self.env.observation_space.shape[0],
             output_dim=self.env.action_space.n,
-            hidden_dim=self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value,
-            num_hidden_layers=self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value,
-            hidden_activation=self.experiment_config.hparams[agents_constants.COMMON.ACTIVATION_FUNCTION].value
+            hidden_dim=self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value,
+            num_hidden_layers=self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value,
+            hidden_activation=self.experiment_config.hparams[constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION].value
         )
 
         # Setup device
-        policy_network.to(torch.device(self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value))
+        policy_network.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
 
         # Setup optimizer
         if self.experiment_config.hparams[agents_constants.COMMON.OPTIMIZER].value == agents_constants.COMMON.ADAM:
@@ -465,7 +466,7 @@ class ReinforceAgent(BaseAgent):
         # perform backprop
         policy_loss.backward()
         # maybe clip gradient
-        if self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value:
+        if self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value:
             torch.nn.utils.clip_grad_norm_(policy_network.parameters(), 1)
         # gradient descent step
         optimizer.step()

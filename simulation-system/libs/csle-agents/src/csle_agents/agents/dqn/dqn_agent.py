@@ -8,6 +8,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
 from stable_baselines3.common.env_util import make_vec_env
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -112,13 +113,13 @@ class DQNAgent(BaseAgent):
 
             # Create DQN Agent
             policy_kwargs = dict(
-                net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
-                          ] * self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value)
+                net_arch=[self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
+                          ] * self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value)
             model = DQN(
                 agents_constants.DQN.MLP_POLICY, env, verbose=0, policy_kwargs=policy_kwargs,
                 batch_size=self.experiment_config.hparams[agents_constants.DQN.DQN_BATCH_SIZE].value,
                 learning_rate=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value,
-                seed=seed, device=self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value,
+                seed=seed, device=self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value,
                 gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value,
                 exploration_fraction=self.experiment_config.hparams[agents_constants.DQN.EXPLORATION_FRACTION].value,
                 exploration_final_eps=(
@@ -193,11 +194,13 @@ class DQNAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER, agents_constants.COMMON.NUM_HIDDEN_LAYERS,
+        return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
                 agents_constants.COMMON.GAMMA,
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
-                agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.DEVICE,
+                agents_constants.COMMON.EVAL_BATCH_SIZE,
+                constants.NEURAL_NETWORKS.DEVICE,
                 agents_constants.COMMON.SAVE_EVERY, agents_constants.DQN.EXPLORATION_INITIAL_EPS,
                 agents_constants.DQN.EXPLORATION_FINAL_EPS, agents_constants.DQN.EXPLORATION_FRACTION,
                 agents_constants.DQN.MLP_POLICY, agents_constants.DQN.MAX_GRAD_NORM,

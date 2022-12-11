@@ -1680,3 +1680,13 @@ class T_SPSA:
     GRADIENT_BATCH_SIZE = "gradient_batch_size"
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+
+
+class NEURAL_NETWORKS:
+    """
+    Constants related to neural networks
+    """
+    NUM_NEURONS_PER_HIDDEN_LAYER = "num_neurons_per_hidden_layer"
+    NUM_HIDDEN_LAYERS = "num_hidden_layers"
+    ACTIVATION_FUNCTION = "activation_function"
+    DEVICE = "device"

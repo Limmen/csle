@@ -3,8 +3,8 @@ import numpy as np
 import torch
 import math
 from torch.distributions import Categorical
-from csle_agents.common.fnn_w_softmax import FNNwithSoftmax
-import csle_agents.constants.constants as agents_constants
+from csle_common.models.fnn_w_softmax import FNNwithSoftmax
+import csle_common.constants.constants as constants
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -52,9 +52,11 @@ class FNNWithSoftmaxPolicy(Policy):
                     input_dim=input_dim,
                     output_dim=output_dim,
                     hidden_dim=self.experiment_config.hparams[
-                        agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value,
-                    num_hidden_layers=self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value,
-                    hidden_activation=self.experiment_config.hparams[agents_constants.COMMON.ACTIVATION_FUNCTION].value
+                        constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value,
+                    num_hidden_layers=self.experiment_config.hparams[
+                        constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value,
+                    hidden_activation=self.experiment_config.hparams[
+                        constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION].value
                 )
                 self.policy_network = self.policy_network.load_state_dict(torch.load(self.save_path))
             except Exception as e:
@@ -70,7 +72,7 @@ class FNNWithSoftmaxPolicy(Policy):
         :return: the selected action
         """
         state = torch.from_numpy(o).float()
-        state = state.to(torch.device(self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value))
+        state = state.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
 
         # Forward pass using the current policy network to predict P(a|s)
         action_probs = self.policy_network(state).squeeze()
@@ -96,7 +98,7 @@ class FNNWithSoftmaxPolicy(Policy):
         :return: The sampled action id and the log probability
         """
         state = torch.from_numpy(state.flatten()).float()
-        state = state.to(torch.device(self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value))
+        state = state.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
 
         # Forward pass using the current policy network to predict P(a|s)
         action_probs = self.policy_network(state).squeeze()
