@@ -35,19 +35,19 @@ if __name__ == '__main__':
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
-            agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
-                value=64, name=agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER,
+            constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
+                value=64, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 descr="neurons per hidden layer of the policy network"),
-            agents_constants.COMMON.NUM_HIDDEN_LAYERS: HParam(
-                value=4, name=agents_constants.COMMON.NUM_HIDDEN_LAYERS,
+            constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
+                value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
             agents_constants.COMMON.LEARNING_RATE: HParam(value=0.0001,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
-            agents_constants.COMMON.DEVICE: HParam(value="cpu",
-                                                   name=agents_constants.COMMON.DEVICE,
+            constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
+                                                   name=constants.NEURAL_NETWORKS.DEVICE,
                                                    descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.OPTIMIZER: HParam(value=agents_constants.COMMON.ADAM,
                                                       name=agents_constants.COMMON.OPTIMIZER,
@@ -58,8 +58,8 @@ if __name__ == '__main__':
             agents_constants.COMMON.LEARNING_RATE_DECAY_RATE: HParam(
                 value=0.999, name=agents_constants.COMMON.LEARNING_RATE_DECAY_RATE,
                 descr="the rate of learning rate decay"),
-            agents_constants.COMMON.ACTIVATION_FUNCTION: HParam(
-                value="ReLU", name=agents_constants.COMMON.ACTIVATION_FUNCTION,
+            constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION: HParam(
+                value="ReLU", name=constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION,
                 descr="the activation function"),
             agents_constants.REINFORCE.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=agents_constants.REINFORCE.GRADIENT_BATCH_SIZE,

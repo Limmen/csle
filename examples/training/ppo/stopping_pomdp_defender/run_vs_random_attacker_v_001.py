@@ -16,11 +16,11 @@ if __name__ == '__main__':
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
-            agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
-                value=64, name=agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER,
+            constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
+                value=64, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 descr="neurons per hidden layer of the policy network"),
-            agents_constants.COMMON.NUM_HIDDEN_LAYERS: HParam(
-                value=4, name=agents_constants.COMMON.NUM_HIDDEN_LAYERS,
+            constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
+                value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=1096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
@@ -30,8 +30,8 @@ if __name__ == '__main__':
             agents_constants.COMMON.LEARNING_RATE: HParam(value=0.0001,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
-            agents_constants.COMMON.DEVICE: HParam(value="cpu",
-                                                   name=agents_constants.COMMON.DEVICE,
+            constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
+                                                   name=constants.NEURAL_NETWORKS.DEVICE,
                                                    descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                 value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
