@@ -360,7 +360,7 @@ running commands can read and write to this directory.
        ```
     To have the binary permanently in $PATH, add the following line to the
     .bashrc: `export PATH=/path/to/csle/management-system/node_exporter/:$PATH`
-    - Run the management system (for more instructions see [README](management system/README.MD)):
+    - Run the management system (for more instructions see [README](management-system/README.MD)):
      ```bash
        cd management-system
        chmod u+x run_all.sh
