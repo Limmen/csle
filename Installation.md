@@ -40,12 +40,14 @@ Logs of CSLE will be stored in `/tmp/csle`, create this directory and set the pe
 running commands can read and write to this directory.
 
 4. **Create log directory**
-    - ```bash
+    - Run command: 
+     ```bash
      mkdir /tmp/csle
      ```
 
 5. **Create PID file directory**
-    - ```bash
+    - Run commands: 
+     ```bash
      mkdir /var/log/csle
      mkdir /var/log/csle/datasets
      chmod -R 777 /var/log/csle
