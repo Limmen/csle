@@ -12,7 +12,7 @@ An OpenAI gym reinforcement learning environment that represents the optimal sto
 - Python 3.8+
 - `csle-common`
 - `csle-attacker`
-- `csle-csle-defender`
+- `csle-defender`
 - `csle-collector`
 
 ## Development Requirements
