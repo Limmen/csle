@@ -1,5 +1,11 @@
 
 const getPlayerTypeStr = (playerType) => {
+    /**
+     * Converts a numeric player type into a string
+     *
+     * @param playerType the numeric player type to convert
+     * @returns {string} the player type string
+     */
     if(playerType === 1) {
         return "Defender"
     }

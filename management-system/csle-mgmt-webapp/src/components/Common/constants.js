@@ -1,3 +1,7 @@
+/**
+ * File with constants
+ */
+
 export const HTTP_PREFIX = "http://"
 export const ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin"
 export const IDS_QUERY_PARAM = "ids"

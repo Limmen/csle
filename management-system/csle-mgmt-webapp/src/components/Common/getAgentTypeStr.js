@@ -1,5 +1,11 @@
 
 const getAgentTypeStr = (agentType) => {
+    /**
+     * Converts a numeric agent type into a string
+     *
+     * @param agentType the numeric agent type
+     * @returns {string} the agent string
+     */
     if(agentType === 0) {
         return "T-SPSA"
     }

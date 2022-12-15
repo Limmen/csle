@@ -1,5 +1,11 @@
 
 const getDateStr = (ts) => {
+    /**
+     * Converts a date timestamp to a string
+     *
+     * @param ts the date timestamp to convert
+     * @returns {string} the converted string
+     */
     var date = new Date(ts * 1000);
     var year = date.getFullYear()
     var month = date.getMonth()
