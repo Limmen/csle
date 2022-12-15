@@ -48,6 +48,16 @@ b) real-time monitoring of emulation and simulation processes; and c), shell acc
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). 
 
+## Supported Releases
+
+| Release | Build Status | Last date of support |
+|---------|--------------|----------------------|
+| TODO    | TODO badge   | TODO date            |
+
+Maintenance releases have a stable API and dependency tree,
+and receive bug fixes and critical improvements but not new features. We
+currently support each release for a window of 6 months.
+
 
 ## Author & Maintainer
 
