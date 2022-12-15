@@ -55,17 +55,17 @@ Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
-<p align="center">
-<a href="./LICENSE.md">Creative Commons</a>
+<p>
+<a href="./LICENSE.md">Creative Commons (C) 2020-2022, Kim Hammar</a>
 </p>
 
 <p align="center">
-(C) 2020-2022, Kim Hammar
+
 </p>
 
 <p align="center">
-<img src="docs/img/kth_logo.png" width="10%", height="10%">
-<img src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
+
+
 </p>
 
 
@@ -75,3 +75,14 @@ Kim Hammar <kimham@kth.se>
 - [gym-optimal-intrusion-response](https://github.com/Limmen/gym-optimal-intrusion-response)
 - [awesome-rl-for-cybersecurity](https://github.com/Limmen/awesome-rl-for-cybersecurity)
 
+---
+<p align="center" style="align-items:center; display:inline-block">
+Made with &#10084; &nbsp;
+at <a href="https://www.kth.se/" target="_blank">
+<img src="docs/img/kth_logo.png" width="10%", height="10%">
+</a> 
+and 
+&nbsp;<a href="https://www.kth.se/cdis" target="_blank">
+<img src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
+</a>
+</p>
