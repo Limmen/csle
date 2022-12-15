@@ -52,10 +52,12 @@ import {
     JOBS_PAGE_RESOURCE
 } from "./components/Common/constants";
 
-/**
- * Container component containing the main components of the page and defining the routes
- */
 function App() {
+    /**
+     * Container component containing the main components of the page and defining the routes
+     * @returns {JSX.Element}
+     * @constructor
+     */
     const {sessionData, setSessionData} = useSession();
     const alert = useAlert();
 

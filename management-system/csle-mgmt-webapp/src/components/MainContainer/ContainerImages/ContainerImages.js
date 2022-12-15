@@ -17,10 +17,14 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {HTTP_PREFIX, IMAGES_RESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
 
-/**
- * Component representing the /images-page
- */
 const ContainerImages = (props) => {
+    /**
+     * Component representing the /images-page
+     *
+     * @param props
+     * @returns {JSX.Element}
+     * @constructor
+     */
     const [images, setImages] = useState([]);
     const [filteredImages, setFilteredImages] = useState([]);
     const [loading, setLoading] = useState([]);
@@ -32,6 +36,11 @@ const ContainerImages = (props) => {
     const setSessionData = props.setSessionData
 
     const fetchImages = useCallback(() => {
+        /**
+         * Fetches container images from the REST API backend
+         *
+         * @type {(function(): void)|*}
+         */
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {

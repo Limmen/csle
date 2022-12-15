@@ -2,11 +2,13 @@ import React from 'react';
 import './About.css';
 import Arch from './arch.png'
 
-/**
- * Component representing the /about-page
- */
 const About = () => {
-
+    /**
+     * Component representing the /about-page
+     *
+     * @returns {JSX.Element}
+     * @constructor
+     */
     return (
         <div className="About">
             <h3> About</h3>
