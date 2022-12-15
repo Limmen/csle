@@ -78,9 +78,10 @@ Kim Hammar <kimham@kth.se>
 ---
 <p align="center" style="align-items:center; display:inline-block">
 Made with &#10084; &nbsp;
-at <a href="https://www.kth.se/" target="_blank">
+at &nbsp; <a href="https://www.kth.se/" target="_blank">
 <img align="absmiddle" src="docs/img/kth_logo.png" width="10%", height="10%">
 </a> 
+&nbsp;
 and 
 &nbsp;<a href="https://www.kth.se/cdis" target="_blank">
 <img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
