@@ -276,7 +276,8 @@ def emulation_execution_info(execution_id: int):
         local_ryu_port = create_ryu_tunnel(execution=execution)
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         execution_info.elk_managers_info.local_kibana_port = local_kibana_port
-        execution_info.ryu_managers_info.local_controller_web_port = local_ryu_port
+        if execution_info.ryu_managers_info is not None:
+            execution_info.ryu_managers_info.local_controller_web_port = local_ryu_port
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response
