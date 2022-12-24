@@ -71,7 +71,7 @@ class EmulationEnvConfig:
         :param version: the version of the emulation
         :param execution_id: the execution id of the emulation
         :param csle_collector_version: the version of the CSLE collector library
-        :param csle_collector_version: the version of the CSLE Ryu library
+        :param csle_ryu_version: the version of the CSLE Ryu library
         """
         self.name = name
         self.descr = descr
