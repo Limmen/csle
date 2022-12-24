@@ -9,8 +9,8 @@ import csle_agents.constants.constants as agents_constants
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-003")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
