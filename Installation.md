@@ -1,4 +1,4 @@
-# Installation 
+# Installation
 
 Follow the instructions below to install CSLE.
 
@@ -19,11 +19,7 @@ chmod u+rwx Anaconda3-5.0.0-Linux-x86_64.sh
 ./Anaconda3-5.0.0-Linux-x86_64.sh
 ```
 
-2. **Setup the configuration**
-
-- Setup your configuration (e.g define default username and passwords for the management system) by editing the config file `csle/config.json`
-
-3. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
+2. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
 
 ```bash
 git clone https://github.com/Limmen/clse
@@ -39,14 +35,18 @@ running commands can read and write to this directory.
 Logs of CSLE will be stored in `/tmp/csle`, create this directory and set the permissions so that the user used for
 running commands can read and write to this directory.
 
+3. **Setup the configuration**
+
+- Setup your configuration (e.g define default username and passwords for the management system) by editing the config file `csle/config.json`
+
 4. **Create log directory**
-    - Run command: 
+    - Run command:
      ```bash
      mkdir /tmp/csle
      ```
 
 5. **Create PID file directory**
-    - Run commands: 
+    - Run commands:
      ```bash
      mkdir /var/log/csle
      mkdir /var/log/csle/datasets
@@ -104,7 +104,7 @@ running commands can read and write to this directory.
     - Install `csle-collector` (see ([README](simulation-system/libs/csle-collector/README.md)) for more information)
       ```bash
        cd simulation-system/libs/csle-collector/
-       pip install -e . 
+       pip install -e .
        cd ../../../
       ```
 
@@ -118,7 +118,7 @@ running commands can read and write to this directory.
     - Install `csle-attacker` (see ([README](simulation-system/libs/csle-attacker/README.md)) for more information)
       ```bash
       cd simulation-system/libs/csle-attacker/
-      pip install -e . 
+      pip install -e .
       cd ../../../
       ```
 
@@ -184,7 +184,7 @@ running commands can read and write to this directory.
       cd ../../
       ```
 
-8. **Initialize management users** 
+8. **Initialize management users**
       ```bash
       csle init
       ```
@@ -203,14 +203,14 @@ running commands can read and write to this directory.
       sudo groupadd docker
       sudo usermod -aG docker $USER
       ```
-    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) 
+    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information)
       To install the base images you have two options: (1) pull the images from DockerHub; or (2), build the images locally.
       To build the images locally, run (this may take a while, e.g. an hour):
       ```bash
       cd emulation-system/base_images
       make build
       cd ../../
-      ```     
+      ```
       To pull the base images from DockerHub, run:
       ```bash
       cd emulation-system/base_images
@@ -261,7 +261,7 @@ running commands can read and write to this directory.
     - Set `max_user_watches`. Run:
        ```bash
        echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-       ```     
+       ```
 
 10. **Install the management system**
     - To build the webapp used in the management system and in the policy examination system you need node.js and npm
