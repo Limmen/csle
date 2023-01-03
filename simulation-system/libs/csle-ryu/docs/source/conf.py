@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'csle-ryu'
-copyright = '2020-2022, Kim Hammar'
+copyright = '2020-2023, Kim Hammar'
 author = 'Kim Hammar'
 
 # The full version, including alpha/beta/rc tags

@@ -128,11 +128,15 @@ body {
 }
 
 .emulationText {
-  margin-top:0px;
+  margin-top:20px;
 }
 
 .onlineLearningLogo {
   margin-top: -22px;
+}
+
+.mgmtSystemText {
+  margin-top:32px;
 }
 
 .learningText {
@@ -149,6 +153,14 @@ body {
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.italicTxt {
+  font-style: italic;
+}
+
+.methodFig {
+  text-align: center;
 }
 
 .footerLogos {
