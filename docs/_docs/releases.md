@@ -63,40 +63,47 @@ Listing 108: Command to generate release documentation.
    <p class="captionFig">
    Listing 110: Makefile for derived Docker images in CSLE.
    </p>
-3. Edit the versions of the base images in the Dockerfiles inside the following directory:
+3. Edit the versions of the derived images in the Dockerfiles inside the following directory:
     ```bash
      ./emulation-system/derived_images/
     ```
    <p class="captionFig">
    Listing 111: Directory with derived Docker images in CSLE.
    </p>
+4Edit the versions of the base images in the Dockerfiles inside the following directory:
+    ```bash
+     ./emulation-system/base_images/
+    ```
+   <p class="captionFig">
+   Listing 112: Directory with base Docker images in CSLE.
+   </p>   
 4. Edit the version parameters in all emulation configurations in the following directory:
    ```bash
    ./emulation-system/envs
    ```
    <p class="captionFig">
-   Listing 112: Directory with emulation configurations.
+   Listing 113: Directory with emulation configurations.
    </p>
 5. Build the images by running the command:
     ```bash
       cd emulation-system/; make build
     ```
    <p class="captionFig">
-   Listing 113: Command to build the Docker images in CSLE.
+   Listing 114: Command to build the Docker images in CSLE.
    </p>
 6. Push the images to DockerHub by running the command:
     ```bash
      cd emulation-system/; make push
     ```
    <p class="captionFig">
-   Listing 114: Command to push Docker images to DockerHub.
+   Listing 115: Command to push Docker images to DockerHub.
    </p>
 7. Insert the new emulation configuration into the metastore by running the command:
     ```bash
      cd emulation-system/; make emulations
     ```
    <p class="captionFig">
-   Listing 115: Command to insert emulation configurations into the metastore.
+   Listing 116: Command to insert emulation configurations into the metastore.
    </p>
 
 **GitHub releases.** To make a release in GitHub, 

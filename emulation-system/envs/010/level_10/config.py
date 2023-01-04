@@ -36,8 +36,8 @@ from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
-from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
+from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -51,7 +51,7 @@ from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
 
-def default_config(name: str, network_id: int = 7, level: int = 7, version: str = "0.0.3") -> EmulationEnvConfig:
+def default_config(name: str, network_id: int = 10, level: int = 10, version: str = "0.1.0") -> EmulationEnvConfig:
     """
     Returns the default configuration of the emulation environment
 
@@ -70,19 +70,18 @@ def default_config(name: str, network_id: int = 7, level: int = 7, version: str 
     vuln_cfg = default_vulns_config(network_id=network_id)
     kafka_cfg = default_kafka_config(network_id=network_id, level=level, version=version)
     services_cfg = default_services_config(network_id=network_id)
-    descr = "An emulation environment with a set of nodes that run common networked services such as " \
-            "SSH, FTP, Telnet, IRC, Kafka," \
-            " etc. Some of the services are vulnerable to different network " \
-            "attacks such as the SambaCry exploit," \
-            "Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection." \
+    descr = "An emulation environment with a set of nodes that run common " \
+            "networked services such as SSH, FTP, Telnet, IRC, Kafka, " \
+            "etc. Some of the services are vulnerable to different network attacks " \
+            "such as the SambaCry exploit, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, " \
+            "and SQL injection. " \
             "Moreover, some nodes are vulnerable to privilege escalation attacks " \
-            "(e.g. CVE-2010-0426 and CVE-2015-5602)" \
-            "which can be used by the attacker to extend his privileges after compromising the host." \
+            "(e.g. CVE-2010-0426 and CVE-2015-5602) " \
+            "which can be used by the attacker to extend his privileges after compromising the host. " \
             "The task of an attacker agent is to identify the vulnerabilities and " \
-            "exploit them and discover hidden flags" \
-            "on the nodes. Conversely, the task of the defender is to " \
-            "harden the defense of the nodes and to detect the" \
-            "attacker. "
+            "exploit them and discover hidden flags " \
+            "on the nodes. Conversely, the task of the defender is " \
+            "to harden the defense of the nodes and to detect the attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_cfg = default_ovs_config(network_id=network_id, level=level, version=version)
     sdn_controller_cfg = default_sdn_controller_config(network_id=network_id, level=level, version=version)
@@ -562,6 +561,64 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_1"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}",
+                            os=constants.CONTAINER_OS.PENGINE_EXPLOIT_1_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.104",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH1,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_1"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CVE_2014_0160_1}",
+                            os=constants.CONTAINER_OS.CVE_2014_0160_1_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.204",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH1,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1")
     ]
     containers_cfg = ContainersConfig(
@@ -580,7 +637,9 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
-            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11"
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204"
         ],
         agent_reachable_nodes=[
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
@@ -595,7 +654,9 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
-            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11"
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204"
         ],
         networks=[
             ContainerNetwork(
@@ -639,7 +700,7 @@ def default_flags_config(network_id: int) -> FlagsConfig:
                             path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}3"
                                  f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
                             dir=f"/{constants.COMMANDS.TMP_DIR}/",
-                            id=3, requires_root=True, score=1
+                            id=3, requires_root=False, score=1
                         )]),
         NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                         flags=[Flag(
@@ -679,7 +740,7 @@ def default_flags_config(network_id: int) -> FlagsConfig:
                             path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}6"
                                  f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
                             dir=f"/{constants.COMMANDS.TMP_DIR}/",
-                            id=3, requires_root=False, score=1
+                            id=6, requires_root=False, score=1
                         )]),
         NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37",
                         flags=[Flag(
@@ -687,7 +748,7 @@ def default_flags_config(network_id: int) -> FlagsConfig:
                             path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}7"
                                  f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
                             dir=f"/{constants.COMMANDS.TMP_DIR}/",
-                            id=3, requires_root=False, score=1
+                            id=7, requires_root=False, score=1
                         )]),
         NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
                         flags=[Flag(
@@ -720,6 +781,14 @@ def default_flags_config(network_id: int) -> FlagsConfig:
                                  f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
                             dir=f"/{constants.COMMANDS.TMP_DIR}/",
                             id=11, requires_root=True, score=1
+                        )]),
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+                        flags=[Flag(
+                            name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}12",
+                            path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}12"
+                                 f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            dir=f"/{constants.COMMANDS.TMP_DIR}/",
+                            id=12, requires_root=True, score=1
                         )])
     ]
     flags_config = FlagsConfig(node_flag_configs=flags)
@@ -818,7 +887,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      cell_overhead_bytes=0
                  )),
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                 f""f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.10",
+                 f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.10",
                  NodeNetworkConfig(
                      interface=constants.NETWORKING.ETH1,
                      limit_packets_queue=30000, packet_delay_ms=2,
@@ -1039,6 +1108,46 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}_1-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.CVE_2014_0160_1}_1-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204",
                  NodeNetworkConfig(
                      interface=constants.NETWORKING.ETH0,
                      limit_packets_queue=30000, packet_delay_ms=0.1,
@@ -1866,8 +1975,114 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         input_accept=set([]),
         forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
         routes=set())
+    node_16 = NodeFirewallConfig(
+        hostname=f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}_1",
+        ips_gw_default_policy_networks=[
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                   f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.104",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            )
+        ],
+        output_accept=set([]),
+        input_accept=set([]),
+        forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
+        routes=set())
+    node_17 = NodeFirewallConfig(
+        hostname=f"{constants.CONTAINER_IMAGES.CVE_2014_0160_1}_1",
+        ips_gw_default_policy_networks=[
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                   f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.204",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            )
+        ],
+        output_accept=set([]),
+        input_accept=set([]),
+        forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
+        routes=set())
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11, node_12,
-                    node_13, node_14, node_15]
+                    node_13, node_14, node_15, node_16, node_17]
     topology = TopologyConfig(node_configs=node_configs,
                               subnetwork_masks=[
                                   f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
@@ -1886,81 +2101,107 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     :return: the traffic configuration
     """
     traffic_generators = [
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_2]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_1]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_1]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_1]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.19",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SAMBA_1]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.31",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SHELLSHOCK_1]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_2]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.19",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SAMBA_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.31",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SHELLSHOCK_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.42",
-            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SQL_INJECTION_1] +
-                      constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SQL_INJECTION_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
             traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
             traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37",
-            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2015_3306_1] +
-                      constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2015_3306_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
             traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
             traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
-            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2015_1427_1] +
-                      constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2015_1427_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
             traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
             traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75",
-            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2016_10033_1] +
-                      constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2016_10033_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
             traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
             traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
-            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2010_0426_1] +
-                      constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2010_0426_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
             traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
             traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
             commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2015_5602_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1]
+                      + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                          constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+            traffic_manager_log_dir="/", traffic_manager_max_workers=10),
+        NodeTrafficConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204",
+            commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.CVE_2014_0160_1]
                       + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                           constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
             traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
@@ -1974,8 +2215,8 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
             subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
             bitmask=constants.CSLE.CSLE_EDGE_BITMASK
         )],
-        ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
-           f".{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
+        ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+           f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
         client_process_type=ClientPopulationProcessType.POISSON,
         lamb=0.025, mu=1, client_manager_port=50044, num_commands=2, client_time_step_len_seconds=1,
         time_scaling_factor=0.01, period_scaling_factor=20,
@@ -2145,10 +2386,10 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
         )
     ]
 
-    config = KafkaConfig(container=container, resources=resources, firewall_config=firewall_config,
-                         topics=topics, version=version,
-                         kafka_port=9092, kafka_manager_port=50051, time_step_len_seconds=15,
-                         kafka_manager_log_file="kafka_manager.log",
+    config = KafkaConfig(container=container, resources=resources, topics=topics,
+                         version=version, kafka_port=9092, kafka_manager_port=50051,
+                         time_step_len_seconds=15,
+                         firewall_config=firewall_config, kafka_manager_log_file="kafka_manager.log",
                          kafka_manager_log_dir="/", kafka_manager_max_workers=10)
     return config
 
@@ -2205,6 +2446,12 @@ def default_users_config(network_id: int) -> UsersConfig:
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11", users=[
             User(username="rich", pw="sutton", root=True)
+        ]),
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104", users=[
+            User(username="abraham", pw="wald", root=True)
+        ]),
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204", users=[
+            User(username="tamer", pw="basar", root=True)
         ])
     ]
     users_conf = UsersConfig(users_configs=users)
@@ -2388,7 +2635,20 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
             cvss=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602_CVSS,
             cve=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602,
             root=True, port=None, protocol=TransportProtocol.TCP,
-            service=None)
+            service=None),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.PENGINE_EXPLOIT,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+            vuln_type=VulnType.RCE,
+            credentials=[Credential(username=constants.PENGINE_EXPLOIT.BACKDOOR_USER,
+                                    pw=constants.PENGINE_EXPLOIT.BACKDOOR_PW, root=True,
+                                    service=constants.PENGINE_EXPLOIT.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.PENGINE_EXPLOIT.PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.PENGINE_EXPLOIT_CVSS,
+            cve=constants.EXPLOIT_VULNERABILITES.PENGINE_EXPLOIT,
+            root=True, port=constants.PENGINE_EXPLOIT.PORT, protocol=TransportProtocol.TCP,
+            service=constants.PENGINE_EXPLOIT.SERVICE_NAME)
     ]
     vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
     return vulns_config
@@ -2419,10 +2679,10 @@ def default_services_config(network_id: int) -> ServicesConfig:
                                name=constants.FTP.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.MONGO.DEFAULT_PORT,
                                name=constants.MONGO.SERVICE_NAME, credentials=[]),
-                NetworkService(protocol=TransportProtocol.TCP, port=constants.TEAMSPEAK3.DEFAULT_PORT,
-                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.TOMCAT.DEFAULT_PORT,
-                               name=constants.TOMCAT.SERVICE_NAME, credentials=[])
+                               name=constants.TOMCAT.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TEAMSPEAK3.DEFAULT_PORT,
+                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -2460,8 +2720,6 @@ def default_services_config(network_id: int) -> ServicesConfig:
         NodeServicesConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
             services=[
-                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.DNS.DEFAULT_PORT,
@@ -2551,9 +2809,7 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.TEAMSPEAK3.DEFAULT_PORT,
-                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[]),
-                NetworkService(protocol=TransportProtocol.TCP, port=constants.TOMCAT.DEFAULT_PORT,
-                               name=constants.TOMCAT.SERVICE_NAME, credentials=[])
+                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -2561,6 +2817,24 @@ def default_services_config(network_id: int) -> ServicesConfig:
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.PENGINE_EXPLOIT.PORT,
+                               name=constants.PENGINE_EXPLOIT.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.HTTPS.DEFAULT_PORT,
+                               name=constants.HTTPS.SERVICE_NAME, credentials=[])
             ]
         )
     ]
@@ -2765,222 +3039,272 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.19",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.31",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.42",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.19",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.31",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.42",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
+        NodeBeatsConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.204",
+            log_files_paths=["/*.log",
+                             "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+            filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+            kafka_input=False, start_filebeat_automatically=False,
+            start_packetbeat_automatically=False,
+            metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                collector_constants.METRICBEAT.LINUX_MODULE],
+            start_metricbeat_automatically=False,
+            start_heartbeat_automatically=False,
+            heartbeat_hosts_to_monitor=[
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+            ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
@@ -3026,7 +3350,11 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.79",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.37"
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.37",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.104",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.204"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
@@ -3076,7 +3404,11 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.79",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.37"
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.37",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.104",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.204"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
@@ -3136,7 +3468,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-level7-003", network_id=7, level=7, version="0.0.3")
+    config = default_config(name="csle-level10-010", network_id=10, level=10, version="0.1.0")
     ExperimentUtil.write_emulation_config_file(config, ExperimentUtil.default_emulation_config_path())
 
     if args.install:
