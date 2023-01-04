@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_attacker &mdash; csle-attacker 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-agents
+            <a href="index.html" class="icon icon-home"> csle-attacker
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -36,10 +36,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_attacker.emulation.html">csle_attacker.emulation package</a></li>
 </ul>
 
         </div>
@@ -48,7 +45,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">csle-agents</a>
+          <a href="index.html">csle-attacker</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -56,7 +53,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_agents</li>
+      <li>csle_attacker</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -66,42 +63,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="csle-agents">
-<h1>csle_agents<a class="headerlink" href="#csle-agents" title="Permalink to this headline"></a></h1>
+  <section id="csle-attacker">
+<h1>csle_attacker<a class="headerlink" href="#csle-attacker" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.html">csle_agents package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle-agents-common-actor-critic-net-module">csle_agents.common.actor_critic_net module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_gaussian">csle_agents.common.fnn_w_gaussian module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_linear">csle_agents.common.fnn_w_linear module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_softmax">csle_agents.common.fnn_w_softmax module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.pruning">csle_agents.common.pruning module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants.constants">csle_agents.constants.constants module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers.training_job_manager">csle_agents.job_controllers.training_job_manager module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_attacker.html">csle_attacker package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_attacker.emulation.html">csle_attacker.emulation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#csle-attacker-emulation-attacker-stopping-middleware-module">csle_attacker.emulation.attacker_stopping_middleware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#csle-attacker-emulation-emulated-attacker-module">csle_attacker.emulation.emulated_attacker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#csle-attacker-emulation-exploit-middleware-module">csle_attacker.emulation.exploit_middleware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#csle-attacker-emulation-post-exploit-middleware-module">csle_attacker.emulation.post_exploit_middleware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#csle-attacker-emulation-recon-middleware-module">csle_attacker.emulation.recon_middleware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attacker.emulation.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.html#module-csle_agents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.html#csle-attacker-attacker-module">csle_attacker.attacker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attacker.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>

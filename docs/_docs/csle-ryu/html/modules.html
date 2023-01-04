@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_ryu &mdash; csle-ryu 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-agents
+            <a href="index.html" class="icon icon-home"> csle-ryu
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -36,10 +36,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.constants.html">csle_ryu.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.controllers.html">csle_ryu.controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.dao.html">csle_ryu.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.monitor.html">csle_ryu.monitor package</a></li>
 </ul>
 
         </div>
@@ -48,7 +48,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">csle-agents</a>
+          <a href="index.html">csle-ryu</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -56,7 +56,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_agents</li>
+      <li>csle_ryu</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -66,42 +66,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="csle-agents">
-<h1>csle_agents<a class="headerlink" href="#csle-agents" title="Permalink to this headline"></a></h1>
+  <section id="csle-ryu">
+<h1>csle_ryu<a class="headerlink" href="#csle-ryu" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.html">csle_agents package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_ryu.html">csle_ryu package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_ryu.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_ryu.constants.html">csle_ryu.constants package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.constants.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.constants.html#csle-ryu-constants-constants-module">csle_ryu.constants.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.constants.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle-agents-common-actor-critic-net-module">csle_agents.common.actor_critic_net module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_gaussian">csle_agents.common.fnn_w_gaussian module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_linear">csle_agents.common.fnn_w_linear module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_softmax">csle_agents.common.fnn_w_softmax module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.pruning">csle_agents.common.pruning module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_ryu.controllers.html">csle_ryu.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.controllers.html#csle-ryu-controllers-learning-switch-controller-module">csle_ryu.controllers.learning_switch_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.controllers.html#csle-ryu-controllers-learning-switch-stp-controller-module">csle_ryu.controllers.learning_switch_stp_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.controllers.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants.constants">csle_agents.constants.constants module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_ryu.dao.html">csle_ryu.dao package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#csle-ryu-dao-agg-flow-statistic-module">csle_ryu.dao.agg_flow_statistic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#csle-ryu-dao-avg-flow-statistic-module">csle_ryu.dao.avg_flow_statistic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#csle-ryu-dao-avg-port-statistic-module">csle_ryu.dao.avg_port_statistic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#csle-ryu-dao-flow-statistic-module">csle_ryu.dao.flow_statistic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#csle-ryu-dao-port-statistic-module">csle_ryu.dao.port_statistic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#csle-ryu-dao-ryu-controller-type-module">csle_ryu.dao.ryu_controller_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.dao.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers.training_job_manager">csle_agents.job_controllers.training_job_manager module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_ryu.monitor.html">csle_ryu.monitor package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.monitor.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.monitor.html#csle-ryu-monitor-flow-and-port-stats-monitor-module">csle_ryu.monitor.flow_and_port_stats_monitor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_ryu.monitor.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.html#module-csle_agents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_ryu.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>

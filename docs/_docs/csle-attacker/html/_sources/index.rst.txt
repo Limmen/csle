@@ -1,20 +1,17 @@
-csle\_agents package
-====================
+csle\_attacker package
+======================
 
 Subpackages
 -----------
 
 .. toctree::
 
-   csle_agents.agents
-   csle_agents.common
-   csle_agents.constants
-   csle_agents.job_controllers
+   csle_attacker.emulation
 
 Module contents
 ---------------
 
-.. automodule:: csle_agents
+.. automodule:: csle_attacker
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,20 +1,20 @@
-csle\_agents package
-====================
+gym\_csle_stopping_game package
+===============================
 
 Subpackages
 -----------
 
 .. toctree::
 
-   csle_agents.agents
-   csle_agents.common
-   csle_agents.constants
-   csle_agents.job_controllers
+   gym_csle_stopping_game.constants
+   gym_csle_stopping_game.dao
+   gym_csle_stopping_game.envs
+   gym_csle_stopping_game.util
 
 Module contents
 ---------------
 
-.. automodule:: csle_agents
+.. automodule:: gym_csle_stopping_game
    :members:
    :undoc-members:
    :show-inheritance:

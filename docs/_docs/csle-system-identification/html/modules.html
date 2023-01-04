@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_system_identification &mdash; csle-system-identification 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-agents
+            <a href="index.html" class="icon icon-home"> csle-system-identification
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -36,10 +36,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.base.html">csle_system_identification.base package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.constants.html">csle_system_identification.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.empirical.html">csle_system_identification.empirical package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.gp.html">csle_system_identification.gp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a></li>
 </ul>
 
         </div>
@@ -48,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">csle-agents</a>
+          <a href="index.html">csle-system-identification</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -56,7 +58,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_agents</li>
+      <li>csle_system_identification</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -66,42 +68,55 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="csle-agents">
-<h1>csle_agents<a class="headerlink" href="#csle-agents" title="Permalink to this headline"></a></h1>
+  <section id="csle-system-identification">
+<h1>csle_system_identification<a class="headerlink" href="#csle-system-identification" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.html">csle_agents package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_system_identification.html">csle_system_identification package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.base.html">csle_system_identification.base package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.base.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.base.html#csle-system-identification-base-base-system-identification-algorithm-module">csle_system_identification.base.base_system_identification_algorithm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.base.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle-agents-common-actor-critic-net-module">csle_agents.common.actor_critic_net module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_gaussian">csle_agents.common.fnn_w_gaussian module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_linear">csle_agents.common.fnn_w_linear module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_softmax">csle_agents.common.fnn_w_softmax module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.pruning">csle_agents.common.pruning module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.constants.html">csle_system_identification.constants package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.constants.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.constants.html#csle-system-identification-constants-constants-module">csle_system_identification.constants.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.constants.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants.constants">csle_agents.constants.constants module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.empirical.html">csle_system_identification.empirical package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.empirical.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.empirical.html#csle-system-identification-empirical-empirical-algorithm-module">csle_system_identification.empirical.empirical_algorithm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.empirical.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers.training_job_manager">csle_agents.job_controllers.training_job_manager module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#csle-system-identification-expectation-maximization-expectation-maximization-algorithm-module">csle_system_identification.expectation_maximization.expectation_maximization_algorithm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.gp.html">csle_system_identification.gp package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#csle-system-identification-gp-gp-regression-algorithm-module">csle_system_identification.gp.gp_regression_algorithm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#csle-system-identification-gp-gp-regression-model-with-gauissan-noise-module">csle_system_identification.gp.gp_regression_model_with_gauissan_noise module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle-system-identification-job-controllers-data-collection-job-manager-module">csle_system_identification.job_controllers.data_collection_job_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle-system-identification-job-controllers-system-identification-job-manager-module">csle_system_identification.job_controllers.system_identification_job_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.html#module-csle_agents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.html#csle-system-identification-emulator-module">csle_system_identification.emulator module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>

@@ -46,9 +46,9 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.datasets.html">csle_common.dao.datasets package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_common.dao.docker package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.docker.docker_container_metadata">csle_common.dao.docker.docker_container_metadata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.docker.docker_env_metadata">csle_common.dao.docker.docker_env_metadata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.docker">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle-common-dao-docker-docker-container-metadata-module">csle_common.dao.docker.docker_container_metadata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle-common-dao-docker-docker-env-metadata-module">csle_common.dao.docker.docker_env_metadata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.domain_randomization.html">csle_common.dao.domain_randomization package</a></li>
@@ -64,7 +64,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.training.html">csle_common.dao.training package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="csle_common.dao.html#module-csle_common.dao">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_common.dao.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_common.logging.html">csle_common.logging package</a></li>
@@ -103,126 +103,14 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-csle_common.dao.docker.docker_container_metadata">
-<span id="csle-common-dao-docker-docker-container-metadata-module"></span><h2>csle_common.dao.docker.docker_container_metadata module<a class="headerlink" href="#module-csle_common.dao.docker.docker_container_metadata" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.docker.docker_container_metadata.</span></span><span class="sig-name descname"><span class="pre">DockerContainerMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_short_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gateway</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_prefix_len</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_container_metadata.html#DockerContainerMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO Object representing a running or stopped Docker container</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata" title="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata"><span class="pre">csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_container_metadata.html#DockerContainerMetadata.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a dict representation to an instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the converted instance</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_container_metadata.html#DockerContainerMetadata.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.to_json_file">
-<span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_container_metadata.html#DockerContainerMetadata.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.to_json_file" title="Permalink to this definition"></a></dt>
-<dd><p>Saves the DTO to a json file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.to_json_str">
-<span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_container_metadata.html#DockerContainerMetadata.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata.to_json_str" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a json string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the json string representation of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-common-dao-docker-docker-container-metadata-module">
+<h2>csle_common.dao.docker.docker_container_metadata module<a class="headerlink" href="#csle-common-dao-docker-docker-container-metadata-module" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-csle_common.dao.docker.docker_env_metadata">
-<span id="csle-common-dao-docker-docker-env-metadata-module"></span><h2>csle_common.dao.docker.docker_env_metadata module<a class="headerlink" href="#module-csle_common.dao.docker.docker_env_metadata" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.docker.docker_env_metadata.</span></span><span class="sig-name descname"><span class="pre">DockerEnvMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">containers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata" title="csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata"><span class="pre">csle_common.dao.docker.docker_container_metadata.DockerContainerMetadata</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.kafka_config.KafkaConfig" title="csle_common.dao.emulation_config.kafka_config.KafkaConfig"><span class="pre">csle_common.dao.emulation_config.kafka_config.KafkaConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_env_metadata.html#DockerEnvMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO Object representing a running environment</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata" title="csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata"><span class="pre">csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_env_metadata.html#DockerEnvMetadata.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a dict representation to an instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the created instance</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_env_metadata.html#DockerEnvMetadata.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.to_json_file">
-<span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_env_metadata.html#DockerEnvMetadata.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.to_json_file" title="Permalink to this definition"></a></dt>
-<dd><p>Saves the DTO to a json file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.to_json_str">
-<span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/docker/docker_env_metadata.html#DockerEnvMetadata.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.docker.docker_env_metadata.DockerEnvMetadata.to_json_str" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a json string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the json string representation of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-common-dao-docker-docker-env-metadata-module">
+<h2>csle_common.dao.docker.docker_env_metadata module<a class="headerlink" href="#csle-common-dao-docker-docker-env-metadata-module" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-csle_common.dao.docker">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_common.dao.docker" title="Permalink to this headline"></a></h2>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

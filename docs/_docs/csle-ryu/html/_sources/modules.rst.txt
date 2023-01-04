@@ -1,7 +1,7 @@
-csle_agents
-===========
+csle_ryu
+========
 
 .. toctree::
    :maxdepth: 4
 
-   csle_agents
+   csle_ryu

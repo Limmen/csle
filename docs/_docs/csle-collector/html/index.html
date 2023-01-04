@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents package &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_collector package &mdash; csle-collector 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="csle_agents.agents package" href="csle_agents.agents.html" /> 
+    <link rel="next" title="csle_collector.client_manager package" href="csle_collector.client_manager.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -26,7 +26,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> csle-agents
+            <a href="#" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -37,10 +37,15 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
 </ul>
 
         </div>
@@ -49,7 +54,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">csle-agents</a>
+          <a href="#">csle-collector</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -57,7 +62,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_agents package</li>
+      <li>csle_collector package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -67,178 +72,112 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="csle-agents-package">
-<h1>csle_agents package<a class="headerlink" href="#csle-agents-package" title="Permalink to this headline"></a></h1>
+  <section id="csle-collector-package">
+<h1>csle_collector package<a class="headerlink" href="#csle-collector-package" title="Permalink to this headline"></a></h1>
 <section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.base.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.base.html#module-csle_agents.agents.base.base_agent">csle_agents.agents.base.base_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.base.html#module-csle_agents.agents.base">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#csle-collector-client-manager-client-manager-module">csle_collector.client_manager.client_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#csle-collector-client-manager-client-manager-pb2-module">csle_collector.client_manager.client_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#csle-collector-client-manager-client-manager-pb2-grpc-module">csle_collector.client_manager.client_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#csle-collector-client-manager-client-manager-util-module">csle_collector.client_manager.client_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#csle-collector-client-manager-client-population-metrics-module">csle_collector.client_manager.client_population_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#csle-collector-client-manager-query-clients-module">csle_collector.client_manager.query_clients module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayes_opt.html">csle_agents.agents.bayes_opt package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayes_opt.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayes_opt.html#csle-agents-agents-bayes-opt-bayes-opt-agent-module">csle_agents.agents.bayes_opt.bayes_opt_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayes_opt.html#module-csle_agents.agents.bayes_opt">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.constants.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.constants.html#csle-collector-constants-constants-module">csle_collector.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.constants.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy.cross_entropy_agent">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle-collector-docker-stats-manager-docker-stats-module">csle_collector.docker_stats_manager.docker_stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle-collector-docker-stats-manager-docker-stats-manager-module">csle_collector.docker_stats_manager.docker_stats_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle-collector-docker-stats-manager-docker-stats-manager-pb2-module">csle_collector.docker_stats_manager.docker_stats_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle-collector-docker-stats-manager-docker-stats-manager-pb2-grpc-module">csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle-collector-docker-stats-manager-docker-stats-util-module">csle_collector.docker_stats_manager.docker_stats_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle-collector-docker-stats-manager-query-docker-stats-manager-module">csle_collector.docker_stats_manager.query_docker_stats_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution.differential_evolution_agent">csle_agents.agents.differential_evolution.differential_evolution_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.elk_manager.html">csle_collector.elk_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#csle-collector-elk-manager-elk-manager-module">csle_collector.elk_manager.elk_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#csle-collector-elk-manager-elk-manager-pb2-module">csle_collector.elk_manager.elk_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#csle-collector-elk-manager-elk-manager-pb2-grpc-module">csle_collector.elk_manager.elk_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#csle-collector-elk-manager-elk-manager-util-module">csle_collector.elk_manager.elk_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#csle-collector-elk-manager-query-elk-server-module">csle_collector.elk_manager.query_elk_server module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn.html">csle_agents.agents.dqn package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dqn.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn.dqn_agent">csle_agents.agents.dqn.dqn_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.html">csle_collector.host_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-failed-login-attempt-module">csle_collector.host_manager.failed_login_attempt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-host-manager-module">csle_collector.host_manager.host_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-host-manager-pb2-module">csle_collector.host_manager.host_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-host-manager-pb2-grpc-module">csle_collector.host_manager.host_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-host-manager-util-module">csle_collector.host_manager.host_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-host-metrics-module">csle_collector.host_manager.host_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-query-host-manager-module">csle_collector.host_manager.query_host_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#csle-collector-host-manager-successful-login-module">csle_collector.host_manager.successful_login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html">csle_agents.agents.dynasec package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#module-csle_agents.agents.dynasec.dynasec_agent">csle_agents.agents.dynasec.dynasec_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#module-csle_agents.agents.dynasec">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#csle-collector-kafka-manager-kafka-manager-module">csle_collector.kafka_manager.kafka_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#csle-collector-kafka-manager-kafka-manager-pb2-module">csle_collector.kafka_manager.kafka_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#csle-collector-kafka-manager-kafka-manager-pb2-grpc-module">csle_collector.kafka_manager.kafka_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#csle-collector-kafka-manager-kafka-manager-util-module">csle_collector.kafka_manager.kafka_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#csle-collector-kafka-manager-query-kafka-server-module">csle_collector.kafka_manager.query_kafka_server module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.kafka_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.fp.html">csle_agents.agents.fp package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#module-csle_agents.agents.fp.fictitious_play_agent">csle_agents.agents.fp.fictitious_play_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#module-csle_agents.agents.fp">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-ossec-ids-alert-module">csle_collector.ossec_ids_manager.ossec_ids_alert module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-ossec-ids-alert-counters-module">csle_collector.ossec_ids_manager.ossec_ids_alert_counters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-ossec-ids-manager-module">csle_collector.ossec_ids_manager.ossec_ids_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-ossec-ids-manager-pb2-module">csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-ossec-ids-manager-pb2-grpc-module">csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-ossec-ids-manager-util-module">csle_collector.ossec_ids_manager.ossec_ids_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#csle-collector-ossec-ids-manager-query-ossec-ids-manager-module">csle_collector.ossec_ids_manager.query_ossec_ids_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ossec_ids_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi.hsvi_agent">csle_agents.agents.hsvi.hsvi_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-query-snort-ids-manager-module">csle_collector.snort_ids_manager.query_snort_ids_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-snort-ids-alert-module">csle_collector.snort_ids_manager.snort_ids_alert module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-snort-ids-alert-counters-module">csle_collector.snort_ids_manager.snort_ids_alert_counters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-snort-ids-manager-module">csle_collector.snort_ids_manager.snort_ids_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-snort-ids-manager-pb2-module">csle_collector.snort_ids_manager.snort_ids_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-snort-ids-manager-pb2-grpc-module">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#csle-collector-snort-ids-manager-snort-ids-manager-util-module">csle_collector.snort_ids_manager.snort_ids_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#module-csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#module-csle_agents.agents.hsvi_os_posg">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#module-csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#module-csle_agents.agents.kiefer_wolfowitz">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#module-csle_agents.agents.pi.pi_agent">csle_agents.agents.pi.pi_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#module-csle_agents.agents.pi">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.ppo.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo.ppo_agent">csle_agents.agents.ppo.ppo_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#module-csle_agents.agents.q_learning.q_learning_agent">csle_agents.agents.q_learning.q_learning_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#module-csle_agents.agents.q_learning">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.random_search.html">csle_agents.agents.random_search package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#module-csle_agents.agents.random_search.random_search_agent">csle_agents.agents.random_search.random_search_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#module-csle_agents.agents.random_search">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.reinforce.html">csle_agents.agents.reinforce package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#module-csle_agents.agents.reinforce.reinforce_agent">csle_agents.agents.reinforce.reinforce_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#module-csle_agents.agents.reinforce">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sarsa.html">csle_agents.agents.sarsa package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#module-csle_agents.agents.sarsa.sarsa_agent">csle_agents.agents.sarsa.sarsa_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#module-csle_agents.agents.sarsa">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html">csle_agents.agents.shapley_iteration package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#module-csle_agents.agents.shapley_iteration.shapley_iteration_agent">csle_agents.agents.shapley_iteration.shapley_iteration_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#module-csle_agents.agents.shapley_iteration">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#module-csle_agents.agents.sondik_vi.sondik_vi_agent">csle_agents.agents.sondik_vi.sondik_vi_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#module-csle_agents.agents.sondik_vi">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#module-csle_agents.agents.t_fp.t_fp_agent">csle_agents.agents.t_fp.t_fp_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#module-csle_agents.agents.t_fp">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_spsa.html">csle_agents.agents.t_spsa package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#module-csle_agents.agents.t_spsa.t_spsa_agent">csle_agents.agents.t_spsa.t_spsa_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#module-csle_agents.agents.t_spsa">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.vi.html">csle_agents.agents.vi package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#module-csle_agents.agents.vi.vi_agent">csle_agents.agents.vi.vi_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#module-csle_agents.agents.vi">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#csle-agents-common-actor-critic-net-module">csle_agents.common.actor_critic_net module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_gaussian">csle_agents.common.fnn_w_gaussian module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_linear">csle_agents.common.fnn_w_linear module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.fnn_w_softmax">csle_agents.common.fnn_w_softmax module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common.pruning">csle_agents.common.pruning module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.common.html#module-csle_agents.common">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.constants.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants.constants">csle_agents.constants.constants module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.constants.html#module-csle_agents.constants">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.job_controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers.training_job_manager">csle_agents.job_controllers.training_job_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.job_controllers.html#module-csle_agents.job_controllers">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#csle-collector-traffic-manager-query-traffic-manager-module">csle_collector.traffic_manager.query_traffic_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#csle-collector-traffic-manager-traffic-manager-module">csle_collector.traffic_manager.traffic_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#csle-collector-traffic-manager-traffic-manager-pb2-module">csle_collector.traffic_manager.traffic_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#csle-collector-traffic-manager-traffic-manager-pb2-grpc-module">csle_collector.traffic_manager.traffic_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#csle-collector-traffic-manager-traffic-manager-util-module">csle_collector.traffic_manager.traffic_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.traffic_manager.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </section>
-<section id="module-csle_agents">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents" title="Permalink to this headline"></a></h2>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
@@ -246,7 +185,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csle_agents.agents.html" class="btn btn-neutral float-right" title="csle_agents.agents package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="csle_collector.client_manager.html" class="btn btn-neutral float-right" title="csle_collector.client_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

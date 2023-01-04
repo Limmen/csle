@@ -53,8 +53,8 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.pi package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pi.pi_agent">csle_agents.agents.pi.pi_agent module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pi">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle-agents-agents-pi-pi-agent-module">csle_agents.agents.pi.pi_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
@@ -69,7 +69,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.vi.html">csle_agents.agents.vi package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
@@ -107,175 +107,11 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-csle_agents.agents.pi.pi_agent">
-<span id="csle-agents-agents-pi-pi-agent-module"></span><h2>csle_agents.agents.pi.pi_agent module<a class="headerlink" href="#module-csle_agents.agents.pi.pi_agent" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pi.pi_agent.</span></span><span class="sig-name descname"><span class="pre">PIAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.experiment_config.ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.jobs.training_job_config.TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_agents.agents.base.base_agent.BaseAgent</span></code></a></p>
-<p>Policy Iteration Agent</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.evaluate_policy">
-<span class="sig-name descname"><span class="pre">evaluate_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.evaluate_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.evaluate_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Evalutes a tabular policy</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>policy</strong> – the tabular policy to evaluate</p></li>
-<li><p><strong>eval_batch_size</strong> – the batch size</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.expected_reward_under_policy">
-<span class="sig-name descname"><span class="pre">expected_reward_under_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.expected_reward_under_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.expected_reward_under_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Utility function for computing the expected immediate reward for each state
-in the MDP given a policy.</p>
-<dl class="simple">
-<dt>:param<span class="classifier">P: the state transition probabilities for all actions in the MDP</span></dt><dd><p>(tensor num_actions x num_states x num_states)</p>
-</dd>
-</dl>
-<p>:param : policy: the policy (matrix num_states x num_actions)
-:param : R: the reward function in the MDP (tensor num_actions x num_states x num_states)
-:param : num_states: the number of states
-:param : num_actions: the number of actions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>r: a vector of dimension &lt;num_states&gt; with the expected immediate reward for each state.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.hparam_names">
-<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.hparam_names" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a list with the hyperparameter names</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.pi">
-<span class="sig-name descname"><span class="pre">pi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.pi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.pi" title="Permalink to this definition"></a></dt>
-<dd><p>The policy iteration algorithm, interleaves policy evaluation and policy improvement for N iterations.
-Guaranteed to converge to the optimal policy and value function.</p>
-<p>:param : P: the state transition probabilities for all actions in the MDP
-:param (tensor num_actions x num_states x num_states):
-:param : policy: the policy (matrix num_states x num_actions)
-:param : N: the number of iterations (scalar)
-:param : gamma: the discount factor
-:param : R: the reward function in the MDP (tensor num_actions x num_states x num_states)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a tuple of (v, policy) where v is the state values after N iterations and policy is the policy
-after N iterations.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.policy_evaluation">
-<span class="sig-name descname"><span class="pre">policy_evaluation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.policy_evaluation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.policy_evaluation" title="Permalink to this definition"></a></dt>
-<dd><p>Implements the policy evaluation step in the policy iteration dynamic programming algorithm.
-Uses the linear algebra interpretation of policy evaluation, solving it as a linear system.</p>
-<dl class="simple">
-<dt>:param<span class="classifier">P: the state transition probabilities for all actions in the MDP</span></dt><dd><p>(tensor num_actions x num_states x num_states)</p>
-</dd>
-</dl>
-<p>:param : policy: the policy (matrix num_states x num_actions)
-:param : gamma: the discount factor
-:param : num_states: the number of states
-:param : num_actions: the number of actions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>v: the state values, a vector of dimension NUM_STATES</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.policy_improvement">
-<span class="sig-name descname"><span class="pre">policy_improvement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.policy_improvement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.policy_improvement" title="Permalink to this definition"></a></dt>
-<dd><p>Implements the policy improvement step in the policy iteration dynamic programming algorithm.</p>
-<dl class="simple">
-<dt>:param<span class="classifier">P: the state transition probabilities for all actions in the MDP</span></dt><dd><p>(tensor num_actions x num_states x num_states)</p>
-</dd>
-</dl>
-<p>:param : R: the reward function in the MDP (tensor num_actions x num_states x num_states)
-:param : gamma: the discount factor
-:param : v: the state values (dimension NUM_STATES)
-:param : pi: the old policy (matrix num_states x num_actions)
-:param : num_states: the number of states
-:param : num_actions: the number of actions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>pi_prime: a new updated policy (dimensions num_states x num_actions)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.policy_iteration">
-<span class="sig-name descname"><span class="pre">policy_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.experiment_result.ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.training.experiment_result.ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.policy_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.policy_iteration" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the policy iteration algorithm</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>exp_result</strong> – the experiment result object</p></li>
-<li><p><strong>seed</strong> – the random seed</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the updated experiment result</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.training.experiment_execution.ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.train" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the policy iteration algorithm to compute V*</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the results</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.pi.pi_agent.PIAgent.transition_probability_under_policy">
-<span class="sig-name descname"><span class="pre">transition_probability_under_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pi/pi_agent.html#PIAgent.transition_probability_under_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pi.pi_agent.PIAgent.transition_probability_under_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Utility function for computing the state transition probabilities under the current policy.
-Assumes a deterministic policy (probability 1 of selecting an action in a state)</p>
-<dl class="simple">
-<dt>:param<span class="classifier">P: the state transition probabilities for all actions in the MDP</span></dt><dd><p>(tensor num_actions x num_states x num_states)</p>
-</dd>
-</dl>
-<p>:param : policy: the policy (matrix num_states x num_actions)
-:param : num_states: the number of states</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>P_pi: the transition probabilities in the MDP under the given policy</dt><dd><p>(dimensions num_states x num_states)</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-agents-agents-pi-pi-agent-module">
+<h2>csle_agents.agents.pi.pi_agent module<a class="headerlink" href="#csle-agents-agents-pi-pi-agent-module" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-csle_agents.agents.pi">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.pi" title="Permalink to this headline"></a></h2>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

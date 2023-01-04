@@ -1,7 +1,7 @@
-csle_agents
-===========
+csle_system_identification
+==========================
 
 .. toctree::
    :maxdepth: 4
 
-   csle_agents
+   csle_system_identification

@@ -1,7 +1,7 @@
-csle_agents
-===========
+gym_csle_stopping_game
+======================
 
 .. toctree::
    :maxdepth: 4
 
-   csle_agents
+   gym_csle_stopping_game

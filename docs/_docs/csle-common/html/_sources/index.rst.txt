@@ -1,4 +1,4 @@
-csle\_agents package
+csle\_common package
 ====================
 
 Subpackages
@@ -6,15 +6,19 @@ Subpackages
 
 .. toctree::
 
-   csle_agents.agents
-   csle_agents.common
-   csle_agents.constants
-   csle_agents.job_controllers
+   csle_common.constants
+   csle_common.consumer_threads
+   csle_common.controllers
+   csle_common.dao
+   csle_common.logging
+   csle_common.metastore
+   csle_common.tunneling
+   csle_common.util
 
 Module contents
 ---------------
 
-.. automodule:: csle_agents
+.. automodule:: csle_common
    :members:
    :undoc-members:
    :show-inheritance:
