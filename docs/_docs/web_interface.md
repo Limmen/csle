@@ -126,18 +126,18 @@ The endpoints of the REST API are listed in Tables 20-23. An example HTTP reques
 
 ```bash
 curl https://csle.dev/emulations?ids=true\&token=<my_token>
-[{"emulation":"csle-level1-003","id":1,"running":false`,
-{"emulation":"csle-level2-003","id":2,"running":false`,
-{"emulation":"csle-level3-003","id":3,"running":false`,
-{"emulation":"csle-level4-003","id":4,"running":false`,
-{"emulation":"csle-level5-003","id":5,"running":false`,
-{"emulation":"csle-level6-003","id":6,"running":false`,
-{"emulation":"csle-level7-003","id":7,"running":false`,
-{"emulation":"csle-level8-003","id":8,"running":false`,
-{"emulation":"csle-level9-003","id":9,"running":true`,
-{"emulation":"csle-level10-003","id":10,"running":false`,
-{"emulation":"csle-level11-003","id":11,"running":false`,
-{"emulation":"csle-level12-003","id":12,"running":false`]
+[{"emulation":"csle-level1-010","id":1,"running":false`,
+{"emulation":"csle-level2-010","id":2,"running":false`,
+{"emulation":"csle-level3-010","id":3,"running":false`,
+{"emulation":"csle-level4-010","id":4,"running":false`,
+{"emulation":"csle-level5-010","id":5,"running":false`,
+{"emulation":"csle-level6-010","id":6,"running":false`,
+{"emulation":"csle-level7-010","id":7,"running":false`,
+{"emulation":"csle-level8-010","id":8,"running":false`,
+{"emulation":"csle-level9-010","id":9,"running":true`,
+{"emulation":"csle-level10-010","id":10,"running":false`,
+{"emulation":"csle-level11-010","id":11,"running":false`,
+{"emulation":"csle-level12-010","id":12,"running":false`]
 ```
 
 <p class="captionFig">

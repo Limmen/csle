@@ -127,25 +127,25 @@ Listing 74: Commands to stop monitoring systems.
 
 ### Starting and Stopping Emulation Executions
 To start an execution of an emulation configuration
-with the name `csle-level9-003`, execute the following command:
+with the name `csle-level9-010`, execute the following command:
 
 ```bash
-csle start csle-level9-003
+csle start csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 75: Command to start an execution of the emulation with configuration `csle-level9-003`.
+Listing 75: Command to start an execution of the emulation with configuration `csle-level9-010`.
 </p>
 
 Similarly, to stop an execution of an emulation configuration
-with the name `csle-level9-003`, execute the following command:
+with the name `csle-level9-010`, execute the following command:
 
 ```bash
-csle stop csle-level9-003
+csle stop csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 76: Command to stop an execution of the emulation with configuration `csle-level9-003`.
+Listing 76: Command to stop an execution of the emulation with configuration `csle-level9-010`.
 </p>
 
 The above command will stop all containers but will not remove them,
@@ -155,11 +155,11 @@ by running the command in Listing 75.
 To stop an emulation execution and remove all of its containers and virtual networks, run the command:
 
 ```bash
-csle clean csle-level9-003
+csle clean csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 77: Command to stop and clean an execution of the emulation with configuration `csle-level9-003`.
+Listing 77: Command to stop and clean an execution of the emulation with configuration `csle-level9-010`.
 </p>
 
 ### Access a Terminal in an Emulated Container

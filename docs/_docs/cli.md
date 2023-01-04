@@ -13,18 +13,18 @@ An example command and the resulting output is shown below.
 ```bash
 kim@gpu2 ~> csle ls emulations --all
 CSLE emulations:
-csle-level9-003 [running]
-csle-level1-003 [stopped]
-csle-level2-003 [stopped]
-csle-level3-003 [stopped]
-csle-level4-003 [stopped]
-csle-level5-003 [stopped]
-csle-level6-003 [stopped]
-csle-level7-003 [stopped]
-csle-level8-003 [stopped]
-csle-level10-003 [stopped]
-csle-level11-003 [stopped]
-csle-level12-003 [stopped]
+csle-level9-010 [running]
+csle-level1-010 [stopped]
+csle-level2-010 [stopped]
+csle-level3-010 [stopped]
+csle-level4-010 [stopped]
+csle-level5-010 [stopped]
+csle-level6-010 [stopped]
+csle-level7-010 [stopped]
+csle-level8-010 [stopped]
+csle-level10-010 [stopped]
+csle-level11-010 [stopped]
+csle-level12-010 [stopped]
 ```
 
 <p class="captionFig">

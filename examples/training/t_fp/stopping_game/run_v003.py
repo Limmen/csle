@@ -113,8 +113,8 @@ def get_obs_tensor():
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
-    defender_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-003")
-    attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-003")
+    defender_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-010")
+    attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-010")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tfp_test",
         title="T-FP training attacker and defender through self-play to approximate a Nash equilibrium",

@@ -113,7 +113,7 @@ def get_obs_tensor():
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-003")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-010")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test",
         title="T-SPSA training attacker to learn 2L thresholds",

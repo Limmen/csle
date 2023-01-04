@@ -17,15 +17,15 @@ Listing 61: Command to list all information about CSLE.
 
 The above command lists information about the CSLE installation,
 including the emulation configurations that are installed in the metastore.
-Select one emulation configuration to start an execution, e.g. `csle-level9-003`,
+Select one emulation configuration to start an execution, e.g. `csle-level9-010`,
 and then run the command:
 
 ```bash
-csle start csle-level9-003
+csle start csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 62: Command to start an execution of the emulation configuration csle-level9-003.
+Listing 62: Command to start an execution of the emulation configuration csle-level9-010.
 </p>
 
 The above command will start all containers of the emulation and apply the configuration.

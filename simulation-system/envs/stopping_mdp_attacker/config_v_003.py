@@ -31,7 +31,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 
 
-def default_config(name: str, version: str = "0.0.3", min_alerts_weighted_by_priority: int = 0,
+def default_config(name: str, version: str = "0.1.0", min_alerts_weighted_by_priority: int = 0,
                    max_alerts_weighted_by_priority: int = 100) -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
@@ -314,7 +314,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-stopping-mdp-attacker-003", version="0.0.3")
+    config = default_config(name="csle-stopping-mdp-attacker-010", version="0.1.0")
 
     if args.install:
         SimulationEnvController.install_simulation(config=config)

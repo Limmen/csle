@@ -136,11 +136,11 @@ layout: default
                 from csle_common.dao.training.tabular_policy import TabularPolicy
 
                 # Select emulation configuration from the metastore
-                emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
+                emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
 
                 # Select simulation configuration from the metastore
                 simulation_env_config = MetastoreFacade.get_simulation_by_name(
-                                                   "csle-stopping-pomdp-defender-003")
+                                                   "csle-stopping-pomdp-defender-010")
 
                 # Setup the reinforcement learning experiment
                 experiment_config = ExperimentConfig(
