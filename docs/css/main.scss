@@ -60,7 +60,7 @@ body {
   font-size: 16px;
 }
 .page-content {
-  padding-bottom: 20px;
+  padding-bottom: 40px;
 }
 .footer {
   position: absolute;
@@ -159,8 +159,13 @@ body {
   font-style: italic;
 }
 
-.methodFig {
+.csleFig {
   text-align: center;
+}
+
+.captionFig {
+  text-align: center;
+  font-style: italic;
 }
 
 .footerLogos {

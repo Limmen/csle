@@ -1,0 +1,186 @@
+---
+title: Operating CSLE
+permalink: /docs/operating/
+---
+
+## Operating CSLE
+
+This section describes commands and procedures that are useful when operating CSLE.
+The framework can be operated in two ways,
+either trough the web interface or through the CLI (see Fig. 28).
+This section focuses on the CLI, but more or less the same commands can be invoked through the web interface,
+which should be self-explanatory.
+
+<p align="center">
+<img src="./../../img/csle_operation.png" width="70%">
+<p class="captionFig">
+Figure 28: User interfaces of CSLE; a user can execute commands to the management system 
+through two interfaces: a web interface and a Command-Line Interface (CLI).
+</p>
+</p>
+
+### Listing the Available Commands in the CLI
+To list the available commands in the CSLE CLI, run the command:
+
+```bash
+csle help
+```
+
+<p class="captionFig">
+Listing 66: Command to list the available commands in the CSLE CLI.
+</p>
+
+### Listing the State of CSLE
+Information about the CSLE installation and its current state can be listed by executing the following command:
+
+```bash
+csle ls --all
+```
+
+<p class="captionFig">
+Listing 67: Command to list the state of a CSLE installation.
+</p>
+
+### Starting, Stopping, and Resetting the Metastore
+
+The metastore can be started by executing the following command:
+
+```bash
+sudo service postgresql start
+```
+
+<p class="captionFig">
+Listing 68: Command to start the metastore.
+</p>
+
+The metastore can be stopped by executing the command:
+
+```bash
+sudo service postgresql stop
+```
+
+<p class="captionFig">
+Listing 69: Command to stop the metastore.
+</p>
+
+To reset the metastore, execute the commands:
+
+```bash
+cd metastore; make clean
+cd metastore; make build
+```
+
+<p class="captionFig">
+Listing 70: Commands to reset the metastore. 
+</p>
+
+### Starting and Stopping the Management System
+
+The management system can be started by executing the command:
+
+```bash
+csle start managementsystem
+```
+
+<p class="captionFig">
+Listing 71: Command to start the management system.
+</p>
+
+The management system can be stopped by executing the command:
+
+```bash
+csle stop managementsystem
+```
+
+<p class="captionFig">
+Listing 72: Command to stop the management system.
+</p>
+
+### Starting and Stopping Monitoring Systems
+
+The monitoring systems Grafana, cAdvisor, Node exporter, and Prometheus can
+be started by executing the commands:
+
+```bash
+csle start grafana
+csle start cadvisor
+csle start nodeexporter
+csle start prometheus
+```
+
+<p class="captionFig">
+Listing 73: Commands to start monitoring systems.
+</p>
+
+Similarly, Grafana, cAdvisor, Node exporter, and Prometheus can be stopped by executing the commands:
+
+```bash
+csle stop grafana
+csle stop cadvisor
+csle stop nodeexporter
+csle stop prometheus
+```
+
+<p class="captionFig">
+Listing 74: Commands to stop monitoring systems.
+</p>
+
+### Starting and Stopping Emulation Executions
+To start an execution of an emulation configuration
+with the name `csle-level9-003`, execute the following command:
+
+```bash
+csle start csle-level9-003
+```
+
+<p class="captionFig">
+Listing 75: Command to start an execution of the emulation with configuration `csle-level9-003`.
+</p>
+
+Similarly, to stop an execution of an emulation configuration
+with the name `csle-level9-003`, execute the following command:
+
+```bash
+csle stop csle-level9-003
+```
+
+<p class="captionFig">
+Listing 76: Command to stop an execution of the emulation with configuration `csle-level9-003`.
+</p>
+
+The above command will stop all containers but will not remove them,
+which means that the emulation can be started again with the same configuration
+by running the command in Listing 75.
+
+To stop an emulation execution and remove all of its containers and virtual networks, run the command:
+
+```bash
+csle clean csle-level9-003
+```
+
+<p class="captionFig">
+Listing 77: Command to stop and clean an execution of the emulation with configuration `csle-level9-003`.
+</p>
+
+### Access a Terminal in an Emulated Container
+
+To see which containers are running, execute the command:
+
+```bash
+csle ls --all
+```
+
+<p class="captionFig">
+Listing 78: Command to list running CSLE containers.
+</p>
+
+To open a terminal in a running container,
+e.g. a container with the name `mycontainer`, run the command:
+
+```bash
+To open a terminal in a running container, e.g. a container with the name `mycontainer`, run the command:
+```
+
+<p class="captionFig">
+Listing 79: Command to open a terminal in an emulated container. 
+</p>

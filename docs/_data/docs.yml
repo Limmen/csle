@@ -2,86 +2,50 @@
   docs:
     - what-is-csle
     - why-csle
-    - csle-architecture
-    - csle-background
+    - background
+    - resources
+    - contributing
+    - license
 
-- title: Installation
-  docs:
-    - install-overview
-    - dependencies-install
-    - configuration-install
-    - metastore-install
-    - simulation-install
-    - cli-install
-    - emulation-install
-    - management-install
-    - uninstall
 
-- title: Command-Line Interface
+- title: Architecture and Design
   docs:
+    - overall-architecture
+    - management-system
+    - metastore
+    - emulation-system
+    - simulation-system
+    - web-interface
     - cli
 
-- title: Metastore
+- title: Getting Started
   docs:
-    - metastore
-
-- title: Emulation System
-  docs:
-    - emulation-system-overview
-    - attack-emulation
-    - client-emulation
-    - defense-emulation
-    - create-emulations
-    - running-emulations
-    - collecting-traces
-    - managing-emulations
-
-- title: Simulation System
-  docs:
-    - simulation-system-overview
-    - create-simulations
-    - system-identification
-    - reinforcement-learning
-    - managing-simulations
-
-
-- title: Management System
-  docs:
-    - management-system
-    - policy-examination
-    - rest-api
-
+    - installing
+    - quick-start
+    - uninstalling
+    - operating
+    - examples
 
 - title: Developer Guide
   docs:
-    - developer-guide
-    - emulation-system-development
-    - simulation-system-development
-    - management-system-development
+    - development-conventions
+    - installing-devtools
+    - writing-docs
+    - debugging
     - tests
-    - static-code-analysis
-    - dependency-management
-    - release-management
-    - continuous-integration
+    - code-analysis
+    - dependencies
+    - releases
 
-- title: Examples
+- title: How-to Guides and Tutorials
   docs:
-    - ppo
-    - dqn
-    - t-spsa
-    - differential-evolution
-    - random-search
-    - value-iteration
-    - hsvi
-    - bayesian-optimization
-    - q-learning
-    - cross-entropy
-    - shapley-iteration
-    - sarsa
-    - reinforce
-    - system-identification-em
-    - collecting-traces-example
-
+    - how-to-base-container
+    - how-to-derived-container
+    - how-to-emulation-config
+    - how-to-simulation-config
+    - how-to-monitoring-agent
+    - how-to-numerical-algo
+    - how-to-config-param
 
 - title: Frequently Asked Questions
   docs:
