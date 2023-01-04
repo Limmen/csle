@@ -20,5 +20,5 @@ There are three kinds of documentation in CSLE:
    simulation-system/libs/generate_docs.sh
    ```
   <p class="captionFig">
-  Listing 97: Command to generate the Python API documentation.
+   Listing 97: Command to generate the Python API documentation.
   </p>
