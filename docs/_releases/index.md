@@ -16,3 +16,5 @@ The following is a list of official releases of of the Cyber Security Learning E
 (2) first release of the simulation system; and (3), first release of the management system.
 
 **Download:** [https://github.com/Limmen/csle/releases/tag/v0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0)
+
+**Documentation:** [https://github.com/Limmen/csle/blob/master/releases/CSLE_RELEASE_v0.1.0_DOCUMENTATION.pdf](https://github.com/Limmen/csle/blob/master/releases/CSLE_RELEASE_v0.1.0_DOCUMENTATION.pdf)
