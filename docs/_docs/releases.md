@@ -70,35 +70,35 @@ Listing 108: Command to generate release documentation.
    <p class="captionFig">
    Listing 111: Directory with derived Docker images in CSLE.
    </p>
-4Edit the versions of the base images in the Dockerfiles inside the following directory:
+4. Edit the versions of the base images in the Dockerfiles inside the following directory:
     ```bash
      ./emulation-system/base_images/
     ```
    <p class="captionFig">
    Listing 112: Directory with base Docker images in CSLE.
    </p>   
-4. Edit the version parameters in all emulation configurations in the following directory:
+5. Edit the version parameters in all emulation configurations in the following directory:
    ```bash
    ./emulation-system/envs
    ```
    <p class="captionFig">
    Listing 113: Directory with emulation configurations.
    </p>
-5. Build the images by running the command:
+6. Build the images by running the command:
     ```bash
       cd emulation-system/; make build
     ```
    <p class="captionFig">
    Listing 114: Command to build the Docker images in CSLE.
    </p>
-6. Push the images to DockerHub by running the command:
+7. Push the images to DockerHub by running the command:
     ```bash
      cd emulation-system/; make push
     ```
    <p class="captionFig">
    Listing 115: Command to push Docker images to DockerHub.
    </p>
-7. Insert the new emulation configuration into the metastore by running the command:
+8. Insert the new emulation configuration into the metastore by running the command:
     ```bash
      cd emulation-system/; make emulations
     ```

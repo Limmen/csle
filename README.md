@@ -50,9 +50,9 @@ Documentation, installation instructions, and usage examples are available [here
 
 ## Supported Releases
 
-| Release | Build Status | Last date of support |
-|---------|--------------|----------------------|
-| TODO    | TODO badge   | TODO date            |
+| Release                                                       | Build Status | Last date of support |
+|---------------------------------------------------------------|--------------|----------------------|
+| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-06-06           |
 
 Maintenance releases have a stable API and dependency tree,
 and receive bug fixes and critical improvements but not new features. We
