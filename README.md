@@ -6,8 +6,8 @@
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
         <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
-    <a href="https://img.shields.io/badge/version-0.0.1-blue">
-        <img src="https://img.shields.io/badge/version-0.0.1-blue" /></a>
+    <a href="https://img.shields.io/badge/version-0.1.0-blue">
+        <img src="https://img.shields.io/badge/version-0.1.0-blue" /></a>
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
