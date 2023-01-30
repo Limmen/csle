@@ -40,6 +40,8 @@ CSLE includes a simulation system for executing reinforcement learning algorithm
 and simulating Markov decision processes and Markov games. It is built in Python and can be integrated
 with standard machine learning libraries.
 
+![](docs/img/training.gif)
+
 ### **Management System**
 
 CSLE includes a system for managing emulations and simulations which can be accessed either through a REST API
