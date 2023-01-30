@@ -30,23 +30,25 @@ is possible to train and evaluate reinforcement learning agents on practical pro
 ### **Emulation System**
 
 CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations.
-It is based on Linux containers and can be used to collect traces and to evaluate security policies. 
+It is based on Linux containers and can be used to collect traces and to evaluate security policies.
 
 ### **Simulation System**
 
-CSLE includes a simulation system for executing reinforcement learning algorithms 
-and simulating Markov decision processes and Markov games. It is built in Python and can be integrated 
+CSLE includes a simulation system for executing reinforcement learning algorithms
+and simulating Markov decision processes and Markov games. It is built in Python and can be integrated
 with standard machine learning libraries.
 
 ### **Management System**
 
-CSLE includes a system for managing emulations and simulations which can be accessed either through a REST API 
-or through a web interface. The management system allows a) to start/stop emulations/simulations; 
+CSLE includes a system for managing emulations and simulations which can be accessed either through a REST API
+or through a web interface. The management system allows a) to start/stop emulations/simulations;
 b) real-time monitoring of emulation and simulation processes; and c), shell access to components of emulations.
+
+![](docs/img/web_ui.gif)
 
 ## Documentation
 
-Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). 
+Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/).
 
 ## Supported Releases
 
@@ -90,9 +92,9 @@ Kim Hammar <kimham@kth.se>
 Made with &#10084; &nbsp;
 at &nbsp; <a href="https://www.kth.se/" target="_blank">
 <img align="absmiddle" src="docs/img/kth_logo.png" width="10%", height="10%">
-</a> 
+</a>
 &nbsp;
-and 
+and
 &nbsp;<a href="https://www.kth.se/cdis" target="_blank">
 <img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
 </a>
