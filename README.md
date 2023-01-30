@@ -32,6 +32,8 @@ is possible to train and evaluate reinforcement learning agents on practical pro
 CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations.
 It is based on Linux containers and can be used to collect traces and to evaluate security policies.
 
+![](docs/img/cli.gif)
+
 ### **Simulation System**
 
 CSLE includes a simulation system for executing reinforcement learning algorithms
