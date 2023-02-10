@@ -5,6 +5,9 @@ SELECT 'CREATE DATABASE csle'
 -- Connect to the csle db --
 \connect csle
 
+-- Create CITUS extension ---
+CREATE EXTENSION citus;
+
 -- Create csle user --
 REASSIGN OWNED BY csle TO postgres;
 DROP OWNED BY csle;
