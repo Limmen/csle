@@ -8,7 +8,7 @@ citus:
 	sudo psql -U postgres -a -f make_db.sql
 
 # Create db, users, and tables
-build: citus
+build:
 	sudo psql -U postgres -a -f create_tables.sql
 
 # Start a postgresql shell
