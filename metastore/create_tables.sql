@@ -5,15 +5,6 @@ SELECT 'CREATE DATABASE csle'
 -- Connect to the csle db --
 \connect csle
 
--- Create CITUS extension --
-CREATE EXTENSION citus;
-
--- Setup citus coordinator node --
-SELECT citus_set_coordinator_host('172.31.212.92', 5432);
-
--- Setup citus worker nodes --
-SELECT citus_add_node('172.31.212.91', 5432);
-
 -- Create csle user --
 REASSIGN OWNED BY csle TO postgres;
 DROP OWNED BY csle;
@@ -22,6 +13,15 @@ CREATE USER csle WITH ENCRYPTED PASSWORD 'csle';
 
 -- Grant priviliges to csle user for the csle db --
 GRANT ALL PRIVILEGES ON DATABASE csle TO csle;
+
+-- Create CITUS extension --
+CREATE EXTENSION citus;
+
+-- Setup citus coordinator node --
+SELECT citus_set_coordinator_host('172.31.212.92', 5432);
+
+-- Setup citus worker nodes --
+SELECT citus_add_node('172.31.212.91', 5432);
 
 -- Create table that stores the emulations --
 CREATE TABLE IF NOT EXISTS emulations (
