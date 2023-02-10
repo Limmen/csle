@@ -1,18 +1,18 @@
 PROJECT=csle
 VERSION=0.0.1
 
-all: build
+all: db cluster tables
 
-# Setup Citus (should be done before build)
-citus:
-	sudo psql -U postgres -a -f make_db.sql
+# Setup db and citus (should be done before build)
+db:
+	sudo psql -U postgres -a -f create_db.sql
 
 # Setup cluster (should be done before build and after citus)
 cluster:
 	sudo psql -U postgres -a -f create_cluster.sql
 
 # Create db, users, and tables
-build:
+tables:
 	sudo psql -U postgres -a -f create_tables.sql
 
 # Start a postgresql shell

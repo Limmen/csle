@@ -1,38 +1,24 @@
 # CSLE Metastore
 
-CSLE stores metadata in a PostgreSQL database. Follow the steps below to install PostgreSQL and setup the database.
+CSLE stores metadata in a PostgreSQL Citus database.
 
 <p align="center">
 <img src="./../docs/img/postgres.png" width="250">
 </p>
 
-## Setup PostgreSQL
+## Setup the metastore
 
-Install postgresql:
+Create database
 ```bash
-sudo apt-get install postgresql # install postgresql
-sudo apt-get install libpq-dev # install dependencies
+make db
 ```
-
-Set a password for the postgres user:
+Create Citus cluster
 ```bash
-sudo -u postgres psql  # start psql session as admin user posgres
-psql> \password postgres # set postgres password
+make cluster
 ```
-
-Setup password authentication for user postgres:
-1. Open file `/etc/postgresql/10/main/pg_hba.conf`
-2. Change `peer` to `md5` on line: `local all postgres peer`
-3. Save and close the file
-4. Restart postgres with the command `sudo service postgresql restart`
-
-Create database and tables:
+Create tables
 ```bash
-sudo psql -U postgres -a -f create_tables.sql
-```
-Or by using the command:
-```bash
-make build
+make tables
 ```
 You can also reset the database with the command:
 ```bash
@@ -41,7 +27,7 @@ make clean
 
 Other useful psql commands: 
 ```bash
-sudo -u postgres psql  # start psql session as admin user posgres
+sudo -u postgres psql  # start psql session as admin user postgres
 psql> \l # Lists databases
 psql> \c csle # Connect to database csle
 psql> \dt # List tables
@@ -49,12 +35,13 @@ psql> \du # List users
 psql> \dn # List schemas
 ```
 
-Commands for starting/restarting/stopping postrgresql:
+Commands for starting/restarting/stopping PostgreSql:
 ```
 sudo service postgresql stop
 sudo service postgresql start
 sudo service postgresql restart
 ```
+
 Logs:
 
 ```
