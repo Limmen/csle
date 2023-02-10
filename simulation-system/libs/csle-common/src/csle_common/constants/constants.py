@@ -1182,6 +1182,8 @@ class AGENT:
     USER = "agent"
     PW = "agent"
 
+class CITUS:
+    COORDINATOR_PORT = 5432
 
 class CSLE_ADMIN:
     """
