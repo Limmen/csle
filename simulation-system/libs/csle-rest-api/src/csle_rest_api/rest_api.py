@@ -29,6 +29,7 @@ from csle_rest_api.pages.server_cluster.routes import get_server_cluster_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
 from csle_rest_api.resources.prometheus.routes import prometheus_bp
 from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
+from csle_rest_api.resources.pgadmin.routes import pgadmin_bp
 from csle_rest_api.resources.grafana.routes import grafana_bp
 from csle_rest_api.resources.emulations.routes import emulations_bp
 from csle_rest_api.resources.emulation_executions.routes import emulation_executions_bp
@@ -109,6 +110,8 @@ def create_app(static_folder: str):
                                       f"{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE}")
     app.register_blueprint(cadvisor_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}")
+    app.register_blueprint(pgadmin_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}")
     app.register_blueprint(grafana_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}")
     app.register_blueprint(get_images_page_bp(static_folder=f"../../{static_folder}"),

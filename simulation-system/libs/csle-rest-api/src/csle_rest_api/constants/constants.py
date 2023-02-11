@@ -46,6 +46,7 @@ class MGMT_WEBAPP:
     TRACES_PAGE_RESOURCE = "traces-page"
     TRAINING_PAGE_RESOURCE = "training-page"
     CADVISOR_RESOURCE = "cadvisor"
+    PGADMIN_RESOURCE = "pgadmin"
     GRAFANA_RESOURCE = "grafana"
     NODE_EXPORTER_RESOURCE = "node-exporter"
     PROMETHEUS_RESOURCE = "prometheus"

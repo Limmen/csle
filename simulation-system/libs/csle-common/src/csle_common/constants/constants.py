@@ -58,6 +58,7 @@ class CONTAINER_IMAGES:
     HACKER_IMAGES = ["csle_hacker_kali_1"]
     CLIENT_IMAGES = ["csle_client_1"]
     CADVISOR = "cadvisor"
+    PGADMIN = "pgadmin"
     GRAFANA = "grafana"
 
 
@@ -876,6 +877,8 @@ class COMMANDS:
                      "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
                      f"--publish={CADVISOR_PORT}:{CADVISOR_PORT}  --name=cadvisor  " \
                      "google/cadvisor:latest"
+    START_PGADMIN = "docker run -p 7778:80 -e 'PGADMIN_DEFAULT_EMAIL=csle@csle.com' -e " \
+                    "'PGADMIN_DEFAULT_PASSWORD=cslePassword' -d --name=pgadmin dpage/pgadmin4"
     CONTAINER_LOGS = "docker logs {}"
     CADVISOR_LOGS = "docker logs cadvisor"
     GRAFANA_LOGS = "docker logs grafana"

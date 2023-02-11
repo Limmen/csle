@@ -196,6 +196,18 @@ class ManagementSystemController:
         return False
 
     @staticmethod
+    def is_pgadmin_running() -> bool:
+        """
+        :return: True if pgadmin is running, otherwise False
+        """
+        client_1 = docker.from_env()
+        containers = client_1.containers.list()
+        for c in containers:
+            if constants.CONTAINER_IMAGES.PGADMIN in c.name:
+                return True
+        return False
+
+    @staticmethod
     def stop_cadvisor() -> bool:
         """
         :return: True if cadvisor was stopped, otherwise False
@@ -204,6 +216,19 @@ class ManagementSystemController:
         containers = client_1.containers.list()
         for c in containers:
             if constants.CONTAINER_IMAGES.CADVISOR in c.name:
+                c.stop()
+                return True
+        return False
+
+    @staticmethod
+    def stop_pgadmin() -> bool:
+        """
+        :return: True if pgadmin was stopped, otherwise False
+        """
+        client_1 = docker.from_env()
+        containers = client_1.containers.list()
+        for c in containers:
+            if constants.CONTAINER_IMAGES.PGADMIN in c.name:
                 c.stop()
                 return True
         return False
@@ -225,6 +250,27 @@ class ManagementSystemController:
                     c.start()
                     return True
         cmd = constants.COMMANDS.START_CADVISOR
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        return True
+
+    @staticmethod
+    def start_pgadmin() -> bool:
+        """
+        :return: True if pgadmin was started, otherwise False
+        """
+        if ManagementSystemController.is_pgadmin_running():
+            return False
+        client_1 = docker.from_env()
+        containers = client_1.containers.list(all=True)
+        for c in containers:
+            if constants.CONTAINER_IMAGES.PGADMIN in c.name:
+                container_state = c.attrs['State']
+                running = container_state['Status'] == "running"
+                if not running:
+                    c.start()
+                    return True
+        cmd = constants.COMMANDS.START_PGADMIN
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True

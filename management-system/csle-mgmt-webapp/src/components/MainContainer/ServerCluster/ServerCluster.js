@@ -67,8 +67,6 @@ const ServerCluster = (props) => {
                 return res.json()
             })
             .then(response => {
-                console.log("RECEIVED")
-                console.log(response)
                 setLoadingServerCluster(false)
                 setServerCluster(response.cluster_nodes)
                 setFilteredServerCluster(response.cluster_nodes)
@@ -391,7 +389,7 @@ const ServerCluster = (props) => {
         setLoadingServerCluster(true)
         fetchServerCluster()
         fetchGrafanaStatus()
-        // fetchPgAdminStatus()
+        fetchPgAdminStatus()
         fetchPrometheusStatus()
         fetchCadvisorStatus()
         fetchNodeExporterStatus()
@@ -480,6 +478,8 @@ const ServerCluster = (props) => {
                                                       sessionData={props.sessionData}/>
                                     <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
                                                   sessionData={props.sessionData}/>
+                                    <PgAdminLink className="grafanaStatus" pgAdminStatus={pgAdminStatus}
+                                                 sessionData={props.sessionData}/>
                                 </td>
                             </tr>
                         )}
@@ -490,17 +490,66 @@ const ServerCluster = (props) => {
         }
     }
 
-    const renderStartTooltip = (props) => (
+    const renderStartGrafanaTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start service
+            Start Grafana
         </Tooltip>
     );
 
-    const renderStopTooltip = (props) => (
+    const renderStopGrafanaTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop service
+            Stop Grafana
         </Tooltip>
     );
+
+    const renderStartcAdvisorTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Start cAdvisor
+        </Tooltip>
+    );
+
+    const renderStopcAdvisorTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Stop cAdvisor
+        </Tooltip>
+    );
+
+    const renderStartpgAdminTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Start pgAdmin
+        </Tooltip>
+    );
+
+    const renderStoppgAdminTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Stop pgAdmin
+        </Tooltip>
+    );
+
+    const renderStartPrometheusTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Start Prometheus
+        </Tooltip>
+    );
+
+    const renderStopPrometheusTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Stop Prometheus
+        </Tooltip>
+    );
+
+    const renderStartNodeExporterTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Start Node exporter
+        </Tooltip>
+    );
+
+    const renderStopNodeExporterTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Stop Node exporter
+        </Tooltip>
+    );
+
 
     const renderGrafanaTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -580,9 +629,9 @@ const ServerCluster = (props) => {
                             <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
                         </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStartTooltip()}>
+                        overlay={renderStartGrafanaTooltip()}>
                         <Button variant="success" className="startButton" size="sm"
                                 onClick={() => startOrStopGrafana()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
@@ -599,9 +648,9 @@ const ServerCluster = (props) => {
                         <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
                     </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
+                        overlay={renderStopGrafanaTooltip()}>
                         <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopGrafana()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
@@ -641,9 +690,9 @@ const ServerCluster = (props) => {
                             <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
                         </OverlayTrigger>
                 <OverlayTrigger
-                    placement="right"
+                    placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderStartTooltip()}>
+                    overlay={renderStartPrometheusTooltip()}>
                         <Button variant="success" className="startButton" size="sm"
                                 onClick={() => startOrStopPrometheus()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
@@ -660,9 +709,9 @@ const ServerCluster = (props) => {
                         <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
                     </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
+                        overlay={renderStopPrometheusTooltip()}>
                         <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopPrometheus()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
@@ -702,9 +751,9 @@ const ServerCluster = (props) => {
                             <i className="fa fa-cloud" aria-hidden="true"></i>
                         </OverlayTrigger>
                 <OverlayTrigger
-                    placement="right"
+                    placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderStartTooltip()}>
+                    overlay={renderStartNodeExporterTooltip()}>
                         <Button variant="success" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopNodeExporter()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
@@ -721,9 +770,9 @@ const ServerCluster = (props) => {
                         <i className="fa fa-cloud" aria-hidden="true"></i>
                     </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
+                        overlay={renderStopNodeExporterTooltip()}>
                         <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopNodeExporter()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
@@ -765,9 +814,9 @@ const ServerCluster = (props) => {
                                  height="2%"/>
                         </OverlayTrigger>
                 <OverlayTrigger
-                    placement="right"
+                    placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderStartTooltip()}>
+                    overlay={renderStartcAdvisorTooltip()}>
                         <Button variant="success" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopcAdvisor()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
@@ -785,9 +834,9 @@ const ServerCluster = (props) => {
                              height="2%"/>
                     </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
+                        overlay={renderStopcAdvisorTooltip()}>
                         <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopcAdvisor()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
@@ -798,8 +847,9 @@ const ServerCluster = (props) => {
         }
     }
 
-
     const PgAdminLink = (props) => {
+        console.log("PGADMINSTATUS:")
+        console.log(props.pgAdminStatus)
         if (props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
             if (props.pgAdminStatus == null || props.pgAdminStatus.running === false) {
                 return (
@@ -811,7 +861,7 @@ const ServerCluster = (props) => {
                             placement="top"
                             delay={{show: 0, hide: 0}}
                             overlay={renderPgAdminTooltip()}>
-                            <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
+                            <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="7%" height="7%"/>
                         </OverlayTrigger>
                     </a>
                 )
@@ -824,12 +874,12 @@ const ServerCluster = (props) => {
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPgAdminTooltip()}>
-                            <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
+                            <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="7%" height="7%"/>
                         </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStartTooltip()}>
+                        overlay={renderStartpgAdminTooltip()}>
                         <Button variant="success" className="startButton" size="sm"
                                 onClick={() => startOrStopPgAdmin()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
@@ -843,12 +893,12 @@ const ServerCluster = (props) => {
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPgAdminTooltip()}>
-                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
+                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="7%" height="7%"/>
                     </OverlayTrigger>
                     <OverlayTrigger
-                        placement="right"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
+                        overlay={renderStoppgAdminTooltip()}>
                         <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopPgAdmin()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
@@ -866,7 +916,7 @@ const ServerCluster = (props) => {
         fetchCadvisorStatus()
         fetchPrometheusStatus()
         fetchNodeExporterStatus()
-        // fetchPgAdminStatus()
+        fetchPgAdminStatus()
     }, [fetchServerCluster, fetchGrafanaStatus, fetchCadvisorStatus, fetchPrometheusStatus,
         fetchNodeExporterStatus, fetchPgAdminStatus]);
 
@@ -919,7 +969,8 @@ const ServerCluster = (props) => {
                 </div>
                 <div className="col-sm-2"></div>
             </div>
-            <SpinnerOrTable serverCluster={filteredServerCluster} loading={loadingServerCluster}/>
+            <SpinnerOrTable serverCluster={filteredServerCluster} loading={loadingServerCluster}
+                            sessionData={props.sessionData}/>
         </div>
     );
 }

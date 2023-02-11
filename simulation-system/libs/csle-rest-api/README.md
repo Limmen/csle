@@ -19,6 +19,7 @@ A REST API for the CSLE management platform.
 | `/simulations?ids=true&token=<valid_token>`                                                           | List of simulation ids only (fast to fetch)                    | `GET`,`DELETE`                          |
 | `/simulations/<simulation_id>?token=<valid_token>`                                                    | Individual simulation                                          | `GET`,`DELETE`                          |
 | `/cadvisor?token=<valid_token>`                                                                       | Starts/stops cadvisor                                          | `POST`                                  |
+| `/pgadmin?token=<valid_token>`                                                                        | Starts/stops pgadmin                                           | `POST`                                  |
 | `/nodeexporter?token=<valid_token>`                                                                   | Starts/stops nodeexporter                                      | `POST`                                  |
 | `/grafana?token=<valid_token>`                                                                        | Starts/stops grafana                                           | `POST`                                  |
 | `/prometheus?token=<valid_token>`                                                                     | Starts/stops prometheus                                        | `POST`                                  |
