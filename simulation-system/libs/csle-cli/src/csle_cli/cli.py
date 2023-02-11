@@ -6,10 +6,10 @@ To see options, run:
 """
 from typing import List, Tuple, Union
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
-from csle_common.dao.emulation_config.config import Config
+from csle_common.util.cluster_util import ClusterUtil
 import click
 
-Config.set_config_parameters_from_config_file()
+ClusterUtil.set_config_parameters_from_config_file()
 
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))

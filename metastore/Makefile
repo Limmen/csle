@@ -3,6 +3,10 @@ VERSION=0.0.1
 
 all: db cluster tables
 
+# Drops the csle citus db
+drop:
+	sudo psql -U postgres -a -f drop_db.sql
+
 # Setup db and citus (should be done before build)
 db:
 	sudo psql -U postgres -a -f create_db.sql

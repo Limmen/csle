@@ -2,7 +2,7 @@ from flask import Flask
 from . import socketio
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
-from csle_common.dao.emulation_config.config import Config
+from csle_common.util.cluster_util import ClusterUtil
 from csle_rest_api.pages.emulations.routes import get_emulations_page_bp
 from csle_rest_api.pages.simulations.routes import get_simulations_page_bp
 from csle_rest_api.pages.monitoring.routes import get_monitoring_page_bp
@@ -289,7 +289,7 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
     # run(f"gunicorn -b {host}:{port} 'csle_rest_api.rest_api:create_app() --workers 4 --threads
     # {num_threads}'".split(' '))
     # gunicorn -b 0.0.0.0:5000 --workers 4 --threads num_threads module:app
-    Config.set_config_parameters_from_config_file()
+    ClusterUtil.set_config_parameters_from_config_file()
     Logger.__call__().get_logger().info(f"Starting web server, listening on port: {port}")
     app = create_app(static_folder=static_folder)
     socketio.run(app, debug=False, port=port, host=host)

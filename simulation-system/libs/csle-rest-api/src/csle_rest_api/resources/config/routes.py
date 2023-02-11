@@ -6,6 +6,7 @@ import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
+from csle_common.util.cluster_util import ClusterUtil
 from csle_common.dao.emulation_config.config import Config
 from csle_common.logging.log import Logger
 
@@ -47,7 +48,7 @@ def config():
         config = json_data[api_constants.MGMT_WEBAPP.CONFIG_PROPERTY]
         config = Config.from_param_dict(config)
         Config.save_config_file(config=config.to_dict())
-        Config.set_config_parameters_from_config_file()
+        ClusterUtil.set_config_parameters_from_config_file()
         response = jsonify(config.to_param_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE

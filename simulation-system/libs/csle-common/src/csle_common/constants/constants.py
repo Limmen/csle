@@ -1186,6 +1186,10 @@ class AGENT:
 class CITUS:
     COORDINATOR_PORT = 5432
 
+class CLUSTER_CONFIG:
+    LEADER = False
+    IP = "127.0.0.1"
+
 class CSLE_ADMIN:
     """
     Constants related to the default csle admin account.
@@ -1512,6 +1516,7 @@ class METADATA_STORE:
     EMULATION_EXECUTIONS_TABLE = "emulation_executions"
     EMPIRICAL_SYSTEM_MODELS_TABLE = "empirical_system_models"
     GP_SYSTEM_MODELS_TABLE = "gp_system_models"
+    CONFIG_TABLE = "config"
     MANAGEMENT_USERS_TABLE = "management_users"
     SESSION_TOKENS_TABLE = "session_tokens"
     TRACES_DATASETS_TABLE = "traces_datasets"

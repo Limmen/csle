@@ -30,6 +30,7 @@ from csle_common.dao.management.management_user import ManagementUser
 from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.datasets.traces_dataset import TracesDataset
 from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
+from csle_common.dao.emulation_config.config import Config
 
 
 class MetastoreFacade:
@@ -3453,3 +3454,132 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug("Statistics dataset with "
                                                      f"id {statistics_dataset.id} deleted successfully")
+
+    @staticmethod
+    def _convert_config_record_to_dto(config_record) -> Config:
+        """
+        Converts a config record fetched from the metastore into a DTO
+
+        :param config_record: the record to convert
+        :return: the DTO representing the record
+        """
+        config_json = json.dumps(config_record[1], indent=4, sort_keys=True)
+        config: Config = Config.from_dict(json.loads(config_json))
+        config.id = config_record[0]
+        return config
+
+    @staticmethod
+    def list_configs() -> List[Config]:
+        """
+        :return: A list of configs in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.CONFIG_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_config_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def list_config_ids() -> List[Dict]:
+        """
+        :return: A list of config ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id FROM {constants.METADATA_STORE.CONFIG_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_config(id: int) -> Union[None, Config]:
+        """
+        Function for fetching the config with a given id from the metastore
+
+        :param id: the id of the config
+        :return: The config or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.CONFIG_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_config_record_to_dto(config_record=record)
+                return record
+
+    @staticmethod
+    def save_config(config: Config) -> Union[Any, int]:
+        """
+        Saves a config to the metastore
+
+        :param config: the config to save
+        :return: id of the config
+        """
+        Logger.__call__().get_logger().debug("Saving a config in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.CONFIG_TABLE} "
+                            f"(config) "
+                            f"VALUES (%s) RETURNING id", (config_json,))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug("config saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_config(config: Config, id: int) -> None:
+        """
+        Updates a config in the metastore
+
+        :param config: the config to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating config with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.CONFIG_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.CONFIG_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Config with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_config(config: Config) -> None:
+        """
+        Removes a config from the metastore
+
+        :param config: the config to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing config with "
+                                             f"id:{config.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.CONFIG_TABLE} WHERE id = %s", (config.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Config with "
+                                                     f"id {config.id} deleted successfully")

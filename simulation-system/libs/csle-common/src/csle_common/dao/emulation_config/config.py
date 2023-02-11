@@ -1,7 +1,6 @@
 from typing import Dict, Any, Union
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 import csle_common.constants.constants as constants
-from csle_common.logging.log import Logger
 import os
 import io
 import json
@@ -118,6 +117,7 @@ class Config:
         self.node_exporter_log_file = node_exporter_log_file
         self.allow_registration = allow_registration
         self.allow_host_shell = allow_host_shell
+        self.id = -1
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -166,6 +166,7 @@ class Config:
         d["node_exporter_log_file"] = self.node_exporter_log_file
         d["allow_registration"] = self.allow_registration
         d["allow_host_shell"] = self.allow_host_shell
+        d["id"] = self.id
         return d
 
     def to_param_dict(self) -> Dict[str, Any]:
@@ -513,6 +514,7 @@ class Config:
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
                      allow_host_shell=d["allow_host_shell"])
+        dto.id = d["id"]
         return dto
 
     @staticmethod
@@ -567,7 +569,10 @@ class Config:
                      cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
-                     allow_host_shell=d["allow_host_shell"])
+                     allow_host_shell=d["allow_host_shell"],
+                     pgadmin_port=d["pgadmin_port"])
+        if "id" in d:
+            dto.id = d["id"]
         return dto
 
     def __str__(self) -> str:
@@ -607,7 +612,8 @@ class Config:
                f"default_log_dir: {self.default_log_dir}, " \
                f"cluster_config: {self.cluster_config}," \
                f"node_exporter_log_file: {self.node_exporter_log_file}," \
-               f"allow_registration: {self.allow_registration}, allow_host_shell: {self.allow_host_shell}"
+               f"allow_registration: {self.allow_registration}, allow_host_shell: {self.allow_host_shell}," \
+               f"id:{self.id}"
 
     def to_json_str(self) -> str:
         """
@@ -674,64 +680,7 @@ class Config:
             f.write(json_str)
 
     @staticmethod
-    def set_config_parameters_from_config_file() -> None:
-        """
-        Reads the config file from $CSLE_HOME/config.json and initializes certain config parameters
-
-        :return: None
-        """
-        if constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM in os.environ:
-            csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
-        else:
-            raise Exception(f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set")
-        config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}" \
-                           f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
-        try:
-            config = Config.read_config_file()
-            constants.CONFIG_FILE.PARSED_CONFIG = config
-            constants.CSLE_ADMIN.MANAGEMENT_USER = config.management_admin_username_default
-            constants.CSLE_ADMIN.MANAGEMENT_PW = config.management_admin_password_default
-            constants.CSLE_ADMIN.MANAGEMENT_EMAIL = config.management_admin_email_default
-            constants.CSLE_ADMIN.MANAGEMENT_ORGANIZATION = config.management_admin_organization_default
-            constants.CSLE_ADMIN.MANAGEMENT_FIRST_NAME = config.management_admin_first_name_default
-            constants.CSLE_ADMIN.MANAGEMENT_LAST_NAME = config.management_admin_last_name_default
-            constants.CSLE_ADMIN.SSH_USER = config.ssh_admin_username
-            constants.CSLE_ADMIN.SSH_PW = config.ssh_admin_password
-            constants.CSLE_GUEST.MANAGEMENT_USER = config.management_guest_username_default
-            constants.CSLE_GUEST.MANAGEMENT_PW = config.management_guest_password_default
-            constants.CSLE_GUEST.MANAGEMENT_EMAIL = config.management_guest_email_default
-            constants.CSLE_GUEST.MANAGEMENT_ORGANIZATION = config.management_guest_organization_default
-            constants.CSLE_GUEST.MANAGEMENT_FIRST_NAME = config.management_guest_first_name_default
-            constants.CSLE_GUEST.MANAGEMENT_LAST_NAME = config.management_guest_last_name_default
-            constants.AGENT.USER = config.ssh_agent_username
-            constants.AGENT.PW = config.ssh_agent_password
-            constants.METADATA_STORE.USER = config.metastore_user
-            constants.METADATA_STORE.PASSWORD = config.metastore_password
-            constants.METADATA_STORE.HOST = config.metastore_ip
-            constants.METADATA_STORE.DBNAME = config.metastore_database_name
-            constants.COMMANDS.NODE_EXPORTER_PORT = config.node_exporter_port
-            constants.COMMANDS.GRAFANA_PORT = config.grafana_port
-            constants.COMMANDS.MANAGEMENT_SYSTEM_PORT = config.management_system_port
-            constants.COMMANDS.CADVISOR_PORT = config.cadvisor_port
-            constants.COMMANDS.PGADMIN_PORT = config.pgadmin_port
-            constants.COMMANDS.PROMETHEUS_PORT = config.prometheus_port
-            constants.COMMANDS.NODE_EXPORTER_PID_FILE = config.node_exporter_pid_file
-            constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE = config.management_system_pid_file
-            constants.COMMANDS.NODE_EXPORTER_LOG_FILE = config.node_exporter_log_file
-            constants.COMMANDS.DOCKER_STATS_MANAGER_OUTFILE = config.docker_stats_manager_outfile
-            constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE = config.docker_stats_manager_pidfile
-            constants.COMMANDS.PROMETHEUS_PID_FILE = config.prometheus_pid_file
-            constants.COMMANDS.PROMETHEUS_LOG_FILE = config.prometheus_log_file
-            constants.COMMANDS.PROMETHEUS_CONFIG_FILE = config.prometheus_config_file
-            constants.LOGGING.DEFAULT_LOG_DIR = config.default_log_dir
-            Logger.__call__().get_logger().info(f"Successfully initialized configuration "
-                                                f"from configuration file: {config_file_path}")
-        except Exception as e:
-            Logger.__call__().get_logger().info(f"Failed to read configuration file from: {config_file_path}. "
-                                                f"Exception: {str(e)}, {repr(e)}")
-
-    @staticmethod
-    def get_current_confg() -> Union["Config", None]:
+    def get_current_config() -> Union["Config", None]:
         """
         :return: The currently parsed config
         """

@@ -33,7 +33,7 @@ def logs():
     if authorized is not None:
         return authorized
 
-    config = Config.get_current_confg()
+    config = Config.get_current_config()
     path = config.default_log_dir
     log_files = []
     for f in os.listdir(path):
@@ -63,7 +63,7 @@ def docker_stats_manager_logs():
     if authorized is not None:
         return authorized
 
-    config = Config.get_current_confg()
+    config = Config.get_current_config()
     path = config.docker_stats_manager_log_dir + config.docker_stats_manager_log_file
 
     if os.path.exists(path):
@@ -91,7 +91,7 @@ def prometheus_logs():
     if authorized is not None:
         return authorized
 
-    config = Config.get_current_confg()
+    config = Config.get_current_config()
     path = config.prometheus_log_file
 
     if os.path.exists(path):
@@ -119,7 +119,7 @@ def node_exporter_logs():
     if authorized is not None:
         return authorized
 
-    config = Config.get_current_confg()
+    config = Config.get_current_config()
     path = config.node_exporter_log_file
 
     if os.path.exists(path):

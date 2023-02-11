@@ -33,6 +33,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 from csle_common.dao.emulation_config.config import Config
 from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
+from csle_common.util.cluster_util import ClusterUtil
 
 
 class EmulationEnvController:
@@ -818,7 +819,7 @@ class EmulationEnvController:
         active_ips.append(constants.COMMON.LOCALHOST)
         active_ips.append(constants.COMMON.LOCALHOST_127_0_0_1)
         active_ips.append(constants.COMMON.LOCALHOST_127_0_1_1)
-        config = Config.get_current_confg()
+        config = Config.get_current_config()
         for node in config.cluster_config.cluster_nodes:
             active_ips.append(node.ip)
         emulation_name = execution.emulation_name
@@ -882,9 +883,9 @@ class EmulationEnvController:
         :param remote_ip: the remote ip to forward
         :return: None
         """
-        config = Config.get_current_confg()
+        config = Config.get_current_config()
         if config is None:
-            Config.set_config_parameters_from_config_file()
+            ClusterUtil.set_config_parameters_from_config_file()
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         conn.connect(remote_ip,

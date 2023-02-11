@@ -322,3 +322,12 @@ CREATE TABLE IF NOT EXISTS statistics_datasets (
 GRANT ALL ON statistics_datasets TO csle;
 GRANT USAGE, SELECT ON SEQUENCE statistics_datasets_id_seq TO csle;
 SELECT create_reference_table('statistics_datasets');
+
+-- Create table that stores the config --
+CREATE TABLE IF NOT EXISTS config (
+    id serial PRIMARY KEY,
+    config json NOT NULL
+);
+GRANT ALL ON config TO csle;
+GRANT USAGE, SELECT ON SEQUENCE config_id_seq TO csle;
+SELECT create_reference_table('config');

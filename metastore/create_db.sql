@@ -3,7 +3,7 @@ SELECT 'CREATE DATABASE csle'
     WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'csle')\gexec
 
 -- Connect to the csle db --
-    \connect csle
+\connect csle
 
 -- Create csle user --
     REASSIGN OWNED BY csle TO postgres;
