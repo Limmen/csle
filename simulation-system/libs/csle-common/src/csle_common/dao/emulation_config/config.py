@@ -514,7 +514,8 @@ class Config:
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
                      allow_host_shell=d["allow_host_shell"])
-        dto.id = d["id"]
+        if "id" in d:
+            dto.id = d["id"]
         return dto
 
     @staticmethod

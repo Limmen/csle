@@ -553,7 +553,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderServerClusterTooltip}>
                                     <NavLink className="dropdown-item" to={SERVER_CLUSTER_PAGE_RESOURCE}>
-                                        Server Cluster <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                                        Server Cluster <i className="fa fa-server headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}

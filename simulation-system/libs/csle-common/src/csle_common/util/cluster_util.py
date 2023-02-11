@@ -1,9 +1,9 @@
 import os
-import socket
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.config import Config
 from csle_common.logging.log import Logger
+from csle_common.util.general_util import GeneralUtil
 
 
 class ClusterUtil:
@@ -28,11 +28,9 @@ class ClusterUtil:
             config = MetastoreFacade.get_config(id=1)
             if config is None:
                 config = Config.read_config_file()
-            hostname = socket.gethostname()
-            ip = socket.gethostbyname(hostname)
+            ip = GeneralUtil.get_host_ip()
             constants.CLUSTER_CONFIG.IP = ip
             leader = False
-            print(f"AM I LEADER? {leader}")
             for node in config.cluster_config.cluster_nodes:
                 if node.ip == ip:
                     leader = node.leader
