@@ -547,14 +547,14 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers = running_containers
     containers = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "grafana", "managementsystem",
+    return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "managementsystem",
             "statsmanager", "all", "emulation_executions"] + emulations + containers
 
 
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | managementsystem | container-name | "
-                            "emulation-name | statsmanager | emulation_executions | all")
+                            "emulation-name | statsmanager | emulation_executions | pgadmin | all")
 def stop(entity: str, id: int = -1) -> None:
     """
     Stops an entity
@@ -577,6 +577,8 @@ def stop(entity: str, id: int = -1) -> None:
         ManagementSystemController.stop_prometheus()
     elif entity == "cadvisor":
         ManagementSystemController.stop_cadvisor()
+    elif entity == "pgadmin":
+        ManagementSystemController.stop_pgadmin()
     elif entity == "grafana":
         ManagementSystemController.stop_grafana()
     elif entity == "managementsystem":
@@ -740,7 +742,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     containers = list(map(lambda x: x[0], containers))
     image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    return (["prometheus", "node_exporter", "grafana", "cadvisor", "managementsystem", "all",
+    return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "managementsystem", "all",
              "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
             + emulations + containers + image_names)
 
@@ -755,7 +757,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--no_network', is_flag=True, help='skip creating network when starting individual container')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
-@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | "
+@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job ")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
@@ -791,6 +793,8 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         ManagementSystemController.start_prometheus()
     elif entity == "cadvisor":
         ManagementSystemController.start_cadvisor()
+    elif entity == "pgadmin":
+        ManagementSystemController.start_pgadmin()
     elif entity == "grafana":
         ManagementSystemController.start_grafana()
     elif entity == "training_job":
@@ -1085,12 +1089,12 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names = list(map(lambda x: x[0], image_names))
     active_networks_names = ContainerController.list_all_networks()
     return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-            "cadvisor", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations
+            "cadvisor", "pgadmin", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations
             + containers + image_names + active_networks_names + simulations)
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
-                          "| node_exporter | cadvisor | statsmanager | managementsystem | "
+                          "| node_exporter | cadvisor | pgadmin | statsmanager | managementsystem | "
                           "simulations | emulation_executions")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
@@ -1132,6 +1136,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
         list_node_exporter()
     elif entity == "cadvisor":
         list_cadvisor()
+    elif entity == "pgadmin":
+        list_pgadmin()
     elif entity == "grafana":
         list_grafana()
     elif entity == "managementsystem":
@@ -1240,6 +1246,7 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
     list_prometheus()
     list_node_exporter()
     list_cadvisor()
+    list_pgadmin()
     list_grafana()
     list_statsmanager()
     list_management_system()
@@ -1323,6 +1330,22 @@ def list_cadvisor() -> None:
                                           f"port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
     else:
         click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_pgadmin() -> None:
+    """
+    Lists status of pgadmin
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.controllers.management_system_controller import ManagementSystemController
+
+    if ManagementSystemController.is_pgadmin_running():
+        click.secho("pgAdmin status: " + f" {click.style('[running]', fg='green')} "
+                                          f"port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
+    else:
+        click.secho("pgAdmin status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_node_exporter() -> None:

@@ -139,7 +139,7 @@ def cadvisor_logs():
     """
     The /logs/cadvisor resource.
 
-    :return: The logs of the docker stats manager
+    :return: The logs of cAdvisor
     """
 
     # Check that token is valid
@@ -148,6 +148,32 @@ def cadvisor_logs():
         return authorized
 
     cmd = constants.COMMANDS.CADVISOR_LOGS
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    (output, err) = p.communicate()
+    output = output.decode("utf-8")
+    output = output.split("\n")[-100:]
+    data = output
+    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def pgadmin_logs():
+    """
+    The /logs/pgadmin resource.
+
+    :return: The logs of pgAdmin
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+
+    cmd = constants.COMMANDS.PGADMIN_LOGS
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (output, err) = p.communicate()
     output = output.decode("utf-8")

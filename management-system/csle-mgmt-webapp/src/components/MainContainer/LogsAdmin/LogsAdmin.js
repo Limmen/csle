@@ -18,7 +18,7 @@ import {
     HTTP_PREFIX,
     LOGIN_PAGE_RESOURCE,
     DOCKER_STATS_MANAGER_SUBRESOURCE, HTTP_REST_POST, HTTP_REST_GET,
-    LOGS_RESOURCE, TOKEN_QUERY_PARAM, FILE_RESOURCE, CADVISOR_RESOURCE,
+    LOGS_RESOURCE, TOKEN_QUERY_PARAM, FILE_RESOURCE, CADVISOR_RESOURCE, PGADMIN_RESOURCE,
     GRAFANA_RESOURCE, NODE_EXPORTER_RESOURCE, PROMETHEUS_RESOURCE
 } from "../../Common/constants";
 
@@ -35,6 +35,9 @@ const LogsAdmin = (props) => {
     const [loadingCAdvisorLogs, setLoadingCAdvisorLogs] = useState(true);
     const [cadvisorLogsOpen, setCAdvisorLogsOpen] = useState(false);
     const [cadvisorLogs, setCAdvisorLogs] = useState([]);
+    const [loadingPgAdminLogs, setLoadingPgAdminLogs] = useState(true);
+    const [pgAdminLogsOpen, setPgAdminLogsOpen] = useState(false);
+    const [pgAdminLogs, setPgAdminLogs] = useState([]);
     const [loadingPrometheusLogs, setLoadingPrometheusLogs] = useState(true);
     const [prometheusLogsOpen, setPrometheusLogsOpen] = useState(false);
     const [prometheusLogs, setPrometheusLogs] = useState([]);
@@ -231,6 +234,33 @@ const LogsAdmin = (props) => {
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
+    const fetchPgAdminLogs = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${PGADMIN_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingPgAdminLogs(false)
+                setPgAdminLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
     const fetchGrafanaLogs = useCallback(() => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${GRAFANA_RESOURCE}`
@@ -266,10 +296,12 @@ const LogsAdmin = (props) => {
         setLoadingPrometheusLogs(true)
         setLoadingCsleLogFiles(true)
         setLoadingSelectedCsleLogFile(true)
+        setLoadingPgAdminLogs(true)
         fetchStatsManagerLogs()
         fetchNodeExporterLogs()
         fetchPrometheusLogs()
         fetchCAdvisorLogs()
+        fetchPgAdminLogs()
         fetchGrafanaLogs()
         fetchCsleLogFiles()
     }
@@ -379,14 +411,16 @@ const LogsAdmin = (props) => {
         setLoadingGrafanaLogs(true)
         setLoadingNodeExporterLogs(true)
         setLoadingPrometheusLogs(true)
+        setLoadingPgAdminLogs(true)
         fetchStatsManagerLogs()
         fetchPrometheusLogs()
         fetchNodeExporterLogs()
         fetchCAdvisorLogs()
+        fetchPgAdminLogs()
         fetchGrafanaLogs()
         fetchCsleLogFiles()
     }, [fetchStatsManagerLogs, fetchPrometheusLogs, fetchNodeExporterLogs, fetchCAdvisorLogs,
-        fetchGrafanaLogs, fetchCsleLogFiles]);
+        fetchPgAdminLogs, fetchGrafanaLogs, fetchCsleLogFiles]);
 
     return (
         <div className="Admin">
@@ -496,6 +530,31 @@ const LogsAdmin = (props) => {
                         </h4>
                         <div className="table-responsive">
                             <SpinnerOrLogs loadingLogs={loadingCAdvisorLogs} logs={cadvisorLogs}/>
+                        </div>
+                    </div>
+                </Collapse>
+            </Card>
+
+            <Card className="subCard">
+                <Card.Header>
+                    <Button
+                        onClick={() => setPgAdminLogsOpen(!pgAdminLogsOpen)}
+                        aria-controls="pgAdminLogsBody"
+                        aria-expanded={pgAdminLogsOpen}
+                        variant="link"
+                    >
+                        <h5 className="semiTitle"> pgAdmin logs
+                            <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                        </h5>
+                    </Button>
+                </Card.Header>
+                <Collapse in={pgAdminLogsOpen}>
+                    <div id="pgAdminLogsBody" className="cardBodyHidden">
+                        <h4>
+                            Last 100 log lines:
+                        </h4>
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={loadingPgAdminLogs} logs={pgAdminLogs}/>
                         </div>
                     </div>
                 </Collapse>

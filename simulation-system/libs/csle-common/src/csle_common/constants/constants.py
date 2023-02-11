@@ -885,6 +885,7 @@ class COMMANDS:
                     f"'PGADMIN_DEFAULT_PASSWORD={PGADMIN_PW}' -d --name=pgadmin dpage/pgadmin4"
     CONTAINER_LOGS = "docker logs {}"
     CADVISOR_LOGS = "docker logs cadvisor"
+    PGADMIN_LOGS = "docker logs pgadmin"
     GRAFANA_LOGS = "docker logs grafana"
     NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
     MANAGEMENT_SYSTEM_PID_FILE = "/var/log/csle/management_system.pid"
