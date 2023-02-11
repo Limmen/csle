@@ -42,15 +42,24 @@
     "cluster_nodes": [
       {
         "ip": "172.31.212.92",
-        "leader": true
+        "leader": true,
+        "cpus": 96,
+        "gpus": 4,
+        "RAM": 768
       },
       {
         "ip": "172.31.212.91",
-        "leader": false
+        "leader": false,
+        "cpus": 15,
+        "gpus": 2,
+        "RAM": 126
       },
       {
         "ip": "172.31.212.93",
-        "leader": false
+        "leader": false,
+        "cpus": 40,
+        "gpus": 0,
+        "RAM": 32
       }
     ]
   },

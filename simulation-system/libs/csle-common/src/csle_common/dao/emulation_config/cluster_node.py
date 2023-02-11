@@ -6,15 +6,21 @@ class ClusterNode:
     A DTO Class representing a node in a CSLE cluster
     """
 
-    def __init__(self, ip: str, leader: bool):
+    def __init__(self, ip: str, leader: bool, cpus: int, gpus: int, RAM: int):
         """
         Initializes the DTO
 
         :param ip: the ip of the node
-        :param leader: boolean indicating whether the node is the master node or not
+        :param leader: boolean indicating whether the node is the leader node or not
+        :param cpus: the number of CPU cores of the node
+        :param gpus: the number of GPUs of the node
+        :param RAM: the amount of RAM of the node (GB)
         """
         self.ip = ip
         self.leader = leader
+        self.cpus=cpus
+        self.gpus=gpus
+        self.RAM=RAM
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -23,6 +29,9 @@ class ClusterNode:
         d = {}
         d["ip"] = self.ip
         d["leader"] = self.leader
+        d["cpus"] = self.cpus
+        d["gpus"] = self.gpus
+        d["RAM"] = self.RAM
         return d
 
     @staticmethod
@@ -32,14 +41,14 @@ class ClusterNode:
 
         :return: a dto representation of the object
         """
-        dto = ClusterNode(ip=d["ip"], leader=d["leader"])
+        dto = ClusterNode(ip=d["ip"], leader=d["leader"], cpus=d["cpus"], gpus=d["gpus"], RAM=d["RAM"])
         return dto
 
     def __str__(self) -> str:
         """
         :return: a string representation of the credential
         """
-        return f"ip: {self.ip}, leader: {self.leader}"
+        return f"ip: {self.ip}, leader: {self.leader}, cpus: {self.cpus}, gpus: {self.gpus}, RAM: {self.RAM}"
 
     def to_json_str(self) -> str:
         """
@@ -74,4 +83,4 @@ class ClusterNode:
         """
         :return: get the schema of the DTO
         """
-        return ClusterNode(ip="", leader=False)
+        return ClusterNode(ip="", leader=False, cpus=0, gpus=0, RAM=0)

@@ -127,7 +127,8 @@ const ServerCluster = (props) => {
                         <thead>
                         <tr className="serverClusterTable">
                             <th>IP</th>
-                            <th>CPU (Cores)</th>
+                            <th>CPUs (Cores)</th>
+                            <th>GPUs</th>
                             <th>RAM (GB)</th>
                             <th>Leader</th>
                             <th></th>
@@ -137,8 +138,9 @@ const ServerCluster = (props) => {
                         {props.serverCluster.map((node, index) =>
                             <tr className="serverClusterTable" key={node.ip + "-" + index}>
                                 <td>{node.ip}</td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td>{node.cpus}</td>
+                                <td>{node.gpus}</td>
+                                <td>{node.RAM}</td>
                                 <td>{getBoolStr(node.leader)}</td>
                                 <td>-</td>
                             </tr>
@@ -160,8 +162,6 @@ const ServerCluster = (props) => {
         const fServerCluster = serverCluster.filter(node => {
             return searchFilter(node, searchVal)
         });
-        console.log("Setting filtered server cluster")
-        console.log(fServerCluster)
         setFilteredServerCluster(fServerCluster)
     }
 
