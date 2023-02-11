@@ -27,7 +27,8 @@ class Config:
                  docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
                  prometheus_log_file: str, prometheus_config_file: str, default_log_dir: str,
                  cluster_config: ClusterConfig, node_exporter_log_file: str,
-                 allow_registration: bool, allow_host_shell: bool):
+                 allow_registration: bool, allow_host_shell: bool, grafana_username: str, grafana_password: str,
+                 pgadmin_username: str, pgadmin_password: str):
         """
         Initializes the DTO
 
@@ -74,6 +75,10 @@ class Config:
         :param node_exporter_log_file: the file to save the logs of the node_exporter
         :param allow_registration: boolean flag indicating whether user registration should be allowed
         :param allow_host_shell: boolean flag indicating whether host-terminal emulation should be enabled.
+        :param grafana_username: default grafana username
+        :param grafana_password: default grafana password
+        :param pgadmin_username: default pgadmin username
+        :param pgadmin_password: default pgadmin password
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
@@ -117,6 +122,10 @@ class Config:
         self.node_exporter_log_file = node_exporter_log_file
         self.allow_registration = allow_registration
         self.allow_host_shell = allow_host_shell
+        self.grafana_username = grafana_username
+        self.grafana_password = grafana_password
+        self.pgadmin_username = pgadmin_username
+        self.pgadmin_password = pgadmin_password
         self.id = -1
 
     def to_dict(self) -> Dict[str, Any]:
@@ -166,6 +175,10 @@ class Config:
         d["node_exporter_log_file"] = self.node_exporter_log_file
         d["allow_registration"] = self.allow_registration
         d["allow_host_shell"] = self.allow_host_shell
+        d["grafana_username"] = self.grafana_username
+        d["grafana_password"] = self.grafana_password
+        d["pgadmin_username"] = self.pgadmin_username
+        d["pgadmin_password"] = self.pgadmin_password
         d["id"] = self.id
         return d
 
@@ -462,6 +475,34 @@ class Config:
                 "value": self.pgadmin_port
             }
         )
+        d["parameters"].append(
+            {
+                "id": 43,
+                "param": "pgadmin_username",
+                "value": self.pgadmin_username
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 44,
+                "param": "pgadmin_password",
+                "value": self.pgadmin_password
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 45,
+                "param": "grafana_username",
+                "value": self.grafana_username
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 46,
+                "param": "grafana_password",
+                "value": self.grafana_password
+            }
+        )
         d["cluster_config"] = self.cluster_config.to_dict()
         return d
 
@@ -513,7 +554,11 @@ class Config:
                      cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
-                     allow_host_shell=d["allow_host_shell"])
+                     allow_host_shell=d["allow_host_shell"],
+                     grafana_username=d["grafana_username"],
+                     grafana_password=d["grafana_password"],
+                     pgadmin_username=d["pgadmin_username"],
+                     pgadmin_password=d["pgadmin_password"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -571,7 +616,11 @@ class Config:
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
                      allow_host_shell=d["allow_host_shell"],
-                     pgadmin_port=d["pgadmin_port"])
+                     pgadmin_port=d["pgadmin_port"],
+                     grafana_username=d["grafana_username"],
+                     grafana_password=d["grafana_password"],
+                     pgadmin_username=d["pgadmin_username"],
+                     pgadmin_password=d["pgadmin_password"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -614,7 +663,8 @@ class Config:
                f"cluster_config: {self.cluster_config}," \
                f"node_exporter_log_file: {self.node_exporter_log_file}," \
                f"allow_registration: {self.allow_registration}, allow_host_shell: {self.allow_host_shell}," \
-               f"id:{self.id}"
+               f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password}," \
+               f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}"
 
     def to_json_str(self) -> str:
         """

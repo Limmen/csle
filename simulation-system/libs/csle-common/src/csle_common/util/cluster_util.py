@@ -63,6 +63,11 @@ class ClusterUtil:
             constants.METADATA_STORE.PASSWORD = config.metastore_password
             constants.METADATA_STORE.HOST = ip
             constants.METADATA_STORE.DBNAME = config.metastore_database_name
+            constants.COMMANDS.PGADMIN_USERNAME = config.pgadmin_username
+            constants.COMMANDS.PGADMIN_PW = config.pgadmin_password
+            constants.COMMANDS.GRAFANA_USERNAME = config.grafana_username
+            constants.COMMANDS.GRAFANA_PW = config.grafana_password
+            constants.COMMANDS.PGADMIN_PW = config.pgadmin_password
             constants.COMMANDS.NODE_EXPORTER_PORT = config.node_exporter_port
             constants.COMMANDS.GRAFANA_PORT = config.grafana_port
             constants.COMMANDS.MANAGEMENT_SYSTEM_PORT = config.management_system_port
