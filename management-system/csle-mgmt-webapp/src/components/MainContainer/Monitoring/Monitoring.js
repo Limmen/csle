@@ -19,15 +19,12 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import GrafanaImg from './Grafana.png'
-import PrometheusImg from './Prometheus.png'
 import {
     EMULATION_EXECUTIONS_RESOURCE, EMULATION_QUERY_PARAM, EMULATIONS_RESOURCE, EXECUTIONS_SUBRESOURCE,
     HTTP_PREFIX,
     HTTP_REST_GET,
-    HTTP_REST_POST,
-    LOGIN_PAGE_RESOURCE, MONITOR_SUBRESOURCE, GRAFANA_RESOURCE, PROMETHEUS_RESOURCE, NODE_EXPORTER_RESOURCE,
-    CADVISOR_RESOURCE, TOKEN_QUERY_PARAM, IDS_QUERY_PARAM
+    LOGIN_PAGE_RESOURCE, MONITOR_SUBRESOURCE,
+    TOKEN_QUERY_PARAM, IDS_QUERY_PARAM
 } from "../../Common/constants";
 
 /**
@@ -112,10 +109,6 @@ const Monitoring = (props) => {
     const [animationDuration, setAnimationDuration] = useState(evolutionSpeedOptions[0]);
     const [animation, setAnimation] = useState(false);
     const animationDurationFactor = 50000
-    const [grafanaStatus, setGrafanaStatus] = useState(null);
-    const [cAdvisorStatus, setCAdvisorStatus] = useState(null);
-    const [prometheusStatus, setPrometheusStatus] = useState(null);
-    const [nodeExporterStatus, setNodeExporterStatus] = useState(null);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
     const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
@@ -344,10 +337,6 @@ const Monitoring = (props) => {
         setLoadingSelectedEmulationExecution(true)
         setLoadingMonitoringData(true)
         setSelectedEmulationExecution(null)
-        fetchGrafanaStatus()
-        fetchPrometheusStatus()
-        fetchCadvisorStatus()
-        fetchNodeExporterStatus()
         fetchEmulationExecutionIds()
     }
 
@@ -406,122 +395,6 @@ const Monitoring = (props) => {
         );
     }
 
-    const startOrStopGrafanaRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${GRAFANA_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_POST,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setGrafanaStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const startOrStopcAdvisorRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CADVISOR_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_POST,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setCAdvisorStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const startOrStopNodeExporterRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${NODE_EXPORTER_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_POST,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setNodeExporterStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const startOrStopPrometheusRequest = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PROMETHEUS_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_POST,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setPrometheusStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
@@ -569,138 +442,6 @@ const Monitoring = (props) => {
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSelectedExecution]);
 
-
-    const fetchGrafanaStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${GRAFANA_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setGrafanaStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchCadvisorStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CADVISOR_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setCAdvisorStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchPrometheusStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PROMETHEUS_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setPrometheusStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchNodeExporterStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${NODE_EXPORTER_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setNodeExporterStatus(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const startOrStopGrafana = () => {
-        startOrStopGrafanaRequest()
-    }
-
-    const startOrStopPrometheus = () => {
-        startOrStopPrometheusRequest()
-    }
-
-    const startOrStopcAdvisor = () => {
-        startOrStopcAdvisorRequest()
-    }
-
-    const startOrStopNodeExporter = () => {
-        startOrStopNodeExporterRequest()
-    }
 
     const SelectedExecutionView = (props) => {
         if (props.loadingSelectedEmulationExecution || props.loadingMonitoringData ||
@@ -945,209 +686,11 @@ const Monitoring = (props) => {
         }
     }
 
-    const renderStartTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start service
-        </Tooltip>
-    );
-
-    const renderStopTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop service
-        </Tooltip>
-    );
-
-
-    const GrafanaLink = (props) => {
-        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin){
-            if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
-                return (
-                    <span className="grafanaStatus">Grafana status: stopped
-                        <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
-                    </span>)
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.grafanaStatus.url}>
-                        Grafana (running)
-                        <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
-                    </a>
-                )
-            }
-        }
-        if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
-            return (
-                <span className="grafanaStatus">Grafana status: stopped
-                    <img src={GrafanaImg} alt="Grafana" className="img-fluid grafanaImg" width="2%" height="2%"/>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStopGrafana()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                    </span>)
-        } else {
-            return (
-                <a className="grafanaStatus" href={props.grafanaStatus.url}>Grafana (running)
-                    <img src={GrafanaImg} alt="Grafana" className="img-fluid grafanaImg" width="2%" height="2%"/>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopGrafana()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </a>
-            )
-        }
-    }
-
-    const PrometheusLink = (props) => {
-        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
-                return (
-                    <span className="grafanaStatus">Prometheus status: stopped
-                        <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                </span>)
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.prometheusStatus.url}>Prometheus (running)
-                        <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                    </a>
-                )
-            }
-        }
-        if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
-            return (
-                <span className="grafanaStatus">Prometheus status: stopped
-                    <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStopPrometheus()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </span>)
-        } else {
-            return (
-                <a className="grafanaStatus" href={props.prometheusStatus.url}>Prometheus (running)
-                    <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                    <OverlayTrigger
-                        placement="right"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopPrometheus()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </a>
-            )
-        }
-    }
-
-    const NodeExporterLink = (props) => {
-        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
-                return (
-                    <span className="grafanaStatus">Node exporter status: stopped
-                </span>)
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.nodeExporterStatus.url}>Node exporter (running)
-                    </a>
-                )
-            }
-        }
-        if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
-            return (
-                <span className="grafanaStatus">Node exporter status: stopped
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopNodeExporter()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </span>)
-        } else {
-            return (
-                <a className="grafanaStatus" href={props.nodeExporterStatus.url}>Node exporter (running)
-                    <OverlayTrigger
-                        placement="right"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopNodeExporter()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </a>
-            )
-        }
-    }
-
-    const CadvisorLink = (props) => {
-        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
-                return (
-                    <span className="grafanaStatus">cAdvisor status: stopped
-                </span>)
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.cAdvisorStatus.url}>cAdvisor (running)
-                    </a>
-                )
-            }
-        }
-        if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
-            return (
-                <span className="grafanaStatus">cAdvisor status: stopped
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopcAdvisor()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </span>)
-        } else {
-            return (
-                <a className="grafanaStatus" href={props.cAdvisorStatus.url}>cAdvisor (running)
-                    <OverlayTrigger
-                        placement="right"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopcAdvisor()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </a>
-            )
-        }
-    }
 
     useEffect(() => {
         setLoading(true)
         fetchEmulationExecutionIds()
-        fetchGrafanaStatus()
-        fetchCadvisorStatus()
-        fetchPrometheusStatus()
-        fetchNodeExporterStatus()
-    }, [fetchEmulationExecutionIds, fetchGrafanaStatus, fetchCadvisorStatus, fetchPrometheusStatus,
-        fetchNodeExporterStatus]);
+    }, [fetchEmulationExecutionIds]);
 
     return (
         <div className="container-fluid">
@@ -1195,18 +738,6 @@ const Monitoring = (props) => {
                                    switchesOptions={openFlowSwitchesOptions}
                                    loadingMonitoringData={loadingMonitoringData}
             />
-            <div className="row">
-                <div className="col-sm-12">
-                    <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}
-                                 sessionData={props.sessionData}/>
-                    <PrometheusLink className="grafanaStatus" prometheusStatus={prometheusStatus}
-                                    sessionData={props.sessionData}/>
-                    <NodeExporterLink className="grafanaStatus" nodeExporterStatus={nodeExporterStatus}
-                                      sessionData={props.sessionData}/>
-                    <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
-                                  sessionData={props.sessionData}/>
-                </div>
-            </div>
         </div>
     );
 }
