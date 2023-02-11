@@ -20,6 +20,7 @@
   "management_system_port": 7777,
   "cadvisor_port": 8080,
   "prometheus_port": 9090,
+  "pgadmin_port": 7778,
   "node_exporter_pid_file": "/var/log/csle/node_exporter.pid",
   "management_system_pid_file": "/var/log/csle/management_system.pid",
   "node_exporter_log_file": "/var/log/csle/node_exporter.log",
@@ -41,7 +42,15 @@
     "cluster_nodes": [
       {
         "ip": "172.31.212.92",
-        "master": true
+        "leader": true
+      },
+      {
+        "ip": "172.31.212.91",
+        "leader": false
+      },
+      {
+        "ip": "172.31.212.93",
+        "leader": false
       }
     ]
   },

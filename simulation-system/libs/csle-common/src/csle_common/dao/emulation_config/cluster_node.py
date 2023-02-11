@@ -6,15 +6,15 @@ class ClusterNode:
     A DTO Class representing a node in a CSLE cluster
     """
 
-    def __init__(self, ip: str, master: bool):
+    def __init__(self, ip: str, leader: bool):
         """
         Initializes the DTO
 
         :param ip: the ip of the node
-        :param master: boolean indicating whether the node is the master node or not
+        :param leader: boolean indicating whether the node is the master node or not
         """
         self.ip = ip
-        self.master = master
+        self.leader = leader
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -22,7 +22,7 @@ class ClusterNode:
         """
         d = {}
         d["ip"] = self.ip
-        d["master"] = self.master
+        d["leader"] = self.leader
         return d
 
     @staticmethod
@@ -32,14 +32,14 @@ class ClusterNode:
 
         :return: a dto representation of the object
         """
-        dto = ClusterNode(ip=d["ip"], master=d["master"])
+        dto = ClusterNode(ip=d["ip"], leader=d["leader"])
         return dto
 
     def __str__(self) -> str:
         """
         :return: a string representation of the credential
         """
-        return f"ip: {self.ip}, master: {self.master}"
+        return f"ip: {self.ip}, leader: {self.leader}"
 
     def to_json_str(self) -> str:
         """
@@ -74,4 +74,4 @@ class ClusterNode:
         """
         :return: get the schema of the DTO
         """
-        return ClusterNode(ip="", master=False)
+        return ClusterNode(ip="", leader=False)

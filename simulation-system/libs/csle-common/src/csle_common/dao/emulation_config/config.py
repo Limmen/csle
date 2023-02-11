@@ -22,6 +22,7 @@ class Config:
                  metastore_user: str, metastore_password: str, metastore_database_name: str, metastore_ip: str,
                  node_exporter_port: int, grafana_port: int,
                  management_system_port: int, cadvisor_port: int, prometheus_port: int, node_exporter_pid_file: str,
+                 pgadmin_port: int,
                  management_system_pid_file: str, docker_stats_manager_log_file: str, docker_stats_manager_log_dir: str,
                  docker_stats_manager_port: int, docker_stats_manager_max_workers: int,
                  docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
@@ -57,6 +58,7 @@ class Config:
         :param management_system_port: the default port to run the management system
         :param cadvisor_port: the default port to run c_advisor
         :param prometheus_port: the default port to run prometheus
+        :param pgadmin_port: the default port to run pgadmin
         :param node_exporter_pid_file: the default port to run node_exporter
         :param management_system_pid_file: the file to save the PID of the management system
         :param docker_stats_manager_log_file: the file to save the logs of docker statsmanager
@@ -99,6 +101,7 @@ class Config:
         self.management_system_port = management_system_port
         self.cadvisor_port = cadvisor_port
         self.prometheus_port = prometheus_port
+        self.pgadmin_port = pgadmin_port
         self.node_exporter_pid_file = node_exporter_pid_file
         self.management_system_pid_file = management_system_pid_file
         self.docker_stats_manager_log_file = docker_stats_manager_log_file
@@ -145,6 +148,7 @@ class Config:
         d["grafana_port"] = self.grafana_port
         d["management_system_port"] = self.management_system_port
         d["cadvisor_port"] = self.cadvisor_port
+        d["pgadmin_port"] = self.pgadmin_port
         d["prometheus_port"] = self.prometheus_port
         d["node_exporter_pid_file"] = self.node_exporter_pid_file
         d["management_system_pid_file"] = self.management_system_pid_file
@@ -448,6 +452,13 @@ class Config:
                 "id": 41,
                 "param": "allow_host_shell",
                 "value": self.allow_host_shell
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 42,
+                "param": "pgadmin_port",
+                "value": self.pgadmin_port
             }
         )
         d["cluster_config"] = self.cluster_config.to_dict()
