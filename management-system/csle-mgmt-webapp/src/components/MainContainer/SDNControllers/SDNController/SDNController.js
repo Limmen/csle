@@ -70,11 +70,11 @@ const SDNController = (props) => {
                 setLocalSdnControllerWebApiPort(response[SDN_CONTROLLER_LOCAL_PORT])
             })
             .catch(error => console.log("error:" + error))
-    }, [ip, port]);
+    }, [ip, port, alert, navigate, props.sessionData.token, setSessionData]);
 
     useEffect(() => {
         fetchSwitches(props.execution.emulation_env_config.name, props.execution.ip_first_octet)
-    }, [fetchSwitches, props.execution.emulation_env_config.id, props.execution.ip_first_octet]);
+    }, [fetchSwitches, props.execution.emulation_env_config.name, props.execution.ip_first_octet]);
 
     const getIps = (ips_and_networks) => {
         const ips = []

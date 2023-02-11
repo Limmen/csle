@@ -1089,7 +1089,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names = list(map(lambda x: x[0], image_names))
     active_networks_names = ContainerController.list_all_networks()
     return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-            "cadvisor", "pgadmin", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations
+             "cadvisor", "pgadmin", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations
             + containers + image_names + active_networks_names + simulations)
 
 
@@ -1343,7 +1343,7 @@ def list_pgadmin() -> None:
 
     if ManagementSystemController.is_pgadmin_running():
         click.secho("pgAdmin status: " + f" {click.style('[running]', fg='green')} "
-                                          f"port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
+                                         f"port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
     else:
         click.secho("pgAdmin status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 

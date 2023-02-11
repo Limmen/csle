@@ -877,10 +877,10 @@ class COMMANDS:
                      "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
                      f"--publish={CADVISOR_PORT}:{CADVISOR_PORT}  --name=cadvisor  " \
                      "google/cadvisor:latest"
-    PGADMIN_USERNAME="csle@csle.com"
-    PGADMIN_PW="cslePassword"
-    GRAFANA_USERNAME="admin"
-    GRAFANA_PW="admin"
+    PGADMIN_USERNAME = "csle@csle.com"
+    PGADMIN_PW = "cslePassword"
+    GRAFANA_USERNAME = "admin"
+    GRAFANA_PW = "admin"
     START_PGADMIN = f"docker run -p 7778:80 -e 'PGADMIN_DEFAULT_EMAIL={PGADMIN_USERNAME}' -e " \
                     f"'PGADMIN_DEFAULT_PASSWORD={PGADMIN_PW}' -d --name=pgadmin dpage/pgadmin4"
     CONTAINER_LOGS = "docker logs {}"
@@ -1191,12 +1191,15 @@ class AGENT:
     USER = "agent"
     PW = "agent"
 
+
 class CITUS:
     COORDINATOR_PORT = 5432
+
 
 class CLUSTER_CONFIG:
     LEADER = False
     IP = "127.0.0.1"
+
 
 class CSLE_ADMIN:
     """

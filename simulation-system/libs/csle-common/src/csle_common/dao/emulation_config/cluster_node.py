@@ -18,9 +18,9 @@ class ClusterNode:
         """
         self.ip = ip
         self.leader = leader
-        self.cpus=cpus
-        self.gpus=gpus
-        self.RAM=RAM
+        self.cpus = cpus
+        self.gpus = gpus
+        self.RAM = RAM
 
     def to_dict(self) -> Dict[str, Any]:
         """
