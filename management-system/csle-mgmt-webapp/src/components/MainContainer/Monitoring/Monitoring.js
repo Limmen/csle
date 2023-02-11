@@ -562,6 +562,7 @@ const Monitoring = (props) => {
                     setLoadingMonitoringData(true)
                 } else {
                     setLoadingSelectedEmulationExecution(false)
+                    setLoadingMonitoringData(false)
                     setSelectedEmulationExecution(null)
                 }
             })

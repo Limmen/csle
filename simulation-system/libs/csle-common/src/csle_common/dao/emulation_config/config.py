@@ -495,6 +495,7 @@ class Config:
                      grafana_port=d["grafana_port"],
                      management_system_port=d["management_system_port"],
                      cadvisor_port=d["cadvisor_port"],
+                     pgadmin_port=d["pgadmin_port"],
                      prometheus_port=d["prometheus_port"],
                      node_exporter_pid_file=d["node_exporter_pid_file"],
                      management_system_pid_file=d["management_system_pid_file"],
@@ -712,6 +713,7 @@ class Config:
             constants.COMMANDS.GRAFANA_PORT = config.grafana_port
             constants.COMMANDS.MANAGEMENT_SYSTEM_PORT = config.management_system_port
             constants.COMMANDS.CADVISOR_PORT = config.cadvisor_port
+            constants.COMMANDS.PGADMIN_PORT = config.pgadmin_port
             constants.COMMANDS.PROMETHEUS_PORT = config.prometheus_port
             constants.COMMANDS.NODE_EXPORTER_PID_FILE = config.node_exporter_pid_file
             constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE = config.management_system_pid_file

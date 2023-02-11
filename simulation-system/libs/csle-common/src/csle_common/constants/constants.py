@@ -870,6 +870,7 @@ class COMMANDS:
     MANAGEMENT_SYSTEM_PORT = 7777
     START_GRAFANA = f"docker run -d -p {GRAFANA_PORT}:{GRAFANA_PORT} --name grafana grafana/grafana"
     CADVISOR_PORT = 8080
+    PGADMIN_PORT = 7778
     START_CADVISOR = "docker run  -dt --volume=/:/rootfs:ro   --volume=/var/run:/var/run:ro   " \
                      "--volume=/sys:/sys:ro   " \
                      "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
