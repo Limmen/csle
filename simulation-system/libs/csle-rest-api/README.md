@@ -133,6 +133,7 @@ A REST API for the CSLE management platform.
 | `/logs/prometheus?token=<valid_token>`                                                                | Get logs of Prometheus                                         | `GET`                                   |
 | `/logs/grafana?token=<valid_token>`                                                                   | Get logs of Grafana                                            | `GET`                                   |
 | `/logs/cadvisor?token=<valid_token>`                                                                  | Get logs of CAdvisor                                           | `GET`                                   |
+| `/logs/pgadmin?token=<valid_token>`                                                                   | Get logs of pgAdmin                                            | `GET`                                   |
 | `/logs/container?token=<valid_token>&container=<container_name>`                                      | Get logs of a specific container                               | `POST`                                  |
 | `/logs/node-exporter?token=<valid_token>`                                                             | Get logs of node-exporter                                      | `GET`                                   |
 | `/logs/client-manager?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`      | Get logs of a specific client manager                          | `POST`                                  |
