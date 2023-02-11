@@ -25,6 +25,7 @@ from csle_rest_api.pages.host_terminal.routes import get_host_terminal_page_bp
 from csle_rest_api.pages.container_terminal.routes import get_container_terminal_page_bp
 from csle_rest_api.pages.system_admin.routes import get_system_admin_page_bp
 from csle_rest_api.pages.logs_admin.routes import get_logs_admin_page_bp
+from csle_rest_api.pages.server_cluster.routes import get_server_cluster_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
 from csle_rest_api.resources.prometheus.routes import prometheus_bp
 from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
@@ -59,6 +60,7 @@ from csle_rest_api.resources.traces_datasets.routes import traces_datasets_bp
 from csle_rest_api.resources.statistics_datasets.routes import statistics_datasets_bp
 from csle_rest_api.resources.users.routes import users_bp
 from csle_rest_api.resources.config.routes import config_bp
+from csle_rest_api.resources.server_cluster.routes import server_cluster_bp
 from csle_rest_api.resources.version.routes import version_bp
 from csle_rest_api.resources.logs.routes import logs_bp
 from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
@@ -102,6 +104,9 @@ def create_app(static_folder: str):
     app.register_blueprint(get_downloads_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.DOWNLOADS_PAGE_RESOURCE}")
+    app.register_blueprint(get_server_cluster_page_bp(static_folder=f"../../{static_folder}"),
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE}")
     app.register_blueprint(cadvisor_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}")
     app.register_blueprint(grafana_bp,
@@ -239,6 +244,9 @@ def create_app(static_folder: str):
     app.register_blueprint(config_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}")
+    app.register_blueprint(server_cluster_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_RESOURCE}")
     app.register_blueprint(version_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.VERSION_RESOURCE}")

@@ -46,8 +46,8 @@ const SystemAdmin = (props) => {
             text: 'IP'
         },
         {
-            dataField: 'master',
-            text: 'Master',
+            dataField: 'leader',
+            text: 'Leader',
             editor: {
                 type: Type.SELECT,
                 options: [{

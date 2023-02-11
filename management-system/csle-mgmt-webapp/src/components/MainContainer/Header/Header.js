@@ -30,6 +30,7 @@ import {
     LOGIN_PAGE_RESOURCE,
     DOWNLOADS_PAGE_RESOURCE,
     VERSION_RESOURCE,
+    SERVER_CLUSTER_PAGE_RESOURCE,
     HTTP_PREFIX, HTTP_REST_GET, CONFIG_RESOURCE, HOST_TERMINAL_ALLOWED_SUBRESOURCE,
     HOST_TERMINAL_ALLOWED_PROPERTY, REGISTRATION_ALLOWED_SUBRESOURCE, REGISTRATION_ALLOWED_PROPERTY
 } from "../../Common/constants";
@@ -375,6 +376,12 @@ const Header = (props) => {
         </Tooltip>
     );
 
+    const renderServerClusterTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Page with server cluster information.
+        </Tooltip>
+    );
+
     return (<div className="Header">
             <div className="row">
                 <div className="col-sm-12 p-5 mb-4 bg-light rounded-3 jumbotron blue-grey lighten-5">
@@ -539,6 +546,14 @@ const Header = (props) => {
                                     overlay={renderControlPlaneTooltip}>
                                     <NavLink className="dropdown-item" to={CONTROL_PLANE_PAGE_RESOURCE}>
                                         Control Plane <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
+                                    </NavLink>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{show: 0, hide: 0}}
+                                    overlay={renderServerClusterTooltip}>
+                                    <NavLink className="dropdown-item" to={SERVER_CLUSTER_PAGE_RESOURCE}>
+                                        Server Cluster <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}

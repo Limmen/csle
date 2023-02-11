@@ -148,11 +148,12 @@ A REST API for the CSLE management platform.
 | `/logs/elk-stack?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`           | Get logs of a specific ELK stack                               | `POST`                                  |
 | `/logs/ryu-controller?token=<valid_token>&emulation=<emulation_name>&executionid=<execution_id>`      | Get logs of a specific Ryu controller                          | `POST`                                  |
 | `/config?token=<valid_token>`                                                                         | Get/Update system configuration                                | `GET`,`PUT`                             |
-| `/config/host-terminal-allowed`                                                                       | Get host terminal policy                                       | `GET`                                    |
-| `/config/registration-allowed`                                                                        | Get registration policy                                        | `GET`                                    |
+| `/config/host-terminal-allowed`                                                                       | Get host terminal policy                                       | `GET`                                   |
+| `/config/registration-allowed`                                                                        | Get registration policy                                        | `GET`                                   |
 | `/version`                                                                                            | Get the version of CSLE management system                      | `GET`                                   |
 | `/about-page`                                                                                         | Get the about page                                             | `GET`                                   |
 | `/login-page`                                                                                         | Get the login page                                             | `GET`                                   |
+| `/server-cluster-page`                                                                                | Get the server-cluster page                                    | `GET`                                   |
 | `/register-page`                                                                                      | Get the register page                                          | `GET`                                   |
 | `/emulation-statistics-page`                                                                          | Get the emulation-statistics                                   | `GET`                                   |
 | `/emulations-page`                                                                                    | Get the emulation page                                         | `GET`                                   |
@@ -174,6 +175,7 @@ A REST API for the CSLE management platform.
 | `/host-terminal-page`                                                                                 | Get the host-terminal page                                     | `GET`                                   |
 | `/container-terminal-page`                                                                            | Get the container-terminal page                                | `GET`                                   |
 | `/host-terminal?token=<valid_token>`                                                                  | Web socket API for host terminal emulation                     | `Websockets`                            |
+| `/server-cluster?token=<valid_token>`                                                                 | Get details of the server cluster                              | `GET`                                   |
 
 ## Requirements
 

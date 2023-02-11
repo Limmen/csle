@@ -22,6 +22,7 @@ import Jobs from "./components/MainContainer/Jobs/Jobs";
 import ControlPlane from "./components/MainContainer/ControlPlane/ControlPlane";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import Downloads from "./components/MainContainer/Downloads/Downloads";
+import ServerCluster from "./components/MainContainer/ServerCluster/ServerCluster";
 import ContainerTerminal from "./components/MainContainer/ContainerTerminal/ContainerTerminal";
 import HostTerminal from "./components/MainContainer/HostTerminal/HostTerminal";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
@@ -49,7 +50,8 @@ import {
     SYSTEM_ADMIN_PAGE_RESOURCE,
     LOGS_ADMIN_PAGE_RESOURCE,
     SYSTEM_MODELS_PAGE_RESOURCE,
-    JOBS_PAGE_RESOURCE
+    JOBS_PAGE_RESOURCE,
+    SERVER_CLUSTER_PAGE_RESOURCE
 } from "./components/Common/constants";
 
 function App() {
@@ -199,6 +201,12 @@ function App() {
                                 <Route path={LOGS_ADMIN_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <LogsAdmin sessionData={sessionData} setSessionData={setSessionData} />
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path={SERVER_CLUSTER_PAGE_RESOURCE} index element={
+                                    <ProtectedRoute>
+                                        <ServerCluster sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
                                 }>
                                 </Route>
