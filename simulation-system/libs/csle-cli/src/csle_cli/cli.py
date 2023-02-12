@@ -34,6 +34,17 @@ def init() -> None:
     import csle_collector.constants.constants as collector_constants
     import subprocess
     host_ip = GeneralUtil.get_host_ip()
+    start_cluster_manager(host_ip=host_ip)
+    leader = ClusterUtil.am_i_leader(ip=host_ip, config=constants.CONFIG_FILE.PARSED_CONFIG)
+    if leader:
+        ManagementUtil.create_default_management_admin_account()
+        ManagementUtil.create_default_management_guest_account()
+
+
+def start_cluster_manager(host_ip: str):
+    import csle_common.constants.constants as constants
+    import csle_collector.constants.constants as collector_constants
+    import subprocess
     if not ClusterController.is_cluster_manager_running(ip=host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT):
         cmd = constants.COMMANDS.START_CLUSTER_MANAGER.format(constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                               collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_DIR,
@@ -41,10 +52,6 @@ def init() -> None:
                                                               10)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
-    leader = ClusterUtil.am_i_leader(ip=host_ip, config=constants.CONFIG_FILE.PARSED_CONFIG)
-    if leader:
-        ManagementUtil.create_default_management_admin_account()
-        ManagementUtil.create_default_management_guest_account()
 
 
 def attacker_shell(s: "EmulationEnvState") -> None:
@@ -570,7 +577,7 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
-                            "| docker")
+                            "| docker | clustermanager")
 def stop(entity: str, id: int = -1, ip: str = "") -> None:
     """
     Stops an entity
@@ -582,6 +589,7 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
     """
     from csle_common.controllers.container_controller import ContainerController
     from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
     if entity == "all":
         ContainerController.stop_all_running_containers()
@@ -589,6 +597,8 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
             stop_all_executions_of_emulation(emulation_env_config=emulation)
     elif entity == "node_exporter":
         stop_node_exporter(ip=ip)
+    elif entity == "clustermanager":
+        ManagementSystemController.stop_cluster_manager()
     elif entity == "prometheus":
         stop_prometheus(ip=ip)
     elif entity == "cadvisor":
@@ -956,7 +966,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
-                             "| system_id_job ")
+                             "| system_id_job | nginx | postgresql | docker | clustermanager")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str) -> None:
     """
     Starts an entity, e.g. a container or the management system
@@ -979,6 +989,8 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         ContainerController.start_all_stopped_containers()
     elif entity == "statsmanager":
         start_statsmanager(ip=ip)
+    elif entity == "clustermanager":
+        start_cluster_manager(host_ip=ip)
     elif entity == "node_exporter":
         start_node_exporter(ip=ip)
     elif entity == "prometheus":
@@ -987,6 +999,12 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         start_cadvisor(ip=ip)
     elif entity == "pgadmin":
         start_pgadmin(ip=ip)
+    elif entity == "nginx":
+        start_nginx(ip=ip)
+    elif entity == "docker":
+        start_docker_engine(ip=ip)
+    elif entity == "postgresql":
+        start_postgresql(ip=ip)
     elif entity == "grafana":
         start_grafana(ip=ip)
     elif entity == "training_job":

@@ -469,6 +469,19 @@ class ManagementSystemController:
         return True
 
     @staticmethod
+    def stop_cluster_manager() -> bool:
+        """
+        Stops the local cluster manager
+
+        :return: True if it was stopped, False otherwise
+        """
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.CLUSTER_MANAGER_PIDFILE)
+        cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        return True
+
+    @staticmethod
     def is_pid_running(pid: int) -> bool:
         """
         Checks if the given pid is running on the host
