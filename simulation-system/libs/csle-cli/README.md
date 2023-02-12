@@ -162,6 +162,7 @@ csle start | stop nodeexporter
 - Python 3.8+
 - `click>=8.0.0`
 - `csle-common`
+- `csle-cluster`
 - `csle-collector`
 - `csle-attacker`
 - `csle-defender`

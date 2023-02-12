@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service ClusterManager {
+  rpc getNodeStatus(GetNodeStatusMsg) returns (NodeStatusDTO) {}
+  rpc startPostgreSQL(StartPostgreSQLMsg) returns (ServiceStatusDTO) {}
+  rpc startCAdvisor(StartCAdvisorMsg) returns (ServiceStatusDTO) {}
+  rpc startNodeExporter(StartNodeExporterMsg) returns (ServiceStatusDTO) {}
+  rpc startGrafana(StartGrafanaMsg) returns (ServiceStatusDTO) {}
+  rpc startPrometheus(StartPrometheusMsg) returns (ServiceStatusDTO) {}
+  rpc startPgAdmin(StartPgAdminMsg) returns (ServiceStatusDTO) {}
+  rpc startNginx(StartNginxMsg) returns (ServiceStatusDTO) {}
+  rpc startFlask(StartFlaskMsg) returns (ServiceStatusDTO) {}
+  rpc startDockerStatsManager(StartDockerStatsManagerMsg) returns (ServiceStatusDTO) {}
+  rpc startDockerEngine(StartDockerEngineMsg) returns (ServiceStatusDTO) {}
+  rpc stopPostgreSQL(StopPostgreSQLMsg) returns (ServiceStatusDTO) {}
+  rpc stopCAdvisor(StopCAdvisorMsg) returns (ServiceStatusDTO) {}
+  rpc stopNodeExporter(StopNodeExporterMsg) returns (ServiceStatusDTO) {}
+  rpc stopGrafana(StopGrafanaMsg) returns (ServiceStatusDTO) {}
+  rpc stopPrometheus(StopPrometheusMsg) returns (ServiceStatusDTO) {}
+  rpc stopPgAdmin(StopPgAdminMsg) returns (ServiceStatusDTO) {}
+  rpc stopNginx(StopNginxMsg) returns (ServiceStatusDTO) {}
+  rpc stopFlask(StopFlaskMsg) returns (ServiceStatusDTO) {}
+  rpc stopDockerStatsManager(StopDockerStatsManagerMsg) returns (ServiceStatusDTO) {}
+  rpc stopDockerEngine(StopDockerEngineMsg) returns (ServiceStatusDTO) {}
+}
+
+// Message that the client sends to get the status of the node
+message GetNodeStatusMsg {}
+
+// Message that the server returns when requested by the client, contains info about node's status
+message NodeStatusDTO {
+  string ip = 1;
+  bool leader = 2;
+  bool cAdvisorRunning = 3;
+  bool prometheusRunning = 4;
+  bool grafanaRunning = 5;
+  bool pgAdminRunning = 6;
+  bool nginxRunning = 7;
+  bool flaskRunning = 8;
+  bool dockerStatsManagerRunning = 9;
+  bool nodeExporterRunning = 10;
+  bool postgreSQLRunning = 11;
+  bool dockerEngineRunning = 12;
+}
+
+// Message that the server returns when changing the status of a service
+message ServiceStatusDTO {
+  bool running = 1;
+}
+
+// Message that the client sends to start PostgreSQL
+message StartPostgreSQLMsg {}
+
+// Message that the client sends to start cAdvisor
+message StartCAdvisorMsg {}
+
+// Message that the client sends to start node exporter
+message StartNodeExporterMsg {}
+
+// Message that the client sends to start grafana
+message StartGrafanaMsg {}
+
+// Message that the client sends to start Prometheus
+message StartPrometheusMsg {}
+
+// Message that the client sends to start pgAdmin
+message StartPgAdminMsg {}
+
+// Message that the client sends to start nginx
+message StartNginxMsg {}
+
+// Message that the client sends to start flask
+message StartFlaskMsg {}
+
+// Message that the client sends to start dockerStatsManager
+message StartDockerStatsManagerMsg {}
+
+// Message that the client sends to start the docker engine
+message StartDockerEngineMsg {}
+
+// Message that the client sends to stop PostgreSQL
+message StopPostgreSQLMsg {}
+
+// Message that the client sends to stop cAdvisor
+message StopCAdvisorMsg {}
+
+// Message that the client sends to stop node exporter
+message StopNodeExporterMsg {}
+
+// Message that the client sends to stop grafana
+message StopGrafanaMsg {}
+
+// Message that the client sends to stop Prometheus
+message StopPrometheusMsg {}
+
+// Message that the client sends to stop pgAdmin
+message StopPgAdminMsg {}
+
+// Message that the client sends to stop nginx
+message StopNginxMsg {}
+
+// Message that the client sends to stop flask
+message StopFlaskMsg {}
+
+// Message that the client sends to stop dockerStatsManager
+message StopDockerStatsManagerMsg {}
+
+// Message that the client sends to stop the docker engine
+message StopDockerEngineMsg {}

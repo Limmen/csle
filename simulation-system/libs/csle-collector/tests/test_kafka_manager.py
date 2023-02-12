@@ -4,7 +4,7 @@ import pytest
 
 class TestKafkaManagerSuite(object):
     """
-    Test suite for shell_util.py
+    Test suite for kafka_manager.py
     """
 
     pytest.logger = logging.getLogger("kafka_manager_tests")

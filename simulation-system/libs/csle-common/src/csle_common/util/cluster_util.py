@@ -12,6 +12,44 @@ class ClusterUtil:
     """
 
     @staticmethod
+    def am_i_leader(ip : str, config: Config):
+        """
+        Checks if a given IP is leader or not
+
+        :param ip: the ip to check
+        :param config: the cluster configuration
+        :return: True if leader, false otherwise
+        """
+        leader = False
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip:
+                leader = node.leader
+        return leader
+
+    @staticmethod
+    def get_config() -> Config:
+        """
+        Gets the current cluster config from the metastore or from disk depending on if it is the leader node or
+        not
+        :return: the cluster config
+        """
+        config = MetastoreFacade.get_config(id=1)
+        if config is None:
+            config = Config.read_config_file()
+        ip = GeneralUtil.get_host_ip()
+        constants.CLUSTER_CONFIG.IP = ip
+        leader = ClusterUtil.am_i_leader(ip=ip, config=config)
+        constants.CLUSTER_CONFIG.LEADER = leader
+        if leader:
+            config = Config.read_config_file()
+            current_config = MetastoreFacade.get_config(id=1)
+            if current_config is None:
+                MetastoreFacade.save_config(config)
+            else:
+                MetastoreFacade.update_config(config=config, id=1)
+        return config
+
+    @staticmethod
     def set_config_parameters_from_config_file() -> None:
         """
         Reads the config file from $CSLE_HOME/config.json and initializes certain config parameters
@@ -25,23 +63,7 @@ class ClusterUtil:
         config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}" \
                            f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
         try:
-            config = MetastoreFacade.get_config(id=1)
-            if config is None:
-                config = Config.read_config_file()
-            ip = GeneralUtil.get_host_ip()
-            constants.CLUSTER_CONFIG.IP = ip
-            leader = False
-            for node in config.cluster_config.cluster_nodes:
-                if node.ip == ip:
-                    leader = node.leader
-            constants.CLUSTER_CONFIG.LEADER = leader
-            if leader:
-                config = Config.read_config_file()
-                current_config = MetastoreFacade.get_config(id=1)
-                if current_config is None:
-                    MetastoreFacade.save_config(config)
-                else:
-                    MetastoreFacade.update_config(config=config, id=1)
+            config = ClusterUtil.get_config()
             constants.CONFIG_FILE.PARSED_CONFIG = config
             constants.CSLE_ADMIN.MANAGEMENT_USER = config.management_admin_username_default
             constants.CSLE_ADMIN.MANAGEMENT_PW = config.management_admin_password_default

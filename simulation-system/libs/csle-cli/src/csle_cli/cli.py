@@ -582,7 +582,7 @@ def stop(entity: str, id: int = -1) -> None:
     elif entity == "grafana":
         ManagementSystemController.stop_grafana()
     elif entity == "managementsystem":
-        ManagementSystemController.stop_management_system()
+        ManagementSystemController.stop_flask()
     elif entity == "statsmanager":
         ManagementSystemController.stop_docker_stats_manager()
     elif entity == "emulation_executions":
@@ -805,7 +805,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         DataCollectionJobManager.start_data_collection_job_in_background(
             data_collection_job=system_id_job)
     elif entity == "managementsystem":
-        ManagementSystemController.start_management_system()
+        ManagementSystemController.start_flask()
     else:
         container_started = ContainerController.start_container(name=entity)
         if not container_started:
@@ -1309,7 +1309,7 @@ def list_management_system() -> None:
     import csle_common.constants.constants as constants
     from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if ManagementSystemController.is_management_system_running():
+    if ManagementSystemController.is_flask_running():
         click.secho("Management system status: " + f" {click.style('[running]', fg='green')} "
                                                    f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
     else:

@@ -902,6 +902,15 @@ class COMMANDS:
     START_SYSTEM_IDENTIFICATION_JOB = "nohup csle systemidentificationjob {} &"
     DOCKER_EXEC_COMMAND = "docker exec"
     PING = "ping"
+    NGINX_STATUS = "service nginx status"
+    POSTGRESQL_STATUS = "service postgresql status"
+    DOCKER_ENGINE_STATUS = "service docker status"
+    POSTGRESQL_START = "sudo service postgresql start"
+    POSTGRESQL_STOP = "sudo service postgresql stop"
+    NGINX_START = "sudo service nginx start"
+    NGINX_STOP = "sudo service nginx stop"
+    DOCKER_ENGINE_START = "sudo service docker start"
+    DOCKER_ENGINE_STOP = "sudo service docker stop"
 
 
 class OVS:

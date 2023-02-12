@@ -1,3 +1,4 @@
+from typing import Any
 import subprocess
 import docker
 import os
@@ -60,9 +61,42 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_NODE_EXPORTER in output and str(pid) in output
 
     @staticmethod
-    def is_management_system_running() -> bool:
+    def is_nginx_running() -> bool:
         """
-        Checks if the management system is running on the host
+        Checks if Nginx is running on the host
+
+        :return: True if nginx is running, false otherwise
+        """
+        output = subprocess.run(constants.COMMANDS.NGINX_STATUS.split(" "), capture_output=True, text=True)
+        nginx_running = not ("not" in output.stdout)
+        return nginx_running
+
+    @staticmethod
+    def is_postgresql_running() -> bool:
+        """
+        Checks if PostgreSQL is running on the host
+
+        :return: True if PostgreSQL is running, false otherwise
+        """
+        output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS.split(" "), capture_output=True, text=True)
+        postgresql_running = not ("not" in output.stdout)
+        return postgresql_running
+
+    @staticmethod
+    def is_docker_engine_running() -> bool:
+        """
+        Checks if Docker engine is running on the host
+
+        :return: True if Docker engine is running, false otherwise
+        """
+        output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_STATUS.split(" "), capture_output=True, text=True)
+        docker_engine_running = not ("not" in output.stdout)
+        return docker_engine_running
+
+    @staticmethod
+    def is_flask_running() -> bool:
+        """
+        Checks if the flask web server is running on the host
 
         :return: True if it is running, false otherwise
         """
@@ -92,13 +126,13 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def start_management_system() -> bool:
+    def start_flask() -> bool:
         """
-        Starts the REST API
+        Starts the Flask REST API Server
 
         :return: True if it was started, False otherwise
         """
-        if ManagementSystemController.is_management_system_running():
+        if ManagementSystemController.is_flask_running():
             return False
 
         cmd = constants.COMMANDS.BUILD_MONITOR
@@ -140,13 +174,13 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def stop_management_system() -> bool:
+    def stop_flask() -> bool:
         """
-        Stops the management system
+        Stops the flask REST API
 
         :return: True if it was stopped, False otherwise
         """
-        if not ManagementSystemController.is_management_system_running():
+        if not ManagementSystemController.is_flask_running():
             return False
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
@@ -253,6 +287,66 @@ class ManagementSystemController:
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
+
+    @staticmethod
+    def start_postgresql() -> (bool, Any, Any):
+        """
+        :return: True if postgresql was started, otherwise False
+        """
+        if ManagementSystemController.is_postgresql_running():
+            return False, None, None
+        output = subprocess.run(constants.COMMANDS.POSTGRESQL_START.split(" "), capture_output=True, text=True)
+        return True, output.stdout, output.stderr
+
+    @staticmethod
+    def stop_postgresql() -> (bool, Any, Any):
+        """
+        :return: True if postgresql was stopped, otherwise False
+        """
+        if not ManagementSystemController.is_postgresql_running():
+            return False, None, None
+        output = subprocess.run(constants.COMMANDS.POSTGRESQL_STOP.split(" "), capture_output=True, text=True)
+        return True, output.stdout, output.stderr
+
+    @staticmethod
+    def start_nginx() -> (bool, Any, Any):
+        """
+        :return: True if nginx was started, otherwise False
+        """
+        if ManagementSystemController.is_nginx_running():
+            return False, None, None
+        output = subprocess.run(constants.COMMANDS.NGINX_START.split(" "), capture_output=True, text=True)
+        return True, output.stdout, output.stderr
+
+    @staticmethod
+    def stop_nginx() -> (bool, Any, Any):
+        """
+        :return: True if postgresql was stopped, otherwise False
+        """
+        if not ManagementSystemController.is_nginx_running():
+            return False, None, None
+        output = subprocess.run(constants.COMMANDS.NGINX_STOP.split(" "), capture_output=True, text=True)
+        return True, output.stdout, output.stderr
+
+    @staticmethod
+    def start_docker_engine() -> (bool, Any, Any):
+        """
+        :return: True if nginx was started, otherwise False
+        """
+        if ManagementSystemController.is_docker_engine_running():
+            return False, None, None
+        output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_START.split(" "), capture_output=True, text=True)
+        return True, output.stdout, output.stderr
+
+    @staticmethod
+    def stop_docker_engine() -> (bool, Any, Any):
+        """
+        :return: True if postgresql was stopped, otherwise False
+        """
+        if not ManagementSystemController.is_docker_engine_running():
+            return False, None, None
+        output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_STOP.split(" "), capture_output=True, text=True)
+        return True, output.stdout, output.stderr
 
     @staticmethod
     def start_pgadmin() -> bool:

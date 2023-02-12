@@ -245,7 +245,7 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
 def serve(port: int = 50046, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "docker_stats_manager.log") -> None:
     """
-    Starts the gRPC server for managing clients
+    Starts the gRPC server for managing docker stats collection
 
     :param port: the port that the server will listen to
     :param log_dir: the directory to write the log file
