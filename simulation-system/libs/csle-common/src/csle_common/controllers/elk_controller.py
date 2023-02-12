@@ -13,6 +13,9 @@ from csle_common.logging.log import Logger
 
 
 class ELKController:
+    """
+    Controller managing API calls to ELK-stacks running inside emulations
+    """
 
     @staticmethod
     def start_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:

@@ -7,6 +7,8 @@ To see options, run:
 from typing import List, Tuple, Union
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.cluster_util import ClusterUtil
+from csle_common.util.general_util import GeneralUtil
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
 import click
 
 ClusterUtil.set_config_parameters_from_config_file()
@@ -28,8 +30,21 @@ def init() -> None:
     :return: None
     """
     from csle_common.util.management_util import ManagementUtil
-    ManagementUtil.create_default_management_admin_account()
-    ManagementUtil.create_default_management_guest_account()
+    import csle_common.constants.constants as constants
+    import csle_collector.constants.constants as collector_constants
+    import subprocess
+    host_ip = GeneralUtil.get_host_ip()
+    if not ClusterController.is_cluster_manager_running(ip=host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT):
+        cmd = constants.COMMANDS.START_CLUSTER_MANAGER.format(constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                              collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_DIR,
+                                                              collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_FILE,
+                                                              10)
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+    leader = ClusterUtil.am_i_leader(ip=host_ip, config=constants.CONFIG_FILE.PARSED_CONFIG)
+    if leader:
+        ManagementUtil.create_default_management_admin_account()
+        ManagementUtil.create_default_management_guest_account()
 
 
 def attacker_shell(s: "EmulationEnvState") -> None:
@@ -620,6 +635,25 @@ def statsmanager(port: int, log_file: str, log_dir: str, max_workers: int) -> No
     """
     import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
     docker_stats_manager.serve(port=port, log_file_name=log_file, log_dir=log_dir, max_workers=max_workers)
+
+
+@click.argument('max_workers', default=10, type=int)
+@click.argument('log_file', default="docker_statsmanager.log", type=str)
+@click.argument('log_dir', default="/var/log/csle", type=str)
+@click.argument('port', default=50046, type=int)
+@click.command("clustermanager", help="port")
+def clustermanager(port: int, log_file: str, log_dir: str, max_workers: int) -> None:
+    """
+    Starts the clustermanager locally
+
+    :param port: the port that the clustermanager will listen to
+    :param log_file: extra parameter for starting the docker stats manager
+    :param log_dir: extra parameter for starting the docker stats manager
+    :param max_workers: extra parameter for starting the docker stats manager
+    :return: None
+    """
+    import csle_cluster.cluster_manager.cluster_manager as cluster_manager
+    cluster_manager.serve(port=port, log_file_name=log_file, log_dir=log_dir, max_workers=max_workers)
 
 
 def trainingjob_shell_complete(ctx, param, incomplete) -> List[str]:
@@ -1717,9 +1751,6 @@ def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:
                 fg="yellow", bold=True)
 
 
-# Set config parameters
-
-
 # Adds the commands to the group
 commands.add_command(ls)
 commands.add_command(rm)
@@ -1730,6 +1761,7 @@ commands.add_command(clean)
 commands.add_command(start_traffic)
 commands.add_command(stop_traffic)
 commands.add_command(statsmanager)
+commands.add_command(clustermanager)
 commands.add_command(em)
 commands.add_command(attacker)
 commands.add_command(trainingjob)

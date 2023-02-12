@@ -20,8 +20,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         """
         Initializes the server
         """
+
         file_name = collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_FILE
-        dir = collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR
+        dir = collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_DIR
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)
         logging.info("Setting up ClusterManager")
@@ -308,7 +309,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Stopped pgAdmin")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
-    def startFlask(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartFlask,
+    def startFlask(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartFlaskMsg,
                    context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """

@@ -190,8 +190,6 @@ def start_docker_engine(
     return service_status_dto
 
 
-# Stop
-
 def stop_postgresql(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         timeout=constants.GRPC.TIMEOUT_SECONDS) \

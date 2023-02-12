@@ -5,6 +5,21 @@ Constants for csle-common
 import re
 
 
+class GRPC_SERVERS:
+    """
+    Constants related to grpc servers
+    """
+    CLUSTER_MANAGER_PORT = 50041
+    RYU_MANAGER_PORT = 50042
+    TRAFFIC_MANAGER_PORT = 50043
+    CLIENT_MANAGER_PORT = 50044
+    ELK_MANAGER_PORT = 50045
+    DOCKER_STATS_MANAGER_PORT = 50046
+    OSSEC_IDS_MANAGER_PORT = 50047
+    SNORT_IDS_MANAGER_PORT = 50048
+    HOST_MANAGER_PORT = 50049
+
+
 class CONFIG_FILE:
     """
     Constants related to the config file
@@ -854,6 +869,11 @@ class COMMANDS:
     START_DOCKER_STATS_MANAGER = "nohup csle statsmanager {} " \
                                  f"& > {DOCKER_STATS_MANAGER_OUTFILE} " \
                                  f"&& echo $! > {DOCKER_STATS_MANAGER_PIDFILE}"
+    CLUSTER_MANAGER_PIDFILE = "/var/log/csle/clustermanager.pid"
+    CLUSTER_MANAGER_OUTFILE = "/var/log/csle/clustermanager.out"
+    START_CLUSTER_MANAGER = "nohup csle clustermanager {} " \
+                            f"& > {CLUSTER_MANAGER_OUTFILE} " \
+                            f"&& echo $! > {CLUSTER_MANAGER_PIDFILE}"
     SEARCH_DOCKER_STATS_MANAGER = "statsmanager"
     SEARCH_PROMETHEUS = "prometheus"
     PROMETHEUS_PID_FILE = "/var/log/csle/prometheus.pid"

@@ -37,6 +37,7 @@ class ClusterUtil:
         if config is None:
             config = Config.read_config_file()
         ip = GeneralUtil.get_host_ip()
+        constants.METADATA_STORE.HOST = ip
         constants.CLUSTER_CONFIG.IP = ip
         leader = ClusterUtil.am_i_leader(ip=ip, config=config)
         constants.CLUSTER_CONFIG.LEADER = leader
@@ -83,7 +84,6 @@ class ClusterUtil:
             constants.AGENT.PW = config.ssh_agent_password
             constants.METADATA_STORE.USER = config.metastore_user
             constants.METADATA_STORE.PASSWORD = config.metastore_password
-            constants.METADATA_STORE.HOST = ip
             constants.METADATA_STORE.DBNAME = config.metastore_database_name
             constants.COMMANDS.PGADMIN_USERNAME = config.pgadmin_username
             constants.COMMANDS.PGADMIN_PW = config.pgadmin_password
