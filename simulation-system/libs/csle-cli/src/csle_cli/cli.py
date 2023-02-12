@@ -648,7 +648,7 @@ def stop_nginx(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_nginx(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_docker_engine(ip: str) -> None:
@@ -664,7 +664,7 @@ def stop_docker_engine(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_docker_engine(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_docker_engine(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_postgresql(ip: str) -> None:
@@ -680,7 +680,7 @@ def stop_postgresql(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_postgresql(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_postgresql(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_node_exporter(ip: str) -> None:
@@ -696,7 +696,7 @@ def stop_node_exporter(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_node_exporter(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_node_exporter(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_prometheus(ip: str) -> None:
@@ -712,7 +712,7 @@ def stop_prometheus(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_prometheus(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_cadvisor(ip: str) -> None:
@@ -728,7 +728,7 @@ def stop_cadvisor(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_cadvisor(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_cadvisor(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_pgadmin(ip: str) -> None:
@@ -744,7 +744,7 @@ def stop_pgadmin(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_pgadmin(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_pgadmin(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 def stop_grafana(ip: str) -> None:
     """
@@ -759,7 +759,7 @@ def stop_grafana(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_grafana(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_grafana(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_flask(ip: str) -> None:
@@ -775,7 +775,7 @@ def stop_flask(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_flask(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_flask(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_statsmanager(ip: str) -> None:
@@ -791,7 +791,7 @@ def stop_statsmanager(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.stop_docker_statsmanager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.stop_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 @click.argument('max_workers', default=10, type=int)
@@ -1044,7 +1044,7 @@ def start_nginx(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_nginx(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_docker_engine(ip: str) -> None:
@@ -1060,7 +1060,7 @@ def start_docker_engine(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_docker_engine(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_docker_engine(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_postgresql(ip: str) -> None:
@@ -1076,7 +1076,7 @@ def start_postgresql(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_postgresql(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_postgresql(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_node_exporter(ip: str) -> None:
@@ -1092,7 +1092,7 @@ def start_node_exporter(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_node_exporter(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_node_exporter(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_prometheus(ip: str) -> None:
@@ -1108,7 +1108,7 @@ def start_prometheus(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_prometheus(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_cadvisor(ip: str) -> None:
@@ -1124,7 +1124,7 @@ def start_cadvisor(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_cadvisor(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_cadvisor(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_pgadmin(ip: str) -> None:
@@ -1140,7 +1140,7 @@ def start_pgadmin(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_pgadmin(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_pgadmin(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 def start_grafana(ip: str) -> None:
     """
@@ -1155,7 +1155,7 @@ def start_grafana(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_grafana(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_grafana(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_flask(ip: str) -> None:
@@ -1171,7 +1171,7 @@ def start_flask(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_flask(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_flask(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def start_statsmanager(ip: str) -> None:
@@ -1187,7 +1187,7 @@ def start_statsmanager(ip: str) -> None:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_docker_statsmanager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.start_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:

@@ -133,7 +133,7 @@ def start_nginx(
 
 def start_flask(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
-        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        timeout=constants.GRPC.CONFIG_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
     """
     Requests the cluster manager to start the flask service
