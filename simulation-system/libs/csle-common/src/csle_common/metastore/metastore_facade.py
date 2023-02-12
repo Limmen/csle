@@ -3533,8 +3533,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 config_json = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.CONFIG_TABLE} "
-                            f"(config) "
-                            f"VALUES (%s) RETURNING id", (config_json,))
+                            f"(id, config) "
+                            f"VALUES (%s, %s) RETURNING id", (1, config_json,))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug("config saved successfully")

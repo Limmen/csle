@@ -1129,7 +1129,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
                           "| node_exporter | cadvisor | pgadmin | statsmanager | managementsystem | "
-                          "simulations | emulation_executions")
+                          "simulations | emulation_executions | cluster")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -1151,6 +1151,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
         list_all(all=all, running=running, stopped=stopped)
     elif entity == "networks":
         list_networks()
+    elif entity == "cluster":
+        list_cluster()
     elif entity == "containers":
         if all:
             list_all_containers()
@@ -1269,6 +1271,7 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
     :param stopped: boolean flag whether stopped containers/emulations should be listed
     :return: None
     """
+    list_cluster()
     list_networks()
     list_all_containers()
     list_images()
@@ -1482,6 +1485,21 @@ def list_networks() -> None:
             active = net.name in active_networks_names
             if active:
                 print_network(net, active=active)
+
+
+def list_cluster() -> None:
+    """
+    Lists the cluster configuration
+
+    :return: None
+    """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
+    click.secho("CSLE cluster:", fg="magenta", bold=True)
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        click.secho(f"ip:{node.ip}, leader:{node.leader}, CPUs:{node.cpus}, GPUs:{node.gpus}, RAM (GB): {node.RAM}",
+                    bold=False)
 
 
 def get_network(name: str) -> Union[None, "ContainerNetwork"]:

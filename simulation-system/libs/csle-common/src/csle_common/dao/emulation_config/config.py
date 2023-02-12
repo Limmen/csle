@@ -126,7 +126,7 @@ class Config:
         self.grafana_password = grafana_password
         self.pgadmin_username = pgadmin_username
         self.pgadmin_password = pgadmin_password
-        self.id = -1
+        self.id = 1
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -179,7 +179,7 @@ class Config:
         d["grafana_password"] = self.grafana_password
         d["pgadmin_username"] = self.pgadmin_username
         d["pgadmin_password"] = self.pgadmin_password
-        d["id"] = self.id
+        d["id"] = 1
         return d
 
     def to_param_dict(self) -> Dict[str, Any]:
