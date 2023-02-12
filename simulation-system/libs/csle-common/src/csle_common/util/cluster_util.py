@@ -12,7 +12,7 @@ class ClusterUtil:
     """
 
     @staticmethod
-    def am_i_leader(ip : str, config: Config):
+    def am_i_leader(ip: str, config: Config):
         """
         Checks if a given IP is leader or not
 

@@ -26,7 +26,6 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.basicConfig(filename=logfile, level=logging.INFO)
         logging.info("Setting up ClusterManager")
 
-
     def get_cadvisor_running_status(self) -> bool:
         """
         :return: True if cadvisor is running, otherwise False
@@ -40,7 +39,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return ManagementSystemController.is_cadvisor_running()
 
     def getNodeStatus(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeStatusMsg,
-            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
+                      context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
         """
         Gets the status of a node in the CSLE cluster & management system
 
@@ -70,7 +69,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         )
 
     def startPosgtreSQL(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartPostgreSQLMsg,
-                      context: grpc.ServicerContext) \
+                        context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts Postgresql
@@ -100,7 +99,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startDockerEngine(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerEngineMsg,
-                        context: grpc.ServicerContext) \
+                          context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts Docker Engine
@@ -115,7 +114,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopDockerEngine(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerEngineMsg,
-                       context: grpc.ServicerContext) \
+                         context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops the Docker Engine
@@ -130,7 +129,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startNginx(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartNginxMsg,
-                          context: grpc.ServicerContext) \
+                   context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts Nginx
@@ -145,7 +144,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopNginx(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopNginxMsg,
-                         context: grpc.ServicerContext) \
+                  context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops Nginx
@@ -160,7 +159,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startCAdvisor(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartCAdvisorMsg,
-                   context: grpc.ServicerContext) \
+                      context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts cAdvisor
@@ -169,13 +168,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of cAdvisor
         """
-        logging.info(f"Starting cAdvisor")
+        logging.info("Starting cAdvisor")
         ManagementSystemController.start_cadvisor()
-        logging.info(f"Started cAdvisor")
+        logging.info("Started cAdvisor")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopCAdvisor(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopCAdvisorMsg,
-                  context: grpc.ServicerContext) \
+                     context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops cAdvisor
@@ -184,13 +183,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of cAdvisor
         """
-        logging.info(f"Stopping cAdvisor")
+        logging.info("Stopping cAdvisor")
         ManagementSystemController.stop_cadvisor()
-        logging.info(f"Stopped cAdvisor")
+        logging.info("Stopped cAdvisor")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startNodeExporter(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartNodeExporterMsg,
-                      context: grpc.ServicerContext) \
+                          context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts node exporter
@@ -199,13 +198,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of node exporter
         """
-        logging.info(f"Starting node exporter")
+        logging.info("Starting node exporter")
         ManagementSystemController.start_node_exporter()
-        logging.info(f"Started node exporter")
+        logging.info("Started node exporter")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopNodeExporter(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopNodeExporterMsg,
-                     context: grpc.ServicerContext) \
+                         context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops node exporter
@@ -214,13 +213,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of node exporter
         """
-        logging.info(f"Stopping node exporter")
+        logging.info("Stopping node exporter")
         ManagementSystemController.stop_node_exporter()
-        logging.info(f"Stopped node exporter")
+        logging.info("Stopped node exporter")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startGrafana(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartGrafanaMsg,
-                          context: grpc.ServicerContext) \
+                     context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts grafana
@@ -229,13 +228,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of grafana
         """
-        logging.info(f"Starting grafana")
+        logging.info("Starting grafana")
         ManagementSystemController.start_grafana()
-        logging.info(f"Started grafana")
+        logging.info("Started grafana")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopGrafana(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopGrafanaMsg,
-                         context: grpc.ServicerContext) \
+                    context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops grafana
@@ -244,13 +243,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of grafana
         """
-        logging.info(f"Stopping grafana")
+        logging.info("Stopping grafana")
         ManagementSystemController.stop_grafana()
-        logging.info(f"Stopped grafana")
+        logging.info("Stopped grafana")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startPrometheus(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartPrometheusMsg,
-                     context: grpc.ServicerContext) \
+                        context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts Prometheus
@@ -259,13 +258,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of Prometheus
         """
-        logging.info(f"Starting Prometheus")
+        logging.info("Starting Prometheus")
         ManagementSystemController.start_prometheus()
-        logging.info(f"Started Prometheus")
+        logging.info("Started Prometheus")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopPrometheus(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopPrometheusMsg,
-                    context: grpc.ServicerContext) \
+                       context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops Prometheus
@@ -274,13 +273,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of Prometheus
         """
-        logging.info(f"Stopping Prometheus")
+        logging.info("Stopping Prometheus")
         ManagementSystemController.stop_prometheus()
-        logging.info(f"Stopped Prometheus")
+        logging.info("Stopped Prometheus")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startPgAdmin(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartPgAdminMsg,
-                        context: grpc.ServicerContext) \
+                     context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts pgAdmin
@@ -289,13 +288,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of pgAdmin
         """
-        logging.info(f"Starting pgAdmin")
+        logging.info("Starting pgAdmin")
         ManagementSystemController.start_pgadmin()
-        logging.info(f"Started pgAdmin")
+        logging.info("Started pgAdmin")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopPgAdmin(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopPgAdminMsg,
-                       context: grpc.ServicerContext) \
+                    context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops pgAdmin
@@ -304,13 +303,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of pgAdmin
         """
-        logging.info(f"Stopping pgAdmin")
+        logging.info("Stopping pgAdmin")
         ManagementSystemController.stop_pgadmin()
-        logging.info(f"Stopped pgAdmin")
+        logging.info("Stopped pgAdmin")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startFlask(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartFlask,
-                     context: grpc.ServicerContext) \
+                   context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts Flask
@@ -319,13 +318,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of flask
         """
-        logging.info(f"Starting flask")
+        logging.info("Starting flask")
         ManagementSystemController.start_flask()
-        logging.info(f"Started flask")
+        logging.info("Started flask")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopFlask(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopFlaskMsg,
-                    context: grpc.ServicerContext) \
+                  context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops Flask
@@ -334,9 +333,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of flask
         """
-        logging.info(f"Stopping flask")
+        logging.info("Stopping flask")
         ManagementSystemController.stop_flask()
-        logging.info(f"Stopped flask")
+        logging.info("Stopped flask")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def startDockerStatsManager(
@@ -349,9 +348,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of the docker statsmanager
         """
-        logging.info(f"Starting the docker statsmanager")
+        logging.info("Starting the docker statsmanager")
         ManagementSystemController.start_docker_stats_manager()
-        logging.info(f"Started the docker statsmanager")
+        logging.info("Started the docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopDockerStatsManager(
@@ -364,9 +363,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with the status of the docker statsmanager
         """
-        logging.info(f"Stopping the Docker statsmanager")
+        logging.info("Stopping the Docker statsmanager")
         ManagementSystemController.stop_docker_stats_manager()
-        logging.info(f"Stopped the Docker statsmanager")
+        logging.info("Stopped the Docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
 
