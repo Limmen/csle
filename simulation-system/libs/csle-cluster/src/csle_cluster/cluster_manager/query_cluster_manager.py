@@ -14,8 +14,7 @@ def get_node_status(
     :param timeout: the GRPC timeout (seconds)
     :return: a NodeStatusDTO describing the status of the node
     """
-    get_node_status_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeStatusMsg()
+    get_node_status_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeStatusMsg()
     node_status_dto = stub.getNodeStatus(get_node_status_msg, timeout=timeout)
     return node_status_dto
 
@@ -31,8 +30,7 @@ def start_postgresql(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the PostgreSQL service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartPostgreSQLMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartPostgreSQLMsg()
     service_status_dto = stub.startPostgreSQL(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -48,8 +46,7 @@ def start_cadvisor(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the cAdvisor service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartCAdvisorMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartCAdvisorMsg()
     service_status_dto = stub.startCAdvisor(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -65,8 +62,7 @@ def start_node_exporter(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the node exporter service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartNodeExporterMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartNodeExporterMsg()
     service_status_dto = stub.startNodeExporter(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -82,8 +78,7 @@ def start_grafana(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the Grafana service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartGrafanaMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartGrafanaMsg()
     service_status_dto = stub.startGrafana(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -99,8 +94,7 @@ def start_prometheus(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the Prometheus service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartPrometheusMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartPrometheusMsg()
     service_status_dto = stub.startPrometheus(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -116,8 +110,7 @@ def start_pgadmin(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the pgAdmin service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartPgAdminMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartPgAdminMsg()
     service_status_dto = stub.startPgAdmin(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -133,8 +126,7 @@ def start_nginx(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the nginx service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartNginxMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartNginxMsg()
     service_status_dto = stub.startNginx(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -150,8 +142,7 @@ def start_flask(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the flask service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartFlaskMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartFlaskMsg()
     service_status_dto = stub.startFlask(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -167,8 +158,7 @@ def start_docker_statsmanager(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the docker statsmanager service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerStatsManagerMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerStatsManagerMsg()
     service_status_dto = stub.startDockerStatsManager(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -184,8 +174,7 @@ def start_docker_engine(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the docker engine service
     """
-    start_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerEngineMsg()
+    start_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerEngineMsg()
     service_status_dto = stub.startDockerEngine(start_msg, timeout=timeout)
     return service_status_dto
 
@@ -201,8 +190,7 @@ def stop_postgresql(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the PostgreSQL service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopPostgreSQLMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopPostgreSQLMsg()
     service_status_dto = stub.stopPostgreSQL(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -218,8 +206,7 @@ def stop_cadvisor(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the cAdvisor service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopCAdvisorMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopCAdvisorMsg()
     service_status_dto = stub.stopCAdvisor(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -235,8 +222,7 @@ def stop_node_exporter(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the node exporter service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopNodeExporterMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopNodeExporterMsg()
     service_status_dto = stub.stopNodeExporter(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -252,8 +238,7 @@ def stop_grafana(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the Grafana service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopGrafanaMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopGrafanaMsg()
     service_status_dto = stub.stopGrafana(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -269,8 +254,7 @@ def stop_prometheus(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the Prometheus service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopPrometheusMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopPrometheusMsg()
     service_status_dto = stub.stopPrometheus(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -286,8 +270,7 @@ def stop_pgadmin(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the pgAdmin service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopPgAdminMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopPgAdminMsg()
     service_status_dto = stub.stopPgAdmin(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -303,9 +286,9 @@ def stop_nginx(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the nginx service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopNginxMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopNginxMsg()
     service_status_dto = stub.stopNginx(stop_msg, timeout=timeout)
+    print(f"Stopped NGINX, output:{service_status_dto.running}")
     return service_status_dto
 
 
@@ -320,8 +303,7 @@ def stop_flask(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the flask service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopFlaskMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopFlaskMsg()
     service_status_dto = stub.stopFlask(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -337,8 +319,7 @@ def stop_docker_statsmanager(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the docker statsmanager service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerStatsManagerMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerStatsManagerMsg()
     service_status_dto = stub.stopDockerStatsManager(stop_msg, timeout=timeout)
     return service_status_dto
 
@@ -354,7 +335,6 @@ def stop_docker_engine(
     :param timeout: the GRPC timeout (seconds)
     :return: a ServiceStatusDTO describing the status of the docker engine service
     """
-    stop_msg = \
-        csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerEngineMsg()
+    stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerEngineMsg()
     service_status_dto = stub.stopDockerEngine(stop_msg, timeout=timeout)
     return service_status_dto

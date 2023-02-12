@@ -68,7 +68,7 @@ class ManagementSystemController:
         :return: True if nginx is running, false otherwise
         """
         output = subprocess.run(constants.COMMANDS.NGINX_STATUS.split(" "), capture_output=True, text=True)
-        nginx_running = not ("not" in output.stdout) or "active (running)" in output.stdout
+        nginx_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
         return nginx_running
 
     @staticmethod
@@ -79,7 +79,7 @@ class ManagementSystemController:
         :return: True if PostgreSQL is running, false otherwise
         """
         output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS.split(" "), capture_output=True, text=True)
-        postgresql_running = not ("not" in output.stdout) or "active (running)" in output.stdout
+        postgresql_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
         return postgresql_running
 
     @staticmethod
@@ -90,7 +90,7 @@ class ManagementSystemController:
         :return: True if Docker engine is running, false otherwise
         """
         output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_STATUS.split(" "), capture_output=True, text=True)
-        docker_engine_running = not ("not" in output.stdout) or "active (running)" in output.stdout
+        docker_engine_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
         return docker_engine_running
 
     @staticmethod

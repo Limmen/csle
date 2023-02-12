@@ -565,21 +565,22 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
             "statsmanager", "all", "emulation_executions"] + emulations + containers
 
-
+@click.option('--ip', default="", type=str)
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
-                            "emulation-name | statsmanager | emulation_executions | pgadmin | all")
-def stop(entity: str, id: int = -1) -> None:
+                            "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
+                            "| docker")
+def stop(entity: str, id: int = -1, ip: str = "") -> None:
     """
     Stops an entity
 
     :param entity: the name of the container to stop or "all"
     :param id: id when stopping a specific emulation execution
+    :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
     :return: None
     """
     from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.management_system_controller import ManagementSystemController
     from csle_common.metastore.metastore_facade import MetastoreFacade
 
     if entity == "all":
@@ -587,19 +588,25 @@ def stop(entity: str, id: int = -1) -> None:
         for emulation in MetastoreFacade.list_emulations():
             stop_all_executions_of_emulation(emulation_env_config=emulation)
     elif entity == "node_exporter":
-        ManagementSystemController.stop_node_exporter()
+        stop_node_exporter(ip=ip)
     elif entity == "prometheus":
-        ManagementSystemController.stop_prometheus()
+        stop_prometheus(ip=ip)
     elif entity == "cadvisor":
-        ManagementSystemController.stop_cadvisor()
+        stop_cadvisor(ip=ip)
     elif entity == "pgadmin":
-        ManagementSystemController.stop_pgadmin()
+        stop_pgadmin(ip=ip)
     elif entity == "grafana":
-        ManagementSystemController.stop_grafana()
+        stop_grafana(ip=ip)
     elif entity == "flask":
-        ManagementSystemController.stop_flask()
+        stop_flask(ip=ip)
+    elif entity == "docker":
+        stop_docker_engine(ip=ip)
+    elif entity == "nginx":
+        stop_nginx(ip=ip)
+    elif entity == "postgresql":
+        stop_postgresql(ip=ip)
     elif entity == "statsmanager":
-        ManagementSystemController.stop_docker_stats_manager()
+        stop_statsmanager(ip=ip)
     elif entity == "emulation_executions":
         stop_emulation_executions()
     else:
@@ -616,6 +623,165 @@ def stop(entity: str, id: int = -1) -> None:
                 emulation_stopped = False
             if not emulation_stopped:
                 click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+
+
+def stop_nginx(ip: str) -> None:
+    """
+    Utility function for stopping nginx
+
+    :param ip: the ip of the node to stop nginx
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_nginx(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_docker_engine(ip: str) -> None:
+    """
+    Utility function for stopping the docker engine
+
+    :param ip: the ip of the node to stop the docker engine
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_docker_engine(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_postgresql(ip: str) -> None:
+    """
+    Utility function for stopping PostgreSQL
+
+    :param ip: the ip of the node to stop PostgreSQL
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_postgresql(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_node_exporter(ip: str) -> None:
+    """
+    Utility function for stopping node exporter
+
+    :param ip: the ip of the node to stop node exporter
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_node_exporter(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_prometheus(ip: str) -> None:
+    """
+    Utility function for stopping Prometheus
+
+    :param ip: the ip of the node to stop Prometheus
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_prometheus(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_cadvisor(ip: str) -> None:
+    """
+    Utility function for stopping cAdvisor
+
+    :param ip: the ip of the node to stop cAdvisor
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_cadvisor(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_pgadmin(ip: str) -> None:
+    """
+    Utility function for stopping pgAdmin
+
+    :param ip: the ip of the node to stop pgAdmin
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_pgadmin(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+def stop_grafana(ip: str) -> None:
+    """
+    Utility function for stopping grafana
+
+    :param ip: the ip of the node to stop grafana
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_grafana(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_flask(ip: str) -> None:
+    """
+    Utility function for stopping flask
+
+    :param ip: the ip of the node to stop flask
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_flask(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_statsmanager(ip: str) -> None:
+    """
+    Utility function for stopping the Docker statsmanager
+
+    :param ip: the ip of the node to stop the Docker statsmanager
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.stop_docker_statsmanager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 @click.argument('max_workers', default=10, type=int)
@@ -638,7 +804,7 @@ def statsmanager(port: int, log_file: str, log_dir: str, max_workers: int) -> No
 
 
 @click.argument('max_workers', default=10, type=int)
-@click.argument('log_file', default="docker_statsmanager.log", type=str)
+@click.argument('log_file', default="cluster_manager.log", type=str)
 @click.argument('log_dir', default="/var/log/csle", type=str)
 @click.argument('port', default=50046, type=int)
 @click.command("clustermanager", help="port")
@@ -781,10 +947,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
             + emulations + containers + image_names)
 
 
-@click.argument('max_workers', default=10, type=int, shell_complete=start_shell_complete)
-@click.argument('log_file', default="docker_statsmanager.log", type=str, shell_complete=start_shell_complete)
-@click.argument('log_dir', default="/var/log/csle", type=str, shell_complete=start_shell_complete)
-@click.argument('port', default=50046, type=int, shell_complete=start_shell_complete)
+@click.option('--ip', default="", type=str)
 @click.option('--id', default=None, type=int)
 @click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
@@ -794,43 +957,38 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job ")
-def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
-          log_file: str, log_dir: str, max_workers: int) -> None:
+def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str) -> None:
     """
     Starts an entity, e.g. a container or the management system
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image
-    :param port: extra parameter for starting the docker stats manager
-    :param log_file: extra parameter for starting the docker stats manager
-    :param log_dir: extra parameter for starting the docker stats manager
-    :param max_workers: extra parameter for starting the docker stats manager
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :param no_clients: a boolean parameter that is True if the client population should be skipped
     :param no_network: a boolean parameter that is True if the network should be skipped when creating a container
     :param id: (optional) an id parameter to identify the entity to start
+    :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.management_system_controller import ManagementSystemController
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
     from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 
     if entity == "all":
         ContainerController.start_all_stopped_containers()
     elif entity == "statsmanager":
-        start_docker_stats_manager(port=port, log_file=log_file, log_dir=log_dir, max_workers=max_workers)
+        start_statsmanager(ip=ip)
     elif entity == "node_exporter":
-        ManagementSystemController.start_node_exporter()
+        start_node_exporter(ip=ip)
     elif entity == "prometheus":
-        ManagementSystemController.start_prometheus()
+        start_prometheus(ip=ip)
     elif entity == "cadvisor":
-        ManagementSystemController.start_cadvisor()
+        start_cadvisor(ip=ip)
     elif entity == "pgadmin":
-        ManagementSystemController.start_pgadmin()
+        start_pgadmin(ip=ip)
     elif entity == "grafana":
-        ManagementSystemController.start_grafana()
+        start_grafana(ip=ip)
     elif entity == "training_job":
         training_job = MetastoreFacade.get_training_job_config(id=id)
         TrainingJobManager.start_training_job_in_background(training_job=training_job)
@@ -839,7 +997,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         DataCollectionJobManager.start_data_collection_job_in_background(
             data_collection_job=system_id_job)
     elif entity == "flask":
-        ManagementSystemController.start_flask()
+        start_flask(ip=ip)
     else:
         container_started = ContainerController.start_container(name=entity)
         if not container_started:
@@ -853,6 +1011,165 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
                 image_started = run_image(image=entity, name=name, create_network=(not no_network))
                 if not image_started:
                     click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+
+
+def start_nginx(ip: str) -> None:
+    """
+    Utility function for starting nginx
+
+    :param ip: the ip of the node to start nginx
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_nginx(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_docker_engine(ip: str) -> None:
+    """
+    Utility function for starting the docker engine
+
+    :param ip: the ip of the node to start the docker engine
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_docker_engine(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_postgresql(ip: str) -> None:
+    """
+    Utility function for starting PostgreSQL
+
+    :param ip: the ip of the node to start PostgreSQL
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_postgresql(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_node_exporter(ip: str) -> None:
+    """
+    Utility function for starting node exporter
+
+    :param ip: the ip of the node to start node exporter
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_node_exporter(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_prometheus(ip: str) -> None:
+    """
+    Utility function for starting Prometheus
+
+    :param ip: the ip of the node to start Prometheus
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_prometheus(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_cadvisor(ip: str) -> None:
+    """
+    Utility function for starting cAdvisor
+
+    :param ip: the ip of the node to start cAdvisor
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_cadvisor(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_pgadmin(ip: str) -> None:
+    """
+    Utility function for starting pgAdmin
+
+    :param ip: the ip of the node to start pgAdmin
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_pgadmin(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+def start_grafana(ip: str) -> None:
+    """
+    Utility function for starting grafana
+
+    :param ip: the ip of the node to start grafana
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_grafana(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_flask(ip: str) -> None:
+    """
+    Utility function for starting flask
+
+    :param ip: the ip of the node to start flask
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_flask(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_statsmanager(ip: str) -> None:
+    """
+    Utility function for starting the Docker statsmanager
+
+    :param ip: the ip of the node to start the Docker statsmanager
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_docker_statsmanager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
@@ -1327,10 +1644,10 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
         else:
             click.secho("REST API (Flask) status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
         if node_status.nginxRunning:
-            click.secho("nginx status: " + f" {click.style('[running]', fg='green')} "
+            click.secho("Nginx status: " + f" {click.style('[running]', fg='green')} "
                                            f"ip:{node.ip}", bold=False)
         else:
-            click.secho("nginx status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+            click.secho("Nginx status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
         if node_status.dockerEngineRunning:
             click.secho("Docker engine status: " + f" {click.style('[running]', fg='green')} "
                                                    f"ip:{node.ip}, port:{constants.COMMANDS.DOCKER_ENGINE_PORT}",
@@ -1448,10 +1765,10 @@ def list_nginx() -> None:
     for node in config.cluster_config.cluster_nodes:
         node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         if node_status.nginxRunning:
-            click.secho("nginx status: " + f" {click.style('[running]', fg='green')} "
+            click.secho("Nginx status: " + f" {click.style('[running]', fg='green')} "
                                            f"ip:{node.ip}", bold=False)
         else:
-            click.secho("nginx status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+            click.secho("Nginx status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
 
 def list_docker_engine() -> None:
