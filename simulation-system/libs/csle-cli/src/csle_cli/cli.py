@@ -562,13 +562,13 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers = running_containers
     containers = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "managementsystem",
+    return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
             "statsmanager", "all", "emulation_executions"] + emulations + containers
 
 
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
-@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | managementsystem | container-name | "
+@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all")
 def stop(entity: str, id: int = -1) -> None:
     """
@@ -596,7 +596,7 @@ def stop(entity: str, id: int = -1) -> None:
         ManagementSystemController.stop_pgadmin()
     elif entity == "grafana":
         ManagementSystemController.stop_grafana()
-    elif entity == "managementsystem":
+    elif entity == "flask":
         ManagementSystemController.stop_flask()
     elif entity == "statsmanager":
         ManagementSystemController.stop_docker_stats_manager()
@@ -776,7 +776,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     containers = list(map(lambda x: x[0], containers))
     image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "managementsystem", "all",
+    return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "flask", "all",
              "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
             + emulations + containers + image_names)
 
@@ -791,7 +791,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--no_network', is_flag=True, help='skip creating network when starting individual container')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
-@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | pgadmin | "
+@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job ")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
@@ -838,7 +838,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         system_id_job = MetastoreFacade.get_data_collection_job_config(id=id)
         DataCollectionJobManager.start_data_collection_job_in_background(
             data_collection_job=system_id_job)
-    elif entity == "managementsystem":
+    elif entity == "flask":
         ManagementSystemController.start_flask()
     else:
         container_started = ContainerController.start_container(name=entity)
@@ -1123,13 +1123,13 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names = list(map(lambda x: x[0], image_names))
     active_networks_names = ContainerController.list_all_networks()
     return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-             "cadvisor", "pgadmin", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations
+             "cadvisor", "pgadmin", "flask", "statsmanager", "--all", "--running", "--stopped"] + emulations
             + containers + image_names + active_networks_names + simulations)
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
-                          "| node_exporter | cadvisor | pgadmin | statsmanager | managementsystem | "
-                          "simulations | emulation_executions | cluster")
+                          "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
+                          "simulations | emulation_executions | cluster | nginx | postgresql | docker")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -1172,12 +1172,18 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
         list_node_exporter()
     elif entity == "cadvisor":
         list_cadvisor()
+    elif entity == "nginx":
+        list_nginx()
+    elif entity == "postgresql":
+        list_postgresql()
+    elif entity == "docker":
+        list_docker_engine()
     elif entity == "pgadmin":
         list_pgadmin()
     elif entity == "grafana":
         list_grafana()
-    elif entity == "managementsystem":
-        list_management_system()
+    elif entity == "flask":
+        list_flask()
     elif entity == "statsmanager":
         list_statsmanager()
     elif entity == "simulations":
@@ -1271,6 +1277,10 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
     :param stopped: boolean flag whether stopped containers/emulations should be listed
     :return: None
     """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+
     list_cluster()
     list_networks()
     list_all_containers()
@@ -1280,13 +1290,59 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
     list_simulations()
     list_csle_gym_envs()
     click.secho("CSLE management system:", fg="magenta", bold=True)
-    list_prometheus()
-    list_node_exporter()
-    list_cadvisor()
-    list_pgadmin()
-    list_grafana()
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.prometheusRunning:
+            click.secho("Prometheus status: " + f" {click.style('[running]', fg='green')} "
+                                                f"ip: {node.ip}, port:{constants.COMMANDS.PROMETHEUS_PORT}", bold=False)
+        else:
+            click.secho("Prometheus status: " + f" {click.style('[stopped]', fg='red')} ip: {node.ip}", bold=False)
+        if node_status.nodeExporterRunning:
+            click.secho("Node exporter status: " + f" {click.style('[running]', fg='green')} "
+                                                   f"ip:{node.ip}, port:{constants.COMMANDS.NODE_EXPORTER_PORT}",
+                        bold=False)
+        else:
+            click.secho("Node exporter status: " + f" {click.style('[stopped],', fg='red')} ip:{node.ip}",
+                        bold=False)
+        if node_status.cAdvisorRunning:
+            click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
+                                              f"ip:{node.ip}, port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
+        else:
+            click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+        if node_status.pgAdminRunning:
+            click.secho("pgAdmin status: " + f" {click.style('[running]', fg='green')} "
+                                             f"ip:{node.ip}, port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
+        else:
+            click.secho("pgAdmin status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+        if node_status.grafanaRunning:
+            click.secho("Grafana status: " + f" {click.style('[running]', fg='green')} "
+                                             f"ip:{node.ip}, port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
+        else:
+            click.secho("Grafana status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+        if node_status.flaskRunning:
+            click.secho("REST API (Flask) status: " + f" {click.style('[running]', fg='green')} "
+                                                      f"ip:{node.ip}, "
+                                                      f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
+        else:
+            click.secho("REST API (Flask) status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+        if node_status.nginxRunning:
+            click.secho("nginx status: " + f" {click.style('[running]', fg='green')} "
+                                           f"ip:{node.ip}", bold=False)
+        else:
+            click.secho("nginx status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+        if node_status.dockerEngineRunning:
+            click.secho("Docker engine status: " + f" {click.style('[running]', fg='green')} "
+                                                   f"ip:{node.ip}, port:{constants.COMMANDS.DOCKER_ENGINE_PORT}",
+                        bold=False)
+        else:
+            click.secho("Docker engine status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+        if node_status.postgreSQLRunning:
+            click.secho("PostgreSQL status: " + f" {click.style('[running]', fg='green')} "
+                                                f"ip:{node.ip}, port:{constants.CITUS.COORDINATOR_PORT}", bold=False)
+        else:
+            click.secho("PostgreSQL status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
     list_statsmanager()
-    list_management_system()
 
 
 def list_statsmanager() -> None:
@@ -1328,29 +1384,36 @@ def list_grafana() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.grafanaRunning:
+            click.secho("Grafana status: " + f" {click.style('[running]', fg='green')} "
+                                             f"ip:{node.ip}, port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
+        else:
+            click.secho("Grafana status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
-    if ManagementSystemController.is_grafana_running():
-        click.secho("Grafana status: " + f" {click.style('[running]', fg='green')} "
-                                         f"port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
-    else:
-        click.secho("Grafana status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
-
-def list_management_system() -> None:
+def list_flask() -> None:
     """
     List status of the management system
 
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
-
-    if ManagementSystemController.is_flask_running():
-        click.secho("Management system status: " + f" {click.style('[running]', fg='green')} "
-                                                   f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
-    else:
-        click.secho("Management system status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.flaskRunning:
+            click.secho("REST API (Flask) status: " + f" {click.style('[running]', fg='green')} "
+                                                      f"ip:{node.ip}, "
+                                                      f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
+        else:
+            click.secho("REST API (Flask) status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
 
 def list_cadvisor() -> None:
@@ -1360,13 +1423,74 @@ def list_cadvisor() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.cAdvisorRunning:
+            click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
+                                              f"ip:{node.ip}, port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
+        else:
+            click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
-    if ManagementSystemController.is_cadvisor_running():
-        click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
-                                          f"port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
-    else:
-        click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+def list_nginx() -> None:
+    """
+    Lists status of nginx
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.nginxRunning:
+            click.secho("nginx status: " + f" {click.style('[running]', fg='green')} "
+                                           f"ip:{node.ip}", bold=False)
+        else:
+            click.secho("nginx status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+
+
+def list_docker_engine() -> None:
+    """
+    Lists status of the docker engine
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.dockerEngineRunning:
+            click.secho("Docker engine status: " + f" {click.style('[running]', fg='green')} "
+                                                   f"ip:{node.ip}, port:{constants.COMMANDS.DOCKER_ENGINE_PORT}",
+                        bold=False)
+        else:
+            click.secho("Docker engine status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+
+
+def list_postgresql() -> None:
+    """
+    Lists status of PostgreSQL
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.postgreSQLRunning:
+            click.secho("PostgreSQL status: " + f" {click.style('[running]', fg='green')} "
+                                                f"ip:{node.ip}, port:{constants.CITUS.COORDINATOR_PORT}", bold=False)
+        else:
+            click.secho("PostgreSQL status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
 
 def list_pgadmin() -> None:
@@ -1376,13 +1500,16 @@ def list_pgadmin() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
-
-    if ManagementSystemController.is_pgadmin_running():
-        click.secho("pgAdmin status: " + f" {click.style('[running]', fg='green')} "
-                                         f"port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
-    else:
-        click.secho("pgAdmin status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.pgAdminRunning:
+            click.secho("pgAdmin status: " + f" {click.style('[running]', fg='green')} "
+                                             f"ip:{node.ip}, port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
+        else:
+            click.secho("pgAdmin status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
 
 def list_node_exporter() -> None:
@@ -1392,13 +1519,18 @@ def list_node_exporter() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
-
-    if ManagementSystemController.is_node_exporter_running():
-        click.secho("Node exporter status: " + f" {click.style('[running]', fg='green')} "
-                                               f"port:{constants.COMMANDS.NODE_EXPORTER_PORT}", bold=False)
-    else:
-        click.secho("Node exporter status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.nodeExporterRunning:
+            click.secho("Node exporter status: " + f" {click.style('[running]', fg='green')} "
+                                                   f"ip:{node.ip}, port:{constants.COMMANDS.NODE_EXPORTER_PORT}",
+                        bold=False)
+        else:
+            click.secho("Node exporter status: " + f" {click.style('[stopped],', fg='red')} ip:{node.ip}",
+                        bold=False)
 
 
 def list_prometheus() -> None:
@@ -1408,13 +1540,17 @@ def list_prometheus() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
-    if ManagementSystemController.is_prometheus_running():
-        click.secho("Prometheus status: " + f" {click.style('[running]', fg='green')} "
-                                            f"port:{constants.COMMANDS.PROMETHEUS_PORT}", bold=False)
-    else:
-        click.secho("Prometheus status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if node_status.prometheusRunning:
+            click.secho("Prometheus status: " + f" {click.style('[running]', fg='green')} "
+                                                f"ip: {node.ip}, port:{constants.COMMANDS.PROMETHEUS_PORT}", bold=False)
+        else:
+            click.secho("Prometheus status: " + f" {click.style('[stopped]', fg='red')} ip: {node.ip}", bold=False)
 
 
 def list_emulations(all: bool = False, stopped: bool = False, running: bool = True) -> None:
