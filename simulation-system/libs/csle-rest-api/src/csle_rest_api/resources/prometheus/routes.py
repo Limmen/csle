@@ -36,8 +36,8 @@ def prometheus():
     config = MetastoreFacade.get_config(id=1)
     cluster_statuses = []
     for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         if node.ip == ip:
-            node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
                 if node_status.prometheusRunning:
                     ClusterController.stop_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)

@@ -121,16 +121,137 @@ const ServerCluster = (props) => {
                     return
                 }
                 removeLoadingEntity(node_ip + "-grafana")
-                let newState = []
-                for (let i = 0; i < serverCluster.length; i++) {
-                    if(node_ip === serverCluster[i].ip) {
-                        newState.push(response)
-                    } else {
-                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
-                    }
+                setServerCluster(response)
+                setFilteredServerCluster(response)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+
+    const startOrStopNginxRequest = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${NGINX_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
                 }
-                setServerCluster(newState)
-                setFilteredServerCluster(newState)
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                removeLoadingEntity(node_ip + "-nginx")
+                setServerCluster(response)
+                setFilteredServerCluster(response)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const startOrStopDockerRequest = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${DOCKER_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                removeLoadingEntity(node_ip + "-docker")
+                setServerCluster(response)
+                setFilteredServerCluster(response)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const startOrStopPostgreSQLRequest = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${POSTGRESQL_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                removeLoadingEntity(node_ip + "-postgresql")
+                setServerCluster(response)
+                setFilteredServerCluster(response)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const startOrStopFlaskRequest = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${FLASK_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                removeLoadingEntity(node_ip + "-flask")
+                setServerCluster(response)
+                setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -161,16 +282,8 @@ const ServerCluster = (props) => {
                     return
                 }
                 removeLoadingEntity(node_ip + "-pgAdmin")
-                let newState = []
-                for (let i = 0; i < serverCluster.length; i++) {
-                    if(node_ip === serverCluster[i].ip) {
-                        newState.push(response)
-                    } else {
-                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
-                    }
-                }
-                setServerCluster(newState)
-                setFilteredServerCluster(newState)
+                setServerCluster(response)
+                setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -201,16 +314,8 @@ const ServerCluster = (props) => {
                     return
                 }
                 removeLoadingEntity(node_ip + "-cAdvisor")
-                let newState = []
-                for (let i = 0; i < serverCluster.length; i++) {
-                    if(node_ip === serverCluster[i].ip) {
-                        newState.push(response)
-                    } else {
-                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
-                    }
-                }
-                setServerCluster(newState)
-                setFilteredServerCluster(newState)
+                setServerCluster(response)
+                setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -241,16 +346,8 @@ const ServerCluster = (props) => {
                     return
                 }
                 removeLoadingEntity(node_ip + "-nodeExporter")
-                let newState = []
-                for (let i = 0; i < serverCluster.length; i++) {
-                    if(node_ip === serverCluster[i].ip) {
-                        newState.push(response)
-                    } else {
-                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
-                    }
-                }
-                setServerCluster(newState)
-                setFilteredServerCluster(newState)
+                setServerCluster(response)
+                setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -281,18 +378,8 @@ const ServerCluster = (props) => {
                     return
                 }
                 removeLoadingEntity(node_ip + "-prometheus")
-                console.log(serverCluster.length)
-                let newState = []
-                for (let i = 0; i < serverCluster.length; i++) {
-                    if(node_ip === serverCluster[i].ip) {
-                        newState.push(response)
-                    } else {
-                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
-                    }
-                }
-                console.log(newState)
-                setServerCluster(newState)
-                setFilteredServerCluster(newState)
+                setServerCluster(response)
+                setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -320,6 +407,26 @@ const ServerCluster = (props) => {
     const startOrStopNodeExporter = (node_ip) => {
         addLoadingEntity(node_ip + "-nodeExporter")
         startOrStopNodeExporterRequest(node_ip)
+    }
+
+    const startOrStopFlask = (node_ip) => {
+        addLoadingEntity(node_ip + "-flask")
+        startOrStopFlaskRequest(node_ip)
+    }
+
+    const startOrStopDocker = (node_ip) => {
+        addLoadingEntity(node_ip + "-docker")
+        startOrStopDockerRequest(node_ip)
+    }
+
+    const startOrStopNginx = (node_ip) => {
+        addLoadingEntity(node_ip + "-nginx")
+        startOrStopNginxRequest(node_ip)
+    }
+
+    const startOrStopPostgreSQL = (node_ip) => {
+        addLoadingEntity(node_ip + "-postgresql")
+        startOrStopPostgreSQLRequest(node_ip)
     }
 
 
@@ -424,6 +531,22 @@ const ServerCluster = (props) => {
                                                  sessionData={props.sessionData} ip={node.ip}
                                                  loading={loadingEntities.includes(`${node.ip}-pgAdmin`)}
                                     />
+                                    <NginxLink className="grafanaStatus" node={node}
+                                                 sessionData={props.sessionData} ip={node.ip}
+                                                 loading={loadingEntities.includes(`${node.ip}-nginx`)}
+                                    />
+                                    <DockerLink className="grafanaStatus" node={node}
+                                               sessionData={props.sessionData} ip={node.ip}
+                                               loading={loadingEntities.includes(`${node.ip}-docker`)}
+                                    />
+                                    <PostgreSQLLink className="grafanaStatus" node={node}
+                                               sessionData={props.sessionData} ip={node.ip}
+                                               loading={loadingEntities.includes(`${node.ip}-postgresql`)}
+                                    />
+                                    <FlaskLink className="grafanaStatus" node={node}
+                                               sessionData={props.sessionData} ip={node.ip}
+                                               loading={loadingEntities.includes(`${node.ip}-flask`)}
+                                    />
                                 </td>
                                 <td>
                                     <GrafanaAction className="grafanaStatus" node={node}
@@ -445,6 +568,22 @@ const ServerCluster = (props) => {
                                     <PgAdminAction className="grafanaStatus" node={node}
                                                    sessionData={props.sessionData} ip={node.ip}
                                                    loading={loadingEntities.includes(`${node.ip}-pgAdmin`)}
+                                    />
+                                    <NginxAction className="grafanaStatus" node={node}
+                                                   sessionData={props.sessionData} ip={node.ip}
+                                                   loading={loadingEntities.includes(`${node.ip}-nginx`)}
+                                    />
+                                    <DockerAction className="grafanaStatus" node={node}
+                                                   sessionData={props.sessionData} ip={node.ip}
+                                                   loading={loadingEntities.includes(`${node.ip}-docker`)}
+                                    />
+                                    <PostgreSQLAction className="grafanaStatus" node={node}
+                                                   sessionData={props.sessionData} ip={node.ip}
+                                                   loading={loadingEntities.includes(`${node.ip}-postrgresql`)}
+                                    />
+                                    <FlaskAction className="grafanaStatus" node={node}
+                                                   sessionData={props.sessionData} ip={node.ip}
+                                                   loading={loadingEntities.includes(`${node.ip}-flask`)}
                                     />
                                 </td>
                             </tr>
@@ -481,9 +620,33 @@ const ServerCluster = (props) => {
         </Tooltip>
     );
 
-    const rendernodeExporterTooltip = (props) => (
+    const renderNodeExporterTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Node exporter
+        </Tooltip>
+    );
+
+    const renderDockerTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Docker engine
+        </Tooltip>
+    );
+
+    const renderNginxTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Nginx
+        </Tooltip>
+    );
+
+    const renderPostgreSQLTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            PostgreSQL
+        </Tooltip>
+    );
+
+    const renderFlaskTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Flask REST API
         </Tooltip>
     );
 
@@ -553,6 +716,196 @@ const ServerCluster = (props) => {
             )
         }
     }
+
+    const NginxLink = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.nginxRunning === false) {
+            return (
+                <></>)
+        } else {
+            return (
+                <a className="grafanfaStatus" href={props.node.nginxUrl}>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderNginxTooltip()}>
+                        <img src={NginxImg} alt="Nginx" className="img-fluid" width="35px" height="35px"/>
+                    </OverlayTrigger>
+                </a>
+            )
+        }
+    }
+
+    const NginxAction = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.nginxRunning === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopNginx(props.node.ip)}>
+                    Start Nginx
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopNginx(props.node.ip)}>
+                    Stop Nginx
+                </Button>
+            )
+        }
+    }
+
+
+    const PostgreSQLLink = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.postgreSQLRunning === false) {
+            return (
+                <></>)
+        } else {
+            return (
+                <a className="grafanfaStatus" href={props.node.postgreSQLUrl}>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderPostgreSQLTooltip()}>
+                        <img src={PostgresImg} alt="PostgreSQL" className="img-fluid" width="40px" height="40px"/>
+                    </OverlayTrigger>
+                </a>
+            )
+        }
+    }
+
+    const PostgreSQLAction = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.postgreSQLRunning === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopPostgreSQL(props.node.ip)}>
+                    Start PostgreSQL
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopPostgreSQL(props.node.ip)}>
+                    Stop PostgreSQL
+                </Button>
+            )
+        }
+    }
+
+    const DockerLink = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.dockerRunning === false) {
+            return (
+                <></>)
+        } else {
+            return (
+                <a className="grafanfaStatus" href={props.node.dockerUrl}>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderDockerTooltip()}>
+                        <img src={DockerImg} alt="Docker Engine" className="img-fluid" width="40px" height="40px"/>
+                    </OverlayTrigger>
+                </a>
+            )
+        }
+    }
+
+    const DockerAction = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.dockerRunning === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopDocker(props.node.ip)}>
+                    Start Docker engine
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopDocker(props.node.ip)}>
+                    Stop Docker engine
+                </Button>
+            )
+        }
+    }
+
+    const FlaskLink = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.flaskRunning === false) {
+            return (
+                <></>)
+        } else {
+            return (
+                <a className="grafanfaStatus" href={props.node.flaskUrl}>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderFlaskTooltip()}>
+                        <img src={FlaskImg} alt="Flask" className="img-fluid" width="30px" height="30px"/>
+                    </OverlayTrigger>
+                </a>
+            )
+        }
+    }
+
+    const FlaskAction = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        }
+        if (props.node == null || props.node.flaskRunning === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopFlask(props.node.ip)}>
+                    Start Flask
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopFlask(props.node.ip)}>
+                    Stop Flask
+                </Button>
+            )
+        }
+    }
+
 
     const PrometheusAction = (props) => {
         if (props.loading) {
@@ -642,7 +995,7 @@ const ServerCluster = (props) => {
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={rendernodeExporterTooltip()}>
+                        overlay={renderNodeExporterTooltip()}>
                         <img src={NodeExporterImg} alt="Prometheus" className="img-fluid" width="45px" height="45px"/>
                     </OverlayTrigger>
                 </a>
@@ -739,7 +1092,7 @@ const ServerCluster = (props) => {
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPgAdminTooltip()}>
-                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="30px" height="30px"/>
+                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="90px" height="90px"/>
                     </OverlayTrigger>
                 </a>
             )
