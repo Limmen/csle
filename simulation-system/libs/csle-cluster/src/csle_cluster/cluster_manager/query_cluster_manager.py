@@ -288,7 +288,6 @@ def stop_nginx(
     """
     stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopNginxMsg()
     service_status_dto = stub.stopNginx(stop_msg, timeout=timeout)
-    print(f"Stopped NGINX, output:{service_status_dto.running}")
     return service_status_dto
 
 
