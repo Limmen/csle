@@ -1,5 +1,5 @@
 """
-Routes and sub-resources for the /pgadmin resource
+Routes and sub-resources for the /nginx resource
 """
 import json
 from flask import Blueprint, jsonify, request
@@ -9,16 +9,17 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
+
 # Creates a blueprint "sub application" of the main REST app
-pgadmin_bp = Blueprint(api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE, __name__,
-                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}")
+nginx_bp = Blueprint(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, __name__,
+                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NGINX_RESOURCE}")
 
 
-@pgadmin_bp.route("",
+@nginx_bp.route("",
                   methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def pgadmin():
+def nginx():
     """
-    :return: static resources for the /pgadmin url
+    :return: static resources for the /nginx url
     """
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -38,12 +39,12 @@ def pgadmin():
         if node.ip == ip:
             node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-                if node_status.pgAdminRunning:
-                    ClusterController.stop_pgadmin(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.pgAdminRunning = False
+                if node_status.nginxRunning:
+                    ClusterController.stop_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                    node_status.nginxRunning = False
                 else:
-                    ClusterController.start_pgadmin(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.pgAdminRunning = True
+                    ClusterController.start_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                    node_status.nginxRunning = True
             cluster_status_dict = {
                 api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
                 api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY: node_status.grafanaRunning,

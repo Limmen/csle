@@ -1,7 +1,7 @@
 """
-Routes and sub-resources for the /prometheus resource
+Routes and sub-resources for the /clusterstatus resource
 """
-import json
+
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
@@ -11,15 +11,14 @@ from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 
 # Creates a blueprint "sub application" of the main REST app
-prometheus_bp = Blueprint(api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE, __name__,
-                          url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}")
+cluster_status_bp = Blueprint(api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE, __name__,
+                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE}")
 
 
-@prometheus_bp.route("",
-                     methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def prometheus():
+@cluster_status_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def cluster_status():
     """
-    :return: static resources for the /prometheus url
+    :return: static resources for the /cluster_status url
     """
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -28,23 +27,10 @@ def prometheus():
     if authorized is not None:
         return authorized
 
-    json_data = json.loads(request.data)
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
     config = MetastoreFacade.get_config(id=1)
     cluster_statuses = []
     for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip:
-            node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-                if node_status.prometheusRunning:
-                    ClusterController.stop_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.prometheusRunning = False
-                else:
-                    ClusterController.start_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.prometheusRunning = True
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         cluster_status_dict = {
             api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
             api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY: node_status.grafanaRunning,

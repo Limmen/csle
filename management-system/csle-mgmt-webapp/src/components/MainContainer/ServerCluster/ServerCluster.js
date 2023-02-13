@@ -21,10 +21,15 @@ import GrafanaImg from './Grafana.png'
 import cAdvisorImg from './cAdvisor.png'
 import pgAdminImg from './PGadmin.png'
 import PrometheusImg from './Prometheus.png'
+import DockerImg from './Docker.png'
+import FlaskImg from './Flask.png'
+import NginxImg from './Nginx.png'
+import PostgresImg from './Postgres.png'
 import NodeExporterImg from './NodeExporter.png'
 import {
     HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE, GRAFANA_RESOURCE, PGADMIN_RESOURCE,
-    PROMETHEUS_RESOURCE, NODE_EXPORTER_RESOURCE,
+    PROMETHEUS_RESOURCE, NODE_EXPORTER_RESOURCE, NGINX_RESOURCE, POSTGRESQL_RESOURCE, CLUSTER_STATUS_RESOURCE,
+    FLASK_RESOURCE, DOCKER_RESOURCE,
     CADVISOR_RESOURCE, TOKEN_QUERY_PARAM, SERVER_CLUSTER_RESOURCE, HTTP_REST_POST,
 } from "../../Common/constants";
 
@@ -33,28 +38,38 @@ import {
  */
 const ServerCluster = (props) => {
     const [loadingServerCluster, setLoadingServerCluster] = useState(true);
-    const [loadingGrafana, setLoadingGrafana] = useState(true);
-    const [loadingCAdvisor, setLoadingCAdvisor] = useState(true);
-    const [loadingPrometheus, setLoadingPrometheus] = useState(true);
-    const [loadingNodeExporter, setLoadingNodeExporter] = useState(true);
-    const [loadingPgAdmin, setLoadingPgAdmin] = useState(true);
     const [serverCluster, setServerCluster] = useState([]);
     const [filteredServerCluster, setFilteredServerCluster] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [grafanaStatus, setGrafanaStatus] = useState(null);
-    const [cAdvisorStatus, setCAdvisorStatus] = useState(null);
-    const [prometheusStatus, setPrometheusStatus] = useState(null);
-    const [nodeExporterStatus, setNodeExporterStatus] = useState(null);
-    const [pgAdminStatus, setPgAdminStatus] = useState(null);
+    const [loadingEntities, setLoadingEntities] = useState([]);
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
+    const removeLoadingEntity = useCallback((entity) => {
+        var newLoadingEntities = []
+        for (let i = 0; i < loadingEntities.length; i++) {
+            if (loadingEntities[i] !== entity) {
+                newLoadingEntities.push(loadingEntities[i])
+            }
+        }
+        setLoadingEntities(newLoadingEntities)
+    }, [loadingEntities])
+
+    const addLoadingEntity = (entity) => {
+        var newLoadingEntities = []
+        for (let i = 0; i < loadingEntities.length; i++) {
+            newLoadingEntities.push(loadingEntities[i])
+        }
+        newLoadingEntities.push(entity)
+        setLoadingEntities(newLoadingEntities)
+    }
+
     const fetchServerCluster = useCallback((path) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SERVER_CLUSTER_RESOURCE}`
+            `${HTTP_PREFIX}${ip}:${port}/${CLUSTER_STATUS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -74,13 +89,13 @@ const ServerCluster = (props) => {
             })
             .then(response => {
                 setLoadingServerCluster(false)
-                setServerCluster(response.cluster_nodes)
-                setFilteredServerCluster(response.cluster_nodes)
+                setServerCluster(response)
+                setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const startOrStopGrafanaRequest = useCallback(() => {
+    const startOrStopGrafanaRequest = useCallback((node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${GRAFANA_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -88,7 +103,8 @@ const ServerCluster = (props) => {
                 method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                })
+                }),
+                body: JSON.stringify({ip: node_ip})
             }
         )
             .then(res => {
@@ -104,13 +120,22 @@ const ServerCluster = (props) => {
                 if (response === null) {
                     return
                 }
-                setGrafanaStatus(response)
-                setLoadingGrafana(false)
+                removeLoadingEntity(node_ip + "-grafana")
+                let newState = []
+                for (let i = 0; i < serverCluster.length; i++) {
+                    if(node_ip === serverCluster[i].ip) {
+                        newState.push(response)
+                    } else {
+                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
+                    }
+                }
+                setServerCluster(newState)
+                setFilteredServerCluster(newState)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const startOrStopPgAdminRequest = useCallback(() => {
+    const startOrStopPgAdminRequest = useCallback((node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${PGADMIN_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -118,7 +143,8 @@ const ServerCluster = (props) => {
                 method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                })
+                }),
+                body: JSON.stringify({ip: node_ip})
             }
         )
             .then(res => {
@@ -134,13 +160,22 @@ const ServerCluster = (props) => {
                 if (response === null) {
                     return
                 }
-                setPgAdminStatus(response)
-                setLoadingPgAdmin(false)
+                removeLoadingEntity(node_ip + "-pgAdmin")
+                let newState = []
+                for (let i = 0; i < serverCluster.length; i++) {
+                    if(node_ip === serverCluster[i].ip) {
+                        newState.push(response)
+                    } else {
+                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
+                    }
+                }
+                setServerCluster(newState)
+                setFilteredServerCluster(newState)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const startOrStopcAdvisorRequest = useCallback(() => {
+    const startOrStopcAdvisorRequest = useCallback((node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${CADVISOR_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -148,7 +183,8 @@ const ServerCluster = (props) => {
                 method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                })
+                }),
+                body: JSON.stringify({ip: node_ip})
             }
         )
             .then(res => {
@@ -164,13 +200,22 @@ const ServerCluster = (props) => {
                 if (response === null) {
                     return
                 }
-                setCAdvisorStatus(response)
-                setLoadingCAdvisor(false)
+                removeLoadingEntity(node_ip + "-cAdvisor")
+                let newState = []
+                for (let i = 0; i < serverCluster.length; i++) {
+                    if(node_ip === serverCluster[i].ip) {
+                        newState.push(response)
+                    } else {
+                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
+                    }
+                }
+                setServerCluster(newState)
+                setFilteredServerCluster(newState)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const startOrStopNodeExporterRequest = useCallback(() => {
+    const startOrStopNodeExporterRequest = useCallback((node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${NODE_EXPORTER_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -178,7 +223,8 @@ const ServerCluster = (props) => {
                 method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                })
+                }),
+                body: JSON.stringify({ip: node_ip})
             }
         )
             .then(res => {
@@ -194,13 +240,22 @@ const ServerCluster = (props) => {
                 if (response === null) {
                     return
                 }
-                setNodeExporterStatus(response)
-                setLoadingNodeExporter(false)
+                removeLoadingEntity(node_ip + "-nodeExporter")
+                let newState = []
+                for (let i = 0; i < serverCluster.length; i++) {
+                    if(node_ip === serverCluster[i].ip) {
+                        newState.push(response)
+                    } else {
+                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
+                    }
+                }
+                setServerCluster(newState)
+                setFilteredServerCluster(newState)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const startOrStopPrometheusRequest = useCallback(() => {
+    const startOrStopPrometheusRequest = useCallback((node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${PROMETHEUS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -208,7 +263,8 @@ const ServerCluster = (props) => {
                 method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                })
+                }),
+                body: JSON.stringify({ip: node_ip})
             }
         )
             .then(res => {
@@ -224,201 +280,52 @@ const ServerCluster = (props) => {
                 if (response === null) {
                     return
                 }
-                setPrometheusStatus(response)
-                setLoadingPrometheus(false)
+                removeLoadingEntity(node_ip + "-prometheus")
+                console.log(serverCluster.length)
+                let newState = []
+                for (let i = 0; i < serverCluster.length; i++) {
+                    if(node_ip === serverCluster[i].ip) {
+                        newState.push(response)
+                    } else {
+                        newState.push(JSON.parse(JSON.stringify(serverCluster[i])))
+                    }
+                }
+                console.log(newState)
+                setServerCluster(newState)
+                setFilteredServerCluster(newState)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
-    const fetchGrafanaStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${GRAFANA_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setGrafanaStatus(response)
-                setLoadingGrafana(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchPgAdminStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PGADMIN_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setPgAdminStatus(response)
-                setLoadingPgAdmin(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchCadvisorStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CADVISOR_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setCAdvisorStatus(response)
-                setLoadingCAdvisor(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchPrometheusStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PROMETHEUS_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setPrometheusStatus(response)
-                setLoadingPrometheus(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const fetchNodeExporterStatus = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${NODE_EXPORTER_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setNodeExporterStatus(response)
-                setLoadingNodeExporter(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
-
-    const startOrStopGrafana = () => {
-        setLoadingGrafana(true)
-        startOrStopGrafanaRequest()
+    const startOrStopGrafana = (node_ip) => {
+        addLoadingEntity(node_ip + "-grafana")
+        startOrStopGrafanaRequest(node_ip)
     }
 
-    const startOrStopPgAdmin = () => {
-        setLoadingPgAdmin(true)
-        startOrStopPgAdminRequest()
+    const startOrStopPgAdmin = (node_ip) => {
+        addLoadingEntity(node_ip + "-pgAdmin")
+        startOrStopPgAdminRequest(node_ip)
     }
 
-    const startOrStopPrometheus = () => {
-        setLoadingPrometheus(true)
-        startOrStopPrometheusRequest()
+    const startOrStopPrometheus = (node_ip) => {
+        addLoadingEntity(node_ip + "-prometheus")
+        startOrStopPrometheusRequest(node_ip)
     }
 
-    const startOrStopcAdvisor = () => {
-        setLoadingCAdvisor(true)
-        startOrStopcAdvisorRequest()
+    const startOrStopcAdvisor = (node_ip) => {
+        addLoadingEntity(node_ip + "-cAdvisor")
+        startOrStopcAdvisorRequest(node_ip)
     }
 
-    const startOrStopNodeExporter = () => {
-        setLoadingNodeExporter(true)
-        startOrStopNodeExporterRequest()
+    const startOrStopNodeExporter = (node_ip) => {
+        addLoadingEntity(node_ip + "-nodeExporter")
+        startOrStopNodeExporterRequest(node_ip)
     }
 
 
     const refresh = () => {
         setLoadingServerCluster(true)
-        setLoadingGrafana(true)
-        setLoadingCAdvisor(true)
-        setLoadingPrometheus(true)
-        setLoadingNodeExporter(true)
-        setLoadingPgAdmin(true)
         fetchServerCluster()
-        fetchGrafanaStatus()
-        fetchPgAdminStatus()
-        fetchPrometheusStatus()
-        fetchCadvisorStatus()
-        fetchNodeExporterStatus()
     }
 
     const renderRefreshTooltip = (props) => (
@@ -497,48 +404,47 @@ const ServerCluster = (props) => {
                                 <td>{node.RAM}</td>
                                 <td>{getBoolStr(node.leader)}</td>
                                 <td>
-                                    <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}
+                                    <GrafanaLink className="grafanaStatus" node={node}
                                                  sessionData={props.sessionData} ip={node.ip}
-                                                 loading={loadingGrafana}
+                                                 loading={loadingEntities.includes(`${node.ip}-grafana`)}
                                     />
-                                    <PrometheusLink className="grafanaStatus" prometheusStatus={prometheusStatus}
+                                    <PrometheusLink className="grafanaStatus" node={node}
                                                     sessionData={props.sessionData} ip={node.ip}
-                                                    loading={loadingPrometheus}
+                                                    loading={loadingEntities.includes(`${node.ip}-prometheus`)}
                                     />
-                                    <NodeExporterLink className="grafanaStatus" nodeExporterStatus={nodeExporterStatus}
+                                    <NodeExporterLink className="grafanaStatus" node={node}
                                                       sessionData={props.sessionData} ip={node.ip}
-                                                      loading={loadingNodeExporter}
+                                                      loading={loadingEntities.includes(`${node.ip}-nodeExporter`)}
                                     />
-                                    <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
+                                    <CadvisorLink className="grafanaStatus" node={node}
                                                   sessionData={props.sessionData} ip={node.ip}
-                                                  loading={loadingCAdvisor}
+                                                  loading={loadingEntities.includes(`${node.ip}-cAdvisor`)}
                                     />
-                                    <PgAdminLink className="grafanaStatus" pgAdminStatus={pgAdminStatus}
+                                    <PgAdminLink className="grafanaStatus" node={node}
                                                  sessionData={props.sessionData} ip={node.ip}
-                                                 loading={loadingPgAdmin}
+                                                 loading={loadingEntities.includes(`${node.ip}-pgAdmin`)}
                                     />
                                 </td>
                                 <td>
-                                    <GrafanaAction className="grafanaStatus" grafanaStatus={grafanaStatus}
+                                    <GrafanaAction className="grafanaStatus" node={node}
                                                    sessionData={props.sessionData} ip={node.ip}
-                                                   loading={loadingGrafana}
+                                                   loading={loadingEntities.includes(`${node.ip}-grafana`)}
                                     />
-                                    <PrometheusAction className="grafanaStatus" prometheusStatus={prometheusStatus}
+                                    <PrometheusAction className="grafanaStatus" node={node}
                                                       sessionData={props.sessionData} ip={node.ip}
-                                                      loading={loadingPrometheus}
+                                                      loading={loadingEntities.includes(`${node.ip}-prometheus`)}
                                     />
                                     <NodeExporterAction className="grafanaStatus"
-                                                        nodeExporterStatus={nodeExporterStatus}
-                                                        sessionData={props.sessionData} ip={node.ip}
-                                                        loading={loadingNodeExporter}
+                                                        node={node} sessionData={props.sessionData} ip={node.ip}
+                                                        loading={loadingEntities.includes(`${node.ip}-nodeExporter`)}
                                     />
-                                    <CadvisorAction className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
+                                    <CadvisorAction className="grafanaStatus" node={node}
                                                     sessionData={props.sessionData} ip={node.ip}
-                                                    loading={loadingCAdvisor}
+                                                    loading={loadingEntities.includes(`${node.ip}-cAdvisor`)}
                                     />
-                                    <PgAdminAction className="grafanaStatus" pgAdminStatus={pgAdminStatus}
+                                    <PgAdminAction className="grafanaStatus" node={node}
                                                    sessionData={props.sessionData} ip={node.ip}
-                                                   loading={loadingPgAdmin}
+                                                   loading={loadingEntities.includes(`${node.ip}-pgAdmin`)}
                                     />
                                 </td>
                             </tr>
@@ -602,27 +508,18 @@ const ServerCluster = (props) => {
     );
 
     const GrafanaLink = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.grafanaStatus !== null) {
-            for (let i = 0; i < props.grafanaStatus.length; i++) {
-                if(props.grafanaStatus[i].ip === props.ip) {
-                    status = props.grafanaStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.grafanaRunning === false) {
             return (
                 <></>)
         } else {
             return (
-                <a className="grafanfaStatus" href={status.url}>
+                <a className="grafanfaStatus" href={props.node.grafanaUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -635,31 +532,22 @@ const ServerCluster = (props) => {
     }
 
     const GrafanaAction = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.grafanaStatus !== null) {
-            for (let i = 0; i < props.grafanaStatus.length; i++) {
-                if(props.grafanaStatus[i].ip === props.ip) {
-                    status = props.grafanaStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.grafanaRunning === false) {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopGrafana()}>
+                        onClick={() => startOrStopGrafana(props.node.ip)}>
                     Start Grafana
                 </Button>)
         } else {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopGrafana()}>
+                        onClick={() => startOrStopGrafana(props.node.ip)}>
                     Stop Grafana
                 </Button>
             )
@@ -667,31 +555,22 @@ const ServerCluster = (props) => {
     }
 
     const PrometheusAction = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.prometheusStatus !== null) {
-            for (let i = 0; i < props.prometheusStatus.length; i++) {
-                if(props.prometheusStatus[i].ip === props.ip) {
-                    status = props.prometheusStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.prometheusRunning === false) {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopPrometheus()}>
+                        onClick={() => startOrStopPrometheus(props.node.ip)}>
                     Start Prometheus
                 </Button>)
         } else {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopPrometheus()}>
+                        onClick={() => startOrStopPrometheus(props.node.ip)}>
                     Stop Prometheus
                 </Button>
             )
@@ -699,28 +578,19 @@ const ServerCluster = (props) => {
     }
 
     const PrometheusLink = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.prometheusStatus !== null) {
-            for (let i = 0; i < props.prometheusStatus.length; i++) {
-                if(props.prometheusStatus[i].ip === props.ip) {
-                    status = props.prometheusStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.prometheusRunning === false) {
             return (
                 <></>
             )
         } else {
             return (
-                <a className="grafanaStatus" href={status.url}>
+                <a className="grafanaStatus" href={props.node.prometheusUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -733,31 +603,22 @@ const ServerCluster = (props) => {
     }
 
     const NodeExporterAction = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.nodeExporterStatus !== null) {
-            for (let i = 0; i < props.nodeExporterStatus.length; i++) {
-                if(props.nodeExporterStatus[i].ip === props.ip) {
-                    status = props.nodeExporterStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.nodeExporterRunning === false) {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopNodeExporter()}>
+                        onClick={() => startOrStopNodeExporter(props.node.ip)}>
                     Start Node exporter
                 </Button>)
         } else {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopNodeExporter()}>
+                        onClick={() => startOrStopNodeExporter(props.node.ip)}>
                     Stop Node exporter
                 </Button>
             )
@@ -765,28 +626,19 @@ const ServerCluster = (props) => {
     }
 
     const NodeExporterLink = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.nodeExporterStatus !== null) {
-            for (let i = 0; i < props.nodeExporterStatus.length; i++) {
-                if(props.nodeExporterStatus[i].ip === props.ip) {
-                    status = props.nodeExporterStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.nodeExporterRunning === false) {
             return (
                 <></>
             )
         } else {
             return (
-                <a className="grafanaStatus" href={status.url}>
+                <a className="grafanaStatus" href={props.node.nodeExporterUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -799,31 +651,22 @@ const ServerCluster = (props) => {
     }
 
     const CadvisorAction = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.cAdvisorStatus !== null) {
-            for (let i = 0; i < props.cAdvisorStatus.length; i++) {
-                if(props.cAdvisorStatus[i].ip === props.ip) {
-                    status = props.cAdvisorStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.cAdvisorRunning === false) {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopcAdvisor()}>
+                        onClick={() => startOrStopcAdvisor(props.node.ip)}>
                     Start cAdvisor
                 </Button>)
         } else {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopcAdvisor()}>
+                        onClick={() => startOrStopcAdvisor(props.node.ip)}>
                     Stop cAdvisor
                 </Button>
             )
@@ -831,28 +674,19 @@ const ServerCluster = (props) => {
     }
 
     const CadvisorLink = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.cAdvisorStatus !== null) {
-            for (let i = 0; i < props.cAdvisorStatus.length; i++) {
-                if(props.cAdvisorStatus[i].ip === props.ip) {
-                    status = props.cAdvisorStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.cAdvisorRunning === false) {
             return (
                 <></>
             )
         } else {
             return (
-                <a className="grafanaStatus" href={status.url}>
+                <a className="grafanaStatus" href={props.node.cAdvisorUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -866,31 +700,22 @@ const ServerCluster = (props) => {
     }
 
     const PgAdminAction = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.pgAdminStatus !== null) {
-            for (let i = 0; i < props.pgAdminStatus.length; i++) {
-                if(props.pgAdminStatus[i].ip === props.ip) {
-                    status = props.pgAdminStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.pgAdminRunning === false) {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopPgAdmin()}>
+                        onClick={() => startOrStopPgAdmin(props.node.ip)}>
                     Start pgAdmin
                 </Button>)
         } else {
             return (
                 <Button variant="link" className="dataDownloadLink"
-                        onClick={() => startOrStopPgAdmin()}>
+                        onClick={() => startOrStopPgAdmin(props.node.ip)}>
                     Stop pgAdmin
                 </Button>
             )
@@ -898,27 +723,18 @@ const ServerCluster = (props) => {
     }
 
     const PgAdminLink = (props) => {
-        if(props.loading) {
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden"></span>
-                </Spinner>
-            )
+                </Spinner>)
         }
-        let status = null
-        if (props.pgAdminStatus !== null) {
-            for (let i = 0; i < props.pgAdminStatus.length; i++) {
-                if(props.pgAdminStatus[i].ip === props.ip) {
-                    status = props.pgAdminStatus[i]
-                }
-            }
-        }
-        if (status == null || status.running === false) {
+        if (props.node == null || props.node.pgAdminRunning === false) {
             return (
                 <></>)
         } else {
             return (
-                <a className="grafanaStatus" href={status.url}>
+                <a className="grafanaStatus" href={props.node.pgAdminUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -932,19 +748,8 @@ const ServerCluster = (props) => {
 
     useEffect(() => {
         setLoadingServerCluster(true)
-        setLoadingGrafana(true)
-        setLoadingCAdvisor(true)
-        setLoadingPrometheus(true)
-        setLoadingNodeExporter(true)
-        setLoadingPgAdmin(true)
         fetchServerCluster()
-        fetchGrafanaStatus()
-        fetchCadvisorStatus()
-        fetchPrometheusStatus()
-        fetchNodeExporterStatus()
-        fetchPgAdminStatus()
-    }, [fetchServerCluster, fetchGrafanaStatus, fetchCadvisorStatus, fetchPrometheusStatus,
-        fetchNodeExporterStatus, fetchPgAdminStatus]);
+    }, [fetchServerCluster]);
 
     return (
         <div className="ServerCluster">

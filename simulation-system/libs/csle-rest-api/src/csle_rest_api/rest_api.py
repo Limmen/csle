@@ -31,6 +31,11 @@ from csle_rest_api.resources.prometheus.routes import prometheus_bp
 from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
 from csle_rest_api.resources.pgadmin.routes import pgadmin_bp
 from csle_rest_api.resources.grafana.routes import grafana_bp
+from csle_rest_api.resources.cluster_status.routes import cluster_status_bp
+from csle_rest_api.resources.nginx.routes import nginx_bp
+from csle_rest_api.resources.postgresql.routes import postgresql_bp
+from csle_rest_api.resources.flask.routes import flask_bp
+from csle_rest_api.resources.docker.routes import docker_bp
 from csle_rest_api.resources.emulations.routes import emulations_bp
 from csle_rest_api.resources.emulation_executions.routes import emulation_executions_bp
 from csle_rest_api.resources.simulations.routes import simulations_bp
@@ -114,6 +119,18 @@ def create_app(static_folder: str):
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}")
     app.register_blueprint(grafana_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}")
+    app.register_blueprint(cluster_status_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE}")
+    app.register_blueprint(nginx_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NGINX_RESOURCE}")
+    app.register_blueprint(docker_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}")
+    app.register_blueprint(flask_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}")
+    app.register_blueprint(postgresql_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE}")
     app.register_blueprint(get_images_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE}")
