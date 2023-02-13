@@ -21,6 +21,7 @@ import GrafanaImg from './Grafana.png'
 import cAdvisorImg from './cAdvisor.png'
 import pgAdminImg from './PGadmin.png'
 import PrometheusImg from './Prometheus.png'
+import NodeExporterImg from './NodeExporter.png'
 import {
     HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE, GRAFANA_RESOURCE, PGADMIN_RESOURCE,
     PROMETHEUS_RESOURCE, NODE_EXPORTER_RESOURCE,
@@ -32,6 +33,11 @@ import {
  */
 const ServerCluster = (props) => {
     const [loadingServerCluster, setLoadingServerCluster] = useState(true);
+    const [loadingGrafana, setLoadingGrafana] = useState(true);
+    const [loadingCAdvisor, setLoadingCAdvisor] = useState(true);
+    const [loadingPrometheus, setLoadingPrometheus] = useState(true);
+    const [loadingNodeExporter, setLoadingNodeExporter] = useState(true);
+    const [loadingPgAdmin, setLoadingPgAdmin] = useState(true);
     const [serverCluster, setServerCluster] = useState([]);
     const [filteredServerCluster, setFilteredServerCluster] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -99,6 +105,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setGrafanaStatus(response)
+                setLoadingGrafana(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -128,6 +135,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setPgAdminStatus(response)
+                setLoadingPgAdmin(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -157,6 +165,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setCAdvisorStatus(response)
+                setLoadingCAdvisor(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -186,6 +195,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setNodeExporterStatus(response)
+                setLoadingNodeExporter(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -215,6 +225,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setPrometheusStatus(response)
+                setLoadingPrometheus(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -244,6 +255,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setGrafanaStatus(response)
+                setLoadingGrafana(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -273,6 +285,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setPgAdminStatus(response)
+                setLoadingPgAdmin(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -302,6 +315,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setCAdvisorStatus(response)
+                setLoadingCAdvisor(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -331,6 +345,7 @@ const ServerCluster = (props) => {
                     return
                 }
                 setPrometheusStatus(response)
+                setLoadingPrometheus(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
@@ -360,33 +375,44 @@ const ServerCluster = (props) => {
                     return
                 }
                 setNodeExporterStatus(response)
+                setLoadingNodeExporter(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const startOrStopGrafana = () => {
+        setLoadingGrafana(true)
         startOrStopGrafanaRequest()
     }
 
     const startOrStopPgAdmin = () => {
+        setLoadingPgAdmin(true)
         startOrStopPgAdminRequest()
     }
 
     const startOrStopPrometheus = () => {
+        setLoadingPrometheus(true)
         startOrStopPrometheusRequest()
     }
 
     const startOrStopcAdvisor = () => {
+        setLoadingCAdvisor(true)
         startOrStopcAdvisorRequest()
     }
 
     const startOrStopNodeExporter = () => {
+        setLoadingNodeExporter(true)
         startOrStopNodeExporterRequest()
     }
 
 
     const refresh = () => {
         setLoadingServerCluster(true)
+        setLoadingGrafana(true)
+        setLoadingCAdvisor(true)
+        setLoadingPrometheus(true)
+        setLoadingNodeExporter(true)
+        setLoadingPgAdmin(true)
         fetchServerCluster()
         fetchGrafanaStatus()
         fetchPgAdminStatus()
@@ -459,6 +485,7 @@ const ServerCluster = (props) => {
                             <th>RAM (GB)</th>
                             <th>Leader</th>
                             <th>Links</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -471,15 +498,48 @@ const ServerCluster = (props) => {
                                 <td>{getBoolStr(node.leader)}</td>
                                 <td>
                                     <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}
-                                                 sessionData={props.sessionData}/>
+                                                 sessionData={props.sessionData} ip={node.ip}
+                                                 loading={loadingGrafana}
+                                    />
                                     <PrometheusLink className="grafanaStatus" prometheusStatus={prometheusStatus}
-                                                    sessionData={props.sessionData}/>
+                                                    sessionData={props.sessionData} ip={node.ip}
+                                                    loading={loadingPrometheus}
+                                    />
                                     <NodeExporterLink className="grafanaStatus" nodeExporterStatus={nodeExporterStatus}
-                                                      sessionData={props.sessionData}/>
+                                                      sessionData={props.sessionData} ip={node.ip}
+                                                      loading={loadingNodeExporter}
+                                    />
                                     <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
-                                                  sessionData={props.sessionData}/>
+                                                  sessionData={props.sessionData} ip={node.ip}
+                                                  loading={loadingCAdvisor}
+                                    />
                                     <PgAdminLink className="grafanaStatus" pgAdminStatus={pgAdminStatus}
-                                                 sessionData={props.sessionData}/>
+                                                 sessionData={props.sessionData} ip={node.ip}
+                                                 loading={loadingPgAdmin}
+                                    />
+                                </td>
+                                <td>
+                                    <GrafanaAction className="grafanaStatus" grafanaStatus={grafanaStatus}
+                                                   sessionData={props.sessionData} ip={node.ip}
+                                                   loading={loadingGrafana}
+                                    />
+                                    <PrometheusAction className="grafanaStatus" prometheusStatus={prometheusStatus}
+                                                      sessionData={props.sessionData} ip={node.ip}
+                                                      loading={loadingPrometheus}
+                                    />
+                                    <NodeExporterAction className="grafanaStatus"
+                                                        nodeExporterStatus={nodeExporterStatus}
+                                                        sessionData={props.sessionData} ip={node.ip}
+                                                        loading={loadingNodeExporter}
+                                    />
+                                    <CadvisorAction className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
+                                                    sessionData={props.sessionData} ip={node.ip}
+                                                    loading={loadingCAdvisor}
+                                    />
+                                    <PgAdminAction className="grafanaStatus" pgAdminStatus={pgAdminStatus}
+                                                   sessionData={props.sessionData} ip={node.ip}
+                                                   loading={loadingPgAdmin}
+                                    />
                                 </td>
                             </tr>
                         )}
@@ -489,66 +549,6 @@ const ServerCluster = (props) => {
             )
         }
     }
-
-    const renderStartGrafanaTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start Grafana
-        </Tooltip>
-    );
-
-    const renderStopGrafanaTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop Grafana
-        </Tooltip>
-    );
-
-    const renderStartcAdvisorTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start cAdvisor
-        </Tooltip>
-    );
-
-    const renderStopcAdvisorTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop cAdvisor
-        </Tooltip>
-    );
-
-    const renderStartpgAdminTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start pgAdmin
-        </Tooltip>
-    );
-
-    const renderStoppgAdminTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop pgAdmin
-        </Tooltip>
-    );
-
-    const renderStartPrometheusTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start Prometheus
-        </Tooltip>
-    );
-
-    const renderStopPrometheusTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop Prometheus
-        </Tooltip>
-    );
-
-    const renderStartNodeExporterTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start Node exporter
-        </Tooltip>
-    );
-
-    const renderStopNodeExporterTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop Node exporter
-        </Tooltip>
-    );
 
 
     const renderGrafanaTooltip = (props) => (
@@ -602,307 +602,328 @@ const ServerCluster = (props) => {
     );
 
     const GrafanaLink = (props) => {
-        if (props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
-                return (
-                    <></>)
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.grafanaStatus.url}>
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderGrafanaTooltip()}>
-                            <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
-                        </OverlayTrigger>
-                    </a>
-                )
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.grafanaStatus !== null) {
+            for (let i = 0; i < props.grafanaStatus.length; i++) {
+                if(props.grafanaStatus[i].ip === props.ip) {
+                    status = props.grafanaStatus[i]
+                }
             }
         }
-        if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
+        if (status == null || status.running === false) {
             return (
-                <span className="grafanaStatus">
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderGrafanaTooltip()}>
-                            <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
-                        </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStartGrafanaTooltip()}>
-                        <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStopGrafana()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                    </span>)
+                <></>)
         } else {
             return (
-                <a className="grafanaStatus" href={props.grafanaStatus.url}>
+                <a className="grafanfaStatus" href={status.url}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderGrafanaTooltip()}>
-                        <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopGrafanaTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopGrafana()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
+                        <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="30px" height="30px"/>
                     </OverlayTrigger>
                 </a>
+            )
+        }
+    }
+
+    const GrafanaAction = (props) => {
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.grafanaStatus !== null) {
+            for (let i = 0; i < props.grafanaStatus.length; i++) {
+                if(props.grafanaStatus[i].ip === props.ip) {
+                    status = props.grafanaStatus[i]
+                }
+            }
+        }
+        if (status == null || status.running === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopGrafana()}>
+                    Start Grafana
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopGrafana()}>
+                    Stop Grafana
+                </Button>
+            )
+        }
+    }
+
+    const PrometheusAction = (props) => {
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.prometheusStatus !== null) {
+            for (let i = 0; i < props.prometheusStatus.length; i++) {
+                if(props.prometheusStatus[i].ip === props.ip) {
+                    status = props.prometheusStatus[i]
+                }
+            }
+        }
+        if (status == null || status.running === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopPrometheus()}>
+                    Start Prometheus
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopPrometheus()}>
+                    Stop Prometheus
+                </Button>
             )
         }
     }
 
     const PrometheusLink = (props) => {
-        if (props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
-                return (
-                    <></>
-                )
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.prometheusStatus.url}>
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderPrometheusTooltip()}>
-                            <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                        </OverlayTrigger>
-                    </a>
-                )
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.prometheusStatus !== null) {
+            for (let i = 0; i < props.prometheusStatus.length; i++) {
+                if(props.prometheusStatus[i].ip === props.ip) {
+                    status = props.prometheusStatus[i]
+                }
             }
         }
-        if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
+        if (status == null || status.running === false) {
             return (
-                <span className="grafanaStatus">
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderPrometheusTooltip()}>
-                            <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                        </OverlayTrigger>
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderStartPrometheusTooltip()}>
-                        <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStopPrometheus()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </span>)
+                <></>
+            )
         } else {
             return (
-                <a className="grafanaStatus" href={props.prometheusStatus.url}>
+                <a className="grafanaStatus" href={status.url}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPrometheusTooltip()}>
-                        <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopPrometheusTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopPrometheus()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
+                        <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="30px" height="30px"/>
                     </OverlayTrigger>
                 </a>
+            )
+        }
+    }
+
+    const NodeExporterAction = (props) => {
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.nodeExporterStatus !== null) {
+            for (let i = 0; i < props.nodeExporterStatus.length; i++) {
+                if(props.nodeExporterStatus[i].ip === props.ip) {
+                    status = props.nodeExporterStatus[i]
+                }
+            }
+        }
+        if (status == null || status.running === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopNodeExporter()}>
+                    Start Node exporter
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopNodeExporter()}>
+                    Stop Node exporter
+                </Button>
             )
         }
     }
 
     const NodeExporterLink = (props) => {
-        if (props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
-                return (
-                    <></>
-                )
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.nodeExporterStatus.url}>
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={rendernodeExporterTooltip()}>
-                            <i className="fa fa-cloud" aria-hidden="true"></i>
-                        </OverlayTrigger>
-                    </a>
-                )
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.nodeExporterStatus !== null) {
+            for (let i = 0; i < props.nodeExporterStatus.length; i++) {
+                if(props.nodeExporterStatus[i].ip === props.ip) {
+                    status = props.nodeExporterStatus[i]
+                }
             }
         }
-        if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
+        if (status == null || status.running === false) {
             return (
-                <span className="grafanaStatus">
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={rendernodeExporterTooltip()}>
-                            <i className="fa fa-cloud" aria-hidden="true"></i>
-                        </OverlayTrigger>
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderStartNodeExporterTooltip()}>
-                        <Button variant="success" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopNodeExporter()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </span>)
+                <></>
+            )
         } else {
             return (
-                <a className="grafanaStatus" href={props.nodeExporterStatus.url}>
+                <a className="grafanaStatus" href={status.url}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={rendernodeExporterTooltip()}>
-                        <i className="fa fa-cloud" aria-hidden="true"></i>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopNodeExporterTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopNodeExporter()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
+                        <img src={NodeExporterImg} alt="Prometheus" className="img-fluid" width="45px" height="45px"/>
                     </OverlayTrigger>
                 </a>
+            )
+        }
+    }
+
+    const CadvisorAction = (props) => {
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.cAdvisorStatus !== null) {
+            for (let i = 0; i < props.cAdvisorStatus.length; i++) {
+                if(props.cAdvisorStatus[i].ip === props.ip) {
+                    status = props.cAdvisorStatus[i]
+                }
+            }
+        }
+        if (status == null || status.running === false) {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopcAdvisor()}>
+                    Start cAdvisor
+                </Button>)
+        } else {
+            return (
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopcAdvisor()}>
+                    Stop cAdvisor
+                </Button>
             )
         }
     }
 
     const CadvisorLink = (props) => {
-        if (props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
-                return (
-                    <></>
-                )
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.cAdvisorStatus.url}>
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={rendercAdvisorTooltip()}>
-                            <img src={cAdvisorImg} alt="cAdvisor" className="img-fluid grafanaImg" width="2%"
-                                 height="2%"/>
-                        </OverlayTrigger>
-                    </a>
-                )
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.cAdvisorStatus !== null) {
+            for (let i = 0; i < props.cAdvisorStatus.length; i++) {
+                if(props.cAdvisorStatus[i].ip === props.ip) {
+                    status = props.cAdvisorStatus[i]
+                }
             }
         }
-        if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
+        if (status == null || status.running === false) {
             return (
-                <span className="grafanaStatus">
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={rendercAdvisorTooltip()}>
-                            <img src={cAdvisorImg} alt="cAdvisor" className="img-fluid grafanaImg" width="2%"
-                                 height="2%"/>
-                        </OverlayTrigger>
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderStartcAdvisorTooltip()}>
-                        <Button variant="success" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopcAdvisor()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </span>)
+                <></>
+            )
         } else {
             return (
-                <a className="grafanaStatus" href={props.cAdvisorStatus.url}>
+                <a className="grafanaStatus" href={status.url}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={rendercAdvisorTooltip()}>
-                        <img src={cAdvisorImg} alt="cAdvisor" className="img-fluid grafanaImg" width="2%"
-                             height="2%"/>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStopcAdvisorTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopcAdvisor()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
+                        <img src={cAdvisorImg} alt="cAdvisor" className="img-fluid grafanaImg" width="30px"
+                             height="30px"/>
                     </OverlayTrigger>
                 </a>
             )
         }
     }
 
-    const PgAdminLink = (props) => {
-        console.log("PGADMINSTATUS:")
-        console.log(props.pgAdminStatus)
-        if (props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
-            if (props.pgAdminStatus == null || props.pgAdminStatus.running === false) {
-                return (
-                    <></>)
-            } else {
-                return (
-                    <a className="grafanaStatus" href={props.pgAdmin.url}>
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderPgAdminTooltip()}>
-                            <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="7%" height="7%"/>
-                        </OverlayTrigger>
-                    </a>
-                )
+    const PgAdminAction = (props) => {
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.pgAdminStatus !== null) {
+            for (let i = 0; i < props.pgAdminStatus.length; i++) {
+                if(props.pgAdminStatus[i].ip === props.ip) {
+                    status = props.pgAdminStatus[i]
+                }
             }
         }
-        if (props.pgAdminStatus == null || props.pgAdminStatus.running === false) {
+        if (status == null || status.running === false) {
             return (
-                <span className="grafanaStatus">
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderPgAdminTooltip()}>
-                            <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="7%" height="7%"/>
-                        </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStartpgAdminTooltip()}>
-                        <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStopPgAdmin()}>
-                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                    </span>)
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopPgAdmin()}>
+                    Start pgAdmin
+                </Button>)
         } else {
             return (
-                <a className="grafanaStatus" href={props.pgAdminStatus.url}>
+                <Button variant="link" className="dataDownloadLink"
+                        onClick={() => startOrStopPgAdmin()}>
+                    Stop pgAdmin
+                </Button>
+            )
+        }
+    }
+
+    const PgAdminLink = (props) => {
+        if(props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>
+            )
+        }
+        let status = null
+        if (props.pgAdminStatus !== null) {
+            for (let i = 0; i < props.pgAdminStatus.length; i++) {
+                if(props.pgAdminStatus[i].ip === props.ip) {
+                    status = props.pgAdminStatus[i]
+                }
+            }
+        }
+        if (status == null || status.running === false) {
+            return (
+                <></>)
+        } else {
+            return (
+                <a className="grafanaStatus" href={status.url}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPgAdminTooltip()}>
-                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="7%" height="7%"/>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderStoppgAdminTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm" size="sm"
-                                onClick={() => startOrStopPgAdmin()}>
-                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                        </Button>
+                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="30px" height="30px"/>
                     </OverlayTrigger>
                 </a>
             )
@@ -911,6 +932,11 @@ const ServerCluster = (props) => {
 
     useEffect(() => {
         setLoadingServerCluster(true)
+        setLoadingGrafana(true)
+        setLoadingCAdvisor(true)
+        setLoadingPrometheus(true)
+        setLoadingNodeExporter(true)
+        setLoadingPgAdmin(true)
         fetchServerCluster()
         fetchGrafanaStatus()
         fetchCadvisorStatus()

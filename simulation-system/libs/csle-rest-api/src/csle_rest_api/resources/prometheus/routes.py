@@ -3,10 +3,11 @@ Routes and sub-resources for the /prometheus resource
 """
 
 from flask import Blueprint, jsonify, request
-from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -27,24 +28,24 @@ def prometheus():
     if authorized is not None:
         return authorized
 
-    running = ManagementSystemController.is_prometheus_running()
-    port = constants.COMMANDS.PROMETHEUS_PORT
-    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-        if running:
-            ManagementSystemController.stop_prometheus()
-            running = False
-        else:
-            ManagementSystemController.start_prometheus()
-            running = True
-    prometheus_ip = "localhost"
-    if constants.CONFIG_FILE.PARSED_CONFIG is not None:
-        prometheus_ip = constants.CONFIG_FILE.PARSED_CONFIG.metastore_ip
-        port = constants.CONFIG_FILE.PARSED_CONFIG.prometheus_port
-    prometheus_dict = {
-        api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
-        api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
-        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{prometheus_ip}:{port}/"
-    }
-    response = jsonify(prometheus_dict)
+    config = MetastoreFacade.get_config(id=1)
+    prometheus_statuses = []
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            if node_status.prometheusRunning:
+                ClusterController.stop_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                node_status.prometheusRunning = False
+            else:
+                ClusterController.start_prometheus(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                node_status.prometheusRunning = True
+        prometheus_dict = {
+            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: node_status.prometheusRunning,
+            api_constants.MGMT_WEBAPP.PORT_PROPERTY: constants.COMMANDS.PROMETHEUS_PORT,
+            api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.PROMETHEUS_PORT}/",
+            api_constants.MGMT_WEBAPP.IP_PROPERTY: node.ip
+        }
+        prometheus_statuses.append(prometheus_dict)
+    response = jsonify(prometheus_statuses)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

@@ -3,10 +3,11 @@ Routes and sub-resources for the /grafana-page page
 """
 
 from flask import Blueprint, jsonify, request
-from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -27,24 +28,24 @@ def grafana():
     if authorized is not None:
         return authorized
 
-    running = ManagementSystemController.is_grafana_running()
-    port = constants.COMMANDS.GRAFANA_PORT
-    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-        if running:
-            ManagementSystemController.stop_grafana()
-            running = False
-        else:
-            ManagementSystemController.start_grafana()
-            running = True
-    grafana_ip = "localhost"
-    if constants.CONFIG_FILE.PARSED_CONFIG is not None:
-        grafana_ip = constants.CONFIG_FILE.PARSED_CONFIG.metastore_ip
-        port = constants.CONFIG_FILE.PARSED_CONFIG.grafana_port
-    grafana_dict = {
-        api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
-        api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
-        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{grafana_ip}:{port}/"
-    }
-    response = jsonify(grafana_dict)
+    config = MetastoreFacade.get_config(id=1)
+    grafana_statuses = []
+    for node in config.cluster_config.cluster_nodes:
+        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            if node_status.grafanaRunning:
+                ClusterController.stop_grafana(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                node_status.grafanaRunning = False
+            else:
+                ClusterController.start_grafana(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                node_status.grafanaRunning = True
+        grafana_dict = {
+            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: node_status.grafanaRunning,
+            api_constants.MGMT_WEBAPP.PORT_PROPERTY: constants.COMMANDS.GRAFANA_PORT,
+            api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.GRAFANA_PORT}/",
+            api_constants.MGMT_WEBAPP.IP_PROPERTY: node.ip
+        }
+        grafana_statuses.append(grafana_dict)
+    response = jsonify(grafana_statuses)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

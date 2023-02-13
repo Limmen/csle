@@ -897,7 +897,7 @@ class COMMANDS:
                      "--volume=/sys:/sys:ro   " \
                      "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
                      f"--publish={CADVISOR_PORT}:{CADVISOR_PORT}  --name=cadvisor  " \
-                     "google/cadvisor:latest"
+                     "gcr.io/cadvisor/cadvisor"
     PGADMIN_USERNAME = "csle@csle.com"
     PGADMIN_PW = "cslePassword"
     GRAFANA_USERNAME = "admin"

@@ -1641,10 +1641,10 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
             click.secho("Node exporter status: " + f" {click.style('[stopped],', fg='red')} ip:{node.ip}",
                         bold=False)
         if node_status.cAdvisorRunning:
-            click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
+            click.secho("cAdvisor status: " + f" {click.style('[running]', fg='green')} "
                                               f"ip:{node.ip}, port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
         else:
-            click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+            click.secho("cAdvisor status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
         if node_status.pgAdminRunning:
             click.secho("pgAdmin status: " + f" {click.style('[running]', fg='green')} "
                                              f"ip:{node.ip}, port:{constants.COMMANDS.PGADMIN_PORT}", bold=False)
@@ -1764,10 +1764,10 @@ def list_cadvisor() -> None:
     for node in config.cluster_config.cluster_nodes:
         node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         if node_status.cAdvisorRunning:
-            click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
+            click.secho("cAdvisor status: " + f" {click.style('[running]', fg='green')} "
                                               f"ip:{node.ip}, port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
         else:
-            click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
+            click.secho("cAdvisor status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}", bold=False)
 
 
 def list_nginx() -> None:
