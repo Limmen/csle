@@ -342,3 +342,183 @@ class ClusterController:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_engine(stub)
             return service_status_dto
+
+    @staticmethod
+    def get_csle_log_files(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets a list of log files in the CSLE log directory
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_docker_statsmanager_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the docker statsmanager logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_docker_statsmanager_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_prometheus_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the Prometheus logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_prometheus_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_node_exporter_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the node exporter logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_node_exporter_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_cadvisor_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the cadvisor logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_cadvisor_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_pgadmin_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the pgAdming logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_pgadmin_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_grafana_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the Grafana logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_grafana_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_nginx_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the Nginx logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_nginx_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_docker_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the Docker logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_postgresql_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the PostgreSQL logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_flask_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the Flask logs
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub)
+            return logs_dto
+
+    @staticmethod
+    def get_log_file(ip: str, port: int, log_file_name: str) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets a specific log file from a node
+
+        :param ip: the ip of the node
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub, log_file_name=log_file_name)
+            return logs_dto

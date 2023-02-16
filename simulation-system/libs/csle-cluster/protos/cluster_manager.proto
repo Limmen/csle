@@ -23,6 +23,61 @@ service ClusterManager {
   rpc stopFlask(StopFlaskMsg) returns (ServiceStatusDTO) {}
   rpc stopDockerStatsManager(StopDockerStatsManagerMsg) returns (ServiceStatusDTO) {}
   rpc stopDockerEngine(StopDockerEngineMsg) returns (ServiceStatusDTO) {}
+  rpc getCsleLogFiles(GetCsleLogFilesMsg) returns (LogsDTO) {}
+  rpc getDockerStatsManagerLogs(GetDockerStatsManagerLogsMsg) returns (LogsDTO) {}
+  rpc getPrometheusLogs(GetPrometheusLogsMsg) returns (LogsDTO) {}
+  rpc getNodeExporterLogs(GetNodeExporterLogsMsg) returns (LogsDTO) {}
+  rpc getCadvisorLogs(GetCAdvisorLogsMsg) returns (LogsDTO) {}
+  rpc getPgAdminLogs(GetPgAdminLogsMsg) returns (LogsDTO) {}
+  rpc getGrafanaLogs(GetGrafanaLogsMsg) returns (LogsDTO) {}
+  rpc getNginxLogs(GetNginxLogsMsg) returns (LogsDTO) {}
+  rpc getDockerLogs(GetDockerLogsMsg) returns (LogsDTO) {}
+  rpc getPostrgreSQLLogs(GetPostgreSQLLogsMsg) returns (LogsDTO) {}
+  rpc getFlaskLogs(GetFlaskLogsMsg) returns (LogsDTO) {}
+  rpc getLogFile(GetLogFileMsg) returns (LogsDTO) {}
+}
+
+// Message that the client sends to get the log file names in the /var/log/csle directory
+message GetCsleLogFilesMsg {}
+
+// Message that the client sends to get a given log file
+message GetLogFileMsg {
+  string name = 1;
+}
+
+// Message that the client sends to get the docker stastmanager logs
+message GetDockerStatsManagerLogsMsg {}
+
+// Message that the client sends to get the Prometheus logs
+message GetPrometheusLogsMsg {}
+
+// Message that the client sends to get the Node exporter logs
+message GetNodeExporterLogsMsg {}
+
+// Message that the client sends to get the cAdvisor logs
+message GetCAdvisorLogsMsg {}
+
+// Message that the client sends to get the pgAdming logs
+message GetPgAdminLogsMsg {}
+
+// Message that the client sends to get the grafana logs
+message GetGrafanaLogsMsg {}
+
+// Message that the client sends to get the nginx logs
+message GetNginxLogsMsg {}
+
+// Message that the client sends to get the docker logs
+message GetDockerLogsMsg {}
+
+// Message that the client sends to get the posgresql logs
+message GetPostgreSQLLogsMsg {}
+
+// Message that the client sends to get the flask logs
+message GetFlaskLogsMsg {}
+
+// Message that the client sends to get the status of the node
+message LogsDTO {
+  repeated string logs = 1;
 }
 
 // Message that the client sends to get the status of the node

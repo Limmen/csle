@@ -190,6 +190,7 @@ A REST API for the CSLE management platform.
 - `flask` (for HTTP server)
 - `csle-common`
 - `csle-agents`
+- `csle-cluster`
 - `csle-system-identification`
 - `csle-ryu`
 - `bcrypt` (for encrypting user credentials)

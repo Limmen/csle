@@ -337,3 +337,196 @@ def stop_docker_engine(
     stop_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerEngineMsg()
     service_status_dto = stub.stopDockerEngine(stop_msg, timeout=timeout)
     return service_status_dto
+
+
+def get_log_file(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        log_file_name: str, timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches a given log file from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param log_file_name: the name of the log file
+    :return: a LogsDTO with the logs
+    """
+    get_log_file_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetLogFileMsg(name=log_file_name)
+    logs_dto = stub.getLogFile(get_log_file_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_flask_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches flask logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetFlaskLogsMsg()
+    logs_dto = stub.getFlaskLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_postgresql_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches PostgreSQL logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg()
+    logs_dto = stub.getPostrgreSQLLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_docker_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches Docker logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg()
+    logs_dto = stub.getDockerLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_nginx_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches Nginx logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg()
+    logs_dto = stub.getNginxLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_grafana_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches grafana logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg()
+    logs_dto = stub.getGrafanaLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_pgadmin_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches pgAdmin logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetPgAdminLogsMsg()
+    logs_dto = stub.getPgAdminLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_cadvisor_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches cAdvisor logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetCAdvisorLogsMsg()
+    logs_dto = stub.getCadvisorLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_node_exporter_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches node exporter logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeExporterLogsMsg()
+    logs_dto = stub.getNodeExporterLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_prometheus_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches node exporter logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg()
+    logs_dto = stub.getPrometheusLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_docker_statsmanager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches docker statsmanager logs from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagerLogsMsg()
+    logs_dto = stub.getDockerStatsManagerLogs(get_msg, timeout=timeout)
+    return logs_dto
+
+
+def get_csle_log_files(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches CSLE log file names from the CSLE log directory from the cluster manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg()
+    logs_dto = stub.getCsleLogFiles(get_msg, timeout=timeout)
+    return logs_dto

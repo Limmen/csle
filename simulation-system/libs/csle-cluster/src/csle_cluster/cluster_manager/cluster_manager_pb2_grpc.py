@@ -120,6 +120,66 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StopDockerEngineMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.ServiceStatusDTO.FromString,
                 )
+        self.getCsleLogFiles = channel.unary_unary(
+                '/ClusterManager/getCsleLogFiles',
+                request_serializer=cluster__manager__pb2.GetCsleLogFilesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getDockerStatsManagerLogs = channel.unary_unary(
+                '/ClusterManager/getDockerStatsManagerLogs',
+                request_serializer=cluster__manager__pb2.GetDockerStatsManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getPrometheusLogs = channel.unary_unary(
+                '/ClusterManager/getPrometheusLogs',
+                request_serializer=cluster__manager__pb2.GetPrometheusLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getNodeExporterLogs = channel.unary_unary(
+                '/ClusterManager/getNodeExporterLogs',
+                request_serializer=cluster__manager__pb2.GetNodeExporterLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getCadvisorLogs = channel.unary_unary(
+                '/ClusterManager/getCadvisorLogs',
+                request_serializer=cluster__manager__pb2.GetCAdvisorLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getPgAdminLogs = channel.unary_unary(
+                '/ClusterManager/getPgAdminLogs',
+                request_serializer=cluster__manager__pb2.GetPgAdminLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getGrafanaLogs = channel.unary_unary(
+                '/ClusterManager/getGrafanaLogs',
+                request_serializer=cluster__manager__pb2.GetGrafanaLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getNginxLogs = channel.unary_unary(
+                '/ClusterManager/getNginxLogs',
+                request_serializer=cluster__manager__pb2.GetNginxLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getDockerLogs = channel.unary_unary(
+                '/ClusterManager/getDockerLogs',
+                request_serializer=cluster__manager__pb2.GetDockerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getPostrgreSQLLogs = channel.unary_unary(
+                '/ClusterManager/getPostrgreSQLLogs',
+                request_serializer=cluster__manager__pb2.GetPostgreSQLLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getFlaskLogs = channel.unary_unary(
+                '/ClusterManager/getFlaskLogs',
+                request_serializer=cluster__manager__pb2.GetFlaskLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getLogFile = channel.unary_unary(
+                '/ClusterManager/getLogFile',
+                request_serializer=cluster__manager__pb2.GetLogFileMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -252,6 +312,78 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getCsleLogFiles(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getDockerStatsManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getPrometheusLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getNodeExporterLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getCadvisorLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getPgAdminLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getGrafanaLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getNginxLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getDockerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getPostrgreSQLLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getFlaskLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getLogFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -359,6 +491,66 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.stopDockerEngine,
                     request_deserializer=cluster__manager__pb2.StopDockerEngineMsg.FromString,
                     response_serializer=cluster__manager__pb2.ServiceStatusDTO.SerializeToString,
+            ),
+            'getCsleLogFiles': grpc.unary_unary_rpc_method_handler(
+                    servicer.getCsleLogFiles,
+                    request_deserializer=cluster__manager__pb2.GetCsleLogFilesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getDockerStatsManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getDockerStatsManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetDockerStatsManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getPrometheusLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getPrometheusLogs,
+                    request_deserializer=cluster__manager__pb2.GetPrometheusLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getNodeExporterLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getNodeExporterLogs,
+                    request_deserializer=cluster__manager__pb2.GetNodeExporterLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getCadvisorLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getCadvisorLogs,
+                    request_deserializer=cluster__manager__pb2.GetCAdvisorLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getPgAdminLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getPgAdminLogs,
+                    request_deserializer=cluster__manager__pb2.GetPgAdminLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getGrafanaLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getGrafanaLogs,
+                    request_deserializer=cluster__manager__pb2.GetGrafanaLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getNginxLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getNginxLogs,
+                    request_deserializer=cluster__manager__pb2.GetNginxLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getDockerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getDockerLogs,
+                    request_deserializer=cluster__manager__pb2.GetDockerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getPostrgreSQLLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getPostrgreSQLLogs,
+                    request_deserializer=cluster__manager__pb2.GetPostgreSQLLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getFlaskLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getFlaskLogs,
+                    request_deserializer=cluster__manager__pb2.GetFlaskLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getLogFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.getLogFile,
+                    request_deserializer=cluster__manager__pb2.GetLogFileMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -725,5 +917,209 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopDockerEngine',
             cluster__manager__pb2.StopDockerEngineMsg.SerializeToString,
             cluster__manager__pb2.ServiceStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getCsleLogFiles(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getCsleLogFiles',
+            cluster__manager__pb2.GetCsleLogFilesMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getDockerStatsManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getDockerStatsManagerLogs',
+            cluster__manager__pb2.GetDockerStatsManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getPrometheusLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getPrometheusLogs',
+            cluster__manager__pb2.GetPrometheusLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getNodeExporterLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getNodeExporterLogs',
+            cluster__manager__pb2.GetNodeExporterLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getCadvisorLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getCadvisorLogs',
+            cluster__manager__pb2.GetCAdvisorLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getPgAdminLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getPgAdminLogs',
+            cluster__manager__pb2.GetPgAdminLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getGrafanaLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getGrafanaLogs',
+            cluster__manager__pb2.GetGrafanaLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getNginxLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getNginxLogs',
+            cluster__manager__pb2.GetNginxLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getDockerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getDockerLogs',
+            cluster__manager__pb2.GetDockerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getPostrgreSQLLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getPostrgreSQLLogs',
+            cluster__manager__pb2.GetPostgreSQLLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getFlaskLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getFlaskLogs',
+            cluster__manager__pb2.GetFlaskLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getLogFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getLogFile',
+            cluster__manager__pb2.GetLogFileMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
