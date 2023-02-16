@@ -15,8 +15,7 @@ docker_bp = Blueprint(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE, __name__,
                        url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}")
 
 
-@docker_bp.route("",
-                  methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+@docker_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def docker():
     """
     :return: static resources for the /docker url

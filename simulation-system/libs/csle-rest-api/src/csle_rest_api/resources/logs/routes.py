@@ -20,7 +20,7 @@ logs_bp = Blueprint(
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
 
 
-@logs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@logs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def logs():
     """
     The /logs resource.
@@ -32,6 +32,11 @@ def logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
+
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
 
     config = Config.get_current_config()
     path = config.default_log_dir
@@ -66,6 +71,11 @@ def docker_stats_manager_logs():
     config = Config.get_current_config()
     path = config.docker_stats_manager_log_dir + config.docker_stats_manager_log_file
 
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+
     if os.path.exists(path):
         with open(path, 'r') as fp:
             data = fp.readlines()
@@ -78,7 +88,7 @@ def docker_stats_manager_logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}",
-               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def prometheus_logs():
     """
     The /logs/prometheus resource.
@@ -94,6 +104,11 @@ def prometheus_logs():
     config = Config.get_current_config()
     path = config.prometheus_log_file
 
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+
     if os.path.exists(path):
         with open(path, 'r') as fp:
             data = fp.readlines()
@@ -106,7 +121,7 @@ def prometheus_logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}",
-               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def node_exporter_logs():
     """
     The /logs/node-exporter resource.
@@ -122,6 +137,11 @@ def node_exporter_logs():
     config = Config.get_current_config()
     path = config.node_exporter_log_file
 
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+
     if os.path.exists(path):
         with open(path, 'r') as fp:
             data = fp.readlines()
@@ -134,7 +154,7 @@ def node_exporter_logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}",
-               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def cadvisor_logs():
     """
     The /logs/cadvisor resource.
@@ -146,6 +166,11 @@ def cadvisor_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
+
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
 
     cmd = constants.COMMANDS.CADVISOR_LOGS
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -160,7 +185,7 @@ def cadvisor_logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}",
-               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def pgadmin_logs():
     """
     The /logs/pgadmin resource.
@@ -172,6 +197,11 @@ def pgadmin_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
+
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
 
     cmd = constants.COMMANDS.PGADMIN_LOGS
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -186,7 +216,7 @@ def pgadmin_logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}",
-               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def grafana_logs():
     """
     The /lofgs/grafana resource.
@@ -198,6 +228,11 @@ def grafana_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
+
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
 
     cmd = constants.COMMANDS.GRAFANA_LOGS
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -227,6 +262,7 @@ def container_logs():
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
     container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
     cmd = constants.COMMANDS.CONTAINER_LOGS.format(container_name)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
