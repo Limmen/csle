@@ -44,7 +44,6 @@ class ClusterManagerUtil:
         d["running"] = node_status_dto.running
         return d
 
-
     @staticmethod
     def logs_dto_to_dict(logs_dto: csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO) \
             -> Dict[str, Any]:

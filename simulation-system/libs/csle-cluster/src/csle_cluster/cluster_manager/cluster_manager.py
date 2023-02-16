@@ -368,7 +368,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting log file: {request.name}")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_flask_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetFlaskLogsMsg,
                      context: grpc.ServicerContext) \
@@ -381,7 +381,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the flask logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_postgresql_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
                        context: grpc.ServicerContext) \
@@ -394,7 +394,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the PostgreSQL logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_docker_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
                             context: grpc.ServicerContext) \
@@ -407,7 +407,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Docker logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_nginx_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg,
                         context: grpc.ServicerContext) \
@@ -420,7 +420,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Nginx logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_grafana_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
                        context: grpc.ServicerContext) \
@@ -433,7 +433,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Grafana logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_pgadmin_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPgAdminLogsMsg,
                          context: grpc.ServicerContext) \
@@ -446,7 +446,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the pgAdmin logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_cadvisor_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCAdvisorLogsMsg,
                          context: grpc.ServicerContext) \
@@ -459,7 +459,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the cAdvisor logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_node_exporter_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeExporterLogsMsg,
                           context: grpc.ServicerContext) \
@@ -472,7 +472,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Node exporter logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_prometheus_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
                                context: grpc.ServicerContext) \
@@ -485,7 +485,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Prometheus logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_docker_statsmanager_logs(
             self,  request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagerLogsMsg,
@@ -498,7 +498,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Docker statsmanager logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
     def get_csle_log_files(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
                             context: grpc.ServicerContext) \
@@ -511,7 +511,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the CSLE log file names")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs="")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

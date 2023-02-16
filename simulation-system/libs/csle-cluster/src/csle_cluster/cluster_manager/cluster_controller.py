@@ -1,7 +1,9 @@
+from typing import Dict, Any
 import grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
+from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
 
 
 class ClusterController:
@@ -344,7 +346,7 @@ class ClusterController:
             return service_status_dto
 
     @staticmethod
-    def get_csle_log_files(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_csle_log_files(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets a list of log files in the CSLE log directory
 
@@ -356,10 +358,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_docker_statsmanager_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_docker_statsmanager_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the docker statsmanager logs
 
@@ -371,10 +373,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_docker_statsmanager_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_prometheus_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_prometheus_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the Prometheus logs
 
@@ -386,10 +388,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_prometheus_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_node_exporter_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_node_exporter_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the node exporter logs
 
@@ -401,10 +403,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_node_exporter_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_cadvisor_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_cadvisor_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the cadvisor logs
 
@@ -416,10 +418,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_cadvisor_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_pgadmin_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_pgadmin_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the pgAdming logs
 
@@ -431,10 +433,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_pgadmin_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_grafana_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_grafana_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the Grafana logs
 
@@ -446,10 +448,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_grafana_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_nginx_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_nginx_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the Nginx logs
 
@@ -461,10 +463,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_nginx_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_docker_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_docker_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the Docker logs
 
@@ -476,10 +478,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_postgresql_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_postgresql_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the PostgreSQL logs
 
@@ -491,10 +493,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_flask_logs(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_flask_logs(ip: str, port: int) -> Dict[str, Any]:
         """
         Gets the Flask logs
 
@@ -506,10 +508,10 @@ class ClusterController:
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub)
-            return logs_dto
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
 
     @staticmethod
-    def get_log_file(ip: str, port: int, log_file_name: str) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    def get_log_file(ip: str, port: int, log_file_name: str) -> Dict[str, Any]:
         """
         Gets a specific log file from a node
 
@@ -520,5 +522,6 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub, log_file_name=log_file_name)
-            return logs_dto
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub,
+                                                                                       log_file_name=log_file_name)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
