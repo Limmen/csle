@@ -9,10 +9,9 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
-
 # Creates a blueprint "sub application" of the main REST app
 docker_bp = Blueprint(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE, __name__,
-                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}")
+                      url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}")
 
 
 @docker_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])

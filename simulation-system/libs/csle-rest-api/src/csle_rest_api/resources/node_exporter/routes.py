@@ -9,7 +9,6 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
-
 # Creates a blueprint "sub application" of the main REST app
 node_exporter_bp = Blueprint(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE, __name__,
                              url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"

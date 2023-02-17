@@ -31,8 +31,6 @@ def init() -> None:
     """
     from csle_common.util.management_util import ManagementUtil
     import csle_common.constants.constants as constants
-    import csle_collector.constants.constants as collector_constants
-    import subprocess
     host_ip = GeneralUtil.get_host_ip()
     start_cluster_manager(host_ip=host_ip)
     leader = ClusterUtil.am_i_leader(ip=host_ip, config=constants.CONFIG_FILE.PARSED_CONFIG)
@@ -572,6 +570,7 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
             "statsmanager", "all", "emulation_executions"] + emulations + containers
 
+
 @click.option('--ip', default="", type=str)
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
@@ -745,6 +744,7 @@ def stop_pgadmin(ip: str) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             ClusterController.stop_pgadmin(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
 
 def stop_grafana(ip: str) -> None:
     """
@@ -1141,6 +1141,7 @@ def start_pgadmin(ip: str) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             ClusterController.start_pgadmin(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
 
 def start_grafana(ip: str) -> None:
     """

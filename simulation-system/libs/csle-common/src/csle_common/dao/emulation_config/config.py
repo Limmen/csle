@@ -580,8 +580,8 @@ class Config:
                      pgadmin_username=d["pgadmin_username"],
                      pgadmin_password=d["pgadmin_password"],
                      postgresql_log_dir=d["postgresql_log_dir"],
-                     nginx_log_dir = d["nginx_log_dir"],
-                     flask_log_file = d["flask_log_file"])
+                     nginx_log_dir=d["nginx_log_dir"],
+                     flask_log_file=d["flask_log_file"])
         if "id" in d:
             dto.id = d["id"]
         return dto

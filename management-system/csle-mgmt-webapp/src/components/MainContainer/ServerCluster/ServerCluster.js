@@ -30,7 +30,7 @@ import {
     HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE, GRAFANA_RESOURCE, PGADMIN_RESOURCE,
     PROMETHEUS_RESOURCE, NODE_EXPORTER_RESOURCE, NGINX_RESOURCE, POSTGRESQL_RESOURCE, CLUSTER_STATUS_RESOURCE,
     FLASK_RESOURCE, DOCKER_RESOURCE,
-    CADVISOR_RESOURCE, TOKEN_QUERY_PARAM, SERVER_CLUSTER_RESOURCE, HTTP_REST_POST,
+    CADVISOR_RESOURCE, TOKEN_QUERY_PARAM, HTTP_REST_POST,
 } from "../../Common/constants";
 
 /**
@@ -125,7 +125,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
 
     const startOrStopNginxRequest = useCallback((node_ip) => {
@@ -158,7 +158,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopDockerRequest = useCallback((node_ip) => {
         fetch(
@@ -190,7 +190,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopPostgreSQLRequest = useCallback((node_ip) => {
         fetch(
@@ -222,7 +222,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopFlaskRequest = useCallback((node_ip) => {
         fetch(
@@ -254,7 +254,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopPgAdminRequest = useCallback((node_ip) => {
         fetch(
@@ -286,7 +286,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopcAdvisorRequest = useCallback((node_ip) => {
         fetch(
@@ -318,7 +318,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopNodeExporterRequest = useCallback((node_ip) => {
         fetch(
@@ -350,7 +350,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopPrometheusRequest = useCallback((node_ip) => {
         fetch(
@@ -382,7 +382,7 @@ const ServerCluster = (props) => {
                 setFilteredServerCluster(response)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, removeLoadingEntity]);
 
     const startOrStopGrafana = (node_ip) => {
         addLoadingEntity(node_ip + "-grafana")

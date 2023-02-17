@@ -40,10 +40,10 @@ def cadvisor():
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
                 if node_status.cAdvisorRunning:
                     ClusterController.stop_cadvisor(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.cAdvisorRunning=False
+                    node_status.cAdvisorRunning = False
                 else:
                     ClusterController.start_cadvisor(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.cAdvisorRunning=True
+                    node_status.cAdvisorRunning = True
         cluster_status_dict = {
             api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
             api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY: node_status.grafanaRunning,

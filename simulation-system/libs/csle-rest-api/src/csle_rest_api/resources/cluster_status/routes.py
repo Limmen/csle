@@ -9,10 +9,10 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
-
 # Creates a blueprint "sub application" of the main REST app
 cluster_status_bp = Blueprint(api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE, __name__,
-                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE}")
+                              url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                         f"{api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE}")
 
 
 @cluster_status_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])

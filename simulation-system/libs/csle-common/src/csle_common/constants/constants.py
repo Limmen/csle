@@ -919,9 +919,10 @@ class COMMANDS:
     FLASK_LOG_FILE = "/var/log/csle/flask.log"
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
-    BUILD_CSLE_MGMT_WEBAPP = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp && npm run build"
+    BUILD_CSLE_MGMT_WEBAPP = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp && npm run " \
+                             f"build"
     START_CSLE_MGMT_WEBAPP = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp" \
-                    f"/server/server.py & > {FLASK_LOG_FILE}"
+                             f"/server/server.py & > {FLASK_LOG_FILE}"
     GET_LATEST_PID = "$!"
     SAVE_PID = "echo {} > {}"
     KILL_PROCESS = "kill -9 {}"

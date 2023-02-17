@@ -9,14 +9,13 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
-
 # Creates a blueprint "sub application" of the main REST app
 flask_bp = Blueprint(api_constants.MGMT_WEBAPP.FLASK_RESOURCE, __name__,
-                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}")
+                     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}")
 
 
 @flask_bp.route("",
-                  methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def flask():
     """
     :return: static resources for the /flask url

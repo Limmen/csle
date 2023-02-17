@@ -2,7 +2,6 @@
 Routes and sub-resources for the /logs resource
 """
 from flask import Blueprint, jsonify, request
-import os
 import subprocess
 import json
 import csle_common.constants.constants as constants
@@ -10,7 +9,6 @@ import csle_rest_api.constants.constants as api_constants
 import csle_collector.constants.constants as collector_constants
 import csle_ryu.constants.constants as ryu_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-from csle_common.dao.emulation_config.config import Config
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.emulation_util import EmulationUtil
 from csle_cluster.cluster_manager.cluster_controller import ClusterController

@@ -80,67 +80,6 @@ const LogsAdmin = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
-    const fetchServerCluster = useCallback((path) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CLUSTER_STATUS_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                const serverClusterIPIds = response.map((id_obj, index) => {
-                    return {
-                        value: id_obj,
-                        label: `IP:${id_obj.ip}`
-                    }
-                })
-                setLoadingServerCluster(false)
-                setServerCluster(serverClusterIPIds)
-                setFilteredServerCluster(serverClusterIPIds)
-                if (serverClusterIPIds.length > 0) {
-                    setSelectedPhysicalServerIp(serverClusterIPIds[0])
-                    setLoadingStatsManagerLogs(true)
-                    setLoadingNodeExporterLogs(true)
-                    setLoadingPrometheusLogs(true)
-                    setLoadingCAdvisorLogs(true)
-                    setLoadingPgAdminLogs(true)
-                    setLoadingGrafanaLogs(true)
-                    setLoadingCsleLogFiles(true)
-                    setLoadingNginxLogs(true)
-                    setLoadingDockerLogs(true)
-                    setLoadingPostgresqlLogs(true)
-                    setLoadingFlaskLogs(true)
-                    fetchStatsManagerLogs(serverClusterIPIds[0].value.ip)
-                    fetchNodeExporterLogs(serverClusterIPIds[0].value.ip)
-                    fetchPrometheusLogs(serverClusterIPIds[0].value.ip)
-                    fetchCAdvisorLogs(serverClusterIPIds[0].value.ip)
-                    fetchPgAdminLogs(serverClusterIPIds[0].value.ip)
-                    fetchGrafanaLogs(serverClusterIPIds[0].value.ip)
-                    fetchCsleLogFiles(serverClusterIPIds[0].value.ip)
-                    fetchNginxLogs(serverClusterIPIds[0].value.ip)
-                    fetchFlaskLogs(serverClusterIPIds[0].value.ip)
-                    fetchPostgresqlLogs(serverClusterIPIds[0].value.ip)
-                    fetchDockerLogs(serverClusterIPIds[0].value.ip)
-                } else {
-                    setSelectedPhysicalServerIp(null)
-                }
-            })
-            .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
-
     const fetchLogFile = useCallback((path, node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
@@ -492,6 +431,69 @@ const LogsAdmin = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchServerCluster = useCallback((path) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${CLUSTER_STATUS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                const serverClusterIPIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj,
+                        label: `IP:${id_obj.ip}`
+                    }
+                })
+                setLoadingServerCluster(false)
+                setServerCluster(serverClusterIPIds)
+                setFilteredServerCluster(serverClusterIPIds)
+                if (serverClusterIPIds.length > 0) {
+                    setSelectedPhysicalServerIp(serverClusterIPIds[0])
+                    setLoadingStatsManagerLogs(true)
+                    setLoadingNodeExporterLogs(true)
+                    setLoadingPrometheusLogs(true)
+                    setLoadingCAdvisorLogs(true)
+                    setLoadingPgAdminLogs(true)
+                    setLoadingGrafanaLogs(true)
+                    setLoadingCsleLogFiles(true)
+                    setLoadingNginxLogs(true)
+                    setLoadingDockerLogs(true)
+                    setLoadingPostgresqlLogs(true)
+                    setLoadingFlaskLogs(true)
+                    fetchStatsManagerLogs(serverClusterIPIds[0].value.ip)
+                    fetchNodeExporterLogs(serverClusterIPIds[0].value.ip)
+                    fetchPrometheusLogs(serverClusterIPIds[0].value.ip)
+                    fetchCAdvisorLogs(serverClusterIPIds[0].value.ip)
+                    fetchPgAdminLogs(serverClusterIPIds[0].value.ip)
+                    fetchGrafanaLogs(serverClusterIPIds[0].value.ip)
+                    fetchCsleLogFiles(serverClusterIPIds[0].value.ip)
+                    fetchNginxLogs(serverClusterIPIds[0].value.ip)
+                    fetchFlaskLogs(serverClusterIPIds[0].value.ip)
+                    fetchPostgresqlLogs(serverClusterIPIds[0].value.ip)
+                    fetchDockerLogs(serverClusterIPIds[0].value.ip)
+                } else {
+                    setSelectedPhysicalServerIp(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchStatsManagerLogs,
+        fetchNodeExporterLogs, fetchPrometheusLogs, fetchCAdvisorLogs, fetchPgAdminLogs, fetchGrafanaLogs,
+        fetchCsleLogFiles, fetchNginxLogs, fetchFlaskLogs, fetchPostgresqlLogs, fetchDockerLogs]);
 
     const refresh = () => {
         setLoadingServerCluster(true)
