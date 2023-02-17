@@ -13,6 +13,7 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.dao.emulation_config.config import Config
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.emulation_util import EmulationUtil
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 # Creates a blueprint "sub application" of the main REST app
 logs_bp = Blueprint(
@@ -37,18 +38,7 @@ def logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    config = Config.get_current_config()
-    path = config.default_log_dir
-    log_files = []
-    for f in os.listdir(path):
-        item = os.path.join(path, f)
-        if os.path.isfile(item):
-            log_files.append(item)
-    if len(log_files) > 20:
-        log_files = log_files[0:20]
-    data = log_files
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_csle_log_files(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -75,13 +65,7 @@ def docker_stats_manager_logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    if os.path.exists(path):
-        with open(path, 'r') as fp:
-            data = fp.readlines()
-            tail = data[-100:]
-            data = tail
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_docker_statsmanager_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -108,13 +92,7 @@ def prometheus_logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    if os.path.exists(path):
-        with open(path, 'r') as fp:
-            data = fp.readlines()
-            tail = data[-100:]
-            data = tail
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_prometheus_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -141,13 +119,7 @@ def node_exporter_logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    if os.path.exists(path):
-        with open(path, 'r') as fp:
-            data = fp.readlines()
-            tail = data[-100:]
-            data = tail
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_node_exporter_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -171,14 +143,7 @@ def cadvisor_logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    cmd = constants.COMMANDS.CADVISOR_LOGS
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    (output, err) = p.communicate()
-    output = output.decode("utf-8")
-    output = output.split("\n")[-100:]
-    data = output
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_cadvisor_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -202,14 +167,7 @@ def pgadmin_logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    cmd = constants.COMMANDS.PGADMIN_LOGS
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    (output, err) = p.communicate()
-    output = output.decode("utf-8")
-    output = output.split("\n")[-100:]
-    data = output
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_pgadmin_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -233,14 +191,7 @@ def grafana_logs():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
-    cmd = constants.COMMANDS.GRAFANA_LOGS
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    (output, err) = p.communicate()
-    output = output.decode("utf-8")
-    output = output.split("\n")[-100:]
-    data = output
-    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    data_dict = ClusterController.get_grafana_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

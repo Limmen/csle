@@ -97,13 +97,15 @@ class ClusterUtil:
             constants.COMMANDS.PGADMIN_PORT = config.pgadmin_port
             constants.COMMANDS.PROMETHEUS_PORT = config.prometheus_port
             constants.COMMANDS.NODE_EXPORTER_PID_FILE = config.node_exporter_pid_file
-            constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE = config.management_system_pid_file
+            constants.COMMANDS.CSLE_MGMT_WEBAPP_PID_FILE = config.csle_mgmt_webapp_pid_file
             constants.COMMANDS.NODE_EXPORTER_LOG_FILE = config.node_exporter_log_file
             constants.COMMANDS.DOCKER_STATS_MANAGER_OUTFILE = config.docker_stats_manager_outfile
             constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE = config.docker_stats_manager_pidfile
             constants.COMMANDS.PROMETHEUS_PID_FILE = config.prometheus_pid_file
             constants.COMMANDS.PROMETHEUS_LOG_FILE = config.prometheus_log_file
-            constants.COMMANDS.PROMETHEUS_CONFIG_FILE = config.prometheus_config_file
+            constants.COMMANDS.POSTGRESQL_LOG_DIR = config.postgresql_log_dir
+            constants.COMMANDS.NGINX_LOG_DIR = config.nginx_log_dir
+            constants.COMMANDS.FLASK_LOG_FILE = config.flask_log_file
             constants.LOGGING.DEFAULT_LOG_DIR = config.default_log_dir
             Logger.__call__().get_logger().info(f"Successfully initialized configuration "
                                                 f"from configuration file: {config_file_path}")

@@ -100,7 +100,7 @@ class ManagementSystemController:
 
         :return: True if it is running, false otherwise
         """
-        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.CSLE_MGMT_WEBAPP_PID_FILE)
         if pid == -1:
             return False
         cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
@@ -135,7 +135,7 @@ class ManagementSystemController:
         if ManagementSystemController.is_flask_running():
             return False
 
-        cmd = constants.COMMANDS.BUILD_MONITOR
+        cmd = constants.COMMANDS.BUILD_CSLE_MGMT_WEBAPP
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
@@ -148,12 +148,12 @@ class ManagementSystemController:
                     pass
                 sys.stdout.flush()
 
-        cmd = constants.COMMANDS.START_MONITOR
+        cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         pid = p.pid + 1
 
-        cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
+        cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.CSLE_MGMT_WEBAPP_PID_FILE)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True
@@ -182,7 +182,7 @@ class ManagementSystemController:
         """
         if not ManagementSystemController.is_flask_running():
             return False
-        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.CSLE_MGMT_WEBAPP_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()

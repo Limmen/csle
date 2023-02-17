@@ -879,6 +879,8 @@ class COMMANDS:
     PROMETHEUS_PID_FILE = "/var/log/csle/prometheus.pid"
     PROMETHEUS_LOG_FILE = "/var/log/csle/prometheus.log"
     PROMETHEUS_CONFIG_FILE = f"${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/prometheus/prometheus.yml"
+    POSTGRESQL_LOG_DIR = "/var/log/postgresql/"
+    NGINX_LOG_DIR = "/var/log/nginx/"
     PROMETHEUS_PORT = 9090
     START_PROMETHEUS = f"nohup prometheus --config.file={PROMETHEUS_CONFIG_FILE} " \
                        "--storage.tsdb.retention.size=10GB " \
@@ -909,14 +911,16 @@ class COMMANDS:
     CADVISOR_LOGS = "docker logs cadvisor"
     PGADMIN_LOGS = "docker logs pgadmin"
     GRAFANA_LOGS = "docker logs grafana"
+    DOCKER_ENGINE_LOGS = "/usr/bin/journalctl -fu docker.service"
     NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
-    MANAGEMENT_SYSTEM_PID_FILE = "/var/log/csle/management_system.pid"
+    CSLE_MGMT_WEBAPP_PID_FILE = "/var/log/csle/csle_mgmt_webapp.pid"
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
+    FLASK_LOG_FILE = "/var/log/csle/flask.log"
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
-    BUILD_MONITOR = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp && npm run build"
-    START_MONITOR = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp" \
-                    "/server/server.py &"
+    BUILD_CSLE_MGMT_WEBAPP = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp && npm run build"
+    START_CSLE_MGMT_WEBAPP = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp" \
+                    f"/server/server.py & > {FLASK_LOG_FILE}"
     GET_LATEST_PID = "$!"
     SAVE_PID = "echo {} > {}"
     KILL_PROCESS = "kill -9 {}"

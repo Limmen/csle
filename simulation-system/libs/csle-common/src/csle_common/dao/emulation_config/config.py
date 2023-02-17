@@ -22,13 +22,14 @@ class Config:
                  node_exporter_port: int, grafana_port: int,
                  management_system_port: int, cadvisor_port: int, prometheus_port: int, node_exporter_pid_file: str,
                  pgadmin_port: int,
-                 management_system_pid_file: str, docker_stats_manager_log_file: str, docker_stats_manager_log_dir: str,
+                 csle_mgmt_webapp_pid_file: str, docker_stats_manager_log_file: str, docker_stats_manager_log_dir: str,
                  docker_stats_manager_port: int, docker_stats_manager_max_workers: int,
                  docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
                  prometheus_log_file: str, prometheus_config_file: str, default_log_dir: str,
                  cluster_config: ClusterConfig, node_exporter_log_file: str,
                  allow_registration: bool, allow_host_shell: bool, grafana_username: str, grafana_password: str,
-                 pgadmin_username: str, pgadmin_password: str):
+                 pgadmin_username: str, pgadmin_password: str, postgresql_log_dir: str, nginx_log_dir: str,
+                 flask_log_file: str):
         """
         Initializes the DTO
 
@@ -60,7 +61,7 @@ class Config:
         :param prometheus_port: the default port to run prometheus
         :param pgadmin_port: the default port to run pgadmin
         :param node_exporter_pid_file: the default port to run node_exporter
-        :param management_system_pid_file: the file to save the PID of the management system
+        :param csle_mgmt_webapp_pid_file: the file to save the PID of the mgmt webapp
         :param docker_stats_manager_log_file: the file to save the logs of docker statsmanager
         :param docker_stats_manager_log_dir: the directory to save the logs of the docker statsmanager
         :param docker_stats_manager_port: the port of the docker statsmanager
@@ -79,6 +80,9 @@ class Config:
         :param grafana_password: default grafana password
         :param pgadmin_username: default pgadmin username
         :param pgadmin_password: default pgadmin password
+        :param postgresql_log_dir: the log directory for postgresql
+        :param nginx_log_dir: the log directory for Nginx
+        :param flask_log_file: the log file of Flask
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
@@ -107,7 +111,7 @@ class Config:
         self.prometheus_port = prometheus_port
         self.pgadmin_port = pgadmin_port
         self.node_exporter_pid_file = node_exporter_pid_file
-        self.management_system_pid_file = management_system_pid_file
+        self.csle_mgmt_webapp_pid_file = csle_mgmt_webapp_pid_file
         self.docker_stats_manager_log_file = docker_stats_manager_log_file
         self.docker_stats_manager_log_dir = docker_stats_manager_log_dir
         self.docker_stats_manager_port = docker_stats_manager_port
@@ -126,6 +130,9 @@ class Config:
         self.grafana_password = grafana_password
         self.pgadmin_username = pgadmin_username
         self.pgadmin_password = pgadmin_password
+        self.postgresql_log_dir = postgresql_log_dir
+        self.nginx_log_dir = nginx_log_dir
+        self.flask_log_file = flask_log_file
         self.id = 1
 
     def to_dict(self) -> Dict[str, Any]:
@@ -160,7 +167,7 @@ class Config:
         d["pgadmin_port"] = self.pgadmin_port
         d["prometheus_port"] = self.prometheus_port
         d["node_exporter_pid_file"] = self.node_exporter_pid_file
-        d["management_system_pid_file"] = self.management_system_pid_file
+        d["csle_mgmt_webapp_pid_file"] = self.csle_mgmt_webapp_pid_file
         d["docker_stats_manager_log_file"] = self.docker_stats_manager_log_file
         d["docker_stats_manager_log_dir"] = self.docker_stats_manager_log_dir
         d["docker_stats_manager_port"] = self.docker_stats_manager_port
@@ -179,6 +186,9 @@ class Config:
         d["grafana_password"] = self.grafana_password
         d["pgadmin_username"] = self.pgadmin_username
         d["pgadmin_password"] = self.pgadmin_password
+        d["postgresql_log_dir"] = self.postgresql_log_dir
+        d["nginx_log_dir"] = self.nginx_log_dir
+        d["flask_log_file"] = self.flask_log_file
         d["id"] = 1
         return d
 
@@ -373,8 +383,8 @@ class Config:
         d["parameters"].append(
             {
                 "id": 27,
-                "param": "management_system_pid_file",
-                "value": self.management_system_pid_file
+                "param": "csle_mgmt_webapp_pid_file",
+                "value": self.csle_mgmt_webapp_pid_file
             }
         )
         d["parameters"].append(
@@ -503,6 +513,27 @@ class Config:
                 "value": self.grafana_password
             }
         )
+        d["parameters"].append(
+            {
+                "id": 47,
+                "param": "postgresql_log_dir",
+                "value": self.postgresql_log_dir
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 48,
+                "param": "nginx_log_dir",
+                "value": self.nginx_log_dir
+            }
+        )
+        d["parameters"].append(
+            {
+                "id": 49,
+                "param": "flask_log_file",
+                "value": self.flask_log_file
+            }
+        )
         d["cluster_config"] = self.cluster_config.to_dict()
         return d
 
@@ -540,7 +571,7 @@ class Config:
                      pgadmin_port=d["pgadmin_port"],
                      prometheus_port=d["prometheus_port"],
                      node_exporter_pid_file=d["node_exporter_pid_file"],
-                     management_system_pid_file=d["management_system_pid_file"],
+                     csle_mgmt_webapp_pid_file=d["csle_mgmt_webapp_pid_file"],
                      docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
                      docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
                      docker_stats_manager_port=d["docker_stats_manager_port"],
@@ -558,7 +589,10 @@ class Config:
                      grafana_username=d["grafana_username"],
                      grafana_password=d["grafana_password"],
                      pgadmin_username=d["pgadmin_username"],
-                     pgadmin_password=d["pgadmin_password"])
+                     pgadmin_password=d["pgadmin_password"],
+                     postgresql_log_dir=d["postgresql_log_dir"],
+                     nginx_log_dir = d["nginx_log_dir"],
+                     flask_log_file = d["flask_log_file"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -601,7 +635,7 @@ class Config:
                      cadvisor_port=d["cadvisor_port"],
                      prometheus_port=d["prometheus_port"],
                      node_exporter_pid_file=d["node_exporter_pid_file"],
-                     management_system_pid_file=d["management_system_pid_file"],
+                     csle_mgmt_webapp_pid_file=d["csle_mgmt_webapp_pid_file"],
                      docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
                      docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
                      docker_stats_manager_port=d["docker_stats_manager_port"],
@@ -620,7 +654,10 @@ class Config:
                      grafana_username=d["grafana_username"],
                      grafana_password=d["grafana_password"],
                      pgadmin_username=d["pgadmin_username"],
-                     pgadmin_password=d["pgadmin_password"])
+                     pgadmin_password=d["pgadmin_password"],
+                     postgresql_log_dir=d["postgresql_log_dir"],
+                     nginx_log_dir=d["nginx_log_dir"],
+                     flask_log_file=d["flask_log_file"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -649,7 +686,7 @@ class Config:
                f"cadvisor_port: {self.cadvisor_port}, " \
                f"prometheus_port: {self.prometheus_port}, " \
                f"node_exporter_pid_file: {self.node_exporter_pid_file}, " \
-               f"management_system_pid_file: {self.management_system_pid_file}, " \
+               f"csle_mgmt_webapp_pid_file: {self.csle_mgmt_webapp_pid_file}, " \
                f"docker_stats_manager_log_file: {self.docker_stats_manager_log_file}, " \
                f"docker_stats_manager_log_dir: {self.docker_stats_manager_log_dir}, " \
                f"docker_stats_manager_port: {self.docker_stats_manager_port}, " \
@@ -664,7 +701,9 @@ class Config:
                f"node_exporter_log_file: {self.node_exporter_log_file}," \
                f"allow_registration: {self.allow_registration}, allow_host_shell: {self.allow_host_shell}," \
                f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password}," \
-               f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}"
+               f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}," \
+               f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir}," \
+               f"flask_log_file: {self.flask_log_file}"
 
     def to_json_str(self) -> str:
         """

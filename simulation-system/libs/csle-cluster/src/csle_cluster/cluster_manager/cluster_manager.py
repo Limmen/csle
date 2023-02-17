@@ -2,13 +2,15 @@ import os
 import logging
 from concurrent import futures
 import grpc
-import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
-import csle_cluster.cluster_manager.cluster_manager_pb2
+import subprocess
 import csle_collector.constants.constants as collector_constants
+from csle_common.dao.emulation_config.config import Config
 import csle_common.constants.constants as constants
 from csle_common.controllers.management_system_controller import ManagementSystemController
 from csle_common.util.general_util import GeneralUtil
 from csle_common.util.cluster_util import ClusterUtil
+import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
+import csle_cluster.cluster_manager.cluster_manager_pb2
 
 
 class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer):
@@ -368,7 +370,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting log file: {request.name}")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        data = ""
+        if os.path.exists(request.name):
+            with open(request.name, 'r') as fp:
+                data = fp.read()
+        logs = data.split("\n")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_flask_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetFlaskLogsMsg,
                      context: grpc.ServicerContext) \
@@ -381,7 +388,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the flask logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        config = Config.get_current_config()
+        path = config.flask_log_file
+        logs = []
+        if os.path.exists(path):
+            with open(path, 'r') as fp:
+                data = fp.readlines()
+                tail = data[-100:]
+                logs = tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_postgresql_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
                        context: grpc.ServicerContext) \
@@ -394,7 +409,17 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the PostgreSQL logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        config = Config.get_current_config()
+        path = config.postgresql_log_dir
+        logs = []
+        for f in os.listdir(path):
+            item = os.path.join(path, f)
+            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item:
+                with open(path, 'r') as fp:
+                    data = fp.readlines()
+                    tail = data[-100:]
+                    logs = logs + tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_docker_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
                             context: grpc.ServicerContext) \
@@ -407,7 +432,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Docker logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        output = output.decode("utf-8")
+        output = output.split("\n")[-100:]
+        logs = output
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_nginx_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg,
                         context: grpc.ServicerContext) \
@@ -420,7 +451,17 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Nginx logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        config = Config.get_current_config()
+        path = config.nginx_log_dir
+        logs = []
+        for f in os.listdir(path):
+            item = os.path.join(path, f)
+            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item:
+                with open(path, 'r') as fp:
+                    data = fp.readlines()
+                    tail = data[-100:]
+                    logs = logs + tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_grafana_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
                        context: grpc.ServicerContext) \
@@ -433,7 +474,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Grafana logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        cmd = constants.COMMANDS.GRAFANA_LOGS
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        output = output.decode("utf-8")
+        output = output.split("\n")[-100:]
+        logs = output
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_pgadmin_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPgAdminLogsMsg,
                          context: grpc.ServicerContext) \
@@ -446,7 +493,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the pgAdmin logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        cmd = constants.COMMANDS.PGADMIN_LOGS
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        output = output.decode("utf-8")
+        output = output.split("\n")[-100:]
+        logs = output
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_cadvisor_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCAdvisorLogsMsg,
                          context: grpc.ServicerContext) \
@@ -459,7 +512,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the cAdvisor logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        cmd = constants.COMMANDS.CADVISOR_LOGS
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        output = output.decode("utf-8")
+        output = output.split("\n")[-100:]
+        logs = output
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_node_exporter_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeExporterLogsMsg,
                           context: grpc.ServicerContext) \
@@ -472,7 +531,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Node exporter logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        config = Config.get_current_config()
+        path = config.node_exporter_log_file
+        logs = []
+        if os.path.exists(path):
+            with open(path, 'r') as fp:
+                data = fp.readlines()
+                tail = data[-100:]
+                logs = tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_prometheus_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
                                context: grpc.ServicerContext) \
@@ -485,7 +552,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Prometheus logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        config = Config.get_current_config()
+        path = config.prometheus_log_file
+        logs = []
+        if os.path.exists(path):
+            with open(path, 'r') as fp:
+                data = fp.readlines()
+                tail = data[-100:]
+                logs = tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_docker_statsmanager_logs(
             self,  request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagerLogsMsg,
@@ -498,7 +573,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the Docker statsmanager logs")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        config = Config.get_current_config()
+        path = config.docker_stats_manager_log_dir + config.docker_stats_manager_log_file
+        logs = []
+        if os.path.exists(path):
+            with open(path, 'r') as fp:
+                data = fp.readlines()
+                tail = data[-100:]
+                logs = tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def get_csle_log_files(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
                             context: grpc.ServicerContext) \
@@ -511,7 +594,17 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the CSLE log file names")
-        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        logging.info(f"Getting log file: {request.name}")
+        config = Config.get_current_config()
+        path = config.default_log_dir
+        log_files = []
+        for f in os.listdir(path):
+            item = os.path.join(path, f)
+            if os.path.isfile(item):
+                log_files.append(item)
+        if len(log_files) > 20:
+            log_files = log_files[0:20]
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=log_files)
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
