@@ -27,7 +27,7 @@ class Config:
                  docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
                  prometheus_log_file: str, prometheus_config_file: str, default_log_dir: str,
                  cluster_config: ClusterConfig, node_exporter_log_file: str,
-                 allow_registration: bool, allow_host_shell: bool, grafana_username: str, grafana_password: str,
+                 allow_registration: bool, grafana_username: str, grafana_password: str,
                  pgadmin_username: str, pgadmin_password: str, postgresql_log_dir: str, nginx_log_dir: str,
                  flask_log_file: str):
         """
@@ -75,7 +75,6 @@ class Config:
         :param cluster_config: the cluster configuration of the CSLE deployment
         :param node_exporter_log_file: the file to save the logs of the node_exporter
         :param allow_registration: boolean flag indicating whether user registration should be allowed
-        :param allow_host_shell: boolean flag indicating whether host-terminal emulation should be enabled.
         :param grafana_username: default grafana username
         :param grafana_password: default grafana password
         :param pgadmin_username: default pgadmin username
@@ -125,7 +124,6 @@ class Config:
         self.cluster_config = cluster_config
         self.node_exporter_log_file = node_exporter_log_file
         self.allow_registration = allow_registration
-        self.allow_host_shell = allow_host_shell
         self.grafana_username = grafana_username
         self.grafana_password = grafana_password
         self.pgadmin_username = pgadmin_username
@@ -181,7 +179,6 @@ class Config:
         d["cluster_config"] = self.cluster_config.to_dict()
         d["node_exporter_log_file"] = self.node_exporter_log_file
         d["allow_registration"] = self.allow_registration
-        d["allow_host_shell"] = self.allow_host_shell
         d["grafana_username"] = self.grafana_username
         d["grafana_password"] = self.grafana_password
         d["pgadmin_username"] = self.pgadmin_username
@@ -474,62 +471,55 @@ class Config:
         d["parameters"].append(
             {
                 "id": 41,
-                "param": "allow_host_shell",
-                "value": self.allow_host_shell
-            }
-        )
-        d["parameters"].append(
-            {
-                "id": 42,
                 "param": "pgadmin_port",
                 "value": self.pgadmin_port
             }
         )
         d["parameters"].append(
             {
-                "id": 43,
+                "id": 42,
                 "param": "pgadmin_username",
                 "value": self.pgadmin_username
             }
         )
         d["parameters"].append(
             {
-                "id": 44,
+                "id": 43,
                 "param": "pgadmin_password",
                 "value": self.pgadmin_password
             }
         )
         d["parameters"].append(
             {
-                "id": 45,
+                "id": 44,
                 "param": "grafana_username",
                 "value": self.grafana_username
             }
         )
         d["parameters"].append(
             {
-                "id": 46,
+                "id": 45,
                 "param": "grafana_password",
                 "value": self.grafana_password
             }
         )
         d["parameters"].append(
             {
-                "id": 47,
+                "id": 46,
                 "param": "postgresql_log_dir",
                 "value": self.postgresql_log_dir
             }
         )
         d["parameters"].append(
             {
-                "id": 48,
+                "id": 47,
                 "param": "nginx_log_dir",
                 "value": self.nginx_log_dir
             }
         )
         d["parameters"].append(
             {
-                "id": 49,
+                "id": 48,
                 "param": "flask_log_file",
                 "value": self.flask_log_file
             }
@@ -585,7 +575,6 @@ class Config:
                      cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
-                     allow_host_shell=d["allow_host_shell"],
                      grafana_username=d["grafana_username"],
                      grafana_password=d["grafana_password"],
                      pgadmin_username=d["pgadmin_username"],
@@ -649,7 +638,6 @@ class Config:
                      cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
                      node_exporter_log_file=d["node_exporter_log_file"],
                      allow_registration=d["allow_registration"],
-                     allow_host_shell=d["allow_host_shell"],
                      pgadmin_port=d["pgadmin_port"],
                      grafana_username=d["grafana_username"],
                      grafana_password=d["grafana_password"],
@@ -699,7 +687,7 @@ class Config:
                f"default_log_dir: {self.default_log_dir}, " \
                f"cluster_config: {self.cluster_config}," \
                f"node_exporter_log_file: {self.node_exporter_log_file}," \
-               f"allow_registration: {self.allow_registration}, allow_host_shell: {self.allow_host_shell}," \
+               f"allow_registration: {self.allow_registration}, " \
                f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password}," \
                f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}," \
                f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir}," \

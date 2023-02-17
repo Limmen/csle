@@ -24,7 +24,6 @@ import SDNControllers from "./components/MainContainer/SDNControllers/SDNControl
 import Downloads from "./components/MainContainer/Downloads/Downloads";
 import ServerCluster from "./components/MainContainer/ServerCluster/ServerCluster";
 import ContainerTerminal from "./components/MainContainer/ContainerTerminal/ContainerTerminal";
-import HostTerminal from "./components/MainContainer/HostTerminal/HostTerminal";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
 import { useAlert } from "react-alert";
@@ -42,7 +41,6 @@ import {
     SDN_CONTROLLERS_PAGE_RESOURCE,
     CONTROL_PLANE_PAGE_RESOURCE,
     CONTAINER_TERMINAL_PAGE_RESOURCE,
-    HOST_TERMINAL_PAGE_RESOURCE,
     ABOUT_PAGE_RESOURCE,
     DOWNLOADS_PAGE_RESOURCE,
     REGISTER_PAGE_RESOURCE,
@@ -166,12 +164,6 @@ function App() {
                                 <Route path={CONTAINER_TERMINAL_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <ContainerTerminal sessionData={sessionData} setSessionData={setSessionData}/>
-                                    </ProtectedRoute>
-                                }>
-                                </Route>
-                                <Route path={HOST_TERMINAL_PAGE_RESOURCE} index element={
-                                    <ProtectedRoute>
-                                        <HostTerminal sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>

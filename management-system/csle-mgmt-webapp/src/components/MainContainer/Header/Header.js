@@ -12,7 +12,6 @@ import {
     CONTROL_PLANE_PAGE_RESOURCE,
     EMULATION_STATISTICS_PAGE_RESOURCE,
     EMULATIONS_PAGE_RESOURCE,
-    HOST_TERMINAL_PAGE_RESOURCE,
     IMAGES_PAGE_RESOURCE,
     JOBS_PAGE_RESOURCE,
     LOGS_ADMIN_PAGE_RESOURCE,
@@ -31,8 +30,8 @@ import {
     DOWNLOADS_PAGE_RESOURCE,
     VERSION_RESOURCE,
     SERVER_CLUSTER_PAGE_RESOURCE,
-    HTTP_PREFIX, HTTP_REST_GET, CONFIG_RESOURCE, HOST_TERMINAL_ALLOWED_SUBRESOURCE,
-    HOST_TERMINAL_ALLOWED_PROPERTY, REGISTRATION_ALLOWED_SUBRESOURCE, REGISTRATION_ALLOWED_PROPERTY
+    HTTP_PREFIX, HTTP_REST_GET, CONFIG_RESOURCE,
+    REGISTRATION_ALLOWED_SUBRESOURCE, REGISTRATION_ALLOWED_PROPERTY
 } from "../../Common/constants";
 
 /**
@@ -41,7 +40,6 @@ import {
 const Header = (props) => {
     const [version, setVersion] = useState("0.0.1");
     const [registerAllowed, setRegisterAllowed] = useState(false);
-    const [hostTerminalAllowed, setHostTerminalAllowed] = useState(false);
     const ip = serverIp
     const port = serverPort
     const location = useLocation();
@@ -51,7 +49,7 @@ const Header = (props) => {
         `/${POLICY_EXAMINATION_PAGE_RESOURCE}`, `/${IMAGES_PAGE_RESOURCE}`,
         `/${TRAINING_PAGE_RESOURCE}`, `/${POLICIES_PAGE_RESOURCE}`, `/${JOBS_PAGE_RESOURCE}`,
         `/${SDN_CONTROLLERS_PAGE_RESOURCE}`, `/${CONTROL_PLANE_PAGE_RESOURCE}`,
-        `/${HOST_TERMINAL_PAGE_RESOURCE}`, `/${CONTAINER_TERMINAL_PAGE_RESOURCE}`]
+        `/${CONTAINER_TERMINAL_PAGE_RESOURCE}`]
     const adminDropdownRoutes = [`/${USER_ADMIN_PAGE_RESOURCE}`, `/${SYSTEM_ADMIN_PAGE_RESOURCE}`,
         `/${LOGS_ADMIN_PAGE_RESOURCE}`]
 
@@ -97,32 +95,10 @@ const Header = (props) => {
     }, [ip, port]);
 
 
-    const fetchHostTerminalAllowed = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}/${HOST_TERMINAL_ALLOWED_SUBRESOURCE}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                return res.json()
-            })
-            .then(response => {
-                if(response !== null && response !== undefined) {
-                    setHostTerminalAllowed(response[HOST_TERMINAL_ALLOWED_PROPERTY])
-                }
-            })
-            .catch(error => console.log("error:" + error))
-    }, [ip, port]);
-
     useEffect(() => {
         fetchVersion()
         fetchRegistrationAllowed()
-        fetchHostTerminalAllowed()
-    }, [fetchVersion, fetchRegistrationAllowed, fetchHostTerminalAllowed]);
+    }, [fetchVersion, fetchRegistrationAllowed]);
 
     const AdministrationDropDown = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
@@ -179,24 +155,6 @@ const Header = (props) => {
                         </OverlayTrigger>
                     </div>
                 </li>
-            )
-        } else {
-            return (<></>)
-        }
-    }
-
-    const HostTerminalPageLinkOrEmpty = (props) => {
-        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin
-            && props.hostTerminalAllowed) {
-            return (
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={props.renderHostTerminalTooltip}>
-                    <NavLink className="dropdown-item" to={HOST_TERMINAL_PAGE_RESOURCE}>
-                        Host Terminal <i className="fa fa-terminal headerIcon" aria-hidden="true"></i>
-                    </NavLink>
-                </OverlayTrigger>
             )
         } else {
             return (<></>)
@@ -321,12 +279,6 @@ const Header = (props) => {
     const renderControlPlaneTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Control plane for emulations
-        </Tooltip>
-    );
-
-    const renderHostTerminalTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Terminal access to the host of the management system
         </Tooltip>
     );
 
@@ -556,10 +508,6 @@ const Header = (props) => {
                                         Control Plane <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
-                                <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}
-                                                             sessionData={props.sessionData}
-                                                             hostTerminalAllowed={hostTerminalAllowed}
-                                />
                                 <ContainerTerminalPageLinkOrEmpty
                                     renderContainerTerminalTooltip={renderContainerTerminalTooltip}
                                     sessionData={props.sessionData}

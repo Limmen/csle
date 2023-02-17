@@ -21,7 +21,6 @@ from csle_rest_api.pages.training.routes import get_training_page_bp
 from csle_rest_api.pages.sdn_controllers.routes import get_sdn_controllers_page_bp
 from csle_rest_api.pages.control_plane.routes import get_control_plane_page_bp
 from csle_rest_api.pages.user_admin.routes import get_user_admin_page_bp
-from csle_rest_api.pages.host_terminal.routes import get_host_terminal_page_bp
 from csle_rest_api.pages.container_terminal.routes import get_container_terminal_page_bp
 from csle_rest_api.pages.system_admin.routes import get_system_admin_page_bp
 from csle_rest_api.pages.logs_admin.routes import get_logs_admin_page_bp
@@ -69,7 +68,6 @@ from csle_rest_api.resources.config.routes import config_bp
 from csle_rest_api.resources.server_cluster.routes import server_cluster_bp
 from csle_rest_api.resources.version.routes import version_bp
 from csle_rest_api.resources.logs.routes import logs_bp
-from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
 from csle_rest_api.web_sockets.container_terminal.container_terminal import get_container_terminal_bp
 import csle_rest_api.constants.constants as api_constants
 
@@ -160,9 +158,6 @@ def create_app(static_folder: str):
     app.register_blueprint(get_user_admin_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE}")
-    app.register_blueprint(get_host_terminal_page_bp(static_folder=f"../../{static_folder}"),
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                      f"{api_constants.MGMT_WEBAPP.HOST_TERMINAL_PAGE_RESOURCE}")
     app.register_blueprint(get_container_terminal_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_PAGE_RESOURCE}")
@@ -273,8 +268,6 @@ def create_app(static_folder: str):
     app.register_blueprint(logs_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
-    web_sockets_host_terminal_bp = get_host_terminal_bp(app)
-    app.register_blueprint(web_sockets_host_terminal_bp)
     web_sockets_container_terminal_bp = get_container_terminal_bp(app)
     app.register_blueprint(web_sockets_container_terminal_bp)
 
