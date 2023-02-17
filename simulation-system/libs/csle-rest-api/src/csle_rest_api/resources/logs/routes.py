@@ -33,7 +33,6 @@ def logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -57,10 +56,6 @@ def docker_stats_manager_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
-    config = Config.get_current_config()
-    path = config.docker_stats_manager_log_dir + config.docker_stats_manager_log_file
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -77,22 +72,107 @@ def prometheus_logs():
     """
     The /logs/prometheus resource.
 
-    :return: The logs of the docker stats manager
+    :return: The Prometheus logs
     """
 
     # Check that token is valid
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
-    config = Config.get_current_config()
-    path = config.prometheus_log_file
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_prometheus_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NGINX_RESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def nginx_logs():
+    """
+    The /logs/nginx resource.
+
+    :return: The nginx logs
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    data_dict = ClusterController.get_nginx_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def postgresql_logs():
+    """
+    The /logs/postgresql resource.
+
+    :return: The PostgreSQL logs
+    """
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    data_dict = ClusterController.get_postgresql_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def flask_logs():
+    """
+    The /logs/flask resource.
+
+    :return: The Flask logs
+    """
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    data_dict = ClusterController.get_flask_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def docker_logs():
+    """
+    The /logs/docker resource.
+
+    :return: The Docker logs
+    """
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    data_dict = ClusterController.get_docker_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -111,10 +191,6 @@ def node_exporter_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
-    config = Config.get_current_config()
-    path = config.node_exporter_log_file
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -138,7 +214,6 @@ def cadvisor_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -162,7 +237,6 @@ def pgadmin_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -181,12 +255,10 @@ def grafana_logs():
 
     :return: The logs of the docker stats manager
     """
-
     # Check that token is valid
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -205,7 +277,6 @@ def container_logs():
 
     :return: The logs of a specific container
     """
-
     # Check that token is valid
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
@@ -213,7 +284,6 @@ def container_logs():
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-
     container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
     cmd = constants.COMMANDS.CONTAINER_LOGS.format(container_name)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)

@@ -169,6 +169,14 @@ const Header = (props) => {
                                 Logs administration <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
                             </NavLink>
                         </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderServerClusterTooltip}>
+                            <NavLink className="dropdown-item" to={SERVER_CLUSTER_PAGE_RESOURCE}>
+                                Cluster administration <i className="fa fa-server headerIcon" aria-hidden="true"></i>
+                            </NavLink>
+                        </OverlayTrigger>
                     </div>
                 </li>
             )
@@ -546,14 +554,6 @@ const Header = (props) => {
                                     overlay={renderControlPlaneTooltip}>
                                     <NavLink className="dropdown-item" to={CONTROL_PLANE_PAGE_RESOURCE}>
                                         Control Plane <i className="fa fa-cogs headerIcon" aria-hidden="true"></i>
-                                    </NavLink>
-                                </OverlayTrigger>
-                                <OverlayTrigger
-                                    placement="right"
-                                    delay={{show: 0, hide: 0}}
-                                    overlay={renderServerClusterTooltip}>
-                                    <NavLink className="dropdown-item" to={SERVER_CLUSTER_PAGE_RESOURCE}>
-                                        Server Cluster <i className="fa fa-server headerIcon" aria-hidden="true"></i>
                                     </NavLink>
                                 </OverlayTrigger>
                                 <HostTerminalPageLinkOrEmpty renderHostTerminalTooltip={renderHostTerminalTooltip}

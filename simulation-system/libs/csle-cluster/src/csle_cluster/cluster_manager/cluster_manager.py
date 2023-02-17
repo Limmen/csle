@@ -415,7 +415,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         for f in os.listdir(path):
             item = os.path.join(path, f)
             if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item:
-                with open(path, 'r') as fp:
+                with open(item, 'r') as fp:
                     data = fp.readlines()
                     tail = data[-100:]
                     logs = logs + tail
@@ -438,6 +438,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         output = output.decode("utf-8")
         output = output.split("\n")[-100:]
         logs = output
+        if len(logs) == 0:
+            alt_cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS_ALTERNATIVE
+            p = subprocess.Popen(alt_cmd, stdout=subprocess.PIPE, shell=True)
+            (output, err) = p.communicate()
+            output = output.decode("utf-8")
+            output = output.split("\n")[-100:]
+            logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getNginxLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg,
@@ -457,7 +464,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         for f in os.listdir(path):
             item = os.path.join(path, f)
             if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item:
-                with open(path, 'r') as fp:
+                with open(item, 'r') as fp:
                     data = fp.readlines()
                     tail = data[-100:]
                     logs = logs + tail

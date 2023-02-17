@@ -25,7 +25,8 @@ import {
     LOGIN_PAGE_RESOURCE, CLUSTER_STATUS_RESOURCE,
     DOCKER_STATS_MANAGER_SUBRESOURCE, HTTP_REST_POST, HTTP_REST_GET,
     LOGS_RESOURCE, TOKEN_QUERY_PARAM, FILE_RESOURCE, CADVISOR_RESOURCE, PGADMIN_RESOURCE,
-    GRAFANA_RESOURCE, NODE_EXPORTER_RESOURCE, PROMETHEUS_RESOURCE
+    GRAFANA_RESOURCE, NODE_EXPORTER_RESOURCE, PROMETHEUS_RESOURCE, NGINX_RESOURCE, DOCKER_RESOURCE,
+    POSTGRESQL_RESOURCE, FLASK_RESOURCE
 } from "../../Common/constants";
 
 /**
@@ -48,6 +49,18 @@ const LogsAdmin = (props) => {
     const [loadingPgAdminLogs, setLoadingPgAdminLogs] = useState(true);
     const [pgAdminLogsOpen, setPgAdminLogsOpen] = useState(false);
     const [pgAdminLogs, setPgAdminLogs] = useState([]);
+    const [loadingNginxLogs, setLoadingNginxLogs] = useState(true);
+    const [nginxLogsOpen, setNginxLogsOpen] = useState(false);
+    const [nginxLogs, setNginxLogs] = useState([]);
+    const [loadingPostgresqlLogs, setLoadingPostgresqlLogs] = useState(true);
+    const [postgresqlLogsOpen, setPostgresqlLogsOpen] = useState(false);
+    const [postgresqlLogs, setPostgresqlLogs] = useState([]);
+    const [loadingDockerLogs, setLoadingDockerLogs] = useState(true);
+    const [dockerLogsOpen, setDockerLogsOpen] = useState(false);
+    const [dockerLogs, setDockerLogs] = useState([]);
+    const [loadingFlaskLogs, setLoadingFlaskLogs] = useState(true);
+    const [flaskLogsOpen, setFlaskLogsOpen] = useState(false);
+    const [flaskLogs, setFlaskLogs] = useState([]);
     const [loadingPrometheusLogs, setLoadingPrometheusLogs] = useState(true);
     const [prometheusLogsOpen, setPrometheusLogsOpen] = useState(false);
     const [prometheusLogs, setPrometheusLogs] = useState([]);
@@ -106,6 +119,10 @@ const LogsAdmin = (props) => {
                     setLoadingPgAdminLogs(true)
                     setLoadingGrafanaLogs(true)
                     setLoadingCsleLogFiles(true)
+                    setLoadingNginxLogs(true)
+                    setLoadingDockerLogs(true)
+                    setLoadingPostgresqlLogs(true)
+                    setLoadingFlaskLogs(true)
                     fetchStatsManagerLogs(serverClusterIPIds[0].value.ip)
                     fetchNodeExporterLogs(serverClusterIPIds[0].value.ip)
                     fetchPrometheusLogs(serverClusterIPIds[0].value.ip)
@@ -113,6 +130,10 @@ const LogsAdmin = (props) => {
                     fetchPgAdminLogs(serverClusterIPIds[0].value.ip)
                     fetchGrafanaLogs(serverClusterIPIds[0].value.ip)
                     fetchCsleLogFiles(serverClusterIPIds[0].value.ip)
+                    fetchNginxLogs(serverClusterIPIds[0].value.ip)
+                    fetchFlaskLogs(serverClusterIPIds[0].value.ip)
+                    fetchPostgresqlLogs(serverClusterIPIds[0].value.ip)
+                    fetchDockerLogs(serverClusterIPIds[0].value.ip)
                 } else {
                     setSelectedPhysicalServerIp(null)
                 }
@@ -359,6 +380,119 @@ const LogsAdmin = (props) => {
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
+
+    const fetchNginxLogs = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${NGINX_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingNginxLogs(false)
+                setNginxLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchPostgresqlLogs = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${POSTGRESQL_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingPostgresqlLogs(false)
+                setPostgresqlLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchFlaskLogs = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${FLASK_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingFlaskLogs(false)
+                setFlaskLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchDockerLogs = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingDockerLogs(false)
+                setDockerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
     const refresh = () => {
         setLoadingServerCluster(true)
         setLoadingStatsManagerLogs(true)
@@ -369,6 +503,10 @@ const LogsAdmin = (props) => {
         setLoadingCsleLogFiles(true)
         setLoadingSelectedCsleLogFile(true)
         setLoadingPgAdminLogs(true)
+        setLoadingNginxLogs(true)
+        setLoadingDockerLogs(true)
+        setLoadingPostgresqlLogs(true)
+        setLoadingFlaskLogs(true)
         fetchServerCluster()
     }
 
@@ -381,6 +519,10 @@ const LogsAdmin = (props) => {
         setLoadingPgAdminLogs(true)
         setLoadingGrafanaLogs(true)
         setLoadingCsleLogFiles(true)
+        setLoadingNginxLogs(true)
+        setLoadingDockerLogs(true)
+        setLoadingPostgresqlLogs(true)
+        setLoadingFlaskLogs(true)
         fetchStatsManagerLogs(physicalServerIp.value.ip)
         fetchNodeExporterLogs(physicalServerIp.value.ip)
         fetchPrometheusLogs(physicalServerIp.value.ip)
@@ -388,6 +530,10 @@ const LogsAdmin = (props) => {
         fetchPgAdminLogs(physicalServerIp.value.ip)
         fetchGrafanaLogs(physicalServerIp.value.ip)
         fetchCsleLogFiles(physicalServerIp.value.ip)
+        fetchNginxLogs(physicalServerIp.value.ip)
+        fetchFlaskLogs(physicalServerIp.value.ip)
+        fetchPostgresqlLogs(physicalServerIp.value.ip)
+        fetchDockerLogs(physicalServerIp.value.ip)
     }
 
     const searchFilter = (node, searchVal) => {
@@ -419,6 +565,10 @@ const LogsAdmin = (props) => {
                 setLoadingPgAdminLogs(true)
                 setLoadingGrafanaLogs(true)
                 setLoadingCsleLogFiles(true)
+                setLoadingNginxLogs(true)
+                setLoadingDockerLogs(true)
+                setLoadingPostgresqlLogs(true)
+                setLoadingFlaskLogs(true)
                 fetchStatsManagerLogs(fServerCluster[0].value.ip)
                 fetchNodeExporterLogs(fServerCluster[0].value.ip)
                 fetchPrometheusLogs(fServerCluster[0].value.ip)
@@ -426,6 +576,10 @@ const LogsAdmin = (props) => {
                 fetchPgAdminLogs(fServerCluster[0].value.ip)
                 fetchGrafanaLogs(fServerCluster[0].value.ip)
                 fetchCsleLogFiles(fServerCluster[0].value.ip)
+                fetchNginxLogs(fServerCluster[0].value.ip)
+                fetchFlaskLogs(fServerCluster[0].value.ip)
+                fetchPostgresqlLogs(fServerCluster[0].value.ip)
+                fetchDockerLogs(fServerCluster[0].value.ip)
             }
         } else {
             setSelectedPhysicalServerIp(null)
@@ -655,6 +809,110 @@ const LogsAdmin = (props) => {
                         </div>
                     </Collapse>
                 </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => props.setNginxLogsOpen(!props.nginxLogsOpen)}
+                            aria-controls="nginxLogsBody"
+                            aria-expanded={props.nginxLogsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Nginx logs
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={props.nginxLogsOpen}>
+                        <div id="nginxLogsBody" className="cardBodyHidden">
+                            <h4>
+                                Last 100 log lines:
+                            </h4>
+                            <div className="table-responsive">
+                                <SpinnerOrLogs loadingLogs={props.loadingNginxLogs}
+                                               logs={props.nginxLogs}/>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => props.setDockerLogsOpen(!props.dockerLogsOpen)}
+                            aria-controls="dockerLogsBody"
+                            aria-expanded={props.dockerLogsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Docker engine logs
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={props.dockerLogsOpen}>
+                        <div id="dockerLogsBody" className="cardBodyHidden">
+                            <h4>
+                                Last 100 log lines:
+                            </h4>
+                            <div className="table-responsive">
+                                <SpinnerOrLogs loadingLogs={props.loadingDockerLogs}
+                                               logs={props.dockerLogs}/>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => props.setFlaskLogsOpen(!props.flaskLogsOpen)}
+                            aria-controls="flaskLogsBody"
+                            aria-expanded={props.flaskLogsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Flask logs
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={props.flaskLogsOpen}>
+                        <div id="flaskLogsBody" className="cardBodyHidden">
+                            <h4>
+                                Last 100 log lines:
+                            </h4>
+                            <div className="table-responsive">
+                                <SpinnerOrLogs loadingLogs={props.loadingFlaskLogs}
+                                               logs={props.flaskLogs}/>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => props.setPostgresqlLogsOpen(!props.postgresqlLogsOpen)}
+                            aria-controls="postgresqlLogsBody"
+                            aria-expanded={props.postgresqlLogsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> PostgreSQL logs
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={props.postgresqlLogsOpen}>
+                        <div id="postgresqlLogsBody" className="cardBodyHidden">
+                            <h4>
+                                Last 100 log lines:
+                            </h4>
+                            <div className="table-responsive">
+                                <SpinnerOrLogs loadingLogs={props.loadingPostgresqlLogs}
+                                               logs={props.postgresqlLogs}/>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
             </div>
         )
     }
@@ -853,6 +1111,10 @@ const LogsAdmin = (props) => {
         setLoadingPrometheusLogs(true)
         setLoadingPgAdminLogs(true)
         setLoadingServerCluster(true)
+        setLoadingNginxLogs(true)
+        setLoadingDockerLogs(true)
+        setLoadingPostgresqlLogs(true)
+        setLoadingFlaskLogs(true)
         fetchServerCluster()
     }, [fetchServerCluster]);
 
@@ -907,6 +1169,14 @@ const LogsAdmin = (props) => {
                                 selectedCsleLogFile={selectedCsleLogFile} loadingCsleLogFiles={loadingCsleLogFiles}
                                 csleLogFiles={csleLogFiles} loadingSelectedCsleLogFile={loadingSelectedCsleLogFile}
                                 selectedCsleLogFileData={selectedCsleLogFileData}
+                                nginxLogsOpen={nginxLogsOpen} setNginxLogsOpen={setNginxLogsOpen}
+                                loadingNginxLogs={loadingNginxLogs} nginxLogs={nginxLogs}
+                                dockerLogsOpen={dockerLogsOpen} setDockerLogsOpen={setDockerLogsOpen}
+                                loadingDockerLogs={loadingDockerLogs} dockerLogs={dockerLogs}
+                                flaskLogsOpen={flaskLogsOpen} setFlaskLogsOpen={setFlaskLogsOpen}
+                                loadingFlaskLogs={loadingFlaskLogs} flaskLogs={flaskLogs}
+                                postgresqlLogsOpen={postgresqlLogsOpen} setPostgresqlLogsOpen={setPostgresqlLogsOpen}
+                                loadingPostgresqlLogs={loadingPostgresqlLogs} postgresqlLogs={postgresqlLogs}
             />
         </div>
     );

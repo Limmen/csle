@@ -54,5 +54,5 @@ class ClusterManagerUtil:
         :return: a dict representation of the DTO
         """
         d = {}
-        d["logs"] = logs_dto.logs
+        d["logs"] = list(logs_dto.logs)
         return d
