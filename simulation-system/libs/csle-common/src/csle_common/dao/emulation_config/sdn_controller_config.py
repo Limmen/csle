@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, List
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -129,15 +129,17 @@ class SDNControllerConfig:
         """
         return SDNControllerConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "SDNControllerConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers : List[str]) -> "SDNControllerConfig":
         """
         Creates a new config for an execution
 
         :param ip_first_octet: the first octet of the IP of the new execution
+        :param physical_servers: the physical servers of the execution
         :return: the new config
         """
         config = self.copy()
-        config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet)
+        config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet,
+                                                                    physical_servers=physical_servers)
         config.resources = config.resources.create_execution_config(ip_first_octet=ip_first_octet)
         config.firewall_config = config.firewall_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config

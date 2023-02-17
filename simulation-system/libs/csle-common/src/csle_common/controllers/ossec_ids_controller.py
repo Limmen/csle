@@ -29,7 +29,8 @@ class OSSECIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    OSSECIDSController.stop_ossec_ids(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    OSSECIDSController.stop_ossec_ids(emulation_env_config=emulation_env_config,
+                                                      ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_ossec_idses(emulation_env_config: EmulationEnvConfig) -> None:
@@ -42,7 +43,8 @@ class OSSECIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config,
+                                                       ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_ossec_ids(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -100,7 +102,7 @@ class OSSECIDSController:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config,
-                                                               ip=c.get_ips()[0])
+                                                               ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_ossec_ids_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -152,7 +154,7 @@ class OSSECIDSController:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     OSSECIDSController.stop_ossec_ids_manager(emulation_env_config=emulation_env_config,
-                                                              ip=c.get_ips()[0])
+                                                              ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_ossec_ids_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -190,7 +192,7 @@ class OSSECIDSController:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config,
-                                                                      ip=c.get_ips()[0])
+                                                                      ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_ossec_ids_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -250,7 +252,7 @@ class OSSECIDSController:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config,
-                                                                     ip=c.get_ips()[0])
+                                                                     ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def get_ossec_idses_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig) -> \
@@ -269,7 +271,8 @@ class OSSECIDSController:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                        port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=c.get_ips()[0])
+                        port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port,
+                        ip=c.docker_gw_bridge_ip)
                     statuses.append(status)
         return statuses
 
@@ -292,7 +295,7 @@ class OSSECIDSController:
                 if ids_image in c.name:
                     # Open a gRPC session
                     with grpc.insecure_channel(
-                            f'{c.get_ips()[0]}:'
+                            f'{c.docker_gw_bridge_ip}:'
                             f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
                         stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                         ids_log_data = csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_alerts(
@@ -313,7 +316,7 @@ class OSSECIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    ips.append(c.get_ips()[0])
+                    ips.append(c.docker_gw_bridge_ip)
         return ips
 
     @staticmethod

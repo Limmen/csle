@@ -20,15 +20,17 @@ class VulnerabilitiesController:
         """
         vulnerabilities = emulation_env_config.vuln_config.node_vulnerability_configs
         for vuln in vulnerabilities:
-            Logger.__call__().get_logger().info(f"Creating vulnerability on ip: {vuln.ip}, type: {vuln.vuln_type}")
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.ip)
+            Logger.__call__().get_logger().info(f"Creating vulnerability on ip: {vuln.docker_gw_bridge_ip}, "
+                                                f"type: {vuln.vuln_type}")
+            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.docker_gw_bridge_ip)
 
             # Update sudoers file
             if vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
 
                 # Restore/Backup sudoers file
                 cmd = "sudo cp /etc/sudoers.bak /etc/sudoers"
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=vuln.ip))
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
+                    ip=vuln.docker_gw_bridge_ip))
 
                 # Install sudoers vulnerability
                 if vuln.cve is not None and vuln.cve.lower() == constants.EXPLOIT_VULNERABILITES.CVE_2010_0426:
@@ -41,7 +43,8 @@ class VulnerabilitiesController:
                 for cr in vuln.credentials:
                     cmd = cmd.format(cr.username)
                     o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                            conn=emulation_env_config.get_connection(ip=vuln.ip))
+                                                            conn=emulation_env_config.get_connection(
+                                                                ip=vuln.docker_gw_bridge_ip))
                     cmd = "sudo chmod 440 /etc/sudoers"
-                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                            conn=emulation_env_config.get_connection(ip=vuln.ip))
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(
+                        cmd=cmd, conn=emulation_env_config.get_connection(ip=vuln.docker_gw_bridge_ip))

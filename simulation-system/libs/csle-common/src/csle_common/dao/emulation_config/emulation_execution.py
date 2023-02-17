@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 
 
@@ -8,7 +8,7 @@ class EmulationExecution:
     """
 
     def __init__(self, emulation_name: str, timestamp: float, ip_first_octet: int,
-                 emulation_env_config: EmulationEnvConfig):
+                 emulation_env_config: EmulationEnvConfig, physical_servers: List[str]):
         """
         Initializes the DTO
 
@@ -17,11 +17,13 @@ class EmulationExecution:
         :param ip_first_octet: the first octet in the ip
         :param emulation_env_config: the emulation env config
         :param id: the id of the execution
+        :param physical_servers: list of physical server IPs where the execution is running
         """
         self.emulation_name = emulation_name
         self.timestamp = timestamp
         self.emulation_env_config = emulation_env_config
         self.ip_first_octet = ip_first_octet
+        self.physical_servers = physical_servers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationExecution":
@@ -33,7 +35,8 @@ class EmulationExecution:
         """
         return EmulationExecution(emulation_name=d["emulation_name"], timestamp=d["timestamp"],
                                   ip_first_octet=d["ip_first_octet"],
-                                  emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]))
+                                  emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]),
+                                  physical_servers=d["physical_servers"])
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -44,6 +47,7 @@ class EmulationExecution:
         d["timestamp"] = self.timestamp
         d["emulation_env_config"] = self.emulation_env_config.to_dict()
         d["ip_first_octet"] = self.ip_first_octet
+        d["physical_servers"] = self.physical_servers
         return d
 
     def __str__(self) -> str:
@@ -51,5 +55,5 @@ class EmulationExecution:
         :return: a string representation of the object
         """
         return f"emulation_name:{self.emulation_name}, timestamp: {self.timestamp}, " \
-               f"emulation_env_config: {self.emulation_env_config}" \
-               f"ip_first_octet:{self.ip_first_octet}"
+               f"emulation_env_config: {self.emulation_env_config}," \
+               f"ip_first_octet:{self.ip_first_octet}, physical_servers: {self.physical_servers}"

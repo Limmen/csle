@@ -23,6 +23,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.controllers.management_system_controller import ManagementSystemController
+from csle_common.dao.emulation_config.config import Config
 
 
 class ContainerController:
@@ -361,10 +362,10 @@ class ContainerController:
         """
         for c in containers_config.containers:
             for ip_net in c.ips_and_networks:
-                networks = ContainerController.get_network_references()
-                networks = list(map(lambda x: x.name, networks))
+                existing_networks = ContainerController.get_network_references()
+                existing_networks = list(map(lambda x: x.name, existing_networks))
                 ip, net = ip_net
-                ContainerController.create_network_from_dto(network_dto=net, existing_network_names=networks)
+                ContainerController.create_network_from_dto(network_dto=net, existing_network_names=existing_networks)
 
     @staticmethod
     def connect_containers_to_networks(emulation_env_config: EmulationEnvConfig) -> None:
@@ -390,6 +391,11 @@ class ContainerController:
                 Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
                                                     f"with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+                if c.docker_gw_bridge_ip == ""or c.docker_gw_bridge_ip is None:
+                    container_id = DockerUtil.get_container_hex_id(name=c.get_full_name())
+                    docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
+                    c.docker_gw_bridge_ip = docker_gw_bridge_ip
 
         ContainerController.connect_container_to_network(container=emulation_env_config.kafka_config.container)
         ContainerController.connect_container_to_network(container=emulation_env_config.elk_config.container)
@@ -420,6 +426,10 @@ class ContainerController:
             Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
                                                 f"with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+            if container.docker_gw_bridge_ip == "" or container.docker_gw_bridge_ip is None:
+                container_id = DockerUtil.get_container_hex_id(name=container.get_full_name())
+                docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
+                container.docker_gw_bridge_ip = docker_gw_bridge_ip
 
     @staticmethod
     def start_docker_stats_thread(execution: EmulationExecution) -> None:
@@ -560,8 +570,12 @@ class ContainerController:
         :param existing_network_names: list of network names, if not None, check if network exists befeore creating
         :return: None
         """
+        config = Config.get_current_config()
+        driver = constants.DOCKER.BRIDGE_NETWORK_DRIVER
+        if len(config.cluster_config.cluster_nodes) > 0:
+            driver = constants.DOCKER.OVERLAY_NETWORK_DRIVER
         ContainerController.create_network(name=network_dto.name, subnetmask=network_dto.subnet_mask,
-                                           existing_network_names=existing_network_names)
+                                           existing_network_names=existing_network_names, driver=driver)
 
     @staticmethod
     def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names: List = None) -> None:
@@ -585,11 +599,13 @@ class ContainerController:
         if existing_network_names is not None:
             network_names = existing_network_names
         if name not in network_names:
-            Logger.__call__().get_logger().info(f"Creating network: {name}, subnetmask: {subnetmask}")
+            Logger.__call__().get_logger().info(f"Creating network: {name}, subnetmask: {subnetmask}, "
+                                                f"driver: {driver}")
             client_1.networks.create(
                 name,
                 driver=driver,
-                ipam=ipam_config
+                ipam=ipam_config,
+                attachable=True
             )
 
     @staticmethod

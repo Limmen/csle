@@ -53,6 +53,7 @@ from csle_common.dao.emulation_config.docker_stats_manager_config import DockerS
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
+from csle_common.util.general_util import GeneralUtil
 
 
 def default_config(name: str, network_id: int = 9, level: int = 9, version: str = "0.1.0") -> EmulationEnvConfig:
@@ -5952,7 +5953,10 @@ if __name__ == '__main__':
     if args.uninstall:
         EmulationEnvController.uninstall_emulation(config=config)
     if args.run:
-        emulation_execution = EmulationEnvController.create_execution(emulation_env_config=config)
+        ip = GeneralUtil.get_host_ip()
+        physical_servers = [ip]
+        emulation_execution = EmulationEnvController.create_execution(emulation_env_config=config,
+                                                                      physical_servers=physical_servers)
         EmulationEnvController.run_containers(emulation_execution=emulation_execution)
     if args.stop:
         emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(

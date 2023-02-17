@@ -88,11 +88,11 @@ class EmulationEnvController:
 
         :return:
         """
-        ips = list(map(lambda x: x.get_ips()[0], emulation_env_config.containers_config.containers))
-        ips.append(emulation_env_config.kafka_config.container.get_ips()[0])
-        ips.append(emulation_env_config.elk_config.container.get_ips()[0])
+        ips = list(map(lambda x: x.docker_gw_bridge_ip, emulation_env_config.containers_config.containers))
+        ips.append(emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+        ips.append(emulation_env_config.elk_config.container.docker_gw_bridge_ip)
         if emulation_env_config.sdn_controller_config is not None:
-            ips.append(emulation_env_config.sdn_controller_config.container.get_ips()[0])
+            ips.append(emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
         for ip in ips:
             Logger.__call__().get_logger().info(f"Installing csle-collector version "
                                                 f"{emulation_env_config.csle_collector_version} on node: {ip}")
@@ -115,6 +115,69 @@ class EmulationEnvController:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
+
+    @staticmethod
+    def update_execution_config_w_docker_gw_bridge_ip(execution: EmulationExecution) -> EmulationExecution:
+        """
+        Updates the execution configuration with the IP of the docker gw of the docker swarm
+
+        :param execution: the execution to update
+        :return: the updated execution
+        """
+        emulation_env_config = execution.emulation_env_config
+        emulation_env_config.kafka_config.resources.docker_gw_bridge_ip = \
+            emulation_env_config.kafka_config.container.docker_gw_bridge_ip
+        emulation_env_config.elk_config.resources.docker_gw_bridge_ip = \
+            emulation_env_config.elk_config.container.docker_gw_bridge_ip
+        if emulation_env_config.sdn_controller_config is not None:
+            emulation_env_config.sdn_controller_config.resources.docker_gw_bridge_ip = \
+                emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip
+        for resource_config in emulation_env_config.resources_config.node_resources_configurations:
+            for container in emulation_env_config.containers_config.containers:
+                if container.get_readable_name() == resource_config.container_name:
+                    resource_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+        for ovs_switch in emulation_env_config.ovs_config.switch_configs:
+            for container in emulation_env_config.containers_config.containers:
+                if container.get_readable_name() == ovs_switch.container_name:
+                    ovs_switch.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+        for user_config in emulation_env_config.users_config.users_configs:
+            for container in emulation_env_config.containers_config.containers:
+                if user_config.ip in container.get_ips():
+                    user_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+        for vuln_config in emulation_env_config.vuln_config.node_vulnerability_configs:
+            for container in emulation_env_config.containers_config.containers:
+                if vuln_config.ip in container.get_ips():
+                    vuln_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+        for flags_config in emulation_env_config.flags_config.node_flag_configs:
+            for container in emulation_env_config.containers_config.containers:
+                if flags_config.ip in container.get_ips():
+                    flags_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+        for node_fw_config in emulation_env_config.topology_config.node_configs:
+            for container in emulation_env_config.containers_config.containers:
+                for ip in container.get_ips():
+                    if ip in node_fw_config.get_ips():
+                        node_fw_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                        break
+        emulation_env_config.kafka_config.firewall_config.docker_gw_bridge_ip = \
+            emulation_env_config.kafka_config.container.docker_gw_bridge_ip
+        emulation_env_config.elk_config.firewall_config.docker_gw_bridge_ip = \
+            emulation_env_config.elk_config.container.docker_gw_bridge_ip
+        if emulation_env_config.sdn_controller_config is not None:
+            emulation_env_config.sdn_controller_config.firewall_config.docker_gw_bridge_ip = \
+                emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip
+        for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
+            for container in emulation_env_config.containers_config.containers:
+                if node_traffic_config.ip in container.get_ips():
+                    node_traffic_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+        for container in emulation_env_config.containers_config.containers:
+            if emulation_env_config.traffic_config.client_population_config.ip in container.get_ips():
+                emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip = \
+                    container.docker_gw_bridge_ip
+        execution.emulation_env_config = emulation_env_config
+        MetastoreFacade.update_emulation_execution(emulation_execution=execution,
+                                                   ip_first_octet=execution.ip_first_octet,
+                                                   emulation=execution.emulation_name)
+        return execution
 
     @staticmethod
     def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False,
@@ -144,6 +207,11 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
         ContainerController.connect_containers_to_networks(emulation_env_config=emulation_env_config)
+
+        # Update execution config with the new IPs for the docker-gw
+        emulation_execution.emulation_env_config = emulation_env_config
+        emulation_execution = EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip(
+            execution=emulation_execution)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
@@ -412,10 +480,11 @@ class EmulationEnvController:
             ContainerController.remove_network(name=net.name)
 
     @staticmethod
-    def create_execution(emulation_env_config: EmulationEnvConfig) -> EmulationExecution:
+    def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers : List[str]) -> EmulationExecution:
         """
         Creates a new emulation execution
         :param emulation_env_config: the emulation configuration
+        :param physical_servers: the physical servers to deploy the containers on
         :return: a DTO representing the execution
         """
         timestamp = float(time.time())
@@ -425,10 +494,11 @@ class EmulationEnvController:
                                     emulation_name=emulation_env_config.name)))
         available_sunets = list(filter(lambda x: x not in used_subnets, total_subnets))
         ip_first_octet = available_sunets[0]
-        em_config = emulation_env_config.create_execution_config(ip_first_octet=ip_first_octet)
+        em_config = emulation_env_config.create_execution_config(ip_first_octet=ip_first_octet,
+                                                                 physical_servers=physical_servers)
         emulation_execution = EmulationExecution(emulation_name=emulation_env_config.name,
                                                  timestamp=timestamp, ip_first_octet=ip_first_octet,
-                                                 emulation_env_config=em_config)
+                                                 emulation_env_config=em_config, physical_servers=physical_servers)
         MetastoreFacade.save_emulation_execution(emulation_execution=emulation_execution)
         return emulation_execution
 

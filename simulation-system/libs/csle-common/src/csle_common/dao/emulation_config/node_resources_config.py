@@ -10,7 +10,8 @@ class NodeResourcesConfig:
 
     def __init__(self, container_name: str,
                  num_cpus: int, available_memory_gb: int,
-                 ips_and_network_configs: List[Tuple[str, NodeNetworkConfig]]):
+                 ips_and_network_configs: List[Tuple[str, NodeNetworkConfig]],
+                 docker_gw_bridge_ip : str = ""):
         """
         Initializes the DTO
 
@@ -18,11 +19,13 @@ class NodeResourcesConfig:
         :param num_cpus: the number of CPUs available to the node
         :param available_memory_gb: the number of RAM GB available to the node
         :param ips_and_network_configs: list of ip adresses and network configurations
+        :param docker_gw_bridge_ip: IP to reach the container from the host network
         """
         self.container_name = container_name
         self.num_cpus = num_cpus
         self.available_memory_gb = available_memory_gb
         self.ips_and_network_configs = ips_and_network_configs
+        self.docker_gw_bridge_ip = docker_gw_bridge_ip
 
     def get_ips(self) -> List[str]:
         """
@@ -42,7 +45,8 @@ class NodeResourcesConfig:
             container_name=d["container_name"],
             ips_and_network_configs=list(map(lambda x: (x[0], NodeNetworkConfig.from_dict(x[1])),
                                              d["ips_and_network_configs"])),
-            num_cpus=d["num_cpus"], available_memory_gb=d["available_memory_gb"]
+            num_cpus=d["num_cpus"], available_memory_gb=d["available_memory_gb"],
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"]
         )
         return obj
 
@@ -56,6 +60,7 @@ class NodeResourcesConfig:
                                                 self.ips_and_network_configs))
         d["num_cpus"] = self.num_cpus
         d["available_memory_gb"] = self.available_memory_gb
+        d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
         return d
 
     def __str__(self) -> str:
@@ -63,7 +68,8 @@ class NodeResourcesConfig:
         :return: a string representation of the node's resources
         """
         return f"num_cpus: {self.num_cpus}, available_memory_gb:{self.available_memory_gb}, " \
-               f"container_name:{self.container_name}, ips_and_network_configs: {self.ips_and_network_configs}"
+               f"container_name:{self.container_name}, ips_and_network_configs: {self.ips_and_network_configs}," \
+               f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}"
 
     def to_json_str(self) -> str:
         """

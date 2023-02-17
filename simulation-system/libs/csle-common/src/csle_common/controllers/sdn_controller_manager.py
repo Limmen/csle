@@ -27,7 +27,7 @@ class SDNControllerManager:
         """
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                    ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                                    ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
         # Check if ryu_manager is already running
@@ -36,12 +36,12 @@ class SDNControllerManager:
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(
-                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0]))
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_RYU_MANAGER not in str(o):
             Logger.__call__().get_logger().info(
                 f"Starting ryu manager on node: "
-                f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
+                f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -49,7 +49,7 @@ class SDNControllerManager:
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=emulation_env_config.get_connection(
-                    ip=emulation_env_config.sdn_controller_config.container.get_ips()[0]))
+                    ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
 
             # Start the ryu_manager
             cmd = constants.COMMANDS.START_RYU_MANAGER.format(
@@ -60,7 +60,7 @@ class SDNControllerManager:
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=emulation_env_config.get_connection(
-                    ip=emulation_env_config.sdn_controller_config.container.get_ips()[0]))
+                    ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
             time.sleep(2)
 
     @staticmethod
@@ -73,11 +73,11 @@ class SDNControllerManager:
         """
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                    ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                                    ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
         Logger.__call__().get_logger().info(f"Stopping ryu manager on node: "
-                                            f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
+                                            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
 
         # Stop background job
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -85,7 +85,7 @@ class SDNControllerManager:
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(
-                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0]))
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
 
         time.sleep(2)
 
@@ -100,7 +100,7 @@ class SDNControllerManager:
         """
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
         ryu_dto = SDNControllerManager.get_ryu_status_by_port_and_ip(
-            ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+            ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.sdn_controller_config.manager_port)
         return ryu_dto
 
@@ -132,12 +132,12 @@ class SDNControllerManager:
         """
         Logger.__call__().get_logger().info(
             f"Stopping RYU SDN controller on container: "
-            f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.stop_ryu(stub)
@@ -153,12 +153,12 @@ class SDNControllerManager:
         """
         Logger.__call__().get_logger().info(
             f"Starting Ryu SDN controller on container: "
-            f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             Logger.__call__().get_logger().info(
@@ -182,16 +182,16 @@ class SDNControllerManager:
         """
         Logger.__call__().get_logger().info(
             f"Starting the ryu monitor on container: "
-            f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.start_ryu_monitor(
-                stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                stub, kafka_ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
                 kafka_port=emulation_env_config.kafka_config.kafka_port,
                 time_step_len=emulation_env_config.sdn_controller_config.time_step_len_seconds)
             return ryu_dto
@@ -207,12 +207,12 @@ class SDNControllerManager:
         """
         Logger.__call__().get_logger().info(
             f"Stopping Ryu monitor on container: "
-            f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.stop_ryu_monitor(stub)
@@ -226,7 +226,7 @@ class SDNControllerManager:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
-        return [emulation_env_config.sdn_controller_config.container.get_ips()[0]]
+        return [emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
 
     @staticmethod
     def get_ryu_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:

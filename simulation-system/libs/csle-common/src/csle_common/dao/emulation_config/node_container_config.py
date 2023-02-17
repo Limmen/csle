@@ -11,7 +11,8 @@ class NodeContainerConfig:
 
     def __init__(self, name: str, ips_and_networks: List[Tuple[str, ContainerNetwork]],
                  version: str, level: str, restart_policy: str,
-                 suffix: str, os: str, execution_ip_first_octet: int = -1):
+                 suffix: str, os: str, execution_ip_first_octet: int = -1, docker_gw_bridge_ip : str = "",
+                 physical_host_ip : str = ""):
         """
         Initializes the DTO
 
@@ -23,6 +24,8 @@ class NodeContainerConfig:
         :param suffix: the suffix of the container id
         :param os: the operating system of the container
         :param execution_ip_first_octet: the first octet in the IP address (depends on the execution)
+        :param docker_gw_bridge_ip: IP to reach the container from the host network
+        :param physical_host_ip: IP of the physical host where the container is running
         """
         self.name = name
         self.ips_and_networks = ips_and_networks
@@ -33,6 +36,8 @@ class NodeContainerConfig:
         self.os = os
         self.execution_ip_first_octet = execution_ip_first_octet
         self.full_name_str = self.get_full_name()
+        self.docker_gw_bridge_ip = docker_gw_bridge_ip
+        self.physical_host_ip = physical_host_ip
 
     def get_ips(self) -> List[str]:
         """
@@ -47,15 +52,13 @@ class NodeContainerConfig:
         :param d:  the dict to convert
         :return: the created instance
         """
-        execution_ip_first_octet = -1
-        if "execution_ip_first_octet" in d:
-            execution_ip_first_octet = d["execution_ip_first_octet"]
         obj = NodeContainerConfig(
             name=d["name"],
             ips_and_networks=list(map(lambda x: (x[0], ContainerNetwork.from_dict(x[1])), d["ips_and_networks"])),
             version=d["version"], level=d["level"],
             restart_policy=d["restart_policy"], suffix=d["suffix"], os=d["os"],
-            execution_ip_first_octet=execution_ip_first_octet
+            execution_ip_first_octet=d["execution_ip_first_octet"],
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"]
         )
         return obj
 
@@ -73,6 +76,8 @@ class NodeContainerConfig:
         d["level"] = self.level
         d["full_name_str"] = self.get_full_name()
         d["execution_ip_first_octet"] = self.execution_ip_first_octet
+        d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     def __str__(self) -> str:
@@ -82,7 +87,8 @@ class NodeContainerConfig:
         return f"name{self.name}, ips and networks: {self.ips_and_networks}, version: {self.version}, " \
                f"level:{self.level}, restart_policy: {self.restart_policy}, " \
                f"suffix:{self.suffix}, os:{self.os}, full_name:{self.full_name_str}, " \
-               f"execution_ip_first_octet: {self.execution_ip_first_octet}"
+               f"execution_ip_first_octet: {self.execution_ip_first_octet}," \
+               f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}"
 
     def reachable(self, reachable_ips: List[str]) -> bool:
         """
@@ -101,6 +107,13 @@ class NodeContainerConfig:
         :return: the full name
         """
         return f"{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}-" \
+               f"{self.execution_ip_first_octet}"
+
+    def get_readable_name(self) -> str:
+        """
+        :return: the readable name
+        """
+        return f"csle-{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}_" \
                f"{self.execution_ip_first_octet}"
 
     def to_json_str(self) -> str:
@@ -131,15 +144,17 @@ class NodeContainerConfig:
         """
         return NodeContainerConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "NodeContainerConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers : List[str]) -> "NodeContainerConfig":
         """
         Creates a new config for an execution
 
         :param ip_first_octet: the first octet of the IP of the new execution
+        :param physical_servers: the list of physical servers of the execution
         :return: the new config
         """
         config = self.copy()
         config.execution_ip_first_octet = ip_first_octet
+        config.physical_host_ip = physical_servers[0] # TODO Update this
         config.ips_and_networks = list(map(lambda x: (
             GeneralUtil.replace_first_octet_of_ip(ip=x[0], ip_first_octet=ip_first_octet),
             x[1].create_execution_config(ip_first_octet=ip_first_octet)), config.ips_and_networks))

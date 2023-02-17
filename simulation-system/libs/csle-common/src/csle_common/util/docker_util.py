@@ -1,5 +1,7 @@
-from typing import List
+from typing import List, Union
 import docker
+import os
+import json
 from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 from csle_common.dao.docker.docker_env_metadata import DockerEnvMetadata
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -19,23 +21,38 @@ class DockerUtil:
         :return: a list of environment DTOs
         """
         client_1 = docker.from_env()
-        client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-        parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client2=client2)
+        client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
+        parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
         emulations = list(set(list(map(lambda x: x.emulation, parsed_containers))))
         parsed_envs = DockerUtil.parse_running_emulation_envs(emulations=emulations, containers=parsed_containers)
         return parsed_envs
 
     @staticmethod
-    def parse_running_containers(client_1, client2) -> List[DockerContainerMetadata]:
+    def get_container_hex_id(name: str) -> Union[str, None]:
+        """
+        Queries the docker engine for the id of a container with a given name
+
+        :return: the id
+        """
+        client_1 = docker.from_env()
+        client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
+        containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
+        for container in containers:
+            if container.name == name:
+                return container.id
+        return None
+
+    @staticmethod
+    def parse_running_containers(client_1, client_2) -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of all running containers
 
         :param client_1: docker client 1
-        :param client2:  docker client 2
+        :param client_2:  docker client 2
         :return: list of parsed running containers
         """
         containers = client_1.containers.list()
-        parsed_containers = DockerUtil.parse_containers(containers=containers, client2=client2)
+        parsed_containers = DockerUtil.parse_containers(containers=containers, client2=client_2)
         return parsed_containers
 
     @staticmethod
@@ -147,3 +164,24 @@ class DockerUtil:
                     container_handle=c, emulation=emulation, kafka_container=kafka_config)
                 parsed_containers.append(parsed_c)
         return parsed_containers
+
+    @staticmethod
+    def get_docker_gw_bridge_ip(container_id: str) -> str:
+        """
+        Gets the docker gw bridge ip of a container
+
+        :param container_id: the id of the container
+        :return: the ip in the gw bridge network
+        """
+        cmd = constants.DOCKER.INSPECT_DOCKER_GWBRIDGE
+        stream = os.popen(cmd)
+        json_output = stream.read()
+        docker_gw_bridge_info = json.loads(json_output)[0]
+        containers = docker_gw_bridge_info[constants.DOCKER.CONTAINERS_KEY]
+        if container_id in containers:
+            container = containers[container_id]
+            ip = container[constants.DOCKER.IPV4_KEY]
+            ip = ip.split("/")[0]
+            return ip
+        raise ValueError(f"The container with id:{container_id} does not have an IP in the docker gw bridge network")
+

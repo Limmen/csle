@@ -2519,6 +2519,36 @@ class MetastoreFacade:
                 return None
 
     @staticmethod
+    def update_emulation_execution(emulation_execution: EmulationExecution, ip_first_octet: int, emulation: str) -> None:
+        """
+        Updates an emulation execution in the metastore
+
+        :param emulation_execution: the emulation execution to update
+        :param ip_first_octet: the first octet of the ip of the execution
+        :param emulation: the emulation of the execution
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating emulation execution with ip first octet: {ip_first_octet} "
+                                             f"and emulation: {emulation} "
+                                             f"in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
+                            f" SET info=%s "
+                            f"WHERE {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}.ip_first_octet = %s "
+                            f"AND {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}.emulation_name = %s",
+                            (config_json_str, ip_first_octet, emulation))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Emulation execution with ip first octet: {ip_first_octet} "
+                                                     f"and emulation: {emulation} "
+                                                     f"updated successfully")
+
+    @staticmethod
     def _convert_empirical_system_model_record_to_dto(empirical_system_model_record) -> \
             EmpiricalSystemModel:
         """

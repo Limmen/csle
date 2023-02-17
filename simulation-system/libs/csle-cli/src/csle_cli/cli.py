@@ -406,7 +406,10 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
-    emulation_execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config)
+    ip = GeneralUtil.get_host_ip()
+    physical_servers = [ip]
+    emulation_execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config,
+                                                                  physical_servers=physical_servers)
     EmulationEnvController.run_containers(emulation_execution=emulation_execution)
     EmulationEnvController.apply_emulation_env_config(emulation_execution=emulation_execution,
                                                       no_traffic=no_traffic, no_clients=no_clients)

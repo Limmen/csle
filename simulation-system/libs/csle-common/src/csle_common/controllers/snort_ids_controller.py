@@ -29,7 +29,8 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config,
+                                                       ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_snort_idses(emulation_env_config: EmulationEnvConfig) -> None:
@@ -42,7 +43,8 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    SnortIDSController.stop_snort_ids(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    SnortIDSController.stop_snort_ids(emulation_env_config=emulation_env_config,
+                                                      ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_snort_ids(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -99,7 +101,8 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config,
+                                                           ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_snort_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -148,7 +151,8 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    SnortIDSController.stop_snort_manager(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    SnortIDSController.stop_snort_manager(emulation_env_config=emulation_env_config,
+                                                          ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_snort_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -182,7 +186,7 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=emulation_env_config,
-                                                                        ip=c.get_ips()[0])
+                                                                        ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def start_snort_idses_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -225,7 +229,7 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     SnortIDSController.stop_snort_idses_monitor_thread(emulation_env_config=emulation_env_config,
-                                                                       ip=c.get_ips()[0])
+                                                                       ip=c.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_snort_idses_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -267,7 +271,8 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     status = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
-                        port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=c.get_ips()[0])
+                        port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port,
+                        ip=c.docker_gw_bridge_ip)
                     statuses.append(status)
         return statuses
 
@@ -308,7 +313,7 @@ class SnortIDSController:
                 if ids_image in c.name:
                     # Open a gRPC session
                     with grpc.insecure_channel(
-                            f'{c.get_ips()[0]}:'
+                            f'{c.docker_gw_bridge_ip}:'
                             f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
                         stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                         ids_log_data = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts(
@@ -329,7 +334,7 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    ips.append(c.get_ips()[0])
+                    ips.append(c.docker_gw_bridge_ip)
         return ips
 
     @staticmethod

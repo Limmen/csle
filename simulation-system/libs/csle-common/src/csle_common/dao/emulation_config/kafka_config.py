@@ -125,15 +125,17 @@ class KafkaConfig:
         """
         return KafkaConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "KafkaConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers : List[str]) -> "KafkaConfig":
         """
         Creates a new config for an execution
 
         :param ip_first_octet: the first octet of the IP of the new execution
+        :param physical_servers: the physical servers of the execution
         :return: the new config
         """
         config = self.copy()
-        config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet)
+        config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet,
+                                                                    physical_servers=physical_servers)
         config.resources = config.resources.create_execution_config(ip_first_octet=ip_first_octet)
         config.firewall_config = config.firewall_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config

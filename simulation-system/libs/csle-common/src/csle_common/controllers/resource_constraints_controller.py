@@ -22,9 +22,9 @@ class ResourceConstraintsController:
         if emulation_env_config.sdn_controller_config is not None:
             resource_constraints = resource_constraints + [emulation_env_config.sdn_controller_config.resources]
         for node_resource_config in resource_constraints:
-            ips = node_resource_config.get_ips()
-            ip = ips[0]
-            Logger.__call__().get_logger().info(f"applying resource constraints on node:{ip}")
+            ip = node_resource_config.docker_gw_bridge_ip
+            Logger.__call__().get_logger().info(f"applying resource constraints on node: {ip}, "
+                                                f"{node_resource_config.container_name}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
             for ip_and_net_config in node_resource_config.ips_and_network_configs:

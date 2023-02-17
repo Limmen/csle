@@ -376,23 +376,26 @@ class EmulationEnvConfig:
         """
         return EmulationEnvConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "EmulationEnvConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers : List[str]) -> "EmulationEnvConfig":
         """
         Creates an execution config from the base config
 
         :param ip_first_octet:  the id of the execution
+        :param physical_servers: the list of physical servers
         :return: the created execution config
         """
         config = self.copy()
         config.execution_id = ip_first_octet
-        config.containers_config = config.containers_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.containers_config = config.containers_config.create_execution_config(
+            ip_first_octet=ip_first_octet, physical_servers=physical_servers)
         config.users_config = config.users_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.flags_config = config.flags_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.vuln_config = config.vuln_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.topology_config = config.topology_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.traffic_config = config.traffic_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.resources_config = config.resources_config.create_execution_config(ip_first_octet=ip_first_octet)
-        config.kafka_config = config.kafka_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.kafka_config = config.kafka_config.create_execution_config(ip_first_octet=ip_first_octet,
+                                                                          physical_servers=physical_servers)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.host_manager_config = config.host_manager_config.create_execution_config(ip_first_octet=ip_first_octet)
@@ -403,11 +406,11 @@ class EmulationEnvConfig:
         config.docker_stats_manager_config = config.docker_stats_manager_config.create_execution_config(
             ip_first_octet=ip_first_octet)
         config.elk_config = config.elk_config.create_execution_config(
-            ip_first_octet=ip_first_octet)
+            ip_first_octet=ip_first_octet, physical_servers=physical_servers)
         config.beats_config = config.beats_config.create_execution_config(ip_first_octet=ip_first_octet)
         if config.sdn_controller_config is not None:
             config.sdn_controller_config = config.sdn_controller_config.create_execution_config(
-                ip_first_octet=ip_first_octet)
+                ip_first_octet=ip_first_octet, physical_servers=physical_servers)
         static_attacker_sequences = {}
         for k, v in config.static_attacker_sequences.items():
             static_attacker_sequences[k] = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),

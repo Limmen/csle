@@ -64,11 +64,11 @@ class OVSController:
         """
         for ovs_sw in emulation_env_config.ovs_config.switch_configs:
             Logger.__call__().get_logger().info(f"Configuring OVS bridge on container: {ovs_sw.container_name}")
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ovs_sw.ip)
+            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ovs_sw.docker_gw_bridge_ip)
             bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} set bridge {bridge_name} " \
                   f"protocols={','.join(ovs_sw.openflow_protocols)}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[ovs_sw.ip])
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[ovs_sw.docker_gw_bridge_ip])
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} set-controller {bridge_name} " \
                   f"{ovs_sw.controller_transport_protocol}:{ovs_sw.controller_ip}:{ovs_sw.controller_port}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[ovs_sw.ip])
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[ovs_sw.docker_gw_bridge_ip])

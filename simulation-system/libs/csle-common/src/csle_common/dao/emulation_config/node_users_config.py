@@ -8,15 +8,17 @@ class NodeUsersConfig:
     A DTO object representing the users of a container in an emulation environment
     """
 
-    def __init__(self, ip: str, users: List[User]):
+    def __init__(self, ip: str, users: List[User], docker_gw_bridge_ip : str = ""):
         """
         Initializes the DTO
 
         :param ip: the ip of the node
         :param users: the list of users
+        :param docker_gw_bridge_ip: IP to reach the container from the host network
         """
         self.ip = ip
         self.users = users
+        self.docker_gw_bridge_ip = docker_gw_bridge_ip
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeUsersConfig":
@@ -27,7 +29,8 @@ class NodeUsersConfig:
         :return: the created instance
         """
         obj = NodeUsersConfig(
-            ip=d["ip"], users=list(map(lambda x: User.from_dict(x), d["users"]))
+            ip=d["ip"], users=list(map(lambda x: User.from_dict(x), d["users"])),
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"]
         )
         return obj
 
@@ -38,13 +41,15 @@ class NodeUsersConfig:
         d = {}
         d["ip"] = self.ip
         d["users"] = list(map(lambda x: x.to_dict(), self.users))
+        d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "ip:{}, users:{}".format(self.ip, ",".join(list(map(lambda x: str(x), self.users))))
+        return f"ip:{self.ip}, docker_gw_bridge_ip:{self.docker_gw_bridge_ip}, " \
+               f"users:{','.join(list(map(lambda x: str(x), self.users)))}"
 
     def to_json_str(self) -> str:
         """

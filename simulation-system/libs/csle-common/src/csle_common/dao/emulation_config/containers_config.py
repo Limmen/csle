@@ -144,15 +144,17 @@ class ContainersConfig:
         """
         return ContainersConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "ContainersConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers : List[str]) -> "ContainersConfig":
         """
         Creates a new config for an execution
 
         :param ip_first_octet: the first octet of the IP of the new execution
+        :param physical_servers: the physical servers where the execution will be deployed
         :return: the new config
         """
         config = self.copy()
-        config.containers = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+        config.containers = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet,
+                                                                         physical_servers=physical_servers),
                                      config.containers))
         config.networks = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
                                    config.networks))

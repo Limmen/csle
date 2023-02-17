@@ -30,20 +30,20 @@ class HostController:
         # Start host managers on emulation containers
         for c in emulation_env_config.containers_config.containers:
             # Connect
-            HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Start host manager on kafka container
         HostController.start_host_manager(emulation_env_config=emulation_env_config,
-                                          ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                          ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Start host manager on ELK container
         HostController.start_host_manager(emulation_env_config=emulation_env_config,
-                                          ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                          ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start host manager on SDN controller container
             HostController.start_host_manager(emulation_env_config=emulation_env_config,
-                                              ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                                              ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def start_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -92,20 +92,21 @@ class HostController:
         """
         # Stop host manager on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_host_manager(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.stop_host_manager(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Stop host manager on Kafka container
         HostController.stop_host_manager(emulation_env_config=emulation_env_config,
-                                         ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                         ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Stop host manager on ELK container
         HostController.stop_host_manager(emulation_env_config=emulation_env_config,
-                                         ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                         ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop host manager on the SDN controller container
-            HostController.stop_host_manager(emulation_env_config=emulation_env_config,
-                                             ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+            HostController.stop_host_manager(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -138,20 +139,21 @@ class HostController:
         """
         # Start host monitor on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
+                                                     ip=c.docker_gw_bridge_ip)
 
         # Start host monitor on the Kafka container
         HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                 ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                                 ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
         # Start host monitor on the ELK container
         HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                 ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                                 ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start host monitor on the SDN controller container
             HostController.start_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def start_filebeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -278,20 +280,20 @@ class HostController:
         """
         # Stop filebeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_filebeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.stop_filebeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Stop filebeat on the kafka container
         HostController.stop_filebeat(emulation_env_config=emulation_env_config,
-                                     ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Stop filebeat on the ELK container
         HostController.stop_filebeat(emulation_env_config=emulation_env_config,
-                                     ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                     ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop filebeat on the SDN controller container
             HostController.stop_filebeat(emulation_env_config=emulation_env_config,
-                                         ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                                         ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -304,20 +306,20 @@ class HostController:
         """
         # Stop packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_packetbeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.stop_packetbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Stop packetbeat on the kafka container
         HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                       ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Stop packetbeat on the ELK container
         HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                       ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop packetbeat on the SDN controller container
             HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
-                                           ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                                           ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_metricbeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -330,20 +332,21 @@ class HostController:
         """
         # Stop metricbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_metricbeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.stop_metricbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Stop metricbeat on the kafka container
         HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                       ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Stop metricbeat on the ELK container
         HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                       ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop metricbeat on the SDN controller container
-            HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
-                                           ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+            HostController.stop_metricbeat(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -356,20 +359,20 @@ class HostController:
         """
         # Stop heartbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_heartbeat(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.stop_heartbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Stop heartbeat on the kafka container
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                      ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                      ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Stop heartbeat on the ELK container
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                      ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                      ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop heartbeat on the SDN controller container
             HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                          ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                                          ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
@@ -497,7 +500,7 @@ class HostController:
                     f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_host_monitor(
-                    stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                    stub=stub, kafka_ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
                     kafka_port=emulation_env_config.kafka_config.kafka_port,
                     time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
@@ -619,16 +622,16 @@ class HostController:
         :param container: the container
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
         kafka_topics = list(map(lambda topic: topic.name, emulation_env_config.kafka_config.topics))
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{container.get_ips()[0]}:'
+                f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring filebeat on {container.get_ips()[0]}.")
+            Logger.__call__().get_logger().info(f"Configuring filebeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_filebeat(
                 stub=stub, log_files_paths=node_beats_config.log_files_paths,
                 kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
@@ -652,14 +655,14 @@ class HostController:
         :param container: the container
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{container.get_ips()[0]}:'
+                f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring packetbeat on {container.get_ips()[0]}.")
+            Logger.__call__().get_logger().info(f"Configuring packetbeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_packetbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -677,15 +680,15 @@ class HostController:
         :param container: the container
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{container.get_ips()[0]}:'
+                f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring metricbeat on {container.get_ips()[0]}.")
+            Logger.__call__().get_logger().info(f"Configuring metricbeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_metricbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -707,15 +710,15 @@ class HostController:
         :param container: the container
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.get_ips()[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{container.get_ips()[0]}:'
+                f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring heartbeat on {container.get_ips()[0]}.")
+            Logger.__call__().get_logger().info(f"Configuring heartbeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_heartbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -734,21 +737,21 @@ class HostController:
         """
         # Stop host monitor threads on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
 
         # Stop host monitor threads on the kafka container
         HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                ip=emulation_env_config.kafka_config.container.get_ips()[0])
+                                                ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Stop host monitor threads on the ELK container
         HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                ip=emulation_env_config.elk_config.container.get_ips()[0])
+                                                ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop host monitor threads on the SDN controller container
             HostController.stop_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0])
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -860,27 +863,27 @@ class HostController:
         # Get statuses of emulation containers
         for c in emulation_env_config.containers_config.containers:
             status = HostController.get_host_monitor_thread_status_by_port_and_ip(
-                ip=c.get_ips()[0], port=emulation_env_config.host_manager_config.host_manager_port)
-            statuses.append((status, c.get_ips()[0]))
+                ip=c.docker_gw_bridge_ip, port=emulation_env_config.host_manager_config.host_manager_port)
+            statuses.append((status, c.docker_gw_bridge_ip))
 
         # Get status of kafka container
         status = HostController.get_host_monitor_thread_status_by_port_and_ip(
-            ip=emulation_env_config.kafka_config.container.get_ips()[0],
+            ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.host_manager_config.host_manager_port)
-        statuses.append((status, emulation_env_config.kafka_config.container.get_ips()[0]))
+        statuses.append((status, emulation_env_config.kafka_config.container.docker_gw_bridge_ip))
 
         # Get status of ELK container
         status = HostController.get_host_monitor_thread_status_by_port_and_ip(
-            ip=emulation_env_config.elk_config.container.get_ips()[0],
+            ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.host_manager_config.host_manager_port)
-        statuses.append((status, emulation_env_config.elk_config.container.get_ips()[0]))
+        statuses.append((status, emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
         if emulation_env_config.sdn_controller_config is not None:
             # Get status of SDN controller container
             status = HostController.get_host_monitor_thread_status_by_port_and_ip(
-                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                 port=emulation_env_config.host_manager_config.host_manager_port)
-            statuses.append((status, emulation_env_config.sdn_controller_config.container.get_ips()[0]))
+            statuses.append((status, emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
 
         return statuses
 
@@ -920,20 +923,20 @@ class HostController:
         # Get log data of emulation containers
         for c in emulation_env_config.containers_config.containers:
             host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-                ip=c.get_ips()[0], port=emulation_env_config.host_manager_config.host_manager_port,
+                ip=c.docker_gw_bridge_ip, port=emulation_env_config.host_manager_config.host_manager_port,
                 failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
             host_metrics_data_list.append(host_metrics_data)
 
         # Get log data from kafka container
         host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-            ip=emulation_env_config.kafka_config.container.get_ips()[0],
+            ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.host_manager_config.host_manager_port,
             failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
         host_metrics_data_list.append(host_metrics_data)
 
         # Get log data from ELK container
         host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-            ip=emulation_env_config.elk_config.container.get_ips()[0],
+            ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.host_manager_config.host_manager_port,
             failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
         host_metrics_data_list.append(host_metrics_data)
@@ -941,7 +944,7 @@ class HostController:
         if emulation_env_config.sdn_controller_config is not None:
             # Get log data from SDN controller container
             host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-                ip=emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                 port=emulation_env_config.host_manager_config.host_manager_port,
                 failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
             host_metrics_data_list.append(host_metrics_data)
@@ -981,17 +984,17 @@ class HostController:
 
         # Get ips of emulation containers
         for c in emulation_env_config.containers_config.containers:
-            ips.append(c.get_ips()[0])
+            ips.append(c.docker_gw_bridge_ip)
 
         # Get ip of Kafka container
-        ips.append(emulation_env_config.kafka_config.container.get_ips()[0])
+        ips.append(emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
         # Get ip of ELK container
-        ips.append(emulation_env_config.elk_config.container.get_ips()[0])
+        ips.append(emulation_env_config.elk_config.container.docker_gw_bridge_ip)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Get ip of SDN controller container
-            ips.append(emulation_env_config.sdn_controller_config.container.get_ips()[0])
+            ips.append(emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
         return ips
 

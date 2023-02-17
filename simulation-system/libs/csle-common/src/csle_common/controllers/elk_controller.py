@@ -28,7 +28,7 @@ class ELKController:
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                    ip=emulation_env_config.elk_config.container.get_ips()[0],
+                                    ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
         # Check if elk_manager is already running
@@ -36,19 +36,19 @@ class ELKController:
                constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
-            conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+            conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_ELK_MANAGER not in str(o):
 
             Logger.__call__().get_logger().info(f"Starting elk manager on node: "
-                                                f"{emulation_env_config.elk_config.container.get_ips()[0]}")
+                                                f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
                    constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+                conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
             # Start the elk_manager
             cmd = constants.COMMANDS.START_ELK_MANAGER.format(
@@ -57,7 +57,8 @@ class ELKController:
                 emulation_env_config.elk_config.elk_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+                conn=emulation_env_config.get_connection(
+                    ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
             time.sleep(2)
 
     @staticmethod
@@ -70,18 +71,19 @@ class ELKController:
         """
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                    ip=emulation_env_config.elk_config.container.get_ips()[0],
+                                    ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
         Logger.__call__().get_logger().info(f"Stopping elk manager on node: "
-                                            f"{emulation_env_config.elk_config.container.get_ips()[0]}")
+                                            f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
         # Stop background job
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
                constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
-            conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+            conn=emulation_env_config.get_connection(
+                ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
         time.sleep(2)
 
@@ -96,7 +98,7 @@ class ELKController:
         """
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
         elk_dto = ELKController.get_elk_status_by_port_and_ip(
-            ip=emulation_env_config.elk_config.container.get_ips()[0],
+            ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.elk_config.elk_manager_port)
         return elk_dto
 
@@ -128,12 +130,12 @@ class ELKController:
         :return: a ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Stopping ELK stack on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_elk(stub)
@@ -149,12 +151,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting ELK stack on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Starting ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_elk(stub)
@@ -170,12 +172,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_elastic(stub)
@@ -191,12 +193,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting kibana on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Starting kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_kibana(stub)
@@ -212,12 +214,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting logstash on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Starting logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_logstash(stub)
@@ -233,12 +235,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Stopping elasticsearch on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_elastic(stub)
@@ -254,12 +256,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Stopping kibana on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_kibana(stub)
@@ -275,12 +277,12 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Stopping logstash on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
+            f"Stopping logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.elk_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_logstash(stub)
@@ -294,7 +296,7 @@ class ELKController:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
-        return [emulation_env_config.elk_config.container.get_ips()[0]]
+        return [emulation_env_config.elk_config.container.docker_gw_bridge_ip]
 
     @staticmethod
     def get_elk_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:

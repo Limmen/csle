@@ -1412,6 +1412,7 @@ class DOCKER:
     CREATE_USERS_SCRIPT = "./create_users.py"
     CREATE_TRAFFIC_GENERATORS_SCRIPT = "./create_traffic_generators.py"
     LIST_NETWORKS_CMD = "docker network ls"
+    INSPECT_DOCKER_GWBRIDGE = "docker network inspect docker_gwbridge"
     NETWORK_CONNECT = "docker network connect"
     LIST_RUNNING_CONTAINERS_CMD = "docker ps -q"
     INSPECT_CONTAINER_CONFIG_CMD = "docker inspect"
@@ -1429,6 +1430,8 @@ class DOCKER:
     IP_PREFIX_LEN_INFO = "IPPrefixLen"
     HOSTNAME_INFO = "Hostname"
     CONTAINERS_DIR = "containers"
+    CONTAINERS_KEY = "Containers"
+    IPV4_KEY = "IPv4Address"
     CONTAINER_MAKEFILE_TEMPLATE_NAME = "Container_Makefile_template"
     CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE = "/../../../common/"
     MAKEFILE_TEMPLATE = "Makefile_template"
@@ -1445,6 +1448,9 @@ class DOCKER:
         "docker container start $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nstop:\n\t" \
         "-docker stop $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nclean: stop\n\t" \
         "-docker rm $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)"
+    BRIDGE_NETWORK_DRIVER = "bridge"
+    OVERLAY_NETWORK_DRIVER = "overlay"
+    ATTACHABLE_NETWORK_FLAG = "--attachable"
 
 
 class CSLE:
