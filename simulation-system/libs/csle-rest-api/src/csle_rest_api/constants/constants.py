@@ -37,7 +37,6 @@ class MGMT_WEBAPP:
     SDN_CONTROLLERS_PAGE_RESOURCE = "sdn-controllers-page"
     CONTROL_PLANE_PAGE_RESOURCE = "control-plane-page"
     USER_ADMIN_PAGE_RESOURCE = "user-admin-page"
-    HOST_TERMINAL_PAGE_RESOURCE = "host-terminal-page"
     CONTAINER_TERMINAL_PAGE_RESOURCE = "container-terminal-page"
     SYSTEM_ADMIN_PAGE_RESOURCE = "system-admin-page"
     LOGS_ADMIN_PAGE_RESOURCE = "logs-admin-page"
@@ -89,7 +88,6 @@ class MGMT_WEBAPP:
     DOCKER_STATS_MONITOR_SUBRESOURCE = "docker-stats-monitor"
     CREATE_SUBRESOURCE = "create"
     REGISTRATION_ALLOWED_SUBRESOURCE = "registration-allowed"
-    HOST_TERMINAL_ALLOWED_SUBRESOURCE = "host-terminal-allowed"
     CONTAINER_SUBRESOURCE = "container"
     SWITCHES_SUBRESOURCE = "switches"
     SDN_CONTROLLER_LOCAL_PORT = "sdn-controller-local-port"
@@ -151,15 +149,12 @@ class MGMT_WEBAPP:
     PROMETHEUS_PORT_PROPERTY = "prometheusPort"
     PGADMIN_PORT_PROPERTY = "pgAdminPort"
     REGISTRATION_ALLOWED_PROPERTY = "registration_allowed"
-    HOST_TERMINAL_ALLOWED_PROPERTY = "host_terminal_allowed_property"
     VERSION_PROPERTY = "version"
     OUTPUT_PROPERTY = "output"
     INPUT_PROPERTY = "input"
     ROWS_PROPERTY = "rows"
     COLS_PROPERTY = "cols"
     WS_CONNECT_MSG = "connect"
-    WS_HOST_TERMINAL_OUTPUT_MSG = "host-terminal-output"
-    WS_HOST_TERMINAL_INPUT_MSG = "host-terminal-input"
     WS_RESIZE_MSG = "resize"
     WS_CONTAINER_TERMINAL_OUTPUT_MSG = "container-terminal-output"
     WS_CONTAINER_TERMINAL_INPUT_MSG = "container-terminal-input"
@@ -230,11 +225,7 @@ class MGMT_WEBAPP:
     KIBANA_TUNNEL_BASE_PORT = 17000
     RYU_TUNNELS_DICT = {}
     RYU_TUNNEL_BASE_PORT = 18000
-    WS_HOST_TERMINAL_NAMESPACE = "host-terminal"
     WS_CONTAINER_TERMINAL_NAMESPACE = "container-terminal"
-    HOST_TERMINAL_FD = "host-terminal-fd"
-    HOST_TERMINAL_CHILD_PID = "host-terminal-child-pid"
-    HOST_TERMINAL_CMD = "host-terminal-cmd"
     CONTAINER_TERMINAL_SSH_SHELL = "container-terminal-ssh-shell"
     CONTAINER_TERMINAL_SSH_CONNECTION = "container-terminal-ssh-connection"
 
