@@ -983,6 +983,7 @@ class FILE_PATTERNS:
     XML_FILE_SUFFIX = ".xm"
     CSV_SUFFIX = ".csv"
     LOG_SUFFIX = ".log"
+    GZ_SUFFIX = ".gz"
 
 
 class NIKTO:
