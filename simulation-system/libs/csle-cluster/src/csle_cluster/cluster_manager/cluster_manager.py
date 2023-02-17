@@ -359,7 +359,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Stopped the Docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
-    def get_log_file(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetLogFileMsg,
+    def getLogFile(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetLogFileMsg,
                         context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -377,7 +377,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = data.split("\n")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_flask_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetFlaskLogsMsg,
+    def getFlaskLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetFlaskLogsMsg,
                      context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -398,7 +398,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 logs = tail
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_postgresql_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
+    def getPostrgreSQLLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
                        context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -421,7 +421,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                     logs = logs + tail
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_docker_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
+    def getDockerLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
                             context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -440,7 +440,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_nginx_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg,
+    def getNginxLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg,
                         context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -463,7 +463,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                     logs = logs + tail
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_grafana_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
+    def getGrafanaLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
                        context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -482,7 +482,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_pgadmin_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPgAdminLogsMsg,
+    def getPgAdminLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPgAdminLogsMsg,
                          context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -501,7 +501,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_cadvisor_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCAdvisorLogsMsg,
+    def getCadvisorLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCAdvisorLogsMsg,
                          context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -520,7 +520,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_node_exporter_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeExporterLogsMsg,
+    def getNodeExporterLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeExporterLogsMsg,
                           context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -541,7 +541,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 logs = tail
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_prometheus_logs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
+    def getPrometheusLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
                                context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -562,7 +562,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 logs = tail
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_docker_statsmanager_logs(
+    def getDockerStatsManagerLogs(
             self,  request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagerLogsMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -583,7 +583,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 logs = tail
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
-    def get_csle_log_files(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
+    def getCsleLogFiles(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
                             context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
@@ -594,7 +594,6 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info(f"Getting the CSLE log file names")
-        logging.info(f"Getting log file: {request.name}")
         config = Config.get_current_config()
         path = config.default_log_dir
         log_files = []
