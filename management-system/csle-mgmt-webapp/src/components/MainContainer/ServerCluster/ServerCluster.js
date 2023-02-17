@@ -682,7 +682,7 @@ const ServerCluster = (props) => {
                 <></>)
         } else {
             return (
-                <a className="grafanfaStatus" href={props.node.grafanaUrl}>
+                <a className="grafanaStatus" href={props.node.grafanaUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -729,12 +729,12 @@ const ServerCluster = (props) => {
                 <></>)
         } else {
             return (
-                <a className="grafanfaStatus" href={props.node.nginxUrl}>
+                <a className="grafanaStatus" href={props.node.nginxUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderNginxTooltip()}>
-                        <img src={NginxImg} alt="Nginx" className="img-fluid" width="35px" height="35px"/>
+                        <img src={NginxImg} alt="Nginx" className="img-fluid grafanaImg" width="35px" height="35px"/>
                     </OverlayTrigger>
                 </a>
             )
@@ -777,12 +777,12 @@ const ServerCluster = (props) => {
                 <></>)
         } else {
             return (
-                <a className="grafanfaStatus" href={props.node.postgreSQLUrl}>
+                <a className="grafanaStatus" href={props.node.postgreSQLUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPostgreSQLTooltip()}>
-                        <img src={PostgresImg} alt="PostgreSQL" className="img-fluid" width="40px" height="40px"/>
+                        <img src={PostgresImg} alt="PostgreSQL" className="img-fluid grafanaImg" width="40px" height="40px"/>
                     </OverlayTrigger>
                 </a>
             )
@@ -824,12 +824,12 @@ const ServerCluster = (props) => {
                 <></>)
         } else {
             return (
-                <a className="grafanfaStatus" href={props.node.dockerUrl}>
+                <a className="grafanaStatus" href={props.node.dockerUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderDockerTooltip()}>
-                        <img src={DockerImg} alt="Docker Engine" className="img-fluid" width="40px" height="40px"/>
+                        <img src={DockerImg} alt="Docker Engine" className="img-fluid grafanaImg" width="40px" height="40px"/>
                     </OverlayTrigger>
                 </a>
             )
@@ -871,7 +871,7 @@ const ServerCluster = (props) => {
                 <></>)
         } else {
             return (
-                <a className="grafanfaStatus" href={props.node.flaskUrl}>
+                <a className="grafanaStatus" href={props.node.flaskUrl}>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
@@ -1092,7 +1092,7 @@ const ServerCluster = (props) => {
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderPgAdminTooltip()}>
-                        <img src={pgAdminImg} alt="Grafana" className="img-fluid" width="90px" height="90px"/>
+                        <img src={pgAdminImg} alt="Grafana" className="img-fluid grafanaImg" width="90px" height="90px"/>
                     </OverlayTrigger>
                 </a>
             )
