@@ -37,6 +37,34 @@ service ClusterManager {
   rpc getLogFile(GetLogFileMsg) returns (LogsDTO) {}
   rpc startContainersInExecution(StartContainersInExecutionMsg) returns (OperationOutcomeDTO) {}
   rpc attachContainersInExecutionToNetworks(AttachContainersToNetworksInExecutionMsg) returns (OperationOutcomeDTO) {}
+  rpc installLibraries(InstallLibrariesMsg) returns (OperationOutcomeDTO) {}
+  rpc applyKafkaConfig(ApplyKafkaConfigMsg) returns (OperationOutcomeDTO) {}
+  rpc startRyu(StartRyuMsg) returns (OperationOutcomeDTO) {}
+  rpc applyResourceConstraints(ApplyResouceConstraintsMsg) returns (OperationOutcomeDTO) {}
+  rpc createOvsSwitches(CreateOvsSwitchesMsg) returns (OperationOutcomeDTO) {}
+  rpc pingExecution(PingExecutionMsg) returns (OperationOutcomeDTO) {}
+  rpc configureOvs(ConfigureOvsMsg) returns (OperationOutcomeDTO) {}
+  rpc startSdnControllerMonitor(StartSdnControllerMonitorMsg) returns (OperationOutcomeDTO) {}
+  rpc createUsers(CreateUsersMsg) returns (OperationOutcomeDTO) {}
+  rpc createVulnerabilities(CreateVulnsMsg) returns (OperationOutcomeDTO) {}
+  rpc createFlags(CreateFlagsMsg) returns (OperationOutcomeDTO) {}
+  rpc createTopology(CreateTopologyMsg) returns (OperationOutcomeDTO) {}
+  rpc startTrafficManagers(StartTrafficManagersMsg) returns (OperationOutcomeDTO) {}
+  rpc startTrafficGenerators(StartTrafficGeneratorsMsg) returns (OperationOutcomeDTO) {}
+  rpc startClientPopulation(StartClientPopulationMsg) returns (OperationOutcomeDTO) {}
+  rpc startKafkaClientProducer(StartKafkaClientProducerMsg) returns (OperationOutcomeDTO) {}
+  rpc startSnortIdses(StartSnortIdsesMsg) returns (OperationOutcomeDTO) {}
+  rpc startOssecIdses(StartOSSECIdsesMsg) returns (OperationOutcomeDTO) {}
+  rpc startElkStack(StartElkStackMsg) returns (OperationOutcomeDTO) {}
+  rpc startHostManagers(StartHostManagersMsg) returns (OperationOutcomeDTO) {}
+  rpc applyFileBeatsConfig(ApplyFileBeatConfigsMsg) returns (OperationOutcomeDTO) {}
+  rpc applyPacketBeatsConfig(ApplyPacketBeatConfigsMsg) returns (OperationOutcomeDTO) {}
+  rpc applyMetricBeatsConfig(ApplyMetricBeatConfigsMsg) returns (OperationOutcomeDTO) {}
+  rpc applyHeartBeatsConfig(ApplyHeartBeatConfigsMsg) returns (OperationOutcomeDTO) {}
+  rpc startFilebeats(StartFileBeatsMsg) returns (OperationOutcomeDTO) {}
+  rpc startPacketbeats(StartPacketBeatsMsg) returns (OperationOutcomeDTO) {}
+  rpc startMetricbeats(StartMetricBeatsMsg) returns (OperationOutcomeDTO) {}
+  rpc startHeartbeats(StartHeartBeatsMsg) returns (OperationOutcomeDTO) {}
 }
 
 // Message that the client sends to get the log file names in the /var/log/csle directory
@@ -55,6 +83,174 @@ message StartContainersInExecutionMsg {
 
 // Message that the client sends when requesting to attach containers of a given emulation execution to networks
 message AttachContainersToNetworksInExecutionMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to install CSLE libraries on containers that are part of an execution
+message InstallLibrariesMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply the kafka config to a given execution
+message ApplyKafkaConfigMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply start the Ryu controller of an execution
+message StartRyuMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply resource constraints to containers of an emulation
+message ApplyResouceConstraintsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to create OvsSwitches
+message CreateOvsSwitchesMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to test ping between containers in an execution
+message PingExecutionMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to configure OVS on an execution
+message ConfigureOvsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the SDN controller monitor in an execution
+message StartSdnControllerMonitorMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to create users of an execution
+message CreateUsersMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to create vulnerabilities of an execution
+message CreateVulnsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to create flags of an execution
+message CreateFlagsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to create the topology of an execution
+message CreateTopologyMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start traffic managers
+message StartTrafficManagersMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start traffic generators
+message StartTrafficGeneratorsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the client population
+message StartClientPopulationMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the Kafka producer
+message StartKafkaClientProducerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the Snort IDSes
+message StartSnortIdsesMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the OSSEC IDSes
+message StartOSSECIdsesMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the ELK stack
+message StartElkStackMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the Host managers
+message StartHostManagersMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply the filebeat configurations
+message ApplyFileBeatConfigsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply the packetbeat configurations
+message ApplyPacketBeatConfigsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply the metricbeat configurations
+message ApplyMetricBeatConfigsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to apply the heartbeat configurations
+message ApplyHeartBeatConfigsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the filebeats of an execution
+message StartFileBeatsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the packetbeats of an execution
+message StartPacketBeatsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the metricbeats of an execution
+message StartMetricBeatsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the heartbeats of an execution
+message StartHeartBeatsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
