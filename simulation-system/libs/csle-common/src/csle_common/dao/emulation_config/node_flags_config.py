@@ -8,17 +8,20 @@ class NodeFlagsConfig:
     A DTO object representing the set of flags at a specific container in an emulation environment
     """
 
-    def __init__(self, ip: str, flags: List[Flag], docker_gw_bridge_ip : str = ""):
+    def __init__(self, ip: str, flags: List[Flag], docker_gw_bridge_ip : str = "", physical_host_ip : str = ""):
         """
         Initializes the DTO
 
         :param ip: the ip of the node
         :param flags: the list of flags
         :param docker_gw_bridge_ip: IP to reach the container from the host network
+        :param physical_host_ip: IP of the physical host where the container is running
         """
         self.ip = ip
         self.flags = flags
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
+        self.physical_host_ip = physical_host_ip
+
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -28,6 +31,7 @@ class NodeFlagsConfig:
         d["ip"] = self.ip
         d["flags"] = list(map(lambda x: x.to_dict(), self.flags))
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     @staticmethod
@@ -39,14 +43,14 @@ class NodeFlagsConfig:
         :return: the created instance
         """
         return NodeFlagsConfig(ip=d["ip"], flags=list(map(lambda x: Flag.from_dict(x), d["flags"])),
-                               docker_gw_bridge_ip=d["docker_gw_bridge_ip"])
+                               docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"])
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
         return f"ip:{self.ip}, docker_gw_bridge_ip:{self.docker_gw_bridge_ip}, " \
-               f"flags:{','.join(list(map(lambda x: str(x), self.flags)))}"
+               f"flags:{','.join(list(map(lambda x: str(x), self.flags)))}, physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """

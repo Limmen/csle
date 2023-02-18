@@ -9,7 +9,7 @@ class NodeTrafficConfig:
 
     def __init__(self, ip: str, commands: List[str], traffic_manager_log_file: str, traffic_manager_log_dir: str,
                  traffic_manager_max_workers: int, traffic_manager_port: int = 50043,
-                 docker_gw_bridge_ip : str = ""):
+                 docker_gw_bridge_ip : str = "", physical_host_ip : str = ""):
         """
         Creates a NodeTrafficConfig DTO Object
 
@@ -20,6 +20,7 @@ class NodeTrafficConfig:
         :param traffic_manager_max_workers: the maximum number of gRPC workers for the traffic manager
         :param traffic_manager_port: the port of the traffic manager
         :param docker_gw_bridge_ip: IP to reach the container from the host network
+        :param physical_host_ip: IP of the physical host where the container is running
         """
         self.ip = ip
         self.commands = commands
@@ -28,6 +29,7 @@ class NodeTrafficConfig:
         self.traffic_manager_log_dir = traffic_manager_log_dir
         self.traffic_manager_max_workers = traffic_manager_max_workers
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
+        self.physical_host_ip = physical_host_ip
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeTrafficConfig":
@@ -42,7 +44,8 @@ class NodeTrafficConfig:
             traffic_manager_max_workers=d["traffic_manager_max_workers"],
             traffic_manager_log_file=d["traffic_manager_log_file"],
             traffic_manager_log_dir=d["traffic_manager_log_dir"],
-            docker_gw_bridge_ip=d["docker_gw_bridge_ip"]
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"],
+            physical_host_ip=d["physical_host_ip"]
         )
         return obj
 
@@ -58,6 +61,7 @@ class NodeTrafficConfig:
         d["traffic_manager_log_file"] = self.traffic_manager_log_file
         d["traffic_manager_log_dir"] = self.traffic_manager_log_dir
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     def __str__(self) -> str:
@@ -68,7 +72,8 @@ class NodeTrafficConfig:
                f"traffic_manager_log_file: {self.traffic_manager_log_file}, " \
                f"traffic_manager_max_workers: {self.traffic_manager_max_workers}, " \
                f"traffic_manager_log_file_dir: {self.traffic_manager_log_dir}," \
-               f" docker_gw_bridge_ip:{self.docker_gw_bridge_ip}"
+               f" docker_gw_bridge_ip:{self.docker_gw_bridge_ip}," \
+               f" physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """

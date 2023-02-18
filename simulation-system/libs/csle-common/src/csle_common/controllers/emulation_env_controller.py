@@ -127,52 +127,73 @@ class EmulationEnvController:
         emulation_env_config = execution.emulation_env_config
         emulation_env_config.kafka_config.resources.docker_gw_bridge_ip = \
             emulation_env_config.kafka_config.container.docker_gw_bridge_ip
+        emulation_env_config.kafka_config.resources.physical_host_ip = \
+            emulation_env_config.kafka_config.container.physical_host_ip
         emulation_env_config.elk_config.resources.docker_gw_bridge_ip = \
             emulation_env_config.elk_config.container.docker_gw_bridge_ip
+        emulation_env_config.elk_config.resources.physical_host_ip = \
+            emulation_env_config.elk_config.container.physical_host_ip
         if emulation_env_config.sdn_controller_config is not None:
             emulation_env_config.sdn_controller_config.resources.docker_gw_bridge_ip = \
                 emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip
+            emulation_env_config.sdn_controller_config.resources.physical_host_ip = \
+                emulation_env_config.sdn_controller_config.container.physical_host_ip
         for resource_config in emulation_env_config.resources_config.node_resources_configurations:
             for container in emulation_env_config.containers_config.containers:
                 if container.get_readable_name() == resource_config.container_name:
                     resource_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                    resource_config.physical_host_ip = container.physical_host_ip
         for ovs_switch in emulation_env_config.ovs_config.switch_configs:
             for container in emulation_env_config.containers_config.containers:
                 if container.get_readable_name() == ovs_switch.container_name:
                     ovs_switch.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                    ovs_switch.physical_host_ip = container.physical_host_ip
         for user_config in emulation_env_config.users_config.users_configs:
             for container in emulation_env_config.containers_config.containers:
                 if user_config.ip in container.get_ips():
                     user_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                    user_config.physical_host_ip = container.physical_host_ip
         for vuln_config in emulation_env_config.vuln_config.node_vulnerability_configs:
             for container in emulation_env_config.containers_config.containers:
                 if vuln_config.ip in container.get_ips():
                     vuln_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                    vuln_config.physical_host_ip = container.physical_host_ip
         for flags_config in emulation_env_config.flags_config.node_flag_configs:
             for container in emulation_env_config.containers_config.containers:
                 if flags_config.ip in container.get_ips():
                     flags_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                    flags_config.physical_host_ip = container.physical_host_ip
         for node_fw_config in emulation_env_config.topology_config.node_configs:
             for container in emulation_env_config.containers_config.containers:
                 for ip in container.get_ips():
                     if ip in node_fw_config.get_ips():
                         node_fw_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                        node_fw_config.physical_host_ip = container.physical_host_ip
                         break
         emulation_env_config.kafka_config.firewall_config.docker_gw_bridge_ip = \
             emulation_env_config.kafka_config.container.docker_gw_bridge_ip
+        emulation_env_config.kafka_config.firewall_config.physical_host_ip = \
+            emulation_env_config.kafka_config.container.physical_host_ip
         emulation_env_config.elk_config.firewall_config.docker_gw_bridge_ip = \
             emulation_env_config.elk_config.container.docker_gw_bridge_ip
+        emulation_env_config.elk_config.firewall_config.physical_host_ip = \
+            emulation_env_config.elk_config.container.physical_host_ip
         if emulation_env_config.sdn_controller_config is not None:
             emulation_env_config.sdn_controller_config.firewall_config.docker_gw_bridge_ip = \
                 emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip
+            emulation_env_config.sdn_controller_config.firewall_config.physical_host_ip = \
+                emulation_env_config.sdn_controller_config.container.physical_host_ip
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
             for container in emulation_env_config.containers_config.containers:
                 if node_traffic_config.ip in container.get_ips():
                     node_traffic_config.docker_gw_bridge_ip = container.docker_gw_bridge_ip
+                    node_traffic_config.physical_host_ip = container.physical_host_ip
         for container in emulation_env_config.containers_config.containers:
             if emulation_env_config.traffic_config.client_population_config.ip in container.get_ips():
                 emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip = \
                     container.docker_gw_bridge_ip
+                emulation_env_config.traffic_config.client_population_config.physical_host_ip = \
+                    container.physical_host_ip
         execution.emulation_env_config = emulation_env_config
         MetastoreFacade.update_emulation_execution(emulation_execution=execution,
                                                    ip_first_octet=execution.ip_first_octet,

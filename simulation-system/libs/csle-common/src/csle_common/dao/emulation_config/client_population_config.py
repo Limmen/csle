@@ -14,7 +14,7 @@ class ClientPopulationConfig:
                  client_manager_log_dir: str, client_manager_max_workers: int,
                  num_commands: int = 5,
                  client_time_step_len_seconds: int = 1, time_scaling_factor: float = 0.01,
-                 period_scaling_factor: float = 20, docker_gw_bridge_ip : str = ""):
+                 period_scaling_factor: float = 20, docker_gw_bridge_ip : str = "", physical_host_ip : str = ""):
         """
         Creates a ClientPopulationConfig DTO Object
 
@@ -30,6 +30,7 @@ class ClientPopulationConfig:
         :param client_manager_log_dir: the log dir of the client manager
         :param client_manager_max_workers: the maximum number of GRPC workers for the client manager
         :param docker_gw_bridge_ip: IP to reach the container from the host network
+        :param physical_host_ip: IP of the physical host where the container is running
         """
         self.networks = networks
         self.ip = ip
@@ -45,6 +46,7 @@ class ClientPopulationConfig:
         self.client_manager_log_file = client_manager_log_file
         self.client_manager_max_workers = client_manager_max_workers
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
+        self.physical_host_ip = physical_host_ip
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ClientPopulationConfig":
@@ -63,7 +65,7 @@ class ClientPopulationConfig:
             period_scaling_factor=d["period_scaling_factor"], time_scaling_factor=d["time_scaling_factor"],
             client_manager_log_dir=d["client_manager_log_dir"], client_manager_log_file=d["client_manager_log_file"],
             client_manager_max_workers=d["client_manager_max_workers"],
-            docker_gw_bridge_ip=d["docker_gw_bridge_ip"]
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"]
         )
         return obj
 
@@ -79,7 +81,7 @@ class ClientPopulationConfig:
             num_commands=0, client_time_step_len_seconds=self.client_time_step_len_seconds,
             period_scaling_factor=self.period_scaling_factor, time_scaling_factor=self.time_scaling_factor,
             client_manager_log_file="client_manager.log", client_manager_log_dir="/", client_manager_max_workers=10,
-            docker_gw_bridge_ip=self.docker_gw_bridge_ip
+            docker_gw_bridge_ip=self.docker_gw_bridge_ip, physical_host_ip=self.physical_host_ip
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -101,6 +103,7 @@ class ClientPopulationConfig:
         d["client_manager_log_dir"] = self.client_manager_log_dir
         d["client_manager_max_workers"] = self.client_manager_max_workers
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     def __str__(self) -> str:
@@ -116,7 +119,7 @@ class ClientPopulationConfig:
                f"client_manager_log_file: {self.client_manager_log_file}, " \
                f"client_manager_log_dir: {self.client_manager_log_dir}, " \
                f"client_manager_max_workers: {self.client_manager_max_workers}, " \
-               f"docker_gw_bridge_ip:{self.docker_gw_bridge_ip}"
+               f"docker_gw_bridge_ip:{self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """

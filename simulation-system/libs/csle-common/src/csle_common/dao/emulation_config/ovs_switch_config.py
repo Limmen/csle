@@ -8,7 +8,8 @@ class OvsSwitchConfig:
     """
 
     def __init__(self, container_name: str, ip: str, openflow_protocols: List[str], controller_ip: str,
-                 controller_port: int, controller_transport_protocol: str, docker_gw_bridge_ip : str = ""):
+                 controller_port: int, controller_transport_protocol: str, docker_gw_bridge_ip : str = "",
+                 physical_host_ip : str = ""):
         """
         Initializes the DTO
 
@@ -19,6 +20,7 @@ class OvsSwitchConfig:
         :param controller_port: the port of the SDN controller
         :param controller_transport_protocol: the transport protocol of the controller
         :param docker_gw_bridge_ip: IP to reach the container from the host network
+        :param physical_host_ip: IP of the physical host where the container is running
         """
         self.container_name = container_name
         self.ip = ip
@@ -27,6 +29,7 @@ class OvsSwitchConfig:
         self.controller_port = controller_port
         self.controller_transport_protocol = controller_transport_protocol
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
+        self.physical_host_ip = physical_host_ip
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "OvsSwitchConfig":
@@ -40,7 +43,8 @@ class OvsSwitchConfig:
                               openflow_protocols=d["openflow_protocols"], controller_ip=d["controller_ip"],
                               controller_port=d["controller_port"],
                               controller_transport_protocol=d["controller_transport_protocol"],
-                              docker_gw_bridge_ip=d["docker_gw_bridge_ip"])
+                              docker_gw_bridge_ip=d["docker_gw_bridge_ip"],
+                              physical_host_ip=d["physical_host_ip"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -55,6 +59,7 @@ class OvsSwitchConfig:
         d["controller_port"] = self.controller_port
         d["controller_transport_protocol"] = self.controller_transport_protocol
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     def __str__(self) -> str:
@@ -64,7 +69,7 @@ class OvsSwitchConfig:
         return f"ip:{self.ip}, container_name: {self.container_name}, openflow_protocols: {self.openflow_protocols}, " \
                f"controller_ip: {self.controller_ip}, controller_port: {self.controller_port}, " \
                f"controller_transport_protocol: {self.controller_transport_protocol}, " \
-               f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}"
+               f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """

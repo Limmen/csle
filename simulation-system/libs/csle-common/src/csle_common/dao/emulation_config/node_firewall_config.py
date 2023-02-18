@@ -11,7 +11,8 @@ class NodeFirewallConfig:
     def __init__(self, ips_gw_default_policy_networks: List[DefaultNetworkFirewallConfig],
                  hostname: str, output_accept: Set[str], input_accept: Set[str],
                  forward_accept: Set[str], output_drop: Set[str], input_drop: Set[str],
-                 forward_drop: Set[str], routes: Set[str], docker_gw_bridge_ip : str = ""):
+                 forward_drop: Set[str], routes: Set[str], docker_gw_bridge_ip : str = "",
+                 physical_host_ip : str = ""):
         """
         Initializes the DTO
 
@@ -26,6 +27,7 @@ class NodeFirewallConfig:
         :param forward_drop: the list of ips to drop forward
         :param routes: the set of custom routes for the routing table
         :param docker_gw_bridge_ip: IP to reach the container from the host network
+        :param physical_host_ip: IP of the physical host where the container is running
         """
         self.ips_gw_default_policy_networks = ips_gw_default_policy_networks
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
@@ -37,6 +39,7 @@ class NodeFirewallConfig:
         self.input_drop = input_drop
         self.forward_drop = forward_drop
         self.routes = routes
+        self.physical_host_ip = physical_host_ip
 
     def get_ips(self):
         """
@@ -63,7 +66,8 @@ class NodeFirewallConfig:
             input_drop=set(d["input_drop"]),
             forward_drop=set(d["forward_drop"]),
             routes=set(d["routes"]),
-            docker_gw_bridge_ip=d["docker_gw_bridge_ip"]
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"],
+            physical_host_ip=d["physical_host_ip"]
         )
         return obj
 
@@ -82,6 +86,7 @@ class NodeFirewallConfig:
         d["forward_drop"] = list(self.forward_drop)
         d["routes"] = list(self.routes)
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     def __str__(self) -> str:
@@ -93,7 +98,8 @@ class NodeFirewallConfig:
                f"input_accept:{self.input_accept}, forward_accept:{self.forward_accept}, " \
                f"output_drop:{self.output_drop}, " \
                f"input_drop:{self.input_drop}, forward_drop:{self.forward_drop}, " \
-               f"routers:{self.routes}, hostname: {self.hostname}, docker_gw_bridge_ip:{self.docker_gw_bridge_ip}"
+               f"routers:{self.routes}, hostname: {self.hostname}, docker_gw_bridge_ip:{self.docker_gw_bridge_ip}," \
+               f" physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """
