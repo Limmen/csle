@@ -41,7 +41,6 @@ from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
 from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
@@ -49,7 +48,6 @@ from csle_common.dao.emulation_config.docker_stats_manager_config import DockerS
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
-from csle_common.util.general_util import GeneralUtil
 
 
 def default_config(name: str, network_id: int = 8, level: int = 8, version: str = "0.1.0") -> EmulationEnvConfig:
@@ -5490,14 +5488,6 @@ def default_beats_config(network_id: int) -> BeatsConfig:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-r", "--run", help="Boolean parameter, if true, run containers",
-                        action="store_true")
-    parser.add_argument("-s", "--stop", help="Boolean parameter, if true, stop containers",
-                        action="store_true")
-    parser.add_argument("-c", "--clean", help="Boolean parameter, if true, remove containers",
-                        action="store_true")
-    parser.add_argument("-a", "--apply", help="Boolean parameter, if true, apply config",
-                        action="store_true")
     parser.add_argument("-i", "--install", help="Boolean parameter, if true, install config",
                         action="store_true")
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
@@ -5514,26 +5504,3 @@ if __name__ == '__main__':
             EmulationEnvController.save_emulation_image(img=encoded_image_str, emulation_name=config.name)
     if args.uninstall:
         EmulationEnvController.uninstall_emulation(config=config)
-    if args.run:
-        ip = GeneralUtil.get_host_ip()
-        physical_servers = [ip]
-        emulation_execution = EmulationEnvController.create_execution(emulation_env_config=config,
-                                                                      physical_servers=physical_servers)
-        EmulationEnvController.run_containers(emulation_execution=emulation_execution)
-    if args.stop:
-        emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
-            emulation_name=config.name)
-        for exec in emulation_executions:
-            EmulationEnvController.stop_containers(execution=exec)
-    if args.clean:
-        emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
-            emulation_name=config.name)
-        for exec in emulation_executions:
-            EmulationEnvController.stop_containers(execution=exec)
-            EmulationEnvController.rm_containers(execution=exec)
-        EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=config)
-    if args.apply:
-        emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
-            emulation_name=config.name)
-        for exec in emulation_executions:
-            EmulationEnvController.apply_emulation_env_config(emulation_execution=exec)

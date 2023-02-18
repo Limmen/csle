@@ -530,3 +530,45 @@ def get_csle_log_files(
     get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg()
     logs_dto = stub.getCsleLogFiles(get_msg, timeout=timeout)
     return logs_dto
+
+
+def start_containers_in_execution(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts containers of a given emulation execution that are configured to be deployed on the host
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartContainersInExecutionMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet
+    )
+    operation_outcome_dto = stub.startContainersInExecution(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def attach_containers_in_execution_to_networks(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Attaches containers of a given emulation execution that are configured to be deployed on the host to networks
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.AttachContainersToNetworksInExecutionMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet
+    )
+    operation_outcome_dto = stub.attachContainersInExecutionToNetworks(operation_msg, timeout=timeout)
+    return operation_outcome_dto

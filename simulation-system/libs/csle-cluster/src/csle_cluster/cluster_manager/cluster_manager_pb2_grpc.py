@@ -180,6 +180,16 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.GetLogFileMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
                 )
+        self.startContainersInExecution = channel.unary_unary(
+                '/ClusterManager/startContainersInExecution',
+                request_serializer=cluster__manager__pb2.StartContainersInExecutionMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.attachContainersInExecutionToNetworks = channel.unary_unary(
+                '/ClusterManager/attachContainersInExecutionToNetworks',
+                request_serializer=cluster__manager__pb2.AttachContainersToNetworksInExecutionMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -384,6 +394,18 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startContainersInExecution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def attachContainersInExecutionToNetworks(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -551,6 +573,16 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getLogFile,
                     request_deserializer=cluster__manager__pb2.GetLogFileMsg.FromString,
                     response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'startContainersInExecution': grpc.unary_unary_rpc_method_handler(
+                    servicer.startContainersInExecution,
+                    request_deserializer=cluster__manager__pb2.StartContainersInExecutionMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'attachContainersInExecutionToNetworks': grpc.unary_unary_rpc_method_handler(
+                    servicer.attachContainersInExecutionToNetworks,
+                    request_deserializer=cluster__manager__pb2.AttachContainersToNetworksInExecutionMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1121,5 +1153,39 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getLogFile',
             cluster__manager__pb2.GetLogFileMsg.SerializeToString,
             cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startContainersInExecution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startContainersInExecution',
+            cluster__manager__pb2.StartContainersInExecutionMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def attachContainersInExecutionToNetworks(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/attachContainersInExecutionToNetworks',
+            cluster__manager__pb2.AttachContainersToNetworksInExecutionMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

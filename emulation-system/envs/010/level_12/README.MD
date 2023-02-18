@@ -1,12 +1,15 @@
-# Capture the Flag - Level 4
+# Capture the Flag - Level 12
 
-An emulation environment with a set of nodes that run common networked services such as SSH, FTP, Telnet, IRC, Kafka, 
+A software-defined networking environment with OVS switches and the Ryu controller. 
+The environment includes a set of nodes that run common networked services such as SSH, FTP, Telnet, IRC, Kafka, 
 etc. Some of the services are vulnerable to simple dictionary attacks as they use weak passwords. 
 The task of an attacker agent is to identify the vulnerabilities and exploit them and discover hidden flags
 on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the 
 attacker. 
 
 - Number of nodes: 7
+- Number of OVS switches: 3
+- Number of SDN controllers: 1
 - IDS: Yes (Snort)
 - Traffic generation: Yes
 - Number of flags: 3
@@ -21,10 +24,8 @@ attacker.
 ## Useful commands
 
 ```bash
-make clean # Stop all running containers
-make run # Run all containers
-make clean # Stop and remove all containers
-make apply_config # Apply config to running containers
+make install # Install the emulation in the metastore
+make uninstall # Uninstall the emulation from the metastore
 make clean_config # Clean config files 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

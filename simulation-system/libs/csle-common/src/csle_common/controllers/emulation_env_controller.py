@@ -1,3 +1,4 @@
+import logging
 from typing import List, Tuple, Dict, Any
 import time
 import subprocess
@@ -524,11 +525,13 @@ class EmulationEnvController:
         return emulation_execution
 
     @staticmethod
-    def run_containers(emulation_execution: EmulationExecution) -> None:
+    def run_containers(emulation_execution: EmulationExecution, physical_host_ip: str, logger: logging.Logger) -> None:
         """
         Run containers in the emulation env config
 
         :param emulation_execution: the execution DTO
+        :param physical_host_ip: the ip of the physical host where the containers should be started
+        :param logger: the logger to use for logging
         :return: None
         """
         path = ExperimentUtil.default_output_dir()
@@ -536,6 +539,8 @@ class EmulationEnvController:
 
         # Start regular containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_host_ip:
+                continue
             ips = c.get_ips()
             container_resources: NodeResourcesConfig = None
             for r in emulation_env_config.resources_config.node_resources_configurations:
@@ -548,7 +553,7 @@ class EmulationEnvController:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
                                  f"resources:{emulation_env_config.resources_config}")
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Starting container:{name}")
+            logger.info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
@@ -559,42 +564,45 @@ class EmulationEnvController:
                   f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
 
-        # Start the kafka container
-        c = emulation_env_config.kafka_config.container
-        container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
-        name = c.get_full_name()
-        Logger.__call__().get_logger().info(f"Starting container:{name}")
-        cmd = f"docker container run -dt --name {name} " \
-              f"--hostname={c.name}{c.suffix} --label dir={path} " \
-              f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
-              f"-e TZ=Europe/Stockholm " \
-              f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
-              f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
-              f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
-        subprocess.call(cmd, shell=True)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_host_ip:
+            # Start the kafka container
+            c = emulation_env_config.kafka_config.container
+            container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
+            name = c.get_full_name()
+            logger.info(f"Starting container:{name}")
+            cmd = f"docker container run -dt --name {name} " \
+                  f"--hostname={c.name}{c.suffix} --label dir={path} " \
+                  f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+                  f"-e TZ=Europe/Stockholm " \
+                  f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
+                  f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
+            subprocess.call(cmd, shell=True)
 
-        # Start the ELK container
-        c = emulation_env_config.elk_config.container
-        container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
-        name = c.get_full_name()
-        Logger.__call__().get_logger().info(f"Starting container:{name}")
-        cmd = f"docker container run -dt --name {name} " \
-              f"--hostname={c.name}{c.suffix} --label dir={path} " \
-              f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
-              f"-e TZ=Europe/Stockholm " \
-              f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
-              f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
-              f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
-        subprocess.call(cmd, shell=True)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
+            # Start the ELK container
+            c = emulation_env_config.elk_config.container
+            container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
+            name = c.get_full_name()
+            logger.info(f"Starting container:{name}")
+            cmd = f"docker container run -dt --name {name} " \
+                  f"--hostname={c.name}{c.suffix} --label dir={path} " \
+                  f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+                  f"-e TZ=Europe/Stockholm " \
+                  f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
+                  f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
+            subprocess.call(cmd, shell=True)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_host_ip:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
             container_resources: NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Starting container:{name}")
+            logger.info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \

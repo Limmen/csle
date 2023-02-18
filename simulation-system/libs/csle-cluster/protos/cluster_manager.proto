@@ -35,6 +35,8 @@ service ClusterManager {
   rpc getPostrgreSQLLogs(GetPostgreSQLLogsMsg) returns (LogsDTO) {}
   rpc getFlaskLogs(GetFlaskLogsMsg) returns (LogsDTO) {}
   rpc getLogFile(GetLogFileMsg) returns (LogsDTO) {}
+  rpc startContainersInExecution(StartContainersInExecutionMsg) returns (OperationOutcomeDTO) {}
+  rpc attachContainersInExecutionToNetworks(AttachContainersToNetworksInExecutionMsg) returns (OperationOutcomeDTO) {}
 }
 
 // Message that the client sends to get the log file names in the /var/log/csle directory
@@ -43,6 +45,18 @@ message GetCsleLogFilesMsg {}
 // Message that the client sends to get a given log file
 message GetLogFileMsg {
   string name = 1;
+}
+
+// Message that the client sends when requesting to start containers of a given emulation execution
+message StartContainersInExecutionMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to attach containers of a given emulation execution to networks
+message AttachContainersToNetworksInExecutionMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends to get the docker stastmanager logs
@@ -75,9 +89,14 @@ message GetPostgreSQLLogsMsg {}
 // Message that the client sends to get the flask logs
 message GetFlaskLogsMsg {}
 
-// Message that the client sends to get the status of the node
+// Message that the server returns after a request for logs
 message LogsDTO {
   repeated string logs = 1;
+}
+
+// Message that the server returns after executing an operation requested by a client
+message OperationOutcomeDTO {
+  bool outcome = 1;
 }
 
 // Message that the client sends to get the status of the node

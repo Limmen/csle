@@ -31,10 +31,8 @@ pareto delay distribution with 2ms delay with 0.5ms jitter and 25% correlation b
 ## Useful commands
 
 ```bash
-make clean # Stop all running containers
-make run # Run all containers
-make clean # Stop and remove all containers
-make apply_config # Apply config to running containers
+make install # Install the emulation in the metastore
+make uninstall # Uninstall the emulation from the metastore
 make clean_config # Clean config files 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

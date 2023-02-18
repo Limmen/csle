@@ -12,6 +12,47 @@ class ClusterController:
     """
 
     @staticmethod
+    def start_containers_in_execution(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
+        """
+        Sends a request to start the containers of a given execution
+
+        :param ip: the ip of the node where to start the containers
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The node status
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_containers_in_execution(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+            )
+            return node_status_dto
+
+    @staticmethod
+    def attach_containers_in_execution_to_networks(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
+        """
+        Sends a request to attach the containers of a given execution to networks
+
+        :param ip: the ip of the node where to start the containers
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The node status
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            node_status_dto = \
+                csle_cluster.cluster_manager.query_cluster_manager.attach_containers_in_execution_to_networks(
+                    stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+                )
+            return node_status_dto
+
+    @staticmethod
     def is_cluster_manager_running(ip: str, port: int, timeout_sec: int = 2) -> bool:
         """
         Utility function for checking if the cluster manager gRPC server is running on a given node

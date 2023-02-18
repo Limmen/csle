@@ -14,12 +14,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x63luster_manager.proto\"\x14\n\x12GetCsleLogFilesMsg\"\x1d\n\rGetLogFileMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1e\n\x1cGetDockerStatsManagerLogsMsg\"\x16\n\x14GetPrometheusLogsMsg\"\x18\n\x16GetNodeExporterLogsMsg\"\x14\n\x12GetCAdvisorLogsMsg\"\x13\n\x11GetPgAdminLogsMsg\"\x13\n\x11GetGrafanaLogsMsg\"\x11\n\x0fGetNginxLogsMsg\"\x12\n\x10GetDockerLogsMsg\"\x16\n\x14GetPostgreSQLLogsMsg\"\x11\n\x0fGetFlaskLogsMsg\"\x17\n\x07LogsDTO\x12\x0c\n\x04logs\x18\x01 \x03(\t\"\x12\n\x10GetNodeStatusMsg\"\xb3\x02\n\rNodeStatusDTO\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0e\n\x06leader\x18\x02 \x01(\x08\x12\x17\n\x0f\x63\x41\x64visorRunning\x18\x03 \x01(\x08\x12\x19\n\x11prometheusRunning\x18\x04 \x01(\x08\x12\x16\n\x0egrafanaRunning\x18\x05 \x01(\x08\x12\x16\n\x0epgAdminRunning\x18\x06 \x01(\x08\x12\x14\n\x0cnginxRunning\x18\x07 \x01(\x08\x12\x14\n\x0c\x66laskRunning\x18\x08 \x01(\x08\x12!\n\x19\x64ockerStatsManagerRunning\x18\t \x01(\x08\x12\x1b\n\x13nodeExporterRunning\x18\n \x01(\x08\x12\x19\n\x11postgreSQLRunning\x18\x0b \x01(\x08\x12\x1b\n\x13\x64ockerEngineRunning\x18\x0c \x01(\x08\"#\n\x10ServiceStatusDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\"\x14\n\x12StartPostgreSQLMsg\"\x12\n\x10StartCAdvisorMsg\"\x16\n\x14StartNodeExporterMsg\"\x11\n\x0fStartGrafanaMsg\"\x14\n\x12StartPrometheusMsg\"\x11\n\x0fStartPgAdminMsg\"\x0f\n\rStartNginxMsg\"\x0f\n\rStartFlaskMsg\"\x1c\n\x1aStartDockerStatsManagerMsg\"\x16\n\x14StartDockerEngineMsg\"\x13\n\x11StopPostgreSQLMsg\"\x11\n\x0fStopCAdvisorMsg\"\x15\n\x13StopNodeExporterMsg\"\x10\n\x0eStopGrafanaMsg\"\x13\n\x11StopPrometheusMsg\"\x10\n\x0eStopPgAdminMsg\"\x0e\n\x0cStopNginxMsg\"\x0e\n\x0cStopFlaskMsg\"\x1b\n\x19StopDockerStatsManagerMsg\"\x15\n\x13StopDockerEngineMsg2\xd5\x0e\n\x0e\x43lusterManager\x12\x34\n\rgetNodeStatus\x12\x11.GetNodeStatusMsg\x1a\x0e.NodeStatusDTO\"\x00\x12;\n\x0fstartPostgreSQL\x12\x13.StartPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x37\n\rstartCAdvisor\x12\x11.StartCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startNodeExporter\x12\x15.StartNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartGrafana\x12\x10.StartGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12;\n\x0fstartPrometheus\x12\x13.StartPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartPgAdmin\x12\x10.StartPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartNginx\x12\x0e.StartNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartFlask\x12\x0e.StartFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12K\n\x17startDockerStatsManager\x12\x1b.StartDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startDockerEngine\x12\x15.StartDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPostgreSQL\x12\x12.StopPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstopCAdvisor\x12\x10.StopCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopNodeExporter\x12\x14.StopNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopGrafana\x12\x0f.StopGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPrometheus\x12\x12.StopPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopPgAdmin\x12\x0f.StopPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopNginx\x12\r.StopNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopFlask\x12\r.StopFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12I\n\x16stopDockerStatsManager\x12\x1a.StopDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopDockerEngine\x12\x14.StopDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x32\n\x0fgetCsleLogFiles\x12\x13.GetCsleLogFilesMsg\x1a\x08.LogsDTO\"\x00\x12\x46\n\x19getDockerStatsManagerLogs\x12\x1d.GetDockerStatsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getPrometheusLogs\x12\x15.GetPrometheusLogsMsg\x1a\x08.LogsDTO\"\x00\x12:\n\x13getNodeExporterLogs\x12\x17.GetNodeExporterLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetCadvisorLogs\x12\x13.GetCAdvisorLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetPgAdminLogs\x12\x12.GetPgAdminLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetGrafanaLogs\x12\x12.GetGrafanaLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetNginxLogs\x12\x10.GetNginxLogsMsg\x1a\x08.LogsDTO\"\x00\x12.\n\rgetDockerLogs\x12\x11.GetDockerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x37\n\x12getPostrgreSQLLogs\x12\x15.GetPostgreSQLLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetFlaskLogs\x12\x10.GetFlaskLogsMsg\x1a\x08.LogsDTO\"\x00\x12(\n\ngetLogFile\x12\x0e.GetLogFileMsg\x1a\x08.LogsDTO\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x63luster_manager.proto\"\x14\n\x12GetCsleLogFilesMsg\"\x1d\n\rGetLogFileMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"H\n\x1dStartContainersInExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"S\n(AttachContainersToNetworksInExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x1e\n\x1cGetDockerStatsManagerLogsMsg\"\x16\n\x14GetPrometheusLogsMsg\"\x18\n\x16GetNodeExporterLogsMsg\"\x14\n\x12GetCAdvisorLogsMsg\"\x13\n\x11GetPgAdminLogsMsg\"\x13\n\x11GetGrafanaLogsMsg\"\x11\n\x0fGetNginxLogsMsg\"\x12\n\x10GetDockerLogsMsg\"\x16\n\x14GetPostgreSQLLogsMsg\"\x11\n\x0fGetFlaskLogsMsg\"\x17\n\x07LogsDTO\x12\x0c\n\x04logs\x18\x01 \x03(\t\"&\n\x13OperationOutcomeDTO\x12\x0f\n\x07outcome\x18\x01 \x01(\x08\"\x12\n\x10GetNodeStatusMsg\"\xb3\x02\n\rNodeStatusDTO\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0e\n\x06leader\x18\x02 \x01(\x08\x12\x17\n\x0f\x63\x41\x64visorRunning\x18\x03 \x01(\x08\x12\x19\n\x11prometheusRunning\x18\x04 \x01(\x08\x12\x16\n\x0egrafanaRunning\x18\x05 \x01(\x08\x12\x16\n\x0epgAdminRunning\x18\x06 \x01(\x08\x12\x14\n\x0cnginxRunning\x18\x07 \x01(\x08\x12\x14\n\x0c\x66laskRunning\x18\x08 \x01(\x08\x12!\n\x19\x64ockerStatsManagerRunning\x18\t \x01(\x08\x12\x1b\n\x13nodeExporterRunning\x18\n \x01(\x08\x12\x19\n\x11postgreSQLRunning\x18\x0b \x01(\x08\x12\x1b\n\x13\x64ockerEngineRunning\x18\x0c \x01(\x08\"#\n\x10ServiceStatusDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\"\x14\n\x12StartPostgreSQLMsg\"\x12\n\x10StartCAdvisorMsg\"\x16\n\x14StartNodeExporterMsg\"\x11\n\x0fStartGrafanaMsg\"\x14\n\x12StartPrometheusMsg\"\x11\n\x0fStartPgAdminMsg\"\x0f\n\rStartNginxMsg\"\x0f\n\rStartFlaskMsg\"\x1c\n\x1aStartDockerStatsManagerMsg\"\x16\n\x14StartDockerEngineMsg\"\x13\n\x11StopPostgreSQLMsg\"\x11\n\x0fStopCAdvisorMsg\"\x15\n\x13StopNodeExporterMsg\"\x10\n\x0eStopGrafanaMsg\"\x13\n\x11StopPrometheusMsg\"\x10\n\x0eStopPgAdminMsg\"\x0e\n\x0cStopNginxMsg\"\x0e\n\x0cStopFlaskMsg\"\x1b\n\x19StopDockerStatsManagerMsg\"\x15\n\x13StopDockerEngineMsg2\x97\x10\n\x0e\x43lusterManager\x12\x34\n\rgetNodeStatus\x12\x11.GetNodeStatusMsg\x1a\x0e.NodeStatusDTO\"\x00\x12;\n\x0fstartPostgreSQL\x12\x13.StartPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x37\n\rstartCAdvisor\x12\x11.StartCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startNodeExporter\x12\x15.StartNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartGrafana\x12\x10.StartGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12;\n\x0fstartPrometheus\x12\x13.StartPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartPgAdmin\x12\x10.StartPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartNginx\x12\x0e.StartNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartFlask\x12\x0e.StartFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12K\n\x17startDockerStatsManager\x12\x1b.StartDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startDockerEngine\x12\x15.StartDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPostgreSQL\x12\x12.StopPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstopCAdvisor\x12\x10.StopCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopNodeExporter\x12\x14.StopNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopGrafana\x12\x0f.StopGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPrometheus\x12\x12.StopPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopPgAdmin\x12\x0f.StopPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopNginx\x12\r.StopNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopFlask\x12\r.StopFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12I\n\x16stopDockerStatsManager\x12\x1a.StopDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopDockerEngine\x12\x14.StopDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x32\n\x0fgetCsleLogFiles\x12\x13.GetCsleLogFilesMsg\x1a\x08.LogsDTO\"\x00\x12\x46\n\x19getDockerStatsManagerLogs\x12\x1d.GetDockerStatsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getPrometheusLogs\x12\x15.GetPrometheusLogsMsg\x1a\x08.LogsDTO\"\x00\x12:\n\x13getNodeExporterLogs\x12\x17.GetNodeExporterLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetCadvisorLogs\x12\x13.GetCAdvisorLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetPgAdminLogs\x12\x12.GetPgAdminLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetGrafanaLogs\x12\x12.GetGrafanaLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetNginxLogs\x12\x10.GetNginxLogsMsg\x1a\x08.LogsDTO\"\x00\x12.\n\rgetDockerLogs\x12\x11.GetDockerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x37\n\x12getPostrgreSQLLogs\x12\x15.GetPostgreSQLLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetFlaskLogs\x12\x10.GetFlaskLogsMsg\x1a\x08.LogsDTO\"\x00\x12(\n\ngetLogFile\x12\x0e.GetLogFileMsg\x1a\x08.LogsDTO\"\x00\x12T\n\x1astartContainersInExecution\x12\x1e.StartContainersInExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12j\n%attachContainersInExecutionToNetworks\x12).AttachContainersToNetworksInExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x62\x06proto3')
 
 
 
 _GETCSLELOGFILESMSG = DESCRIPTOR.message_types_by_name['GetCsleLogFilesMsg']
 _GETLOGFILEMSG = DESCRIPTOR.message_types_by_name['GetLogFileMsg']
+_STARTCONTAINERSINEXECUTIONMSG = DESCRIPTOR.message_types_by_name['StartContainersInExecutionMsg']
+_ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG = DESCRIPTOR.message_types_by_name['AttachContainersToNetworksInExecutionMsg']
 _GETDOCKERSTATSMANAGERLOGSMSG = DESCRIPTOR.message_types_by_name['GetDockerStatsManagerLogsMsg']
 _GETPROMETHEUSLOGSMSG = DESCRIPTOR.message_types_by_name['GetPrometheusLogsMsg']
 _GETNODEEXPORTERLOGSMSG = DESCRIPTOR.message_types_by_name['GetNodeExporterLogsMsg']
@@ -31,6 +33,7 @@ _GETDOCKERLOGSMSG = DESCRIPTOR.message_types_by_name['GetDockerLogsMsg']
 _GETPOSTGRESQLLOGSMSG = DESCRIPTOR.message_types_by_name['GetPostgreSQLLogsMsg']
 _GETFLASKLOGSMSG = DESCRIPTOR.message_types_by_name['GetFlaskLogsMsg']
 _LOGSDTO = DESCRIPTOR.message_types_by_name['LogsDTO']
+_OPERATIONOUTCOMEDTO = DESCRIPTOR.message_types_by_name['OperationOutcomeDTO']
 _GETNODESTATUSMSG = DESCRIPTOR.message_types_by_name['GetNodeStatusMsg']
 _NODESTATUSDTO = DESCRIPTOR.message_types_by_name['NodeStatusDTO']
 _SERVICESTATUSDTO = DESCRIPTOR.message_types_by_name['ServiceStatusDTO']
@@ -67,6 +70,20 @@ GetLogFileMsg = _reflection.GeneratedProtocolMessageType('GetLogFileMsg', (_mess
   # @@protoc_insertion_point(class_scope:GetLogFileMsg)
   })
 _sym_db.RegisterMessage(GetLogFileMsg)
+
+StartContainersInExecutionMsg = _reflection.GeneratedProtocolMessageType('StartContainersInExecutionMsg', (_message.Message,), {
+  'DESCRIPTOR' : _STARTCONTAINERSINEXECUTIONMSG,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:StartContainersInExecutionMsg)
+  })
+_sym_db.RegisterMessage(StartContainersInExecutionMsg)
+
+AttachContainersToNetworksInExecutionMsg = _reflection.GeneratedProtocolMessageType('AttachContainersToNetworksInExecutionMsg', (_message.Message,), {
+  'DESCRIPTOR' : _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AttachContainersToNetworksInExecutionMsg)
+  })
+_sym_db.RegisterMessage(AttachContainersToNetworksInExecutionMsg)
 
 GetDockerStatsManagerLogsMsg = _reflection.GeneratedProtocolMessageType('GetDockerStatsManagerLogsMsg', (_message.Message,), {
   'DESCRIPTOR' : _GETDOCKERSTATSMANAGERLOGSMSG,
@@ -144,6 +161,13 @@ LogsDTO = _reflection.GeneratedProtocolMessageType('LogsDTO', (_message.Message,
   # @@protoc_insertion_point(class_scope:LogsDTO)
   })
 _sym_db.RegisterMessage(LogsDTO)
+
+OperationOutcomeDTO = _reflection.GeneratedProtocolMessageType('OperationOutcomeDTO', (_message.Message,), {
+  'DESCRIPTOR' : _OPERATIONOUTCOMEDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:OperationOutcomeDTO)
+  })
+_sym_db.RegisterMessage(OperationOutcomeDTO)
 
 GetNodeStatusMsg = _reflection.GeneratedProtocolMessageType('GetNodeStatusMsg', (_message.Message,), {
   'DESCRIPTOR' : _GETNODESTATUSMSG,
@@ -314,74 +338,80 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _GETCSLELOGFILESMSG._serialized_end=45
   _GETLOGFILEMSG._serialized_start=47
   _GETLOGFILEMSG._serialized_end=76
-  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_start=78
-  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_end=108
-  _GETPROMETHEUSLOGSMSG._serialized_start=110
-  _GETPROMETHEUSLOGSMSG._serialized_end=132
-  _GETNODEEXPORTERLOGSMSG._serialized_start=134
-  _GETNODEEXPORTERLOGSMSG._serialized_end=158
-  _GETCADVISORLOGSMSG._serialized_start=160
-  _GETCADVISORLOGSMSG._serialized_end=180
-  _GETPGADMINLOGSMSG._serialized_start=182
-  _GETPGADMINLOGSMSG._serialized_end=201
-  _GETGRAFANALOGSMSG._serialized_start=203
-  _GETGRAFANALOGSMSG._serialized_end=222
-  _GETNGINXLOGSMSG._serialized_start=224
-  _GETNGINXLOGSMSG._serialized_end=241
-  _GETDOCKERLOGSMSG._serialized_start=243
-  _GETDOCKERLOGSMSG._serialized_end=261
-  _GETPOSTGRESQLLOGSMSG._serialized_start=263
-  _GETPOSTGRESQLLOGSMSG._serialized_end=285
-  _GETFLASKLOGSMSG._serialized_start=287
-  _GETFLASKLOGSMSG._serialized_end=304
-  _LOGSDTO._serialized_start=306
-  _LOGSDTO._serialized_end=329
-  _GETNODESTATUSMSG._serialized_start=331
-  _GETNODESTATUSMSG._serialized_end=349
-  _NODESTATUSDTO._serialized_start=352
-  _NODESTATUSDTO._serialized_end=659
-  _SERVICESTATUSDTO._serialized_start=661
-  _SERVICESTATUSDTO._serialized_end=696
-  _STARTPOSTGRESQLMSG._serialized_start=698
-  _STARTPOSTGRESQLMSG._serialized_end=718
-  _STARTCADVISORMSG._serialized_start=720
-  _STARTCADVISORMSG._serialized_end=738
-  _STARTNODEEXPORTERMSG._serialized_start=740
-  _STARTNODEEXPORTERMSG._serialized_end=762
-  _STARTGRAFANAMSG._serialized_start=764
-  _STARTGRAFANAMSG._serialized_end=781
-  _STARTPROMETHEUSMSG._serialized_start=783
-  _STARTPROMETHEUSMSG._serialized_end=803
-  _STARTPGADMINMSG._serialized_start=805
-  _STARTPGADMINMSG._serialized_end=822
-  _STARTNGINXMSG._serialized_start=824
-  _STARTNGINXMSG._serialized_end=839
-  _STARTFLASKMSG._serialized_start=841
-  _STARTFLASKMSG._serialized_end=856
-  _STARTDOCKERSTATSMANAGERMSG._serialized_start=858
-  _STARTDOCKERSTATSMANAGERMSG._serialized_end=886
-  _STARTDOCKERENGINEMSG._serialized_start=888
-  _STARTDOCKERENGINEMSG._serialized_end=910
-  _STOPPOSTGRESQLMSG._serialized_start=912
-  _STOPPOSTGRESQLMSG._serialized_end=931
-  _STOPCADVISORMSG._serialized_start=933
-  _STOPCADVISORMSG._serialized_end=950
-  _STOPNODEEXPORTERMSG._serialized_start=952
-  _STOPNODEEXPORTERMSG._serialized_end=973
-  _STOPGRAFANAMSG._serialized_start=975
-  _STOPGRAFANAMSG._serialized_end=991
-  _STOPPROMETHEUSMSG._serialized_start=993
-  _STOPPROMETHEUSMSG._serialized_end=1012
-  _STOPPGADMINMSG._serialized_start=1014
-  _STOPPGADMINMSG._serialized_end=1030
-  _STOPNGINXMSG._serialized_start=1032
-  _STOPNGINXMSG._serialized_end=1046
-  _STOPFLASKMSG._serialized_start=1048
-  _STOPFLASKMSG._serialized_end=1062
-  _STOPDOCKERSTATSMANAGERMSG._serialized_start=1064
-  _STOPDOCKERSTATSMANAGERMSG._serialized_end=1091
-  _STOPDOCKERENGINEMSG._serialized_start=1093
-  _STOPDOCKERENGINEMSG._serialized_end=1114
-  _CLUSTERMANAGER._serialized_start=1117
-  _CLUSTERMANAGER._serialized_end=2994
+  _STARTCONTAINERSINEXECUTIONMSG._serialized_start=78
+  _STARTCONTAINERSINEXECUTIONMSG._serialized_end=150
+  _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG._serialized_start=152
+  _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG._serialized_end=235
+  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_start=237
+  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_end=267
+  _GETPROMETHEUSLOGSMSG._serialized_start=269
+  _GETPROMETHEUSLOGSMSG._serialized_end=291
+  _GETNODEEXPORTERLOGSMSG._serialized_start=293
+  _GETNODEEXPORTERLOGSMSG._serialized_end=317
+  _GETCADVISORLOGSMSG._serialized_start=319
+  _GETCADVISORLOGSMSG._serialized_end=339
+  _GETPGADMINLOGSMSG._serialized_start=341
+  _GETPGADMINLOGSMSG._serialized_end=360
+  _GETGRAFANALOGSMSG._serialized_start=362
+  _GETGRAFANALOGSMSG._serialized_end=381
+  _GETNGINXLOGSMSG._serialized_start=383
+  _GETNGINXLOGSMSG._serialized_end=400
+  _GETDOCKERLOGSMSG._serialized_start=402
+  _GETDOCKERLOGSMSG._serialized_end=420
+  _GETPOSTGRESQLLOGSMSG._serialized_start=422
+  _GETPOSTGRESQLLOGSMSG._serialized_end=444
+  _GETFLASKLOGSMSG._serialized_start=446
+  _GETFLASKLOGSMSG._serialized_end=463
+  _LOGSDTO._serialized_start=465
+  _LOGSDTO._serialized_end=488
+  _OPERATIONOUTCOMEDTO._serialized_start=490
+  _OPERATIONOUTCOMEDTO._serialized_end=528
+  _GETNODESTATUSMSG._serialized_start=530
+  _GETNODESTATUSMSG._serialized_end=548
+  _NODESTATUSDTO._serialized_start=551
+  _NODESTATUSDTO._serialized_end=858
+  _SERVICESTATUSDTO._serialized_start=860
+  _SERVICESTATUSDTO._serialized_end=895
+  _STARTPOSTGRESQLMSG._serialized_start=897
+  _STARTPOSTGRESQLMSG._serialized_end=917
+  _STARTCADVISORMSG._serialized_start=919
+  _STARTCADVISORMSG._serialized_end=937
+  _STARTNODEEXPORTERMSG._serialized_start=939
+  _STARTNODEEXPORTERMSG._serialized_end=961
+  _STARTGRAFANAMSG._serialized_start=963
+  _STARTGRAFANAMSG._serialized_end=980
+  _STARTPROMETHEUSMSG._serialized_start=982
+  _STARTPROMETHEUSMSG._serialized_end=1002
+  _STARTPGADMINMSG._serialized_start=1004
+  _STARTPGADMINMSG._serialized_end=1021
+  _STARTNGINXMSG._serialized_start=1023
+  _STARTNGINXMSG._serialized_end=1038
+  _STARTFLASKMSG._serialized_start=1040
+  _STARTFLASKMSG._serialized_end=1055
+  _STARTDOCKERSTATSMANAGERMSG._serialized_start=1057
+  _STARTDOCKERSTATSMANAGERMSG._serialized_end=1085
+  _STARTDOCKERENGINEMSG._serialized_start=1087
+  _STARTDOCKERENGINEMSG._serialized_end=1109
+  _STOPPOSTGRESQLMSG._serialized_start=1111
+  _STOPPOSTGRESQLMSG._serialized_end=1130
+  _STOPCADVISORMSG._serialized_start=1132
+  _STOPCADVISORMSG._serialized_end=1149
+  _STOPNODEEXPORTERMSG._serialized_start=1151
+  _STOPNODEEXPORTERMSG._serialized_end=1172
+  _STOPGRAFANAMSG._serialized_start=1174
+  _STOPGRAFANAMSG._serialized_end=1190
+  _STOPPROMETHEUSMSG._serialized_start=1192
+  _STOPPROMETHEUSMSG._serialized_end=1211
+  _STOPPGADMINMSG._serialized_start=1213
+  _STOPPGADMINMSG._serialized_end=1229
+  _STOPNGINXMSG._serialized_start=1231
+  _STOPNGINXMSG._serialized_end=1245
+  _STOPFLASKMSG._serialized_start=1247
+  _STOPFLASKMSG._serialized_end=1261
+  _STOPDOCKERSTATSMANAGERMSG._serialized_start=1263
+  _STOPDOCKERSTATSMANAGERMSG._serialized_end=1290
+  _STOPDOCKERENGINEMSG._serialized_start=1292
+  _STOPDOCKERENGINEMSG._serialized_end=1313
+  _CLUSTERMANAGER._serialized_start=1316
+  _CLUSTERMANAGER._serialized_end=3387
 # @@protoc_insertion_point(module_scope)

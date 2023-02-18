@@ -167,17 +167,22 @@ class HostController:
         """
         # Start filebeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_filebeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
+            HostController.start_filebeat(emulation_env_config=emulation_env_config,
+                                          ips=[c.docker_gw_bridge_ip] + c.get_ips(),
                                           initial_start=initial_start)
 
         # Start filebeat on the Kafka container
-        HostController.start_filebeat(emulation_env_config=emulation_env_config,
-                                      ips=emulation_env_config.kafka_config.container.get_ips(),
-                                      initial_start=initial_start)
+        HostController.start_filebeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                emulation_env_config.kafka_config.container.get_ips()),
+            initial_start=initial_start)
         # Start filebeat on the ELK container
-        HostController.start_filebeat(emulation_env_config=emulation_env_config,
-                                      ips=emulation_env_config.elk_config.container.get_ips(),
-                                      initial_start=initial_start)
+        HostController.start_filebeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                emulation_env_config.elk_config.container.get_ips()),
+            initial_start=initial_start)
 
     @staticmethod
     def start_packetbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -191,23 +196,31 @@ class HostController:
         """
         # Start packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_packetbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
-                                            initial_start=initial_start)
+            HostController.start_packetbeat(
+                emulation_env_config=emulation_env_config,
+                ips=[c.docker_gw_bridge_ip] + c.get_ips(),
+                initial_start=initial_start)
 
         # Start packetbeat on the Kafka container
-        HostController.start_packetbeat(emulation_env_config=emulation_env_config,
-                                        ips=emulation_env_config.kafka_config.container.get_ips(),
-                                        initial_start=initial_start)
+        HostController.start_packetbeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                emulation_env_config.kafka_config.container.get_ips()),
+            initial_start=initial_start)
         # Start packetbeat on the ELK container
-        HostController.start_packetbeat(emulation_env_config=emulation_env_config,
-                                        ips=emulation_env_config.elk_config.container.get_ips(),
-                                        initial_start=initial_start)
+        HostController.start_packetbeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                emulation_env_config.elk_config.container.get_ips()),
+            initial_start=initial_start)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start packetbeat on the SDN controller container
-            HostController.start_packetbeat(emulation_env_config=emulation_env_config,
-                                            ips=emulation_env_config.sdn_controller_config.container.get_ips(),
-                                            initial_start=initial_start)
+            HostController.start_packetbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
+                     emulation_env_config.sdn_controller_config.container.get_ips()),
+                initial_start=initial_start)
 
     @staticmethod
     def start_metricbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -221,23 +234,31 @@ class HostController:
         """
         # Start packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_metricbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
-                                            initial_start=initial_start)
+            HostController.start_metricbeat(
+                emulation_env_config=emulation_env_config,
+                ips=[c.docker_gw_bridge_ip] + c.get_ips(),
+                initial_start=initial_start)
 
         # Start metricbeat on the Kafka container
-        HostController.start_metricbeat(emulation_env_config=emulation_env_config,
-                                        ips=emulation_env_config.kafka_config.container.get_ips(),
-                                        initial_start=initial_start)
+        HostController.start_metricbeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                 emulation_env_config.kafka_config.container.get_ips()),
+            initial_start=initial_start)
         # Start metricbeat on the ELK container
-        HostController.start_metricbeat(emulation_env_config=emulation_env_config,
-                                        ips=emulation_env_config.elk_config.container.get_ips(),
-                                        initial_start=initial_start)
+        HostController.start_metricbeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                 emulation_env_config.elk_config.container.get_ips()),
+            initial_start=initial_start)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start metricbeat on the SDN controller container
-            HostController.start_metricbeat(emulation_env_config=emulation_env_config,
-                                            ips=emulation_env_config.sdn_controller_config.container.get_ips(),
-                                            initial_start=initial_start)
+            HostController.start_metricbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.sdn_controller_config.container.get_ips()),
+                initial_start=initial_start)
 
     @staticmethod
     def start_heartbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
@@ -251,23 +272,32 @@ class HostController:
         """
         # Start heartbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_heartbeat(emulation_env_config=emulation_env_config, ips=c.get_ips(),
-                                           initial_start=initial_start)
+            HostController.start_heartbeat(
+                emulation_env_config=emulation_env_config,
+                ips=[c.docker_gw_bridge_ip] + c.get_ips(),
+                initial_start=initial_start)
 
         # Start heartbeat on the Kafka container
-        HostController.start_heartbeat(emulation_env_config=emulation_env_config,
-                                       ips=emulation_env_config.kafka_config.container.get_ips(),
-                                       initial_start=initial_start)
+        HostController.start_heartbeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                emulation_env_config.kafka_config.container.get_ips()),
+            initial_start=initial_start)
+
         # Start heartbeat on the ELK container
-        HostController.start_heartbeat(emulation_env_config=emulation_env_config,
-                                       ips=emulation_env_config.elk_config.container.get_ips(),
-                                       initial_start=initial_start)
+        HostController.start_heartbeat(
+            emulation_env_config=emulation_env_config,
+            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                emulation_env_config.elk_config.container.get_ips()),
+            initial_start=initial_start)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start heartbeat on the SDN controller container
-            HostController.start_heartbeat(emulation_env_config=emulation_env_config,
-                                           ips=emulation_env_config.sdn_controller_config.container.get_ips(),
-                                           initial_start=initial_start)
+            HostController.start_heartbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
+                     emulation_env_config.sdn_controller_config.container.get_ips()),
+                initial_start=initial_start)
 
     @staticmethod
     def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:

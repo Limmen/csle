@@ -353,14 +353,17 @@ class ContainerController:
         return networks
 
     @staticmethod
-    def create_networks(containers_config: ContainersConfig) -> None:
+    def create_networks(containers_config: ContainersConfig, physical_host_ip: str) -> None:
         """
         Creates docker networks for a given containers configuration
 
         :param containers_config: the containers configuration
+        :param physical_host_ip: the IP of the physical host
         :return: None
         """
         for c in containers_config.containers:
+            if c.physical_host_ip != physical_host_ip:
+                continue
             for ip_net in c.ips_and_networks:
                 existing_networks = ContainerController.get_network_references()
                 existing_networks = list(map(lambda x: x.name, existing_networks))

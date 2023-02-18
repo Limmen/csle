@@ -13,7 +13,8 @@ This folder contains emulation environments.
   - *Level 8* [level_8](010/level_8): An infrastructure with 26 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
   - *Level 9* [./level_9](010/level_9): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring
   - *Level 10* [./level_10](010/level_10): An infrastructure with 16 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine Server RCE Exploit, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
-  - *Level 11* [./level_11](010/level_11): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring  
+  - *Level 11* [./level_11](010/level_11): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring
+  - *Level 12* [./level_12](010/level_12): A simple software-defined networking environment
 
 ## Useful commands:
 
@@ -27,29 +28,9 @@ This folder contains emulation environments.
   make uninstall
    ```
 
-- Clean all emulations:
-  ```bash
-  make clean
-   ```
-
-- Stop all emulations:
-  ```bash
-  make stop
-   ```
-
-- Run all emulations (Warning: don't do this on a machine with limited resources):
-  ```bash
-  make run
-   ```
-
 - Clean the configuration of all emulations:
   ```bash
   make clean_config
-   ```
-
-- Apply the configuration of all emulations:
-  ```bash
-  make apply_config
    ```
 
 ## Author & Maintainer

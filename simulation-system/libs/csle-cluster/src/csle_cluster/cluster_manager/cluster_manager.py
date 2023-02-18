@@ -9,6 +9,9 @@ import csle_common.constants.constants as constants
 from csle_common.controllers.management_system_controller import ManagementSystemController
 from csle_common.util.general_util import GeneralUtil
 from csle_common.util.cluster_util import ClusterUtil
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.controllers.emulation_env_controller import EmulationEnvController
+from csle_common.controllers.container_controller import ContainerController
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 
@@ -612,6 +615,50 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if len(log_files) > 20:
             log_files = log_files[0:20]
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=log_files)
+
+    def startContainersInExecution(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartContainersInExecutionMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the containers of a given emulation execution that are configured to be deployed on this host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting containers in execution with ID: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        EmulationEnvController.run_containers(emulation_execution=execution,
+                                              physical_host_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
+        MetastoreFacade.update_emulation_execution(emulation_execution=execution,
+                                                   ip_first_octet=execution.ip_first_octet,
+                                                   emulation=execution.emulation_name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def attachContainersInExecutionToNetworks(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartContainersInExecutionMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Attaches the containers of a given emulation execution that are configured to be deployed on this host to
+        their corresponding virtual overlay networks
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Attaching containers in execution with ID: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation} to networks")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config,
+                                            physical_host_ip=GeneralUtil.get_host_ip())
+        MetastoreFacade.update_emulation_execution(emulation_execution=execution,
+                                                   ip_first_octet=execution.ip_first_octet,
+                                                   emulation=execution.emulation_name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
