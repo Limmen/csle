@@ -1157,7 +1157,7 @@ def start_filebeats(
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartFileBeatsMsg(
-        emulation=emulation, ipFirstOctet=ip_first_octet, initial_start=initial_start
+        emulation=emulation, ipFirstOctet=ip_first_octet, initialStart=initial_start
     )
     operation_outcome_dto = stub.startFilebeats(operation_msg, timeout=timeout)
     return operation_outcome_dto
@@ -1179,7 +1179,7 @@ def start_metricbeats(
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartMetricBeatsMsg(
-        emulation=emulation, ipFirstOctet=ip_first_octet, initial_start=initial_start
+        emulation=emulation, ipFirstOctet=ip_first_octet, initialStart=initial_start
     )
     operation_outcome_dto = stub.startMetricbeats(operation_msg, timeout=timeout)
     return operation_outcome_dto
@@ -1201,7 +1201,7 @@ def start_heartbeats(
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartHeartBeatsMsg(
-        emulation=emulation, ipFirstOctet=ip_first_octet, initial_start=initial_start
+        emulation=emulation, ipFirstOctet=ip_first_octet, initialStart=initial_start
     )
     operation_outcome_dto = stub.startHeartbeats(operation_msg, timeout=timeout)
     return operation_outcome_dto
@@ -1223,7 +1223,7 @@ def start_packetbeats(
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartPacketBeatsMsg(
-        emulation=emulation, ipFirstOctet=ip_first_octet, initial_start=initial_start
+        emulation=emulation, ipFirstOctet=ip_first_octet, initialStart=initial_start
     )
     operation_outcome_dto = stub.startPacketbeats(operation_msg, timeout=timeout)
     return operation_outcome_dto
