@@ -417,7 +417,7 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config,
                                                                   physical_servers=physical_servers)
 
-    steps = 40
+    steps = 39
     if no_traffic:
         steps = steps - 1
     if no_clients:
