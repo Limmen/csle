@@ -10,11 +10,12 @@ class ResourceConstraintsController:
     """
 
     @staticmethod
-    def apply_resource_constraints(emulation_env_config: EmulationEnvConfig):
+    def apply_resource_constraints(emulation_env_config: EmulationEnvConfig, physical_server_ip: str):
         """
         Creates users in an emulation environment according to a specified users-configuration
 
         :param emulation_env_config: the emulation env configuration
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         resource_constraints = emulation_env_config.resources_config.node_resources_configurations
@@ -22,6 +23,8 @@ class ResourceConstraintsController:
         if emulation_env_config.sdn_controller_config is not None:
             resource_constraints = resource_constraints + [emulation_env_config.sdn_controller_config.resources]
         for node_resource_config in resource_constraints:
+            if node_resource_config.physical_host_ip != physical_server_ip:
+                continue
             ip = node_resource_config.docker_gw_bridge_ip
             Logger.__call__().get_logger().info(f"applying resource constraints on node: {ip}, "
                                                 f"{node_resource_config.container_name}")

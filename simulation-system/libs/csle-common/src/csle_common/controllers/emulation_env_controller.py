@@ -83,15 +83,22 @@ class EmulationEnvController:
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
-    def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig):
+    def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
+            -> None:
         """
-        Installs the latest csle-collector and csle-ryu libraries on all nodes
+        Installs the latest csle-collector and csle-ryu libraries on all nodes of a given emulation
 
-        :return:
+        :param emulation_env_config: the emulation configuration
+        :param physical_server_ip: the IP of the physical servers where the containers are
+        :return: None
         """
-        ips = list(map(lambda x: x.docker_gw_bridge_ip, emulation_env_config.containers_config.containers))
-        ips.append(emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
-        ips.append(emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+        containers = list(filter(lambda x: x.physical_host_ip == physical_server_ip,
+                                 emulation_env_config.containers_config.containers))
+        ips = list(map(lambda x: x.docker_gw_bridge_ip, containers))
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            ips.append(emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            ips.append(emulation_env_config.elk_config.container.docker_gw_bridge_ip)
         if emulation_env_config.sdn_controller_config is not None:
             ips.append(emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
         for ip in ips:
@@ -407,13 +414,16 @@ class EmulationEnvController:
         time.sleep(2)
 
     @staticmethod
-    def apply_kafka_config(emulation_env_config: EmulationEnvConfig) -> None:
+    def apply_kafka_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Applies the kafka config
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
+        if emulation_env_config.kafka_config.container.physical_host_ip != physical_server_ip:
+            return
         steps = 2
         current_step = 1
         Logger.__call__().get_logger().info("-- Configuring the kafka container --")
@@ -870,14 +880,16 @@ class EmulationEnvController:
         return running_emulations, stopped_emulations
 
     @staticmethod
-    def ping_all(emulation_env_config: EmulationEnvConfig) -> None:
+    def ping_all(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Tests the connections between all the containers using ping
 
         :param emulation_env_config: the emulation config
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
 
             # Ping controller-switches
             for ovs_sw in emulation_env_config.ovs_config.switch_configs:
@@ -895,6 +907,8 @@ class EmulationEnvController:
 
         # Ping containers to switches
         for c1 in emulation_env_config.containers_config.containers:
+            if c1.physical_host_ip != physical_server_ip:
+                continue
             for c2 in emulation_env_config.containers_config.containers:
                 for ip in c2.get_ips():
                     Logger.__call__().get_logger().info(f"Ping {c1.get_ips()[0]} to {ip}")

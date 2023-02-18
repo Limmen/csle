@@ -10,11 +10,12 @@ class TopologyController:
     """
 
     @staticmethod
-    def create_topology(emulation_env_config: EmulationEnvConfig) -> None:
+    def create_topology(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Utility function for connecting to a running emulation and creating the configuration
 
         :param emulation_env_config: the emulation configuration
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         Logger.__call__().get_logger().info("Creating topology")
@@ -23,6 +24,8 @@ class TopologyController:
         if emulation_env_config.sdn_controller_config is not None:
             topology_configs = topology_configs + [emulation_env_config.sdn_controller_config.firewall_config]
         for node_fw_config in topology_configs:
+            if node_fw_config.physical_host_ip != physical_server_ip:
+                continue
             ip = node_fw_config.docker_gw_bridge_ip
             Logger.__call__().get_logger().info(f"Connecting to node:{ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)

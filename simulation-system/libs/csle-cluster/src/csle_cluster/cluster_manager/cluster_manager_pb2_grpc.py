@@ -65,6 +65,11 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StartDockerStatsManagerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.ServiceStatusDTO.FromString,
                 )
+        self.startDockerStatsManagerThread = channel.unary_unary(
+                '/ClusterManager/startDockerStatsManagerThread',
+                request_serializer=cluster__manager__pb2.StartDockerStatsManagerThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ServiceStatusDTO.FromString,
+                )
         self.startDockerEngine = channel.unary_unary(
                 '/ClusterManager/startDockerEngine',
                 request_serializer=cluster__manager__pb2.StartDockerEngineMsg.SerializeToString,
@@ -270,14 +275,29 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StartKafkaClientProducerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.stopKafkaClientProducer = channel.unary_unary(
+                '/ClusterManager/stopKafkaClientProducer',
+                request_serializer=cluster__manager__pb2.StopKafkaClientProducerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
         self.startSnortIdses = channel.unary_unary(
                 '/ClusterManager/startSnortIdses',
                 request_serializer=cluster__manager__pb2.StartSnortIdsesMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.startSnortIdsesMonitorThreads = channel.unary_unary(
+                '/ClusterManager/startSnortIdsesMonitorThreads',
+                request_serializer=cluster__manager__pb2.StartSnortIdsesMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
         self.startOssecIdses = channel.unary_unary(
                 '/ClusterManager/startOssecIdses',
                 request_serializer=cluster__manager__pb2.StartOSSECIdsesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startOssecIdsesMonitorThreads = channel.unary_unary(
+                '/ClusterManager/startOssecIdsesMonitorThreads',
+                request_serializer=cluster__manager__pb2.StartOSSECIdsesMonitorThreadsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startElkStack = channel.unary_unary(
@@ -391,6 +411,12 @@ class ClusterManagerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def startDockerStatsManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startDockerStatsManagerThread(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -642,13 +668,31 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopKafkaClientProducer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def startSnortIdses(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startSnortIdsesMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def startOssecIdses(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOssecIdsesMonitorThreads(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -765,6 +809,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'startDockerStatsManager': grpc.unary_unary_rpc_method_handler(
                     servicer.startDockerStatsManager,
                     request_deserializer=cluster__manager__pb2.StartDockerStatsManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ServiceStatusDTO.SerializeToString,
+            ),
+            'startDockerStatsManagerThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.startDockerStatsManagerThread,
+                    request_deserializer=cluster__manager__pb2.StartDockerStatsManagerThreadMsg.FromString,
                     response_serializer=cluster__manager__pb2.ServiceStatusDTO.SerializeToString,
             ),
             'startDockerEngine': grpc.unary_unary_rpc_method_handler(
@@ -972,14 +1021,29 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     request_deserializer=cluster__manager__pb2.StartKafkaClientProducerMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
+            'stopKafkaClientProducer': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopKafkaClientProducer,
+                    request_deserializer=cluster__manager__pb2.StopKafkaClientProducerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
             'startSnortIdses': grpc.unary_unary_rpc_method_handler(
                     servicer.startSnortIdses,
                     request_deserializer=cluster__manager__pb2.StartSnortIdsesMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
+            'startSnortIdsesMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIdsesMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsesMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
             'startOssecIdses': grpc.unary_unary_rpc_method_handler(
                     servicer.startOssecIdses,
                     request_deserializer=cluster__manager__pb2.StartOSSECIdsesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startOssecIdsesMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOssecIdsesMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StartOSSECIdsesMonitorThreadsMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startElkStack': grpc.unary_unary_rpc_method_handler(
@@ -1209,6 +1273,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startDockerStatsManager',
             cluster__manager__pb2.StartDockerStatsManagerMsg.SerializeToString,
+            cluster__manager__pb2.ServiceStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startDockerStatsManagerThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startDockerStatsManagerThread',
+            cluster__manager__pb2.StartDockerStatsManagerThreadMsg.SerializeToString,
             cluster__manager__pb2.ServiceStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -1911,6 +1992,23 @@ class ClusterManager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def stopKafkaClientProducer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopKafkaClientProducer',
+            cluster__manager__pb2.StopKafkaClientProducerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def startSnortIdses(request,
             target,
             options=(),
@@ -1928,6 +2026,23 @@ class ClusterManager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def startSnortIdsesMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsesMonitorThreads',
+            cluster__manager__pb2.StartSnortIdsesMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def startOssecIdses(request,
             target,
             options=(),
@@ -1940,6 +2055,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOssecIdses',
             cluster__manager__pb2.StartOSSECIdsesMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOssecIdsesMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOssecIdsesMonitorThreads',
+            cluster__manager__pb2.StartOSSECIdsesMonitorThreadsMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

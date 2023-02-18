@@ -441,11 +441,12 @@ class ContainerController:
                 container.docker_gw_bridge_ip = docker_gw_bridge_ip
 
     @staticmethod
-    def start_docker_stats_thread(execution: EmulationExecution) -> None:
+    def start_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str) -> None:
         """
         Sends a request to the docker stats manager on the docker host for starting a docker stats monitor thread
 
         :param execution: the emulation execution
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
@@ -457,7 +458,7 @@ class ContainerController:
             )
             time.sleep(5)
         hostname = socket.gethostname()
-        ip = socket.gethostbyname(hostname)
+        ip = physical_server_ip
         Logger.__call__().get_logger().info(
             f"connecting to: {ip}:"
             f"{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}")

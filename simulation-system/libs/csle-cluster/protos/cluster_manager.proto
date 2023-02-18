@@ -12,6 +12,7 @@ service ClusterManager {
   rpc startNginx(StartNginxMsg) returns (ServiceStatusDTO) {}
   rpc startFlask(StartFlaskMsg) returns (ServiceStatusDTO) {}
   rpc startDockerStatsManager(StartDockerStatsManagerMsg) returns (ServiceStatusDTO) {}
+  rpc startDockerStatsManagerThread(StartDockerStatsManagerThreadMsg) returns (ServiceStatusDTO) {}
   rpc startDockerEngine(StartDockerEngineMsg) returns (ServiceStatusDTO) {}
   rpc stopPostgreSQL(StopPostgreSQLMsg) returns (ServiceStatusDTO) {}
   rpc stopCAdvisor(StopCAdvisorMsg) returns (ServiceStatusDTO) {}
@@ -53,8 +54,11 @@ service ClusterManager {
   rpc startTrafficGenerators(StartTrafficGeneratorsMsg) returns (OperationOutcomeDTO) {}
   rpc startClientPopulation(StartClientPopulationMsg) returns (OperationOutcomeDTO) {}
   rpc startKafkaClientProducer(StartKafkaClientProducerMsg) returns (OperationOutcomeDTO) {}
+  rpc stopKafkaClientProducer(StopKafkaClientProducerMsg) returns (OperationOutcomeDTO) {}
   rpc startSnortIdses(StartSnortIdsesMsg) returns (OperationOutcomeDTO) {}
+  rpc startSnortIdsesMonitorThreads(StartSnortIdsesMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc startOssecIdses(StartOSSECIdsesMsg) returns (OperationOutcomeDTO) {}
+  rpc startOssecIdsesMonitorThreads(StartOSSECIdsesMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc startElkStack(StartElkStackMsg) returns (OperationOutcomeDTO) {}
   rpc startHostManagers(StartHostManagersMsg) returns (OperationOutcomeDTO) {}
   rpc applyFileBeatsConfig(ApplyFileBeatConfigsMsg) returns (OperationOutcomeDTO) {}
@@ -177,8 +181,14 @@ message StartClientPopulationMsg {
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the Kafka producer
+// Message that the client sends when requesting to start the client Kafka producer
 message StartKafkaClientProducerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to stop the client Kafka producer
+message StopKafkaClientProducerMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
@@ -189,8 +199,20 @@ message StartSnortIdsesMsg {
   int32 ipFirstOctet = 2;
 }
 
+// Message that the client sends when requesting to start the Snort IDSes Monitor threads
+message StartSnortIdsesMonitorThreadsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
 // Message that the client sends when requesting to start the OSSEC IDSes
 message StartOSSECIdsesMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the OSSEC IDSes monitor threads
+message StartOSSECIdsesMonitorThreadsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
@@ -235,24 +257,28 @@ message ApplyHeartBeatConfigsMsg {
 message StartFileBeatsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
+  bool initialStart = 3;
 }
 
 // Message that the client sends when requesting to start the packetbeats of an execution
 message StartPacketBeatsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
+  bool initialStart = 3;
 }
 
 // Message that the client sends when requesting to start the metricbeats of an execution
 message StartMetricBeatsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
+  bool initialStart = 3;
 }
 
 // Message that the client sends when requesting to start the heartbeats of an execution
 message StartHeartBeatsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
+  bool initialStart = 3;
 }
 
 // Message that the client sends to get the docker stastmanager logs
@@ -345,6 +371,12 @@ message StartFlaskMsg {}
 
 // Message that the client sends to start dockerStatsManager
 message StartDockerStatsManagerMsg {}
+
+// Message that the client sends to start a dockerStatsManager thread for an execution
+message StartDockerStatsManagerThreadMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
 
 // Message that the client sends to start the docker engine
 message StartDockerEngineMsg {}

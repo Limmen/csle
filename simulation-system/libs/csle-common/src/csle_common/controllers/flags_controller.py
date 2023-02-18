@@ -10,14 +10,17 @@ class FlagsController:
     """
 
     @staticmethod
-    def create_flags(emulation_env_config: EmulationEnvConfig) -> None:
+    def create_flags(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Connects to a node in the emulation and creates the flags according to a given flags config
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         for flags_conf in emulation_env_config.flags_config.node_flag_configs:
+            if flags_conf.physical_host_ip != physical_server_ip:
+                continue
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                         ip=flags_conf.docker_gw_bridge_ip)
 

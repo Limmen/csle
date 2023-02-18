@@ -9,14 +9,17 @@ class UsersController:
     """
 
     @staticmethod
-    def create_users(emulation_env_config: EmulationEnvConfig) -> None:
+    def create_users(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Creates users in an emulation environment according to a specified users-configuration
 
         :param emulation_env_config: the emulation env configuration
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         for users_conf in emulation_env_config.users_config.users_configs:
+            if users_conf.physical_host_ip != physical_server_ip:
+                continue
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=users_conf.docker_gw_bridge_ip)
 
             cmd = "ls /home"
@@ -44,6 +47,8 @@ class UsersController:
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
 
         for vuln in emulation_env_config.vuln_config.node_vulnerability_configs:
+            if vuln.physical_host_ip != physical_server_ip:
+                continue
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.docker_gw_bridge_ip)
             for cr in vuln.credentials:
                 if cr.root:

@@ -129,92 +129,77 @@ class HostController:
                                                 conn=emulation_env_config.get_connection(ip=ip))
 
     @staticmethod
-    def start_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_host_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and the monitor thread
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Start host monitor on emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
                                                      ip=c.docker_gw_bridge_ip)
 
-        # Start host monitor on the Kafka container
-        HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                 ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
-        # Start host monitor on the ELK container
-        HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                 ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Start host monitor on the Kafka container
+            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
+                                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Start host monitor on the ELK container
+            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
+                                                     ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+
+        if emulation_env_config.sdn_controller_config is not None and \
+                emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the SDN controller container
             HostController.start_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
                 ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
-    def start_filebeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
+    def start_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                        initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and filebeat
 
         :param emulation_env_config: the emulation env config
         :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Start filebeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.start_filebeat(emulation_env_config=emulation_env_config,
                                           ips=[c.docker_gw_bridge_ip] + c.get_ips(),
                                           initial_start=initial_start)
 
-        # Start filebeat on the Kafka container
-        HostController.start_filebeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                emulation_env_config.kafka_config.container.get_ips()),
-            initial_start=initial_start)
-        # Start filebeat on the ELK container
-        HostController.start_filebeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                emulation_env_config.elk_config.container.get_ips()),
-            initial_start=initial_start)
-
-    @staticmethod
-    def start_packetbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
-        """
-        A method that sends a request to the HostManager on every container
-        to start the Host manager and packetbeat
-
-        :param emulation_env_config: the emulation env config
-        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
-        :return: None
-        """
-        # Start packetbeat on emulation containers
-        for c in emulation_env_config.containers_config.containers:
-            HostController.start_packetbeat(
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Start filebeat on the Kafka container
+            HostController.start_filebeat(
                 emulation_env_config=emulation_env_config,
-                ips=[c.docker_gw_bridge_ip] + c.get_ips(),
+                ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.kafka_config.container.get_ips()),
                 initial_start=initial_start)
 
-        # Start packetbeat on the Kafka container
-        HostController.start_packetbeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                emulation_env_config.kafka_config.container.get_ips()),
-            initial_start=initial_start)
-        # Start packetbeat on the ELK container
-        HostController.start_packetbeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                emulation_env_config.elk_config.container.get_ips()),
-            initial_start=initial_start)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Start filebeat on the ELK container
+            HostController.start_filebeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Start packetbeat on the SDN controller container
             HostController.start_packetbeat(
                 emulation_env_config=emulation_env_config,
@@ -223,36 +208,90 @@ class HostController:
                 initial_start=initial_start)
 
     @staticmethod
-    def start_metricbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
+    def start_packetbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                          initial_start: bool = False) -> None:
+        """
+        A method that sends a request to the HostManager on every container
+        to start the Host manager and packetbeat
+
+        :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server
+        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :return: None
+        """
+        # Start packetbeat on emulation containers
+        for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
+            HostController.start_packetbeat(
+                emulation_env_config=emulation_env_config,
+                ips=[c.docker_gw_bridge_ip] + c.get_ips(),
+                initial_start=initial_start)
+
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Start packetbeat on the Kafka container
+            HostController.start_packetbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.kafka_config.container.get_ips()),
+                initial_start=initial_start)
+
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Start packetbeat on the ELK container
+            HostController.start_packetbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start)
+
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
+            # Start packetbeat on the SDN controller container
+            HostController.start_packetbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
+                     emulation_env_config.sdn_controller_config.container.get_ips()),
+                initial_start=initial_start)
+
+    @staticmethod
+    def start_metricbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                          initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and metricbeat
 
         :param emulation_env_config: the emulation env config
         :param initial_start: boolean indicating whether this method is called on emulation initialization or not
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Start packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.start_metricbeat(
                 emulation_env_config=emulation_env_config,
                 ips=[c.docker_gw_bridge_ip] + c.get_ips(),
                 initial_start=initial_start)
 
-        # Start metricbeat on the Kafka container
-        HostController.start_metricbeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                 emulation_env_config.kafka_config.container.get_ips()),
-            initial_start=initial_start)
-        # Start metricbeat on the ELK container
-        HostController.start_metricbeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                 emulation_env_config.elk_config.container.get_ips()),
-            initial_start=initial_start)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Start metricbeat on the Kafka container
+            HostController.start_metricbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                     emulation_env_config.kafka_config.container.get_ips()),
+                initial_start=initial_start)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Start metricbeat on the ELK container
+            HostController.start_metricbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                     emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start)
+
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Start metricbeat on the SDN controller container
             HostController.start_metricbeat(
                 emulation_env_config=emulation_env_config,
@@ -261,37 +300,43 @@ class HostController:
                 initial_start=initial_start)
 
     @staticmethod
-    def start_heartbeats(emulation_env_config: EmulationEnvConfig, initial_start: bool = False) -> None:
+    def start_heartbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and heartbeat
 
         :param emulation_env_config: the emulation env config
         :param initial_start: boolean indicating whether this method is called on emulation initialization or not
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Start heartbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.start_heartbeat(
                 emulation_env_config=emulation_env_config,
                 ips=[c.docker_gw_bridge_ip] + c.get_ips(),
                 initial_start=initial_start)
 
-        # Start heartbeat on the Kafka container
-        HostController.start_heartbeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                emulation_env_config.kafka_config.container.get_ips()),
-            initial_start=initial_start)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Start heartbeat on the Kafka container
+            HostController.start_heartbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.kafka_config.container.get_ips()),
+                initial_start=initial_start)
 
-        # Start heartbeat on the ELK container
-        HostController.start_heartbeat(
-            emulation_env_config=emulation_env_config,
-            ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                emulation_env_config.elk_config.container.get_ips()),
-            initial_start=initial_start)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Start heartbeat on the ELK container
+            HostController.start_heartbeat(
+                emulation_env_config=emulation_env_config,
+                ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
+                    emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Start heartbeat on the SDN controller container
             HostController.start_heartbeat(
                 emulation_env_config=emulation_env_config,
@@ -405,105 +450,129 @@ class HostController:
                                           ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
-    def config_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def config_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of filebeat
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Configure filebeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.config_filebeat(emulation_env_config=emulation_env_config, container=c)
 
-        # Configure filebeat on the kafka container
-        HostController.config_filebeat(emulation_env_config=emulation_env_config,
-                                       container=emulation_env_config.kafka_config.container)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Configure filebeat on the kafka container
+            HostController.config_filebeat(emulation_env_config=emulation_env_config,
+                                           container=emulation_env_config.kafka_config.container)
 
-        # Configure filebeat on the ELK container
-        HostController.config_filebeat(emulation_env_config=emulation_env_config,
-                                       container=emulation_env_config.elk_config.container)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Configure filebeat on the ELK container
+            HostController.config_filebeat(emulation_env_config=emulation_env_config,
+                                           container=emulation_env_config.elk_config.container)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Configure filebeat on the SDN controller container
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
                                            container=emulation_env_config.sdn_controller_config.container)
 
     @staticmethod
-    def config_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def config_packetbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of packetbeat
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Configure packetbeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.config_packetbeat(emulation_env_config=emulation_env_config, container=c)
 
-        # Configure packetbeat on the kafka container
-        HostController.config_packetbeat(emulation_env_config=emulation_env_config,
-                                         container=emulation_env_config.kafka_config.container)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Configure packetbeat on the kafka container
+            HostController.config_packetbeat(emulation_env_config=emulation_env_config,
+                                             container=emulation_env_config.kafka_config.container)
 
-        # Configure packetbeat on the ELK container
-        HostController.config_packetbeat(emulation_env_config=emulation_env_config,
-                                         container=emulation_env_config.elk_config.container)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Configure packetbeat on the ELK container
+            HostController.config_packetbeat(emulation_env_config=emulation_env_config,
+                                             container=emulation_env_config.elk_config.container)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Configure packetbeat on the SDN controller container
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.sdn_controller_config.container)
 
     @staticmethod
-    def config_metricbeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def config_metricbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of metricbeat
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Configure metricbeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.config_metricbeat(emulation_env_config=emulation_env_config, container=c)
 
-        # Configure metricbeat on the kafka container
-        HostController.config_metricbeat(emulation_env_config=emulation_env_config,
-                                         container=emulation_env_config.kafka_config.container)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Configure metricbeat on the kafka container
+            HostController.config_metricbeat(emulation_env_config=emulation_env_config,
+                                             container=emulation_env_config.kafka_config.container)
 
-        # Configure metricbeat on the ELK container
-        HostController.config_metricbeat(emulation_env_config=emulation_env_config,
-                                         container=emulation_env_config.elk_config.container)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Configure metricbeat on the ELK container
+            HostController.config_metricbeat(emulation_env_config=emulation_env_config,
+                                             container=emulation_env_config.elk_config.container)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Configure metricbeat on the SDN controller container
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.sdn_controller_config.container)
 
     @staticmethod
-    def config_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def config_heartbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of heartbeat
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         # Configure heartbeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             HostController.config_heartbeat(emulation_env_config=emulation_env_config, container=c)
 
-        # Configure heartbeat on the kafka container
-        HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                        container=emulation_env_config.kafka_config.container)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            # Configure heartbeat on the kafka container
+            HostController.config_heartbeat(emulation_env_config=emulation_env_config,
+                                            container=emulation_env_config.kafka_config.container)
 
-        # Configure heartbeat on the ELK container
-        HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                        container=emulation_env_config.elk_config.container)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            # Configure heartbeat on the ELK container
+            HostController.config_heartbeat(emulation_env_config=emulation_env_config,
+                                            container=emulation_env_config.elk_config.container)
 
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.sdn_controller_config is not None \
+                and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Configure heartbeat on the SDN controller container
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
                                             container=emulation_env_config.sdn_controller_config.container)

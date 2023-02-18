@@ -11,15 +11,18 @@ class VulnerabilitiesController:
     """
 
     @staticmethod
-    def create_vulns(emulation_env_config: EmulationEnvConfig) -> None:
+    def create_vulns(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Creates vulnerabilities in an emulation environment according to a specified vulnerabilities configuration
 
         :param emulation_env_config: the emulation environment configuration
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         vulnerabilities = emulation_env_config.vuln_config.node_vulnerability_configs
         for vuln in vulnerabilities:
+            if vuln.physical_host_ip != physical_server_ip:
+                continue
             Logger.__call__().get_logger().info(f"Creating vulnerability on ip: {vuln.docker_gw_bridge_ip}, "
                                                 f"type: {vuln.vuln_type}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.docker_gw_bridge_ip)
