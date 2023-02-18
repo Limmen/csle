@@ -145,22 +145,17 @@ class HostController:
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            logger.info(f"Starting host monitor thread on ip: {c.docker_gw_bridge_ip}")
             HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
                                                      ip=c.docker_gw_bridge_ip, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the Kafka container
-            logger.info(f"Starting kafka host monitor thread on IP: "
-                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.start_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
                 ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the ELK container
-            logger.info(f"Starting ELK host monitor thread on IP: "
-                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.start_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
                 ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip, logger=logger)
@@ -168,8 +163,6 @@ class HostController:
         if emulation_env_config.sdn_controller_config is not None and \
                 emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the SDN controller container
-            logger.info(f"Starting SDN controller host monitor thread on IP: "
-                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             HostController.start_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
                 ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
@@ -501,27 +494,20 @@ class HostController:
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            logger.info(f"Configuring filebeat on ip: {c.docker_gw_bridge_ip}")
             HostController.config_filebeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure filebeat on the kafka container
-            logger.info(f"Configuring filebeat on kafka container with ip: "
-                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
                                            container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure filebeat on the ELK container
-            logger.info(f"Configuring filebeat on elk container with ip: "
-                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
                                            container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
-            logger.info(f"Configuring filebeat on SDN controller container with ip: "
-                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure filebeat on the SDN controller container
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
                                            container=emulation_env_config.sdn_controller_config.container,
@@ -543,27 +529,20 @@ class HostController:
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            logger.info(f"Configuring packetbeat on ip: {c.docker_gw_bridge_ip}")
             HostController.config_packetbeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure packetbeat on the kafka container
-            logger.info(f"Configuring packetbeat on kafka container with ip: "
-                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure packetbeat on the ELK container
-            logger.info(f"Configuring packetbeat on elk container with ip: "
-                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
-            logger.info(f"Configuring packetbeat on SDN controller container with ip: "
-                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure packetbeat on the SDN controller container
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.sdn_controller_config.container,
@@ -585,27 +564,20 @@ class HostController:
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            logger.info(f"Configuring metricbeat on ip: {c.docker_gw_bridge_ip}")
             HostController.config_metricbeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure metricbeat on the kafka container
-            logger.info(f"Configuring metricbeat on kafka container with ip: "
-                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure metricbeat on the ELK container
-            logger.info(f"Configuring metricbeat on elk container with ip: "
-                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
-            logger.info(f"Configuring metricbeat on SDN controller container with ip: "
-                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure metricbeat on the SDN controller container
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
                                              container=emulation_env_config.sdn_controller_config.container,
@@ -627,27 +599,20 @@ class HostController:
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            logger.info(f"Configuring heartbeat on ip: {c.docker_gw_bridge_ip}")
             HostController.config_heartbeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure heartbeat on the kafka container
-            logger.info(f"Configuring heartbeat on kafka container with ip: "
-                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
                                             container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure heartbeat on the ELK container
-            logger.info(f"Configuring heartbeat on elk container with ip: "
-                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
                                             container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
-            logger.info(f"Configuring heartbeat on SDN controller container with ip: "
-                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure heartbeat on the SDN controller container
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
                                             container=emulation_env_config.sdn_controller_config.container,
@@ -669,8 +634,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.monitor_running:
-            logger.info(
-                f"Host monitor thread is not running on {ip}, starting it.")
+            logger.info(f"Host monitor thread is not running on {ip}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
