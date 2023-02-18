@@ -404,20 +404,23 @@ class ContainerController:
                     c.docker_gw_bridge_ip = docker_gw_bridge_ip
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
-            ContainerController.connect_container_to_network(container=emulation_env_config.kafka_config.container)
+            ContainerController.connect_container_to_network(container=emulation_env_config.kafka_config.container,
+                                                             logger=logger)
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
-            ContainerController.connect_container_to_network(container=emulation_env_config.elk_config.container)
+            ContainerController.connect_container_to_network(container=emulation_env_config.elk_config.container,
+                                                             logger=logger)
         if emulation_env_config.sdn_controller_config is not None and \
                 emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             ContainerController.connect_container_to_network(
-                container=emulation_env_config.sdn_controller_config.container)
+                container=emulation_env_config.sdn_controller_config.container, logger=logger)
 
     @staticmethod
-    def connect_container_to_network(container: NodeContainerConfig) -> None:
+    def connect_container_to_network(container: NodeContainerConfig, logger: logging.Logger) -> None:
         """
         Connect a running container to networks
 
         :param container: the container to connect
+        :param logger: the logger to use for logging
         :return: None
         """
         container_name = container.get_full_name()
@@ -432,7 +435,7 @@ class ContainerController:
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
-            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
+            logger.info(f"Connecting container:{container_name} to network:{net.name} "
                                                 f"with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
             if container.docker_gw_bridge_ip == "" or container.docker_gw_bridge_ip is None:
@@ -441,12 +444,14 @@ class ContainerController:
                 container.docker_gw_bridge_ip = docker_gw_bridge_ip
 
     @staticmethod
-    def start_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str) -> None:
+    def start_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str,
+                                  logger: logging.Logger) -> None:
         """
         Sends a request to the docker stats manager on the docker host for starting a docker stats monitor thread
 
         :param execution: the emulation execution
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
@@ -457,9 +462,8 @@ class ContainerController:
                 max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
             )
             time.sleep(5)
-        hostname = socket.gethostname()
         ip = physical_server_ip
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"connecting to: {ip}:"
             f"{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}")
         with grpc.insecure_channel(
@@ -472,7 +476,7 @@ class ContainerController:
                 ip = c.get_ips()[0]
                 container_ip_dtos.append(csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp(
                     ip=ip, container=name))
-            Logger.__call__().get_logger().info("connected")
+            logger.info("connected")
 
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name,

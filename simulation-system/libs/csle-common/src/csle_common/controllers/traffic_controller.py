@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import time
 import grpc
@@ -26,13 +27,15 @@ class TrafficController:
     """
 
     @staticmethod
-    def start_traffic_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_traffic_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                               logger: logging.Logger) -> None:
         """
         Utility method for checking if the traffic manager is running and starting it if it is not running
         on every node
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
@@ -209,17 +212,19 @@ class TrafficController:
                 csle_collector.client_manager.query_clients.stop_clients(stub)
 
     @staticmethod
-    def start_client_producer(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_client_producer(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                              logger: logging.Logger) -> None:
         """
         Starts the Kafka producer for client metrics
 
         :param emulation_env_config: the emulation environment configuration
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         if emulation_env_config.traffic_config.client_population_config.physical_host_ip != physical_server_ip:
             return
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
@@ -244,18 +249,20 @@ class TrafficController:
                     time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
     @staticmethod
-    def stop_client_producer(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def stop_client_producer(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                             logger: logging.Logger) -> None:
         """
         Stops the Kafka producer for client metrics
 
         :param emulation_env_config: the emulation environment configuration
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         if emulation_env_config.traffic_config.client_population_config.physical_host_ip != physical_server_ip:
             return
 
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
@@ -277,17 +284,19 @@ class TrafficController:
                 csle_collector.client_manager.query_clients.stop_producer(stub=stub)
 
     @staticmethod
-    def start_client_population(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_client_population(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                logger: logging.Logger) -> None:
         """
         Starts the arrival process of clients
 
         :param emulation_env_config: the emulation environment configuration
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         if emulation_env_config.traffic_config.client_population_config.physical_host_ip != physical_server_ip:
             return
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting client population on container: "
             f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
         commands = []
@@ -417,12 +426,14 @@ class TrafficController:
             csle_collector.traffic_manager.query_traffic_manager.stop_traffic(stub)
 
     @staticmethod
-    def start_internal_traffic_generators(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_internal_traffic_generators(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                          logger: logging.Logger) -> None:
         """
         Utility function for starting internal traffic generators
 
         :param emulation_env_config: the configuration of the emulation env
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:

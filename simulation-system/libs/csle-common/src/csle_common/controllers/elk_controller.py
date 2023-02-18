@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import grpc
 import time
@@ -142,17 +143,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def start_elk_stack(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> \
+    def start_elk_stack(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start the ELK server
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
         if emulation_env_config.elk_config.container.physical_host_ip != physical_server_ip:
             return
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 

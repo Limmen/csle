@@ -689,7 +689,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         EmulationEnvController.install_csle_collector_and_ryu_libraries(emulation_env_config=
                                                                         execution.emulation_env_config,
-                                                                        physical_server_ip=GeneralUtil.get_host_ip())
+                                                                        physical_server_ip=GeneralUtil.get_host_ip(),
+                                                                        logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyKafkaConfig(
@@ -707,7 +708,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         EmulationEnvController.apply_kafka_config(emulation_env_config=execution.emulation_env_config,
-                                                  physical_server_ip=GeneralUtil.get_host_ip())
+                                                  physical_server_ip=GeneralUtil.get_host_ip(),
+                                                  logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startSdnController(
@@ -725,7 +727,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         SDNControllerManager.start_ryu(emulation_env_config=execution.emulation_env_config,
-                                       physical_server_ip=GeneralUtil.get_host_ip())
+                                       physical_server_ip=GeneralUtil.get_host_ip(),
+                                       logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyResourceConstraints(
@@ -743,7 +746,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         ResourceConstraintsController.apply_resource_constraints(emulation_env_config=execution.emulation_env_config,
-                                                                 physical_server_ip=GeneralUtil.get_host_ip())
+                                                                 physical_server_ip=GeneralUtil.get_host_ip(),
+                                                                 logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def createOvsSwitches(
@@ -762,7 +766,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         OVSController.create_virtual_switches_on_container(
             containers_config=execution.emulation_env_config.containers_config,
-            physical_server_ip=GeneralUtil.get_host_ip())
+            physical_server_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def pingExecution(
@@ -780,7 +784,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         EmulationEnvController.ping_all(emulation_env_config=execution.emulation_env_config,
-                                        physical_server_ip=GeneralUtil.get_host_ip())
+                                        physical_server_ip=GeneralUtil.get_host_ip(),
+                                        logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def configureOvs(
@@ -798,7 +803,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         OVSController.apply_ovs_config(emulation_env_config=execution.emulation_env_config,
-                                       physical_server_ip=GeneralUtil.get_host_ip())
+                                       physical_server_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startSdnControllerMonitor(
@@ -816,7 +821,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         SDNControllerManager.start_ryu_monitor(emulation_env_config=execution.emulation_env_config,
-                                               physical_server_ip=GeneralUtil.get_host_ip())
+                                               physical_server_ip=GeneralUtil.get_host_ip(),
+                                               logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def createUsers(
@@ -834,7 +840,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         UsersController.create_users(emulation_env_config=execution.emulation_env_config,
-                                     physical_server_ip=GeneralUtil.get_host_ip())
+                                     physical_server_ip=GeneralUtil.get_host_ip(),
+                                     logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def createVulnerabilities(
@@ -852,7 +859,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         VulnerabilitiesController.create_vulns(emulation_env_config=execution.emulation_env_config,
-                                               physical_server_ip=GeneralUtil.get_host_ip())
+                                               physical_server_ip=GeneralUtil.get_host_ip(),
+                                               logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def createFlags(
@@ -870,7 +878,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         FlagsController.create_flags(emulation_env_config=execution.emulation_env_config,
-                                     physical_server_ip=GeneralUtil.get_host_ip())
+                                     physical_server_ip=GeneralUtil.get_host_ip(),
+                                     logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def createTopology(
@@ -888,7 +897,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TopologyController.create_topology(emulation_env_config=execution.emulation_env_config,
-                                           physical_server_ip=GeneralUtil.get_host_ip())
+                                           physical_server_ip=GeneralUtil.get_host_ip(),
+                                           logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startTrafficManagers(
@@ -906,7 +916,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.start_traffic_managers(emulation_env_config=execution.emulation_env_config,
-                                                 physical_server_ip=GeneralUtil.get_host_ip())
+                                                 physical_server_ip=GeneralUtil.get_host_ip(),
+                                                 logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startTrafficGenerators(
@@ -924,7 +935,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.start_internal_traffic_generators(emulation_env_config=execution.emulation_env_config,
-                                                            physical_server_ip=GeneralUtil.get_host_ip())
+                                                            physical_server_ip=GeneralUtil.get_host_ip(),
+                                                            logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startClientPopulation(
@@ -942,7 +954,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.start_client_population(emulation_env_config=execution.emulation_env_config,
-                                                  physical_server_ip=GeneralUtil.get_host_ip())
+                                                  physical_server_ip=GeneralUtil.get_host_ip(),
+                                                  logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startKafkaClientProducer(
@@ -960,7 +973,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.start_client_producer(emulation_env_config=execution.emulation_env_config,
-                                                physical_server_ip=GeneralUtil.get_host_ip())
+                                                physical_server_ip=GeneralUtil.get_host_ip(),
+                                                logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopKafkaClientProducer(
@@ -978,7 +992,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.stop_client_producer(emulation_env_config=execution.emulation_env_config,
-                                               physical_server_ip=GeneralUtil.get_host_ip())
+                                               physical_server_ip=GeneralUtil.get_host_ip(),
+                                               logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startSnortIdses(
@@ -996,7 +1011,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         SnortIDSController.start_snort_idses(emulation_env_config=execution.emulation_env_config,
-                                             physical_server_ip=GeneralUtil.get_host_ip())
+                                             physical_server_ip=GeneralUtil.get_host_ip(),
+                                             logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startSnortIdsesMonitorThreads(
@@ -1014,7 +1030,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config,
-                                                             physical_server_ip=GeneralUtil.get_host_ip())
+                                                             physical_server_ip=GeneralUtil.get_host_ip(),
+                                                             logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startOssecIdses(
@@ -1032,7 +1049,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         OSSECIDSController.start_ossec_idses(emulation_env_config=execution.emulation_env_config,
-                                             physical_server_ip=GeneralUtil.get_host_ip())
+                                             physical_server_ip=GeneralUtil.get_host_ip(),
+                                             logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startOssecIdsesMonitorThreads(
@@ -1050,7 +1068,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         OSSECIDSController.start_ossec_idses_monitor_threads(emulation_env_config=execution.emulation_env_config,
-                                                             physical_server_ip=GeneralUtil.get_host_ip())
+                                                             physical_server_ip=GeneralUtil.get_host_ip(),
+                                                             logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startElkStack(
@@ -1068,7 +1087,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         ELKController.start_elk_stack(emulation_env_config=execution.emulation_env_config,
-                                      physical_server_ip=GeneralUtil.get_host_ip())
+                                      physical_server_ip=GeneralUtil.get_host_ip(),
+                                      logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startHostManagers(
@@ -1086,7 +1106,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         HostController.start_host_monitor_threads(emulation_env_config=execution.emulation_env_config,
-                                                  physical_server_ip=GeneralUtil.get_host_ip())
+                                                  physical_server_ip=GeneralUtil.get_host_ip(),
+                                                  logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyFileBeatsConfig(
@@ -1104,7 +1125,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         HostController.config_filebeats(emulation_env_config=execution.emulation_env_config,
-                                        physical_server_ip=GeneralUtil.get_host_ip())
+                                        physical_server_ip=GeneralUtil.get_host_ip(),
+                                        logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyPacketBeatsConfig(
@@ -1122,7 +1144,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         HostController.config_packetbeats(emulation_env_config=execution.emulation_env_config,
-                                          physical_server_ip=GeneralUtil.get_host_ip())
+                                          physical_server_ip=GeneralUtil.get_host_ip(),
+                                          logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyMetricBeatsConfig(
@@ -1140,7 +1163,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         HostController.config_metricbeats(emulation_env_config=execution.emulation_env_config,
-                                          physical_server_ip=GeneralUtil.get_host_ip())
+                                          physical_server_ip=GeneralUtil.get_host_ip(),
+                                          logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyHeartBeatsConfig(
@@ -1158,7 +1182,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         HostController.config_heartbeats(emulation_env_config=execution.emulation_env_config,
-                                         physical_server_ip=GeneralUtil.get_host_ip())
+                                         physical_server_ip=GeneralUtil.get_host_ip(),
+                                         logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startFilebeats(
@@ -1177,7 +1202,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         HostController.start_filebeats(emulation_env_config=execution.emulation_env_config,
                                        initial_start=request.initialStart,
-                                       physical_server_ip=GeneralUtil.get_host_ip())
+                                       physical_server_ip=GeneralUtil.get_host_ip(),
+                                       logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startPacketbeats(
@@ -1196,7 +1222,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         HostController.start_packetbeats(emulation_env_config=execution.emulation_env_config,
                                          initial_start=request.initialStart,
-                                         physical_server_ip=GeneralUtil.get_host_ip())
+                                         physical_server_ip=GeneralUtil.get_host_ip(),
+                                         logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startMetricbeats(
@@ -1215,7 +1242,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         HostController.start_metricbeats(emulation_env_config=execution.emulation_env_config,
                                          initial_start=request.initialStart,
-                                         physical_server_ip=GeneralUtil.get_host_ip())
+                                         physical_server_ip=GeneralUtil.get_host_ip(),
+                                         logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startHeartbeats(
@@ -1234,7 +1262,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         HostController.start_heartbeats(emulation_env_config=execution.emulation_env_config,
                                         initial_start=request.initialStart,
-                                        physical_server_ip=GeneralUtil.get_host_ip())
+                                        physical_server_ip=GeneralUtil.get_host_ip(),
+                                        logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startDockerStatsManagerThread(
@@ -1252,7 +1281,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         ContainerController.start_docker_stats_thread(execution=execution,
-                                                      physical_server_ip=GeneralUtil.get_host_ip())
+                                                      physical_server_ip=GeneralUtil.get_host_ip(),
+                                                      logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
 
@@ -1273,6 +1303,7 @@ def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int =
     csle_cluster.cluster_manager.cluster_manager_pb2_grpc.add_ClusterManagerServicer_to_server(
         ClusterManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
+    logging.getLogger("paramiko").setLevel(logging.WARNING)
     server.start()
     logging.info(f"ClusterManager Server Started, Listening on port: {port}")
     server.wait_for_termination()

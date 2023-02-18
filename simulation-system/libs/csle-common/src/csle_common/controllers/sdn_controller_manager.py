@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import grpc
 import time
@@ -144,18 +145,19 @@ class SDNControllerManager:
             return ryu_dto
 
     @staticmethod
-    def start_ryu(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
+    def start_ryu(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: Logger) \
             -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for requesting the RyuManager to start the Ryu SDN controller
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: an RyuDTO with the status of the server
         """
         if emulation_env_config.sdn_controller_config.container.physical_host_ip != physical_server_ip:
             return
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting Ryu SDN controller on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
@@ -165,7 +167,7 @@ class SDNControllerManager:
                 f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Starting RYU, port: {emulation_env_config.sdn_controller_config.controller_port}, "
                 f"web_port: {emulation_env_config.sdn_controller_config.controller_web_api_port}, "
                 f"controller: {emulation_env_config.sdn_controller_config.controller_module_name}")
@@ -176,18 +178,19 @@ class SDNControllerManager:
             return ryu_dto
 
     @staticmethod
-    def start_ryu_monitor(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
+    def start_ryu_monitor(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) \
             -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for requesting the RyuManager to start the Ryu monitor
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: an RyuDTO with the status
         """
         if emulation_env_config.sdn_controller_config.container.physical_host_ip != physical_server_ip:
             return
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting the ryu monitor on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)

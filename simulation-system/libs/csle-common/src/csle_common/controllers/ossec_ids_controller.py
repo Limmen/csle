@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import grpc
 import time
@@ -33,12 +34,14 @@ class OSSECIDSController:
                                                       ip=c.docker_gw_bridge_ip)
 
     @staticmethod
-    def start_ossec_idses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_ossec_idses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                          logger: logging.Logger) -> None:
         """
         Utility function for starting the OSSEC IDSes
 
         :param emulation_config: the emulation env configuration
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
@@ -46,6 +49,7 @@ class OSSECIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
+                    logger.info(f"Starting the OSSEC IDS on ip: {c.docker_gw_bridge_ip}")
                     OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config,
                                                        ip=c.docker_gw_bridge_ip)
 
@@ -181,13 +185,15 @@ class OSSECIDSController:
         time.sleep(2)
 
     @staticmethod
-    def start_ossec_idses_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_ossec_idses_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                          logger: logging.Logger) -> None:
         """
         A method that sends a request to the OSSECIDSManager on every container that runs
         an IDS to start the IDS manager and the monitor thread
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         OSSECIDSController.start_ossec_idses_managers(emulation_env_config=emulation_env_config)
@@ -197,6 +203,7 @@ class OSSECIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
+                    logger.info(f"Starting OSSEC IDS monitor thread on IP: {c.docker_gw_bridge_ip}")
                     OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config,
                                                                       ip=c.docker_gw_bridge_ip)
 

@@ -1,3 +1,4 @@
+import logging
 from typing import List, Tuple
 import grpc
 import time
@@ -129,41 +130,52 @@ class HostController:
                                                 conn=emulation_env_config.get_connection(ip=ip))
 
     @staticmethod
-    def start_host_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_host_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                   logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and the monitor thread
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Start host monitor on emulation containers
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
+            logger.info(f"Starting host monitor thread on ip: {c.docker_gw_bridge_ip}")
             HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                     ip=c.docker_gw_bridge_ip)
+                                                     ip=c.docker_gw_bridge_ip, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the Kafka container
-            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+            logger.info(f"Starting kafka host monitor thread on IP: "
+                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
+            HostController.start_host_monitor_thread(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the ELK container
-            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                     ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+            logger.info(f"Starting ELK host monitor thread on IP: "
+                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            HostController.start_host_monitor_thread(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None and \
                 emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             # Start host monitor on the SDN controller container
+            logger.info(f"Starting SDN controller host monitor thread on IP: "
+                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             HostController.start_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def start_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+    def start_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger,
                         initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -172,6 +184,7 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Start filebeat on emulation containers
@@ -180,23 +193,23 @@ class HostController:
                 continue
             HostController.start_filebeat(emulation_env_config=emulation_env_config,
                                           ips=[c.docker_gw_bridge_ip] + c.get_ips(),
-                                          initial_start=initial_start)
+                                          initial_start=initial_start, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start filebeat on the Kafka container
             HostController.start_filebeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.kafka_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.kafka_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Start filebeat on the ELK container
             HostController.start_filebeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.elk_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
@@ -205,10 +218,10 @@ class HostController:
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
                      emulation_env_config.sdn_controller_config.container.get_ips()),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
     @staticmethod
-    def start_packetbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+    def start_packetbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger,
                           initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -217,6 +230,7 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
         :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :param logger: the logger to use for logging
         :return: None
         """
         # Start packetbeat on emulation containers
@@ -226,23 +240,23 @@ class HostController:
             HostController.start_packetbeat(
                 emulation_env_config=emulation_env_config,
                 ips=[c.docker_gw_bridge_ip] + c.get_ips(),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start packetbeat on the Kafka container
             HostController.start_packetbeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.kafka_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.kafka_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Start packetbeat on the ELK container
             HostController.start_packetbeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.elk_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
@@ -251,10 +265,10 @@ class HostController:
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
                      emulation_env_config.sdn_controller_config.container.get_ips()),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
     @staticmethod
-    def start_metricbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+    def start_metricbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger,
                           initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -263,6 +277,7 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :param initial_start: boolean indicating whether this method is called on emulation initialization or not
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Start packetbeat on emulation containers
@@ -272,7 +287,7 @@ class HostController:
             HostController.start_metricbeat(
                 emulation_env_config=emulation_env_config,
                 ips=[c.docker_gw_bridge_ip] + c.get_ips(),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start metricbeat on the Kafka container
@@ -280,7 +295,7 @@ class HostController:
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
                      emulation_env_config.kafka_config.container.get_ips()),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start metricbeat on the ELK container
@@ -288,7 +303,7 @@ class HostController:
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
                      emulation_env_config.elk_config.container.get_ips()),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
@@ -296,11 +311,12 @@ class HostController:
             HostController.start_metricbeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.sdn_controller_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.sdn_controller_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
     @staticmethod
-    def start_heartbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, initial_start: bool = False) -> None:
+    def start_heartbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger,
+                         initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and heartbeat
@@ -308,6 +324,7 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :param initial_start: boolean indicating whether this method is called on emulation initialization or not
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Start heartbeat on emulation containers
@@ -317,23 +334,23 @@ class HostController:
             HostController.start_heartbeat(
                 emulation_env_config=emulation_env_config,
                 ips=[c.docker_gw_bridge_ip] + c.get_ips(),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Start heartbeat on the Kafka container
             HostController.start_heartbeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.kafka_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.kafka_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.kafka_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Start heartbeat on the ELK container
             HostController.start_heartbeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.elk_config.container.docker_gw_bridge_ip] +
-                    emulation_env_config.elk_config.container.get_ips()),
-                initial_start=initial_start)
+                     emulation_env_config.elk_config.container.get_ips()),
+                initial_start=initial_start, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
@@ -342,249 +359,309 @@ class HostController:
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
                      emulation_env_config.sdn_controller_config.container.get_ips()),
-                initial_start=initial_start)
+                initial_start=initial_start, logger=logger)
 
     @staticmethod
-    def stop_filebeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_filebeats(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to stop filebeat
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Stop filebeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_filebeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
+            HostController.stop_filebeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip,
+                                         logger=logger)
 
         # Stop filebeat on the kafka container
         HostController.stop_filebeat(emulation_env_config=emulation_env_config,
-                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                     logger=logger)
 
         # Stop filebeat on the ELK container
         HostController.stop_filebeat(emulation_env_config=emulation_env_config,
-                                     ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+                                     ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                     logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop filebeat on the SDN controller container
             HostController.stop_filebeat(emulation_env_config=emulation_env_config,
-                                         ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                                         ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                                         logger=logger)
 
     @staticmethod
-    def stop_packetbeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_packetbeats(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to stop packetbeat
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Stop packetbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_packetbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
+            HostController.stop_packetbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip,
+                                           logger=logger)
 
         # Stop packetbeat on the kafka container
         HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+                                       ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                       logger=logger)
 
         # Stop packetbeat on the ELK container
         HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+                                       ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                       logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop packetbeat on the SDN controller container
             HostController.stop_packetbeat(emulation_env_config=emulation_env_config,
-                                           ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                                           ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                                           logger=logger)
 
     @staticmethod
-    def stop_metricbeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_metricbeats(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to stop metricbeat
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Stop metricbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_metricbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
+            HostController.stop_metricbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip,
+                                           logger=logger)
 
         # Stop metricbeat on the kafka container
         HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+                                       ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                       logger=logger)
 
         # Stop metricbeat on the ELK container
         HostController.stop_metricbeat(emulation_env_config=emulation_env_config,
-                                       ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+                                       ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                       logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop metricbeat on the SDN controller container
             HostController.stop_metricbeat(
                 emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def stop_heartbeats(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_heartbeats(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to stop heartbeat
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Stop heartbeat on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_heartbeat(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
+            HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
+                                          ip=c.docker_gw_bridge_ip, logger=logger)
 
         # Stop heartbeat on the kafka container
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                      ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+                                      ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                      logger=logger)
 
         # Stop heartbeat on the ELK container
         HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                      ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+                                      ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                      logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop heartbeat on the SDN controller container
             HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
-                                          ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                                          ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                                          logger=logger)
 
     @staticmethod
-    def config_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def config_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                         logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of filebeat
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Configure filebeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            HostController.config_filebeat(emulation_env_config=emulation_env_config, container=c)
+            logger.info(f"Configuring filebeat on ip: {c.docker_gw_bridge_ip}")
+            HostController.config_filebeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure filebeat on the kafka container
+            logger.info(f"Configuring filebeat on kafka container with ip: "
+                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
-                                           container=emulation_env_config.kafka_config.container)
+                                           container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure filebeat on the ELK container
+            logger.info(f"Configuring filebeat on elk container with ip: "
+                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
-                                           container=emulation_env_config.elk_config.container)
+                                           container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
+            logger.info(f"Configuring filebeat on SDN controller container with ip: "
+                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure filebeat on the SDN controller container
             HostController.config_filebeat(emulation_env_config=emulation_env_config,
-                                           container=emulation_env_config.sdn_controller_config.container)
+                                           container=emulation_env_config.sdn_controller_config.container,
+                                           logger=logger)
 
     @staticmethod
-    def config_packetbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def config_packetbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                           logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of packetbeat
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Configure packetbeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            HostController.config_packetbeat(emulation_env_config=emulation_env_config, container=c)
+            logger.info(f"Configuring packetbeat on ip: {c.docker_gw_bridge_ip}")
+            HostController.config_packetbeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure packetbeat on the kafka container
+            logger.info(f"Configuring packetbeat on kafka container with ip: "
+                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
-                                             container=emulation_env_config.kafka_config.container)
+                                             container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure packetbeat on the ELK container
+            logger.info(f"Configuring packetbeat on elk container with ip: "
+                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
-                                             container=emulation_env_config.elk_config.container)
+                                             container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
+            logger.info(f"Configuring packetbeat on SDN controller container with ip: "
+                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure packetbeat on the SDN controller container
             HostController.config_packetbeat(emulation_env_config=emulation_env_config,
-                                             container=emulation_env_config.sdn_controller_config.container)
+                                             container=emulation_env_config.sdn_controller_config.container,
+                                             logger=logger)
 
     @staticmethod
-    def config_metricbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def config_metricbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                           logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of metricbeat
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Configure metricbeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            HostController.config_metricbeat(emulation_env_config=emulation_env_config, container=c)
+            logger.info(f"Configuring metricbeat on ip: {c.docker_gw_bridge_ip}")
+            HostController.config_metricbeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure metricbeat on the kafka container
+            logger.info(f"Configuring metricbeat on kafka container with ip: "
+                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
-                                             container=emulation_env_config.kafka_config.container)
+                                             container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure metricbeat on the ELK container
+            logger.info(f"Configuring metricbeat on elk container with ip: "
+                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
-                                             container=emulation_env_config.elk_config.container)
+                                             container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
+            logger.info(f"Configuring metricbeat on SDN controller container with ip: "
+                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure metricbeat on the SDN controller container
             HostController.config_metricbeat(emulation_env_config=emulation_env_config,
-                                             container=emulation_env_config.sdn_controller_config.container)
+                                             container=emulation_env_config.sdn_controller_config.container,
+                                             logger=logger)
 
     @staticmethod
-    def config_heartbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def config_heartbeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                          logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to setup the configuration of heartbeat
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         # Configure heartbeat on the emulation containers
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
-            HostController.config_heartbeat(emulation_env_config=emulation_env_config, container=c)
+            logger.info(f"Configuring heartbeat on ip: {c.docker_gw_bridge_ip}")
+            HostController.config_heartbeat(emulation_env_config=emulation_env_config, container=c, logger=logger)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Configure heartbeat on the kafka container
+            logger.info(f"Configuring heartbeat on kafka container with ip: "
+                        f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                            container=emulation_env_config.kafka_config.container)
+                                            container=emulation_env_config.kafka_config.container, logger=logger)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Configure heartbeat on the ELK container
+            logger.info(f"Configuring heartbeat on elk container with ip: "
+                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                            container=emulation_env_config.elk_config.container)
+                                            container=emulation_env_config.elk_config.container, logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
+            logger.info(f"Configuring heartbeat on SDN controller container with ip: "
+                        f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
             # Configure heartbeat on the SDN controller container
             HostController.config_heartbeat(emulation_env_config=emulation_env_config,
-                                            container=emulation_env_config.sdn_controller_config.container)
+                                            container=emulation_env_config.sdn_controller_config.container,
+                                            logger=logger)
 
     @staticmethod
-    def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
         to start the Host manager and the monitor thread
 
         :param emulation_env_config: the emulation env config
         :param ip: IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
@@ -592,7 +669,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.monitor_running:
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Host monitor thread is not running on {ip}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -604,14 +681,16 @@ class HostController:
                     time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
     @staticmethod
-    def start_filebeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
+    def start_filebeat(emulation_env_config: EmulationEnvConfig, ips: List[str], logger: logging.Logger,
+                       initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
         to start the Host manager and filebeat
 
         :param emulation_env_config: the emulation env config
-        :param ip: IP of the container
+        :param ips: IP of the container
         :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
@@ -622,7 +701,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.filebeat_running:
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Filebeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -631,14 +710,16 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_filebeat(stub=stub)
 
     @staticmethod
-    def start_packetbeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
+    def start_packetbeat(emulation_env_config: EmulationEnvConfig, ips: List[str],
+                         logger: logging.Logger, initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
         to start the Host manager and packetbeat
 
         :param emulation_env_config: the emulation env config
-        :param ip: IP of the container
+        :param ips: IP of the container
         :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
@@ -649,7 +730,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.packetbeat_running:
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Packetbeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -658,14 +739,16 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_packetbeat(stub=stub)
 
     @staticmethod
-    def start_metricbeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
+    def start_metricbeat(emulation_env_config: EmulationEnvConfig, ips: List[str],
+                         logger: logging.Logger, initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
         to start the Host manager and metricbeat
 
         :param emulation_env_config: the emulation env config
-        :param ip: IP of the container
+        :param ips: IP of the container
         :param initial_start: boolean indicating whether this method is called on emulation initialization or not
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
@@ -676,7 +759,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.metricbeat_running:
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Metricbeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -685,14 +768,17 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_metricbeat(stub=stub)
 
     @staticmethod
-    def start_heartbeat(emulation_env_config: EmulationEnvConfig, ips: List[str], initial_start: bool = False) -> None:
+    def start_heartbeat(emulation_env_config: EmulationEnvConfig, ips: List[str],
+                        logger: logging.Logger,
+                        initial_start: bool = False) -> None:
         """
         A method that sends a request to the HostManager on a specific IP
         to start the Host manager and heartbeat
 
         :param emulation_env_config: the emulation env config
-        :param ip: IP of the container
+        :param ips: IPs of the container
         :param initial_start: boolean indicating whether this method is called on emulation initialization or not
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
@@ -703,7 +789,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.heartbeat_running:
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Heartbeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -712,13 +798,15 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_heartbeat(stub=stub)
 
     @staticmethod
-    def config_filebeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
+    def config_filebeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig,
+                        logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container
         to setup the filebeat configuration
 
         :param emulation_env_config: the emulation env config
         :param container: the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
@@ -730,7 +818,7 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring filebeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring filebeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_filebeat(
                 stub=stub, log_files_paths=node_beats_config.log_files_paths,
                 kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
@@ -745,13 +833,15 @@ class HostController:
                 kafka=node_beats_config.kafka_input)
 
     @staticmethod
-    def config_packetbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
+    def config_packetbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig,
+                          logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container
         to setup the packetbeat configuration
 
         :param emulation_env_config: the emulation env config
         :param container: the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
@@ -761,7 +851,7 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring packetbeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring packetbeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_packetbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -770,13 +860,15 @@ class HostController:
                 num_elastic_shards=emulation_env_config.beats_config.num_elastic_shards)
 
     @staticmethod
-    def config_metricbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
+    def config_metricbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig,
+                          logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container
         to setup the metricbeat configuration
 
         :param emulation_env_config: the emulation env config
         :param container: the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
@@ -787,7 +879,7 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring metricbeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring metricbeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_metricbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -800,13 +892,15 @@ class HostController:
                 reload_enabled=emulation_env_config.beats_config.reload_enabled)
 
     @staticmethod
-    def config_heartbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig) -> None:
+    def config_heartbeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig,
+                         logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container
         to setup the heartbeat configuration
 
         :param emulation_env_config: the emulation env config
         :param container: the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
@@ -817,7 +911,7 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Configuring heartbeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring heartbeat on {container.docker_gw_bridge_ip}.")
             csle_collector.host_manager.query_host_manager.config_heartbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -827,38 +921,43 @@ class HostController:
                 hosts_to_monitor=node_beats_config.heartbeat_hosts_to_monitor)
 
     @staticmethod
-    def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container to stop the monitor threads
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Stop host monitor threads on emulation containers
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
+            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
+                                                    ip=c.docker_gw_bridge_ip, logger=logger)
 
         # Stop host monitor threads on the kafka container
         HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+                                                ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                                logger=logger)
 
         # Stop host monitor threads on the ELK container
         HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+                                                ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                                logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Stop host monitor threads on the SDN controller container
             HostController.stop_host_monitor_thread(
                 emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container to stop the monitor threads
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
@@ -868,16 +967,17 @@ class HostController:
                 f'{ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Stopping the Host monitor thread on {ip}.")
+            logger.info(f"Stopping the Host monitor thread on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
 
     @staticmethod
-    def stop_filebeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_filebeat(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container to stop filebeat
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
@@ -887,16 +987,17 @@ class HostController:
                 f'{ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Stopping filebeat on {ip}.")
+            logger.info(f"Stopping filebeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_filebeat(stub=stub)
 
     @staticmethod
-    def stop_packetbeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_packetbeat(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container to stop packetbeat
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
@@ -906,16 +1007,17 @@ class HostController:
                 f'{ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Stopping packetbeat on {ip}.")
+            logger.info(f"Stopping packetbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_packetbeat(stub=stub)
 
     @staticmethod
-    def stop_metricbeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_metricbeat(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container to stop metricbeat
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
@@ -925,16 +1027,17 @@ class HostController:
                 f'{ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Stopping metricbeat on {ip}.")
+            logger.info(f"Stopping metricbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_metricbeat(stub=stub)
 
     @staticmethod
-    def stop_heartbeat(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_heartbeat(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on a specific container to stop heartbeat
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
@@ -944,7 +1047,7 @@ class HostController:
                 f'{ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            Logger.__call__().get_logger().info(f"Stopping heartbeat on {ip}.")
+            logger.info(f"Stopping heartbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_heartbeat(stub=stub)
 
     @staticmethod

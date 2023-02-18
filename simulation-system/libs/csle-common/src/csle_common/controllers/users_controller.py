@@ -1,3 +1,5 @@
+import logging
+
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
@@ -9,17 +11,19 @@ class UsersController:
     """
 
     @staticmethod
-    def create_users(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def create_users(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Creates users in an emulation environment according to a specified users-configuration
 
         :param emulation_env_config: the emulation env configuration
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for users_conf in emulation_env_config.users_config.users_configs:
             if users_conf.physical_host_ip != physical_server_ip:
                 continue
+            logger.info(f"Creating users on container: {users_conf.docker_gw_bridge_ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=users_conf.docker_gw_bridge_ip)
 
             cmd = "ls /home"

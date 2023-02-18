@@ -83,13 +83,15 @@ class EmulationEnvController:
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
-    def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
+    def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                                 logger: logging.Logger) \
             -> None:
         """
         Installs the latest csle-collector and csle-ryu libraries on all nodes of a given emulation
 
         :param emulation_env_config: the emulation configuration
         :param physical_server_ip: the IP of the physical servers where the containers are
+        :param logger: the logger to use for logging
         :return: None
         """
         containers = list(filter(lambda x: x.physical_host_ip == physical_server_ip,
@@ -102,7 +104,7 @@ class EmulationEnvController:
         if emulation_env_config.sdn_controller_config is not None:
             ips.append(emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
         for ip in ips:
-            Logger.__call__().get_logger().info(f"Installing csle-collector version "
+            logger.info(f"Installing csle-collector version "
                                                 f"{emulation_env_config.csle_collector_version} on node: {ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
             cmd = collector_constants.INSTALL
@@ -112,7 +114,7 @@ class EmulationEnvController:
             time.sleep(2)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(2)
-            Logger.__call__().get_logger().info(f"Installing csle-ryu version "
+            logger.info(f"Installing csle-ryu version "
                                                 f"{emulation_env_config.csle_ryu_version} on node: {ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
             cmd = ryu_constants.INSTALL
@@ -414,21 +416,23 @@ class EmulationEnvController:
         time.sleep(2)
 
     @staticmethod
-    def apply_kafka_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def apply_kafka_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                           logger: logging.Logger) -> None:
         """
         Applies the kafka config
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         if emulation_env_config.kafka_config.container.physical_host_ip != physical_server_ip:
             return
         steps = 2
         current_step = 1
-        Logger.__call__().get_logger().info("-- Configuring the kafka container --")
+        logger.info("-- Configuring the kafka container --")
 
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"-- Kafka configuration step {current_step}/{steps}: Restarting the Kafka server --")
         KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
@@ -436,7 +440,7 @@ class EmulationEnvController:
         time.sleep(20)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Kafka configuration step {current_step}/{steps}: Create topics --")
+        logger.info(f"-- Kafka configuration step {current_step}/{steps}: Create topics --")
         KafkaController.create_topics(emulation_env_config=emulation_env_config)
 
     @staticmethod
@@ -880,12 +884,13 @@ class EmulationEnvController:
         return running_emulations, stopped_emulations
 
     @staticmethod
-    def ping_all(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def ping_all(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Tests the connections between all the containers using ping
 
         :param emulation_env_config: the emulation config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         if emulation_env_config.sdn_controller_config is not None \
@@ -893,7 +898,7 @@ class EmulationEnvController:
 
             # Ping controller-switches
             for ovs_sw in emulation_env_config.ovs_config.switch_configs:
-                Logger.__call__().get_logger().info(f"Ping {ovs_sw.controller_ip} to {ovs_sw.ip}")
+                logger.info(f"Ping {ovs_sw.controller_ip} to {ovs_sw.ip}")
                 cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} " \
                       f"{emulation_env_config.sdn_controller_config.container.get_full_name()} " \
                       f"{constants.COMMANDS.PING} " \
@@ -911,7 +916,7 @@ class EmulationEnvController:
                 continue
             for c2 in emulation_env_config.containers_config.containers:
                 for ip in c2.get_ips():
-                    Logger.__call__().get_logger().info(f"Ping {c1.get_ips()[0]} to {ip}")
+                    logger.info(f"Ping {c1.get_ips()[0]} to {ip}")
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {c1.get_full_name()} {constants.COMMANDS.PING} " \
                           f"{ip} -c 5 &"
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)

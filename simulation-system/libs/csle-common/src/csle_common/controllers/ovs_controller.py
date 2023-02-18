@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import time
 from csle_common.logging.log import Logger
@@ -13,12 +14,14 @@ class OVSController:
     """
 
     @staticmethod
-    def create_virtual_switches_on_container(containers_config: ContainersConfig, physical_server_ip: str) -> None:
+    def create_virtual_switches_on_container(containers_config: ContainersConfig, physical_server_ip: str,
+                                             logger: logging.Logger) -> None:
         """
         Sets up OVS switches on containers
 
         :param containers_config: the containers configuration
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in containers_config.containers:
@@ -26,7 +29,7 @@ class OVSController:
                 continue
             for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
                 if ovs_image in c.name:
-                    Logger.__call__().get_logger().info(f"Creating OVS bridge and ports "
+                    logger.info(f"Creating OVS bridge and ports "
                                                         f"on container: {c.get_full_name()}")
                     container_name = c.get_full_name()
                     bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
@@ -58,18 +61,19 @@ class OVSController:
                         idx += 1
 
     @staticmethod
-    def apply_ovs_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def apply_ovs_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Aplies the OVS configuration on the OVS switches
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for ovs_sw in emulation_env_config.ovs_config.switch_configs:
             if ovs_sw.physical_host_ip != physical_server_ip:
                 continue
-            Logger.__call__().get_logger().info(f"Configuring OVS bridge on container: {ovs_sw.container_name}")
+            logger.info(f"Configuring OVS bridge on container: {ovs_sw.container_name}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ovs_sw.docker_gw_bridge_ip)
             bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} set bridge {bridge_name} " \

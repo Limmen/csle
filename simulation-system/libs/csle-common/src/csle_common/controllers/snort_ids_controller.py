@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import grpc
 import time
@@ -19,19 +20,22 @@ class SnortIDSController:
     """
 
     @staticmethod
-    def start_snort_idses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_snort_idses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                          logger: logging.Logger) -> None:
         """
         Utility function for starting the Snort IDSes
 
         :param emulation_config: the emulation env configuration
         :param physical_server_ip: the ip of the phsyical server
-        :return:
+        :param logger: the logger to use for logging
+        :return: None
         """
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
+                    logger.info(f"Starting the Snort IDS on IP: {c.docker_gw_bridge_ip}")
                     SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config,
                                                        ip=c.docker_gw_bridge_ip)
 
@@ -177,13 +181,15 @@ class SnortIDSController:
         time.sleep(2)
 
     @staticmethod
-    def start_snort_idses_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_snort_idses_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                          logger: logging.Logger) -> None:
         """
         A method that sends a request to the SnortIDSManager on every container that runs
         an IDS to start the IDS manager and the monitor thread
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
@@ -191,6 +197,7 @@ class SnortIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
+                    logger.info(f"Starting Snort IDS monitor thread on IP: {c.docker_gw_bridge_ip}")
                     SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=emulation_env_config,
                                                                         ip=c.docker_gw_bridge_ip)
 

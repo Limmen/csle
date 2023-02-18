@@ -1,3 +1,5 @@
+import logging
+
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
@@ -10,15 +12,16 @@ class TopologyController:
     """
 
     @staticmethod
-    def create_topology(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def create_topology(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Utility function for connecting to a running emulation and creating the configuration
 
         :param emulation_env_config: the emulation configuration
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
-        Logger.__call__().get_logger().info("Creating topology")
+        logger.info("Creating topology")
         topology_configs = emulation_env_config.topology_config.node_configs
         topology_configs = topology_configs + [emulation_env_config.kafka_config.firewall_config]
         if emulation_env_config.sdn_controller_config is not None:
@@ -27,7 +30,7 @@ class TopologyController:
             if node_fw_config.physical_host_ip != physical_server_ip:
                 continue
             ip = node_fw_config.docker_gw_bridge_ip
-            Logger.__call__().get_logger().info(f"Connecting to node:{ip}")
+            logger.info(f"Connecting to node:{ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
             for route in node_fw_config.routes:
