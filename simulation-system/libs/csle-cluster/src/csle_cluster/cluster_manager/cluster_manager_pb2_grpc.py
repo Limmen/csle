@@ -205,9 +205,9 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.ApplyKafkaConfigMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
-        self.startRyu = channel.unary_unary(
-                '/ClusterManager/startRyu',
-                request_serializer=cluster__manager__pb2.StartRyuMsg.SerializeToString,
+        self.startSdnController = channel.unary_unary(
+                '/ClusterManager/startSdnController',
+                request_serializer=cluster__manager__pb2.StartSdnControllerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.applyResourceConstraints = channel.unary_unary(
@@ -584,7 +584,7 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def startRyu(self, request, context):
+    def startSdnController(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -951,9 +951,9 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     request_deserializer=cluster__manager__pb2.ApplyKafkaConfigMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
-            'startRyu': grpc.unary_unary_rpc_method_handler(
-                    servicer.startRyu,
-                    request_deserializer=cluster__manager__pb2.StartRyuMsg.FromString,
+            'startSdnController': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSdnController,
+                    request_deserializer=cluster__manager__pb2.StartSdnControllerMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'applyResourceConstraints': grpc.unary_unary_rpc_method_handler(
@@ -1754,7 +1754,7 @@ class ClusterManager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def startRyu(request,
+    def startSdnController(request,
             target,
             options=(),
             channel_credentials=None,
@@ -1764,8 +1764,8 @@ class ClusterManager(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startRyu',
-            cluster__manager__pb2.StartRyuMsg.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSdnController',
+            cluster__manager__pb2.StartSdnControllerMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

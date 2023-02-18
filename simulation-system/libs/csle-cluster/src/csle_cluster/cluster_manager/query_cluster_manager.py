@@ -616,7 +616,7 @@ def apply_kafka_config(
     return operation_outcome_dto
 
 
-def start_ryu(
+def start_sdn_controller(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
@@ -630,10 +630,10 @@ def start_ryu(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartSdnControllerMsg(
         emulation=emulation, ipFirstOctet=ip_first_octet
     )
-    operation_outcome_dto = stub.startRyu(operation_msg, timeout=timeout)
+    operation_outcome_dto = stub.startSdnController(operation_msg, timeout=timeout)
     return operation_outcome_dto
 
 

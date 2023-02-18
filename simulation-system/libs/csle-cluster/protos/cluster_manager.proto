@@ -40,7 +40,7 @@ service ClusterManager {
   rpc attachContainersInExecutionToNetworks(AttachContainersToNetworksInExecutionMsg) returns (OperationOutcomeDTO) {}
   rpc installLibraries(InstallLibrariesMsg) returns (OperationOutcomeDTO) {}
   rpc applyKafkaConfig(ApplyKafkaConfigMsg) returns (OperationOutcomeDTO) {}
-  rpc startRyu(StartRyuMsg) returns (OperationOutcomeDTO) {}
+  rpc startSdnController(StartSdnControllerMsg) returns (OperationOutcomeDTO) {}
   rpc applyResourceConstraints(ApplyResouceConstraintsMsg) returns (OperationOutcomeDTO) {}
   rpc createOvsSwitches(CreateOvsSwitchesMsg) returns (OperationOutcomeDTO) {}
   rpc pingExecution(PingExecutionMsg) returns (OperationOutcomeDTO) {}
@@ -103,8 +103,8 @@ message ApplyKafkaConfigMsg {
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to apply start the Ryu controller of an execution
-message StartRyuMsg {
+// Message that the client sends when requesting to apply start the SDN controller of an execution
+message StartSdnControllerMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }

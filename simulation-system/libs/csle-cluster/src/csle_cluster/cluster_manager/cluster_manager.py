@@ -710,8 +710,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                   physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
-    def startRyu(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMsg,
+    def startSdnController(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSdnControllerMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts the Ryu SDN controller of an execution

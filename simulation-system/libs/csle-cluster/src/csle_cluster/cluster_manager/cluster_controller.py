@@ -608,7 +608,7 @@ class ClusterController:
             return node_status_dto
 
     @staticmethod
-    def start_ryu(ip: str, port: int, emulation: str, ip_first_octet: int) \
+    def start_sdn_controller(ip: str, port: int, emulation: str, ip_first_octet: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
         """
         Sends a request to start the Ryu SDN controller on a given execution
@@ -622,7 +622,7 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ryu(
+            node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_sdn_controller(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
             return node_status_dto

@@ -469,9 +469,9 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     if emulation_env_config.sdn_controller_config is not None:
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Starting Ryu on {ip}")
-            ClusterController.start_ryu(ip=ip,  port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                emulation=execution.emulation_name,
-                                        ip_first_octet=execution.ip_first_octet)
+            ClusterController.start_sdn_controller(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                   emulation=execution.emulation_name,
+                                                   ip_first_octet=execution.ip_first_octet)
         time.sleep(10)
 
     current_step += 1
