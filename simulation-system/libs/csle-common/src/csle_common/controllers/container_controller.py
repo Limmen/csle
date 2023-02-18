@@ -1,3 +1,4 @@
+import logging
 from typing import List, Tuple
 import subprocess
 import time
@@ -353,17 +354,14 @@ class ContainerController:
         return networks
 
     @staticmethod
-    def create_networks(containers_config: ContainersConfig, physical_host_ip: str) -> None:
+    def create_networks(containers_config: ContainersConfig) -> None:
         """
         Creates docker networks for a given containers configuration
 
         :param containers_config: the containers configuration
-        :param physical_host_ip: the IP of the physical host
         :return: None
         """
         for c in containers_config.containers:
-            if c.physical_host_ip != physical_host_ip:
-                continue
             for ip_net in c.ips_and_networks:
                 existing_networks = ContainerController.get_network_references()
                 existing_networks = list(map(lambda x: x.name, existing_networks))
@@ -371,14 +369,19 @@ class ContainerController:
                 ContainerController.create_network_from_dto(network_dto=net, existing_network_names=existing_networks)
 
     @staticmethod
-    def connect_containers_to_networks(emulation_env_config: EmulationEnvConfig) -> None:
+    def connect_containers_to_networks(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                       logger: logging.Logger) -> None:
         """
         Connects running containers to networks
 
         :param emulation_env_config: the emulation config
+        :param physical_server_ip: the ip of the physical server where the operation is executed
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             container_name = c.get_full_name()
             # Disconnect from none
             cmd = f"docker network disconnect none {container_name}"
@@ -391,7 +394,7 @@ class ContainerController:
                 ip, net = ip_net
                 cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                       f"{container_name}"
-                Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
+                logger.info(f"Connecting container:{container_name} to network:{net.name} "
                                                     f"with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
@@ -400,9 +403,12 @@ class ContainerController:
                     docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
                     c.docker_gw_bridge_ip = docker_gw_bridge_ip
 
-        ContainerController.connect_container_to_network(container=emulation_env_config.kafka_config.container)
-        ContainerController.connect_container_to_network(container=emulation_env_config.elk_config.container)
-        if emulation_env_config.sdn_controller_config is not None:
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
+            ContainerController.connect_container_to_network(container=emulation_env_config.kafka_config.container)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
+            ContainerController.connect_container_to_network(container=emulation_env_config.elk_config.container)
+        if emulation_env_config.sdn_controller_config is not None and \
+                emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
             ContainerController.connect_container_to_network(
                 container=emulation_env_config.sdn_controller_config.container)
 

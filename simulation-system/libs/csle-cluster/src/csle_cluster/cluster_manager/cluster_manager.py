@@ -652,8 +652,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"and emulation: {request.emulation} to networks")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config,
-                                            physical_host_ip=GeneralUtil.get_host_ip())
+        ContainerController.connect_containers_to_networks(emulation_env_config=execution.emulation_env_config,
+                                                           physical_server_ip=GeneralUtil.get_host_ip(),
+                                                           logger=logging.getLogger())
         MetastoreFacade.update_emulation_execution(emulation_execution=execution,
                                                    ip_first_octet=execution.ip_first_octet,
                                                    emulation=execution.emulation_name)

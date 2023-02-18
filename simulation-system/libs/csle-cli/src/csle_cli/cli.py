@@ -405,6 +405,7 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     :return: None
     """
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
+    from csle_common.controllers.container_controller import ContainerController
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     import csle_common.constants.constants as constants
@@ -412,15 +413,15 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
     ip = GeneralUtil.get_host_ip()
     physical_servers = [ip]
-    emulation_execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config,
+    execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config,
                                                                   physical_servers=physical_servers)
 
     steps = 37
     if no_traffic:
         steps = steps - 1
     if no_clients:
-        emulation_execution.emulation_env_config.traffic_config.client_population_config = \
-            emulation_execution.emulation_env_config.traffic_config.client_population_config.no_clients()
+        execution.emulation_env_config.traffic_config.client_population_config = \
+            execution.emulation_env_config.traffic_config.client_population_config.no_clients()
 
     current_step = 1
     Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting containers --")
@@ -428,23 +429,26 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
         Logger.__call__().get_logger().info(f"-- Starting containers of: {emulation_env_config.name} "
                                             f"on server: {ip}--")
         ClusterController.start_containers_in_execution(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                        emulation = emulation_execution.emulation_name,
-                                                        ip_first_octet=emulation_execution.ip_first_octet)
+                                                        emulation = execution.emulation_name,
+                                                        ip_first_octet=execution.ip_first_octet)
+
+    Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
+    ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config)
 
     current_step += 1
     Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
     for ip in physical_servers:
         Logger.__call__().get_logger().info(f"-- Connecting containers of: {emulation_env_config.name} to networks"
-                                            f"on server: {ip}--")
+                                            f" on server: {ip}--")
         ClusterController.attach_containers_in_execution_to_networks(
-            ip=ip,  port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_execution.emulation_name,
-            ip_first_octet=emulation_execution.ip_first_octet)
+            ip=ip,  port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+            ip_first_octet=execution.ip_first_octet)
 
     # Update execution config with the new IPs for the docker-gw
-    emulation_execution = MetastoreFacade.get_emulation_execution(ip_first_octet=emulation_execution.ip_first_octet,
-                                                                  emulation_name=emulation_execution.emulation_name)
-    emulation_execution = EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip(
-        execution=emulation_execution)
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution.ip_first_octet,
+                                                                  emulation_name=execution.emulation_name)
+    execution = EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip(
+        execution=execution)
 
 
 def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
