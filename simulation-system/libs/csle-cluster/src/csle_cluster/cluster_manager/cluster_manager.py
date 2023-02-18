@@ -1120,7 +1120,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Applies filebeta confgiurations to containers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Applies filebeat confgiurations to containers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
