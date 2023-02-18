@@ -211,211 +211,6 @@ class EmulationEnvController:
         return execution
 
     @staticmethod
-    def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False,
-                                   no_clients: bool = False) -> None:
-        """
-        Applies the emulation env config
-
-        :param emulation_execution: the emulation execution
-        :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
-        :param no_clients: a boolean parameter that is True if the client population should be skipped
-        :return: None
-        """
-        steps = 36
-        if no_traffic:
-            steps = steps - 1
-        if no_clients:
-            emulation_execution.emulation_env_config.traffic_config.client_population_config = \
-                emulation_execution.emulation_env_config.traffic_config.client_population_config.no_clients()
-
-        current_step = 1
-        emulation_env_config = emulation_execution.emulation_env_config
-
-        Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
-        ContainerController.create_networks(containers_config=emulation_env_config.containers_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
-        ContainerController.connect_containers_to_networks(emulation_env_config=emulation_env_config)
-
-        # Update execution config with the new IPs for the docker-gw
-        emulation_execution.emulation_env_config = emulation_env_config
-        emulation_execution = EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip(
-            execution=emulation_execution)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
-        EmulationEnvController.install_csle_collector_and_ryu_libraries(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
-        EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
-        if emulation_env_config.sdn_controller_config is not None:
-            SDNControllerManager.start_ryu(emulation_env_config=emulation_env_config)
-            time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        ResourceConstraintsController.apply_resource_constraints(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
-        OVSController.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
-        EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
-        OVSController.apply_ovs_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
-        EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller monitor --")
-        if emulation_env_config.sdn_controller_config is not None:
-            SDNControllerManager.start_ryu_monitor(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
-        UsersController.create_users(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
-        VulnerabilitiesController.create_vulns(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating flags --")
-        FlagsController.create_flags(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
-        TopologyController.create_topology(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic managers --")
-        TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
-
-        if not no_traffic:
-            current_step += 1
-            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic generators "
-                                                f"on internal nodes --")
-            TrafficController.start_internal_traffic_generators(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
-        TrafficController.stop_client_producer(emulation_env_config=emulation_env_config)
-        TrafficController.start_client_population(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client Kafka producer --")
-        TrafficController.start_client_producer(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step "
-                                            f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
-        SnortIDSController.start_snort_idses(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-        SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step "
-                                            f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
-        OSSECIDSController.start_ossec_idses(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-        OSSECIDSController.start_ossec_idses_monitor_threads(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the ELK stack --")
-        EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
-                                            f"and host monitors --")
-        HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
-        HostController.config_filebeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying packetbeats configurations --")
-        HostController.config_packetbeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying metricbeats configurations --")
-        HostController.config_metricbeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying heartbeats configurations --")
-        HostController.config_heartbeats(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
-        HostController.start_filebeats(emulation_env_config=emulation_env_config, initial_start=True)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting packetbeats --")
-        HostController.start_packetbeats(emulation_env_config=emulation_env_config, initial_start=True)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting metricbeats --")
-        HostController.start_metricbeats(emulation_env_config=emulation_env_config, initial_start=True)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting heartbeats --")
-        HostController.start_heartbeats(emulation_env_config=emulation_env_config, initial_start=True)
-        time.sleep(10)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
-        ManagementSystemController.start_docker_stats_manager(
-            port=emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
-            log_file=emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
-            log_dir=emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
-            max_workers=emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
-        )
-        time.sleep(15)
-        ContainerController.start_docker_stats_thread(execution=emulation_execution)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
-        ManagementSystemController.start_cadvisor()
-        time.sleep(2)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Grafana --")
-        ManagementSystemController.start_grafana()
-        time.sleep(2)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Node_exporter --")
-        ManagementSystemController.start_node_exporter()
-        time.sleep(2)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Prometheus --")
-        ManagementSystemController.start_prometheus()
-        time.sleep(2)
-
-    @staticmethod
     def apply_kafka_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
                            logger: logging.Logger) -> None:
         """
@@ -444,34 +239,29 @@ class EmulationEnvController:
         KafkaController.create_topics(emulation_env_config=emulation_env_config)
 
     @staticmethod
-    def apply_elk_config(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Applies the ELK config
-
-        :param emulation_env_config: the emulation env config
-        :return: None
-        """
-        steps = 1
-        current_step = 1
-        Logger.__call__().get_logger().info(
-            f"-- ELK configuration step {current_step}/{steps}: Start the ELK stack  --")
-        ELKController.start_elk_stack(emulation_env_config=emulation_env_config)
-        time.sleep(30)
-
-    @staticmethod
-    def start_custom_traffic(emulation_env_config: EmulationEnvConfig, no_traffic: bool = True) -> None:
+    def start_custom_traffic(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                             no_traffic: bool = True) -> None:
         """
         Utility function for starting traffic generators and client population on a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param no_traffic boolean flag whether the internal traffic generators should be skipped.
+        :param physical_server_ip: ip of the physical servern
         :return: None
         """
         if not no_traffic:
-            TrafficController.start_internal_traffic_generators(emulation_env_config=emulation_env_config)
-        TrafficController.stop_client_producer(emulation_env_config=emulation_env_config)
-        TrafficController.start_client_population(emulation_env_config=emulation_env_config)
-        TrafficController.start_client_producer(emulation_env_config=emulation_env_config)
+            TrafficController.start_internal_traffic_generators(emulation_env_config=emulation_env_config,
+                                                                physical_server_ip=physical_server_ip,
+                                                                logger=Logger.__call__().get_logger())
+        TrafficController.stop_client_producer(emulation_env_config=emulation_env_config,
+                                               physical_server_ip=physical_server_ip,
+                                               logger=Logger.__call__().get_logger())
+        TrafficController.start_client_population(emulation_env_config=emulation_env_config,
+                                                  physical_server_ip=physical_server_ip,
+                                                  logger=Logger.__call__().get_logger())
+        TrafficController.start_client_producer(emulation_env_config=emulation_env_config,
+                                                physical_server_ip=physical_server_ip,
+                                                logger=Logger.__call__().get_logger())
 
     @staticmethod
     def stop_custom_traffic(emulation_env_config: EmulationEnvConfig) -> None:
