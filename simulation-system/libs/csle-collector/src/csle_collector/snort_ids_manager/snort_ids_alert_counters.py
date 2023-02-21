@@ -60,7 +60,7 @@ class SnortIdsAlertCounters:
             self.priority_alerts[constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD:])
         self.alerts_weighted_by_priority = 0
         for idx in range(len(self.priority_alerts)):
-            priority = (5 - idx + 1)
+            priority = (len(self.priority_alerts) - idx + 1)
             self.alerts_weighted_by_priority += priority * self.priority_alerts[idx]
 
     @staticmethod
