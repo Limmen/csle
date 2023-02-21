@@ -48,7 +48,7 @@ class SnortIdsAlertCounters:
         :return: None
         """
         for a in alerts:
-            if a.priority in range(0, len(self.priority_alerts)):
+            if a.priority-1 in range(0, len(self.priority_alerts)):
                 self.priority_alerts[a.priority] += 1
             if a.class_id in range(0, len(self.class_alerts)):
                 self.class_alerts[a.class_id] += 1
