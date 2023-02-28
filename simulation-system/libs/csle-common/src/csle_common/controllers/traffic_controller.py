@@ -43,16 +43,19 @@ class TrafficController:
                 continue
             # Connect
             TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
-                                                    node_traffic_config=node_traffic_config)
+                                                    node_traffic_config=node_traffic_config,
+                                                    logger=logger)
 
     @staticmethod
     def start_traffic_manager(emulation_env_config: EmulationEnvConfig,
-                              node_traffic_config: NodeTrafficConfig) -> None:
+                              node_traffic_config: NodeTrafficConfig,
+                              logger: logging.Logger) -> None:
         """
         Utility method for starting traffic manager on a specific container
 
         :param emulation_env_config: the emulation env config
         :param node_traffic_config: traffic config of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -68,7 +71,7 @@ class TrafficController:
 
         if constants.COMMANDS.SEARCH_TRAFFIC_MANAGER not in str(o):
 
-            Logger.__call__().get_logger().info(f"Starting traffic manager on node "
+            logger.info(f"Starting traffic manager on node "
                                                 f"{node_traffic_config.docker_gw_bridge_ip}")
 
             # Stop old background job if running
@@ -87,31 +90,36 @@ class TrafficController:
             time.sleep(2)
 
     @staticmethod
-    def stop_traffic_managers(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_traffic_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                              logger: logging.Logger) -> None:
         """
-        Utility method for stopping traffic managers
+        Utility method for stopping traffic managers on a given server
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server to stop the traffic managers
+        :param logger: the logger to use for logging
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            TrafficController.stop_traffic_manager(emulation_env_config=emulation_env_config,
-                                                   node_traffic_config=node_traffic_config)
+            if node_traffic_config.physical_host_ip == physical_server_ip:
+                TrafficController.stop_traffic_manager(emulation_env_config=emulation_env_config,
+                                                       node_traffic_config=node_traffic_config, logger=logger)
 
     @staticmethod
-    def stop_traffic_manager(emulation_env_config: EmulationEnvConfig, node_traffic_config: NodeTrafficConfig) -> None:
+    def stop_traffic_manager(emulation_env_config: EmulationEnvConfig, node_traffic_config: NodeTrafficConfig,
+                             logger: logging.Logger) -> None:
         """
         Utility method for stopping a specific traffic manager
 
         :param emulation_env_config: the emulation env config
         :param node_traffic_config: the node traffic configuration
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=node_traffic_config.docker_gw_bridge_ip)
-        Logger.__call__().get_logger().info(f"Stopping traffic manager on node "
-                                            f"{node_traffic_config.docker_gw_bridge_ip}")
+        logger.info(f"Stopping traffic manager on node {node_traffic_config.docker_gw_bridge_ip}")
 
         # Stop old background job if running
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -121,11 +129,12 @@ class TrafficController:
                                                     ip=node_traffic_config.docker_gw_bridge_ip))
 
     @staticmethod
-    def start_client_manager(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_client_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method starting the client manager
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -142,7 +151,7 @@ class TrafficController:
                 ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_CLIENT_MANAGER not in str(o):
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Starting client manager on node "
                 f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
@@ -164,7 +173,7 @@ class TrafficController:
             time.sleep(2)
 
     @staticmethod
-    def stop_client_manager(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_client_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method starting the client manager
 
@@ -175,9 +184,8 @@ class TrafficController:
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip)
 
-        Logger.__call__().get_logger().info(
-            f"Stopping client manager on node "
-            f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
+        logger.info(f"Stopping client manager on node "
+                    f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
         # Stop old background job if running
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -186,18 +194,19 @@ class TrafficController:
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip))
 
     @staticmethod
-    def stop_client_population(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_client_population(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Function for stopping the client arrival process of an emulation
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping client population on container: "
             f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
-        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
@@ -266,7 +275,7 @@ class TrafficController:
             f"Stopping client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
-        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
@@ -323,7 +332,7 @@ class TrafficController:
             for cmd in constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.CLIENT_1_SUBNET]:
                 commands.append(cmd.format(net.subnet_mask))
 
-        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
@@ -359,16 +368,17 @@ class TrafficController:
             )
 
     @staticmethod
-    def get_num_active_clients(emulation_env_config: EmulationEnvConfig) \
+    def get_num_active_clients(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) \
             -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Gets the number of active clients
 
         :param emulation_env_config: the emulation configuration
+        :param logger: the logger to use for logging
         :return: A ClientDTO which contains the number of active clients
         """
 
-        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
@@ -393,30 +403,36 @@ class TrafficController:
             return status
 
     @staticmethod
-    def stop_internal_traffic_generators(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_internal_traffic_generators(emulation_env_config: EmulationEnvConfig, logger: logging.Logger,
+                                         physical_server_ip: str) -> None:
         """
         Utility function for stopping internal traffic generators
 
         :param emulation_env_config: the configuration of the emulation env
+        :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            TrafficController.stop_internal_traffic_generator(emulation_env_config=emulation_env_config,
-                                                              node_traffic_config=node_traffic_config)
+            if node_traffic_config.physical_host_ip == physical_server_ip:
+                TrafficController.stop_internal_traffic_generator(emulation_env_config=emulation_env_config,
+                                                                  node_traffic_config=node_traffic_config,
+                                                                  logger=logger)
 
     @staticmethod
     def stop_internal_traffic_generator(emulation_env_config: EmulationEnvConfig,
-                                        node_traffic_config: NodeTrafficConfig) -> None:
+                                        node_traffic_config: NodeTrafficConfig, logger: logging.Logger) -> None:
         """
         Utility function for stopping a specific internal traffic generator
 
         :param emulation_env_config: the configuration of the emulation env
+        :param logger: the logger to use for logging
         :param node_traffic_config: the node traffic config
         :return: None
         """
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
-                                                node_traffic_config=node_traffic_config)
-        Logger.__call__().get_logger().info(f"Stopping traffic generator script, "
+                                                node_traffic_config=node_traffic_config, logger=logger)
+        logger.info(f"Stopping traffic generator script, "
                                             f"node ip:{node_traffic_config.docker_gw_bridge_ip}")
 
         # Open a gRPC session
@@ -449,25 +465,26 @@ class TrafficController:
             else:
                 TrafficController.start_internal_traffic_generator(
                     emulation_env_config=emulation_env_config, node_traffic_config=node_traffic_config,
-                    container=container)
+                    container=container, logger=logger)
 
     @staticmethod
     def start_internal_traffic_generator(
             emulation_env_config: EmulationEnvConfig, node_traffic_config: NodeTrafficConfig,
-            container: NodeContainerConfig) -> None:
+            container: NodeContainerConfig, logger: logging.Logger) -> None:
         """
         Utility function for starting internal traffic generators
 
         :param emulation_env_config: the configuration of the emulation env
         :param node_traffic_config: the node traffic configuration
         :param container: the container
+        :param logger: the logger to use for logging
         :return: None
         """
         if node_traffic_config is None or container is None:
             return
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
-                                                node_traffic_config=node_traffic_config)
-        Logger.__call__().get_logger().info(f"Starting traffic generator script, "
+                                                node_traffic_config=node_traffic_config, logger=logger)
+        logger.info(f"Starting traffic generator script, "
                                             f"node ip:{node_traffic_config.docker_gw_bridge_ip}")
 
         commands = []

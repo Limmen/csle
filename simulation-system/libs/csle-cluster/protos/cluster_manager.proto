@@ -75,6 +75,29 @@ service ClusterManager {
   rpc cleanAllExecutions(CleanAllExecutionsMsg) returns (OperationOutcomeDTO) {}
   rpc cleanAllExecutionsOfEmulation(CleanAllExecutionsOfEmulationMsg) returns (OperationOutcomeDTO) {}
   rpc cleanExecution(CleanExecutionMsg) returns (OperationOutcomeDTO) {}
+  rpc startTrafficManager(StartTrafficManagerMsg) returns (OperationOutcomeDTO) {}
+  rpc stopTrafficManager(StartTrafficManagerMsg) returns (OperationOutcomeDTO) {}
+  rpc stopTrafficManagers(StartTrafficManagersMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to stop all traffic managers of a given execution
+message StopTrafficManagersMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to stop a specific traffic manager
+message StopTrafficManagerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to start a specific traffic manager
+message StartTrafficManagerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
 }
 
 // Message that the client sends to clean all executions
