@@ -36,17 +36,18 @@ class EmulationEnvController:
     """
 
     @staticmethod
-    def stop_all_executions_of_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_all_executions_of_emulation(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Stops all executions of a given emulation
 
         :param emulation_env_config: the emulation for which executions should be stopped
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
             emulation_name=emulation_env_config.name)
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
@@ -478,17 +479,20 @@ class EmulationEnvController:
         subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def stop_containers(execution: EmulationExecution) -> None:
+    def stop_containers(execution: EmulationExecution, physical_server_ip: str) -> None:
         """
         Stop containers in the emulation env config
 
         :param execution: the execution to stop
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         emulation_env_config = execution.emulation_env_config
 
         # Stop regular containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
@@ -496,25 +500,28 @@ class EmulationEnvController:
 
         # Stop the Kafka container
         c = emulation_env_config.kafka_config.container
-        name = c.get_full_name()
-        Logger.__call__().get_logger().info(f"Stopping container:{name}")
-        cmd = f"docker stop {name}"
-        subprocess.call(cmd, shell=True)
-
-        # Stop the ELK container
-        c = emulation_env_config.elk_config.container
-        name = c.get_full_name()
-        Logger.__call__().get_logger().info(f"Stopping container:{name}")
-        cmd = f"docker stop {name}"
-        subprocess.call(cmd, shell=True)
-
-        if emulation_env_config.sdn_controller_config is not None:
-            # Stop the SDN controller container
-            c = emulation_env_config.sdn_controller_config.container
+        if c.physical_host_ip == physical_server_ip:
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
+
+        # Stop the ELK container
+        c = emulation_env_config.elk_config.container
+        if c.physical_host_ip == physical_server_ip:
+            name = c.get_full_name()
+            Logger.__call__().get_logger().info(f"Stopping container:{name}")
+            cmd = f"docker stop {name}"
+            subprocess.call(cmd, shell=True)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop the SDN controller container
+            c = emulation_env_config.sdn_controller_config.container
+            if c.physical_host_ip == physical_server_ip:
+                name = c.get_full_name()
+                Logger.__call__().get_logger().info(f"Stopping container:{name}")
+                cmd = f"docker stop {name}"
+                subprocess.call(cmd, shell=True)
 
     @staticmethod
     def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig) -> None:

@@ -1248,3 +1248,21 @@ def start_docker_statsmanager_thread(
     )
     operation_outcome_dto = stub.startDockerStatsManagerThread(operation_msg, timeout=timeout)
     return operation_outcome_dto
+
+
+def stop_all_executions_of_emulation(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops all executions of a given emulation
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopAllExecutionsOfEmulationMsg(
+        emulation=emulation)
+    operation_outcome_dto = stub.stopAllExecutionsOfEmulation(operation_msg, timeout=timeout)
+    return operation_outcome_dto

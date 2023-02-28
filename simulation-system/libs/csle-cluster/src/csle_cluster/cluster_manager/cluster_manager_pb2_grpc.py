@@ -350,6 +350,11 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StartHeartBeatsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.stopAllExecutionsOfEmulation = channel.unary_unary(
+                '/ClusterManager/stopAllExecutionsOfEmulation',
+                request_serializer=cluster__manager__pb2.StopAllExecutionsOfEmulationMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -758,6 +763,12 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopAllExecutionsOfEmulation(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1094,6 +1105,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'startHeartbeats': grpc.unary_unary_rpc_method_handler(
                     servicer.startHeartbeats,
                     request_deserializer=cluster__manager__pb2.StartHeartBeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopAllExecutionsOfEmulation': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopAllExecutionsOfEmulation,
+                    request_deserializer=cluster__manager__pb2.StopAllExecutionsOfEmulationMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
@@ -2242,6 +2258,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHeartbeats',
             cluster__manager__pb2.StartHeartBeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopAllExecutionsOfEmulation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopAllExecutionsOfEmulation',
+            cluster__manager__pb2.StopAllExecutionsOfEmulationMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

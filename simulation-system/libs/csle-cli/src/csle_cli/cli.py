@@ -810,10 +810,14 @@ def stop_all_executions_of_emulation(emulation_env_config: "EmulationEnvConfig")
     :param emulation_env_config: the configuration of the emulation to stop
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Stopping all executions of emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvController.stop_all_executions_of_emulation(emulation_env_config=emulation_env_config)
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.stop_all_executions_of_emulation(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
 
 
 def stop_emulation_execution(emulation_env_config: "EmulationEnvConfig", execution_id: int) -> None:

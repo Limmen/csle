@@ -1248,7 +1248,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHeartBeatsMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
-        Starts heartbeat in a given execution
+        Starts heartbeats in a given execution
 
         :param request: the gRPC request
         :param context: the gRPC context
@@ -1268,7 +1268,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerStatsManagerThreadMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
-        Starts heartbeat in a given execution
+        Starts the docker stats manager
 
         :param request: the gRPC request
         :param context: the gRPC context
@@ -1281,6 +1281,22 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         ContainerController.start_docker_stats_thread(execution=execution,
                                                       physical_server_ip=GeneralUtil.get_host_ip(),
                                                       logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopAllExecutionsOfEmulation(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopAllExecutionsOfEmulationMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops all executions of a given emulation
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping executions of emulation: {request.emulation}")
+        emulation = MetastoreFacade.get_emulation_by_name(name=request.emulation)
+        EmulationEnvController.stop_all_executions_of_emulation(emulation_env_config=emulation,
+                                                                physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
 

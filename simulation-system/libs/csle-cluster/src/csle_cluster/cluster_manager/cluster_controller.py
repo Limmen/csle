@@ -37,7 +37,7 @@ class ClusterController:
         """
         Sends a request to attach the containers of a given execution to networks
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to attach the containers
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -74,7 +74,7 @@ class ClusterController:
         """
         Gets the status of a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the status
         :param port: the port of the cluster manager
         :return: The node status
         """
@@ -89,7 +89,7 @@ class ClusterController:
         """
         Starts PostgreSQL on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start PostgreSQL
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -104,7 +104,7 @@ class ClusterController:
         """
         Starts cAdvisor on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start cAdvisor
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -119,7 +119,7 @@ class ClusterController:
         """
         Starts Node exporter on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start node exporter
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -134,7 +134,7 @@ class ClusterController:
         """
         Starts Grafana on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start Grafana
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -149,7 +149,7 @@ class ClusterController:
         """
         Starts Prometheus on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start Prometheus
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -164,7 +164,7 @@ class ClusterController:
         """
         Starts pgAdmin on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start pgAdmin
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -179,7 +179,7 @@ class ClusterController:
         """
         Starts nginx on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start Nginx
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -194,7 +194,7 @@ class ClusterController:
         """
         Starts Flask on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start flask
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -210,7 +210,7 @@ class ClusterController:
         """
         Starts Docker statsmanager on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to start the docker statsmanager
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -223,9 +223,9 @@ class ClusterController:
     @staticmethod
     def start_docker_engine(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Docker engine on a cluster node
+        Stops Docker engine on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop the docker engine
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -238,9 +238,9 @@ class ClusterController:
     @staticmethod
     def stop_postgresql(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts PostgreSQL on a cluster node
+        Stops PostgreSQL on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop PostgreSQL
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -253,9 +253,9 @@ class ClusterController:
     @staticmethod
     def stop_cadvisor(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts cAdvisor on a cluster node
+        Stops cAdvisor on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop cAdvisor
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -268,9 +268,9 @@ class ClusterController:
     @staticmethod
     def stop_node_exporter(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Node exporter on a cluster node
+        Stops Node exporter on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop node exporter
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -283,9 +283,9 @@ class ClusterController:
     @staticmethod
     def stop_grafana(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Grafana on a cluster node
+        Stops Grafana on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop Grafana
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -298,9 +298,9 @@ class ClusterController:
     @staticmethod
     def stop_prometheus(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Prometheus on a cluster node
+        Stops Prometheus on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop Prometheus
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -313,9 +313,9 @@ class ClusterController:
     @staticmethod
     def stop_pgadmin(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts pgAdmin on a cluster node
+        Stops pgAdmin on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop pgAdmin
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -328,9 +328,9 @@ class ClusterController:
     @staticmethod
     def stop_nginx(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts nginx on a cluster node
+        Stops nginx on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop Nginx
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -343,9 +343,9 @@ class ClusterController:
     @staticmethod
     def stop_flask(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Flask on a cluster node
+        Stops Flask on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop flask
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -359,9 +359,9 @@ class ClusterController:
     def stop_docker_statsmanager(ip: str, port: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Docker statsmanager on a cluster node
+        Stops Docker statsmanager on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop the statsmanager
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -374,9 +374,9 @@ class ClusterController:
     @staticmethod
     def stop_docker_engine(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
-        Starts Docker engine on a cluster node
+        Stops Docker engine on a cluster node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to stop the docker engine
         :param port: the port of the cluster manager
         :return: The status of the service
         """
@@ -391,7 +391,7 @@ class ClusterController:
         """
         Gets a list of log files in the CSLE log directory
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the CSLE logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -406,7 +406,7 @@ class ClusterController:
         """
         Gets the docker statsmanager logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the Docker statsmanager logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -421,7 +421,7 @@ class ClusterController:
         """
         Gets the Prometheus logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the Prometheus logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -436,7 +436,7 @@ class ClusterController:
         """
         Gets the node exporter logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the node exporter logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -451,7 +451,7 @@ class ClusterController:
         """
         Gets the cadvisor logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the cAdvisor logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -466,7 +466,7 @@ class ClusterController:
         """
         Gets the pgAdming logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the pgAdmin logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -481,7 +481,7 @@ class ClusterController:
         """
         Gets the Grafana logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the Grafana logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -496,7 +496,7 @@ class ClusterController:
         """
         Gets the Nginx logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the Nginx logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -511,7 +511,7 @@ class ClusterController:
         """
         Gets the Docker logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the Docker logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -526,7 +526,7 @@ class ClusterController:
         """
         Gets the PostgreSQL logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node to get the PostgreSQL logs from
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -541,7 +541,7 @@ class ClusterController:
         """
         Gets the Flask logs
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node where to get the flask logs
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -556,7 +556,7 @@ class ClusterController:
         """
         Gets a specific log file from a node
 
-        :param ip: the ip of the node
+        :param ip: the ip of the node where to get the log file
         :param port: the port of the cluster manager
         :return: A DTO with the log files
         """
@@ -573,7 +573,7 @@ class ClusterController:
         """
         Sends a request to install CSLE libraries on the containers of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to install the libraries
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -593,7 +593,7 @@ class ClusterController:
         """
         Sends a request to apply the Kafka config to a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to apply the Kafka config
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -613,7 +613,7 @@ class ClusterController:
         """
         Sends a request to start the Ryu SDN controller on a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the SDN controller
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -633,7 +633,7 @@ class ClusterController:
         """
         Sends a request to apply resource constraints to containers of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to apply the resouce constraints
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -653,7 +653,7 @@ class ClusterController:
         """
         Sends a request to start the OVS switches of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to create the OVS switches
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -673,7 +673,7 @@ class ClusterController:
         """
         Sends a request to ping all containers of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to ping the execution
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -693,7 +693,7 @@ class ClusterController:
         """
         Sends a request to configure OVS switches of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to configure OVS
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -713,7 +713,7 @@ class ClusterController:
         """
         Sends a request to start the SDN controller monitor on a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start teh SDN controller monitor
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -733,7 +733,7 @@ class ClusterController:
         """
         Sends a request to create users on a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to create the users
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -753,7 +753,7 @@ class ClusterController:
         """
         Sends a request to create vulnerabilities of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to create the vulnerabilities
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -773,7 +773,7 @@ class ClusterController:
         """
         Sends a request to create flags of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to create the flags
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -793,7 +793,7 @@ class ClusterController:
         """
         Sends a request to create the topology of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to create the topology
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -813,7 +813,7 @@ class ClusterController:
         """
         Sends a request to start the traffic managers of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the traffic managers
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -833,7 +833,7 @@ class ClusterController:
         """
         Sends a request to start the traffic generators of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the traffic generators
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -853,7 +853,7 @@ class ClusterController:
         """
         Sends a request to start the client population of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the client population
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -873,7 +873,7 @@ class ClusterController:
         """
         Sends a request to start the kafka client producer of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the kafka client producer
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -893,7 +893,7 @@ class ClusterController:
         """
         Sends a request to stop the kafka client producer of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to stop the kafka client producer
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -913,7 +913,7 @@ class ClusterController:
         """
         Sends a request to start the Snort IDSes of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the Snort IDSes
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -933,7 +933,7 @@ class ClusterController:
         """
         Sends a request to start the Snort IDSes monitor threads of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the Snort IDS monitor threads
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -953,7 +953,7 @@ class ClusterController:
         """
         Sends a request to start the OSSEC IDSes of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the OSSEC IDS
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -973,7 +973,7 @@ class ClusterController:
         """
         Sends a request to start the OSSEC IDSes monitor threads of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the OSSEC IDS monitor threads
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -993,7 +993,7 @@ class ClusterController:
         """
         Sends a request to start the ELK stack of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the elk stack
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1013,7 +1013,7 @@ class ClusterController:
         """
         Sends a request to start the host managers of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the host managers
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1033,7 +1033,7 @@ class ClusterController:
         """
         Sends a request to apply the filebeats configuration to a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the filebeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1053,7 +1053,7 @@ class ClusterController:
         """
         Sends a request to apply the packetbeats configuration to a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the packetbeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1073,7 +1073,7 @@ class ClusterController:
         """
         Sends a request to apply the metricbeats configuration to a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the metricbeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1093,7 +1093,7 @@ class ClusterController:
         """
         Sends a request to apply the hearbeats config to a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the heartbeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1113,7 +1113,7 @@ class ClusterController:
         """
         Sends a request to start the filebeats of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the filebeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1134,7 +1134,7 @@ class ClusterController:
         """
         Sends a request to start the metricbeats of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the metricbeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1155,7 +1155,7 @@ class ClusterController:
         """
         Sends a request to start the heartbeats of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the heartbeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1176,7 +1176,7 @@ class ClusterController:
         """
         Sends a request to start the packetbeats of a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the packetbeats
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1197,7 +1197,7 @@ class ClusterController:
         """
         Sends a request to start a docker statsmanager thread for a given execution
 
-        :param ip: the ip of the node where to start the containers
+        :param ip: the ip of the node where to start the statsmanager
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1209,4 +1209,22 @@ class ClusterController:
             node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager_thread(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
+            return node_status_dto
+
+    @staticmethod
+    def stop_all_executions_of_emulation(ip: str, port: int, emulation: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
+        """
+        Sends a request to a node to stop all executions of a given emulation
+
+        :param ip: the ip of the node where to stop the executions
+        :param port: the port of the cluster manager
+        :param emulation: the name of the emulation
+        :return: The node status
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_all_executions_of_emulation(
+                stub=stub, emulation=emulation)
             return node_status_dto

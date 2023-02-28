@@ -69,6 +69,12 @@ service ClusterManager {
   rpc startPacketbeats(StartPacketBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startMetricbeats(StartMetricBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startHeartbeats(StartHeartBeatsMsg) returns (OperationOutcomeDTO) {}
+  rpc stopAllExecutionsOfEmulation(StopAllExecutionsOfEmulationMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends to stop all executions of a given emulation
+message StopAllExecutionsOfEmulationMsg {
+  string emulation = 1;
 }
 
 // Message that the client sends to get the log file names in the /var/log/csle directory
