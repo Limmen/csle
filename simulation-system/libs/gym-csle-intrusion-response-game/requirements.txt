@@ -1,0 +1,5 @@
+csle-common==0.1.1
+csle-collector==0.1.1
+csle-attacker==0.1.1
+csle-defender==0.1.1
+gym==0.21
