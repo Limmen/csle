@@ -81,6 +81,13 @@ service ClusterManager {
   rpc startClientManager(StartClientManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopClientPopulation(StopClientPopulationMsg) returns (OperationOutcomeDTO) {}
   rpc stopClientManager(StopClientManagerMsg) returns (OperationOutcomeDTO) {}
+  rpc getNumActiveClients(GetNumActiveClientsMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to get the number of active clients of an execution
+message GetNumActiveClientsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop the client population of a specific execution

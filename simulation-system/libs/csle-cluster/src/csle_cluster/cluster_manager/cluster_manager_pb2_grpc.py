@@ -410,6 +410,11 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StopClientManagerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.getNumActiveClients = channel.unary_unary(
+                '/ClusterManager/getNumActiveClients',
+                request_serializer=cluster__manager__pb2.GetNumActiveClientsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -890,6 +895,12 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getNumActiveClients(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1286,6 +1297,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'stopClientManager': grpc.unary_unary_rpc_method_handler(
                     servicer.stopClientManager,
                     request_deserializer=cluster__manager__pb2.StopClientManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getNumActiveClients': grpc.unary_unary_rpc_method_handler(
+                    servicer.getNumActiveClients,
+                    request_deserializer=cluster__manager__pb2.GetNumActiveClientsMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
@@ -2638,6 +2654,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopClientManager',
             cluster__manager__pb2.StopClientManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getNumActiveClients(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getNumActiveClients',
+            cluster__manager__pb2.GetNumActiveClientsMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
