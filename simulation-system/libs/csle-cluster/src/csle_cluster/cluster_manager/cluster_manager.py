@@ -1546,6 +1546,77 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 producer_time_step_len_seconds = 0
             )
 
+    def stopTrafficGenerators(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopTrafficGeneratorsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops traffic generators in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stops traffic generators in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        TrafficController.stop_internal_traffic_generators(emulation_env_config=execution.emulation_env_config,
+                                                            physical_server_ip=GeneralUtil.get_host_ip(),
+                                                            logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def startTrafficGenerator(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartTrafficGeneratorMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts a specific traffic generator
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting traffic generator with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_traffic_config = execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+            ip=request.containerIp)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
+            TrafficController.start_internal_traffic_generator(emulation_env_config=execution.emulation_env_config,
+                                                               node_traffic_config=node_traffic_config,
+                                                               logger=logging.getLogger(),
+                                                               container=node_container_config)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopTrafficGenerator(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopTrafficGeneratorMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a specific traffic generator
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping traffic generator with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_traffic_config = execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+            ip=request.containerIp)
+        if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
+            TrafficController.stop_internal_traffic_generator(emulation_env_config=execution.emulation_env_config,
+                                                               node_traffic_config=node_traffic_config,
+                                                               logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "cluster_manager.log") -> None:

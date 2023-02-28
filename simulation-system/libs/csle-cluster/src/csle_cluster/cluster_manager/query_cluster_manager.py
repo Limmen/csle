@@ -1507,3 +1507,68 @@ def get_num_active_clients(
     )
     clients_dto = stub.getNumActiveClients(operation_msg, timeout=timeout)
     return clients_dto
+
+
+def stop_traffic_generators(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops traffic generators of a given execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopTrafficGeneratorsMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet
+    )
+    operation_outcome_dto = stub.stopTrafficGenerators(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def start_traffic_generator(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts a specific traffic generator
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :param container_ip: the ip of the container to start the traffic generator
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartTrafficGeneratorMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet, containerIp=container_ip
+    )
+    operation_outcome_dto = stub.startTrafficGenerator(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_traffic_generator(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops a specific traffic generator
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :param container_ip: the ip of the container to stop the traffic generator
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopTrafficGeneratorMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet, containerIp=container_ip
+    )
+    operation_outcome_dto = stub.stopTrafficGenerator(operation_msg, timeout=timeout)
+    return operation_outcome_dto

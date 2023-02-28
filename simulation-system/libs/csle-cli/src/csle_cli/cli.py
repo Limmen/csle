@@ -179,7 +179,6 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.traffic_controller import TrafficController
     from csle_common.controllers.snort_ids_controller import SnortIDSController
     from csle_common.controllers.kafka_controller import KafkaController
     from csle_common.controllers.host_controller import HostController

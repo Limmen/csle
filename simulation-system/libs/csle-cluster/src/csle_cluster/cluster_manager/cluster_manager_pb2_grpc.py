@@ -415,6 +415,21 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.GetNumActiveClientsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.GetNumClientsDTO.FromString,
                 )
+        self.startTrafficGenerator = channel.unary_unary(
+                '/ClusterManager/startTrafficGenerator',
+                request_serializer=cluster__manager__pb2.StartTrafficGeneratorMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopTrafficGenerators = channel.unary_unary(
+                '/ClusterManager/stopTrafficGenerators',
+                request_serializer=cluster__manager__pb2.StopTrafficGeneratorsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopTrafficGenerator = channel.unary_unary(
+                '/ClusterManager/stopTrafficGenerator',
+                request_serializer=cluster__manager__pb2.StopTrafficGeneratorMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -901,6 +916,24 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startTrafficGenerator(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopTrafficGenerators(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopTrafficGenerator(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1303,6 +1336,21 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getNumActiveClients,
                     request_deserializer=cluster__manager__pb2.GetNumActiveClientsMsg.FromString,
                     response_serializer=cluster__manager__pb2.GetNumClientsDTO.SerializeToString,
+            ),
+            'startTrafficGenerator': grpc.unary_unary_rpc_method_handler(
+                    servicer.startTrafficGenerator,
+                    request_deserializer=cluster__manager__pb2.StartTrafficGeneratorMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopTrafficGenerators': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopTrafficGenerators,
+                    request_deserializer=cluster__manager__pb2.StopTrafficGeneratorsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopTrafficGenerator': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopTrafficGenerator,
+                    request_deserializer=cluster__manager__pb2.StopTrafficGeneratorMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2672,5 +2720,56 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getNumActiveClients',
             cluster__manager__pb2.GetNumActiveClientsMsg.SerializeToString,
             cluster__manager__pb2.GetNumClientsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startTrafficGenerator(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startTrafficGenerator',
+            cluster__manager__pb2.StartTrafficGeneratorMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopTrafficGenerators(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopTrafficGenerators',
+            cluster__manager__pb2.StopTrafficGeneratorsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopTrafficGenerator(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopTrafficGenerator',
+            cluster__manager__pb2.StopTrafficGeneratorMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

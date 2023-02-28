@@ -82,6 +82,29 @@ service ClusterManager {
   rpc stopClientPopulation(StopClientPopulationMsg) returns (OperationOutcomeDTO) {}
   rpc stopClientManager(StopClientManagerMsg) returns (OperationOutcomeDTO) {}
   rpc getNumActiveClients(GetNumActiveClientsMsg) returns (GetNumClientsDTO) {}
+  rpc startTrafficGenerator(StartTrafficGeneratorMsg) returns (OperationOutcomeDTO) {}
+  rpc stopTrafficGenerators(StopTrafficGeneratorsMsg) returns (OperationOutcomeDTO) {}
+  rpc stopTrafficGenerator(StopTrafficGeneratorMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to start a specific traffic generator
+message StartTrafficGeneratorMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to stop a specific traffic generator
+message StopTrafficGeneratorMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to stop all traffic generators of a given execution
+message StopTrafficGeneratorsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the server returns when the client requested the number of clients of a given execution
@@ -257,13 +280,13 @@ message CreateTopologyMsg {
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start traffic managers
+// Message that the client sends when requesting to start traffic managers of a given execution
 message StartTrafficManagersMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start traffic generators
+// Message that the client sends when requesting to start traffic generators of a given execution
 message StartTrafficGeneratorsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
