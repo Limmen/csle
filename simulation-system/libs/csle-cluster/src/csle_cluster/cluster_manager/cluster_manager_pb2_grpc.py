@@ -413,7 +413,7 @@ class ClusterManagerStub(object):
         self.getNumActiveClients = channel.unary_unary(
                 '/ClusterManager/getNumActiveClients',
                 request_serializer=cluster__manager__pb2.GetNumActiveClientsMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                response_deserializer=cluster__manager__pb2.GetNumClientsDTO.FromString,
                 )
 
 
@@ -1302,7 +1302,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'getNumActiveClients': grpc.unary_unary_rpc_method_handler(
                     servicer.getNumActiveClients,
                     request_deserializer=cluster__manager__pb2.GetNumActiveClientsMsg.FromString,
-                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+                    response_serializer=cluster__manager__pb2.GetNumClientsDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2671,6 +2671,6 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getNumActiveClients',
             cluster__manager__pb2.GetNumActiveClientsMsg.SerializeToString,
-            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            cluster__manager__pb2.GetNumClientsDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

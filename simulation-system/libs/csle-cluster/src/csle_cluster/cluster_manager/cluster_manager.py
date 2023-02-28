@@ -1514,13 +1514,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
     def getNumActiveClients(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNumActiveClientsMsg,
-            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.GetNumActiveClientsMsg:
         """
         Gets the number of active clients of a given execution
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: an OperationOutcomeDTO
+        :return: a GetNumActiveClientsMsg
         """
         logging.info(f"Gets the number of active clients in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
@@ -1528,11 +1528,23 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip \
                 == GeneralUtil.get_host_ip():
-            TrafficController.get_num_active_clients(emulation_env_config=execution.emulation_env_config,
+            clients_dto = TrafficController.get_num_active_clients(emulation_env_config=execution.emulation_env_config,
                                                      logger=logging.getLogger())
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO(
+                num_clients=clients_dto.num_clients,
+                client_process_active = clients_dto.client_process_active,
+                producer_active = clients_dto.producer_active,
+                clients_time_step_len_seconds = clients_dto.clients_time_step_len_seconds,
+                producer_time_step_len_seconds = clients_dto.producer_time_step_len_seconds
+            )
         else:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO(
+                num_clients=0,
+                client_process_active =False,
+                producer_active = False,
+                clients_time_step_len_seconds = 0,
+                producer_time_step_len_seconds = 0
+            )
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

@@ -1492,7 +1492,7 @@ def get_num_active_clients(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
-        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO:
     """
     Gets the number of active clients of a given execution
 
@@ -1505,5 +1505,5 @@ def get_num_active_clients(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetNumActiveClientsMsg(
         emulation=emulation, ipFirstOctet=ip_first_octet
     )
-    operation_outcome_dto = stub.getNumActiveClients(operation_msg, timeout=timeout)
-    return operation_outcome_dto
+    clients_dto = stub.getNumActiveClients(operation_msg, timeout=timeout)
+    return clients_dto

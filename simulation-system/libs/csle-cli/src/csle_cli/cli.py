@@ -183,32 +183,38 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
     from csle_common.controllers.snort_ids_controller import SnortIDSController
     from csle_common.controllers.kafka_controller import KafkaController
     from csle_common.controllers.host_controller import HostController
+    import csle_common.constants.constants as constants
 
     emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
         emulation_name=emulation_env_config.name)
+    config = MetastoreFacade.get_config(id=1)
     if emulation_env_config is not None:
         click.secho(f"Executions of: {emulation}", fg="magenta", bold=True)
         for exec in executions:
             click.secho(f"IP ID: {exec.ip_first_octet}, emulation name: {exec.emulation_name}")
         if clients:
             for exec in executions:
-                clients_dto = TrafficController.get_num_active_clients(emulation_env_config=exec.emulation_env_config)
-                click.secho(f"Client population status for execution {exec.ip_first_octet} of {emulation}",
-                            fg="magenta", bold=True)
-                click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
-                if clients_dto.client_process_active:
-                    click.secho("Client process " + f" {click.style('[active]', fg='green')}", bold=False)
-                else:
-                    click.secho("Client process " + f" {click.style('[inactive]', fg='red')}", bold=False)
-                if clients_dto.producer_active:
-                    click.secho("Producer process " + f" {click.style('[active]', fg='green')}", bold=False)
-                else:
-                    click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
-                click.secho(f"Clients time-step length: "
-                            f"{clients_dto.clients_time_step_len_seconds} seconds", bold=False)
-                click.secho(f"Producer time-step length: "
-                            f"{clients_dto.producer_time_step_len_seconds} seconds", bold=False)
+                for node in config.cluster_config.cluster_nodes:
+                    if node.ip == exec.emulation_env_config.traffic_config.client_population_config.physical_host_ip:
+                        clients_dto = ClusterController.get_num_active_clients(
+                            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                            emulation=emulation_env_config.name, ip_first_octet=exec.ip_first_octet)
+                        click.secho(f"Client population status for execution {exec.ip_first_octet} of {emulation}",
+                                    fg="magenta", bold=True)
+                        click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
+                        if clients_dto.client_process_active:
+                            click.secho("Client process " + f" {click.style('[active]', fg='green')}", bold=False)
+                        else:
+                            click.secho("Client process " + f" {click.style('[inactive]', fg='red')}", bold=False)
+                        if clients_dto.producer_active:
+                            click.secho("Producer process " + f" {click.style('[active]', fg='green')}", bold=False)
+                        else:
+                            click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
+                        click.secho(f"Clients time-step length: "
+                                    f"{clients_dto.clients_time_step_len_seconds} seconds", bold=False)
+                        click.secho(f"Producer time-step length: "
+                                    f"{clients_dto.producer_time_step_len_seconds} seconds", bold=False)
         if snortids:
             for exec in executions:
                 snort_ids_monitors_statuses = SnortIDSController.get_snort_idses_monitor_threads_statuses(
