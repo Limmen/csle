@@ -67,8 +67,9 @@ currently support each release for a window of 6 months.
 ## Supported Platforms
 
 <p align="center">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/OS_X-Logo.svg" width="10%", height="10%"/>
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="10%", height="10%"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/OS_X-Logo.svg" width="7%", height="7%"/>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%", height="7%" style="margin-left:20px;"/>
 </p>
 
 ## Author & Maintainer
