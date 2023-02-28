@@ -1,9 +1,7 @@
 import logging
-
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.logging.log import Logger
 
 
 class TopologyController:
@@ -12,7 +10,8 @@ class TopologyController:
     """
 
     @staticmethod
-    def create_topology(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
+    def create_topology(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                        logger: logging.Logger) -> None:
         """
         Utility function for connecting to a running emulation and creating the configuration
 

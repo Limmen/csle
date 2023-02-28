@@ -184,4 +184,3 @@ class DockerUtil:
             ip = ip.split("/")[0]
             return ip
         raise ValueError(f"The container with id:{container_id} does not have an IP in the docker gw bridge network")
-

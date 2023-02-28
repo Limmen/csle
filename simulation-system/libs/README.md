@@ -48,9 +48,14 @@ This folder contains python projects that implement the functionality of the sim
   - Implementation of system identification algorithms to learn system models based on measured data and traces
 
 - **csle-cli** ([csle-cli](./csle-cli)):
-  - [![PyPI version](https://badge.fury.io/py/csle-agents.svg)](https://badge.fury.io/py/csle-cli)
+  - [![PyPI version](https://badge.fury.io/py/csle-cli.svg)](https://badge.fury.io/py/csle-cli)
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-cli)
   - The CSLE command-line interface
+
+- **csle-cluster** ([csle-cluster](./csle-cluster)):
+  - [![PyPI version](https://badge.fury.io/py/csle-cluster.svg)](https://badge.fury.io/py/csle-cluster)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-cluster)
+  - The CSLE cluster manager
 
 ## Commands
 To generate API docs, execute:

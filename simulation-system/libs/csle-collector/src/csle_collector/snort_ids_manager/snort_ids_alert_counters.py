@@ -11,6 +11,7 @@ class SnortIdsAlertCounters:
     DTO containing statistics from the Snort IDS log
 
     """
+
     def __init__(self):
         """
         Initializes the DTO
@@ -48,7 +49,7 @@ class SnortIdsAlertCounters:
         :return: None
         """
         for a in alerts:
-            if a.priority-1 in range(0, len(self.priority_alerts)):
+            if a.priority - 1 in range(0, len(self.priority_alerts)):
                 self.priority_alerts[a.priority] += 1
             if a.class_id in range(0, len(self.class_alerts)):
                 self.class_alerts[a.class_id] += 1
@@ -247,7 +248,7 @@ class SnortIdsAlertCounters:
         deltas_priority = list(np.array(counters_prime.priority_alerts).astype(int).tolist())
         deltas_class = list(np.array(counters_prime.class_alerts).astype(int).tolist())
         deltas = ([int(counters_prime.total_alerts), int(counters_prime.warning_alerts),
-                  int(counters_prime.severe_alerts), int(counters_prime.alerts_weighted_by_priority)]
+                   int(counters_prime.severe_alerts), int(counters_prime.alerts_weighted_by_priority)]
                   + deltas_priority + deltas_class)
         labels = constants.KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)

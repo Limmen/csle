@@ -395,10 +395,10 @@ class ContainerController:
                 cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                       f"{container_name}"
                 logger.info(f"Connecting container:{container_name} to network:{net.name} "
-                                                    f"with ip: {ip}")
+                            f"with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
-                if c.docker_gw_bridge_ip == ""or c.docker_gw_bridge_ip is None:
+                if c.docker_gw_bridge_ip == "" or c.docker_gw_bridge_ip is None:
                     container_id = DockerUtil.get_container_hex_id(name=c.get_full_name())
                     docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
                     c.docker_gw_bridge_ip = docker_gw_bridge_ip
@@ -436,7 +436,7 @@ class ContainerController:
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
             logger.info(f"Connecting container:{container_name} to network:{net.name} "
-                                                f"with ip: {ip}")
+                        f"with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
             if container.docker_gw_bridge_ip == "" or container.docker_gw_bridge_ip is None:
                 container_id = DockerUtil.get_container_hex_id(name=container.get_full_name())

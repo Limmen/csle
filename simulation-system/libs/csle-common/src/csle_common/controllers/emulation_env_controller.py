@@ -98,7 +98,7 @@ class EmulationEnvController:
             ips.append(emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
         for ip in ips:
             logger.info(f"Installing csle-collector version "
-                                                f"{emulation_env_config.csle_collector_version} on node: {ip}")
+                        f"{emulation_env_config.csle_collector_version} on node: {ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
             cmd = collector_constants.INSTALL
             if emulation_env_config.csle_collector_version != collector_constants.LATEST_VERSION:
@@ -108,7 +108,7 @@ class EmulationEnvController:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(2)
             logger.info(f"Installing csle-ryu version "
-                                                f"{emulation_env_config.csle_ryu_version} on node: {ip}")
+                        f"{emulation_env_config.csle_ryu_version} on node: {ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
             cmd = ryu_constants.INSTALL
             if emulation_env_config.csle_ryu_version != ryu_constants.LATEST_VERSION:
@@ -299,7 +299,7 @@ class EmulationEnvController:
             ContainerController.remove_network(name=net.name)
 
     @staticmethod
-    def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers : List[str]) -> EmulationExecution:
+    def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str]) -> EmulationExecution:
         """
         Creates a new emulation execution
         :param emulation_env_config: the emulation configuration
@@ -452,7 +452,7 @@ class EmulationEnvController:
         :return: None
         """
         Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle_{name}-"
-                                            f"{version.replace('.','')}")
+                                            f"{version.replace('.', '')}")
         if create_network:
             net_id = random.randint(128, 254)
             sub_net_id = random.randint(2, 254)
@@ -462,14 +462,14 @@ class EmulationEnvController:
             ContainerController.create_network(name=net_name,
                                                subnetmask=f"55.{net_id}.0.0/16",
                                                existing_network_names=[])
-            cmd = f"docker container run -dt --name csle_{name}-{version.replace('.','')} " \
+            cmd = f"docker container run -dt --name csle_{name}-{version.replace('.', '')} " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--network={net_name} --ip {ip} --publish-all=true " \
                   f"--memory={memory}G --cpus={num_cpus} " \
                   f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --cap-add=SYS_NICE {image}"
         else:
-            cmd = f"docker container run -dt --name csle-{name}-{version.replace('.','')} " \
+            cmd = f"docker container run -dt --name csle-{name}-{version.replace('.', '')} " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm --net=none " \
                   f"--publish-all=true " \

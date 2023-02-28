@@ -23,7 +23,6 @@ from csle_common.controllers.ovs_controller import OVSController
 from csle_common.controllers.snort_ids_controller import SnortIDSController
 from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 from csle_common.controllers.host_controller import HostController
-from csle_common.controllers.kafka_controller import KafkaController
 from csle_common.controllers.elk_controller import ELKController
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
@@ -687,10 +686,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        EmulationEnvController.install_csle_collector_and_ryu_libraries(emulation_env_config=
-                                                                        execution.emulation_env_config,
-                                                                        physical_server_ip=GeneralUtil.get_host_ip(),
-                                                                        logger=logging.getLogger())
+        EmulationEnvController.install_csle_collector_and_ryu_libraries(
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip(),
+            logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def applyKafkaConfig(

@@ -11,8 +11,8 @@ class NodeFirewallConfig:
     def __init__(self, ips_gw_default_policy_networks: List[DefaultNetworkFirewallConfig],
                  hostname: str, output_accept: Set[str], input_accept: Set[str],
                  forward_accept: Set[str], output_drop: Set[str], input_drop: Set[str],
-                 forward_drop: Set[str], routes: Set[str], docker_gw_bridge_ip : str = "",
-                 physical_host_ip : str = ""):
+                 forward_drop: Set[str], routes: Set[str], docker_gw_bridge_ip: str = "",
+                 physical_host_ip: str = ""):
         """
         Initializes the DTO
 
@@ -122,6 +122,20 @@ class NodeFirewallConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NodeFirewallConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NodeFirewallConfig.from_dict(json.loads(json_str))
 
     def copy(self) -> "NodeFirewallConfig":
         """

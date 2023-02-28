@@ -11,7 +11,7 @@ class NodeResourcesConfig:
     def __init__(self, container_name: str,
                  num_cpus: int, available_memory_gb: int,
                  ips_and_network_configs: List[Tuple[str, NodeNetworkConfig]],
-                 docker_gw_bridge_ip : str = "", physical_host_ip : str = ""):
+                 docker_gw_bridge_ip: str = "", physical_host_ip: str = ""):
         """
         Initializes the DTO
 
@@ -95,6 +95,20 @@ class NodeResourcesConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NodeResourcesConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NodeResourcesConfig.from_dict(json.loads(json_str))
 
     def copy(self) -> "NodeResourcesConfig":
         """

@@ -77,8 +77,9 @@ class SDNControllerManager:
                                     ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
-        Logger.__call__().get_logger().info(f"Stopping ryu manager on node: "
-                                            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+        Logger.__call__().get_logger().info(
+            f"Stopping ryu manager on node: "
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
 
         # Stop background job
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +

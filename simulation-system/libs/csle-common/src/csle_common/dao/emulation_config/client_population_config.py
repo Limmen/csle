@@ -14,7 +14,7 @@ class ClientPopulationConfig:
                  client_manager_log_dir: str, client_manager_max_workers: int,
                  num_commands: int = 5,
                  client_time_step_len_seconds: int = 1, time_scaling_factor: float = 0.01,
-                 period_scaling_factor: float = 20, docker_gw_bridge_ip : str = "", physical_host_ip : str = ""):
+                 period_scaling_factor: float = 20, docker_gw_bridge_ip: str = "", physical_host_ip: str = ""):
         """
         Creates a ClientPopulationConfig DTO Object
 
@@ -142,6 +142,20 @@ class ClientPopulationConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ClientPopulationConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ClientPopulationConfig.from_dict(json.loads(json_str))
 
     def copy(self) -> "ClientPopulationConfig":
         """

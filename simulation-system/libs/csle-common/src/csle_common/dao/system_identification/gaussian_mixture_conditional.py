@@ -133,6 +133,20 @@ class GaussianMixtureConditional:
             f.write(json_str)
 
     @staticmethod
+    def from_json_file(json_file_path: str) -> "GaussianMixtureConditional":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return GaussianMixtureConditional.from_dict(json.loads(json_str))
+
+    @staticmethod
     def from_sklearn_gaussian_mixture(gmm: GaussianMixture, conditional_name: str, metric_name: str,
                                       num_components: int, sample_space: List[int],
                                       dim: int = 1) -> "GaussianMixtureConditional":

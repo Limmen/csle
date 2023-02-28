@@ -1,10 +1,8 @@
 import logging
-
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.vulnerability_type import VulnType
-from csle_common.logging.log import Logger
 
 
 class VulnerabilitiesController:
@@ -27,7 +25,7 @@ class VulnerabilitiesController:
             if vuln.physical_host_ip != physical_server_ip:
                 continue
             logger.info(f"Creating vulnerability on ip: {vuln.docker_gw_bridge_ip}, "
-                                                f"type: {vuln.vuln_type}")
+                        f"type: {vuln.vuln_type}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.docker_gw_bridge_ip)
 
             # Update sudoers file

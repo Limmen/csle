@@ -397,7 +397,7 @@ class EmulationStatistics:
         """
         Saves the DTO to a json file
 
-        :param json_file_path: the json file path to save  the DTO to
+        :param json_file_path: the json file path to save the DTO to
         :return: None
         """
         import io
@@ -406,6 +406,11 @@ class EmulationStatistics:
             f.write(json_str)
 
     def get_number_of_samples(self) -> int:
+        """
+        Counts the number of samples
+
+        :return: the number of samples
+        """
         num_samples = 0
         for k, v in self.conditionals_counts.items():
             for k, v in v.items():

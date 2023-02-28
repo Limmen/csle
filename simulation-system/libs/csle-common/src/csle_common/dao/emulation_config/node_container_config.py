@@ -11,8 +11,8 @@ class NodeContainerConfig:
 
     def __init__(self, name: str, ips_and_networks: List[Tuple[str, ContainerNetwork]],
                  version: str, level: str, restart_policy: str,
-                 suffix: str, os: str, execution_ip_first_octet: int = -1, docker_gw_bridge_ip : str = "",
-                 physical_host_ip : str = ""):
+                 suffix: str, os: str, execution_ip_first_octet: int = -1, docker_gw_bridge_ip: str = "",
+                 physical_host_ip: str = ""):
         """
         Initializes the DTO
 
@@ -138,13 +138,27 @@ class NodeContainerConfig:
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NodeContainerConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NodeContainerConfig.from_dict(json.loads(json_str))
+
     def copy(self) -> "NodeContainerConfig":
         """
         :return: a copy of the DTO
         """
         return NodeContainerConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int, physical_servers : List[str]) -> "NodeContainerConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers: List[str]) -> "NodeContainerConfig":
         """
         Creates a new config for an execution
 
@@ -154,7 +168,7 @@ class NodeContainerConfig:
         """
         config = self.copy()
         config.execution_ip_first_octet = ip_first_octet
-        config.physical_host_ip = physical_servers[0] # TODO Update this
+        config.physical_host_ip = physical_servers[0]  # TODO Update this
         config.ips_and_networks = list(map(lambda x: (
             GeneralUtil.replace_first_octet_of_ip(ip=x[0], ip_first_octet=ip_first_octet),
             x[1].create_execution_config(ip_first_octet=ip_first_octet)), config.ips_and_networks))

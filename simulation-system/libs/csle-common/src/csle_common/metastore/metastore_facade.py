@@ -2519,7 +2519,8 @@ class MetastoreFacade:
                 return None
 
     @staticmethod
-    def update_emulation_execution(emulation_execution: EmulationExecution, ip_first_octet: int, emulation: str) -> None:
+    def update_emulation_execution(emulation_execution: EmulationExecution, ip_first_octet: int,
+                                   emulation: str) -> None:
         """
         Updates an emulation execution in the metastore
 

@@ -2,7 +2,6 @@ import logging
 import subprocess
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.logging.log import Logger
 
 
 class ResourceConstraintsController:
@@ -30,7 +29,7 @@ class ResourceConstraintsController:
                 continue
             ip = node_resource_config.docker_gw_bridge_ip
             logger.info(f"applying resource constraints on node: {ip}, "
-                                                f"{node_resource_config.container_name}")
+                        f"{node_resource_config.container_name}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
             for ip_and_net_config in node_resource_config.ips_and_network_configs:

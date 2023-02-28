@@ -27,16 +27,19 @@ class UsersController:
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=users_conf.docker_gw_bridge_ip)
 
             cmd = "ls /home"
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.docker_gw_bridge_ip])
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[
+                users_conf.docker_gw_bridge_ip])
             users_w_home = o.decode().split("\n")
             users_w_home = list(filter(lambda x: x != '', users_w_home))
 
             for user in users_w_home:
                 if user != constants.CSLE_ADMIN.SSH_USER:
                     cmd = "sudo deluser {}".format(user)
-                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.docker_gw_bridge_ip])
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                  conn=emulation_env_config.connections[users_conf.docker_gw_bridge_ip])
                     cmd = "sudo rm -rf /home/{}".format(user)
-                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.docker_gw_bridge_ip])
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                  conn=emulation_env_config.connections[users_conf.docker_gw_bridge_ip])
 
             for user in users_conf.users:
                 if user.root:
@@ -46,7 +49,8 @@ class UsersController:
                     cmd = "sudo useradd -rm  -d /home/{} -s /bin/bash -g {}" \
                           "-p \"$(openssl passwd -1 '{}')\" {}".format(user.username, user.username, user.pw,
                                                                        user.username)
-                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.docker_gw_bridge_ip])
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[
+                    users_conf.docker_gw_bridge_ip])
 
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
 

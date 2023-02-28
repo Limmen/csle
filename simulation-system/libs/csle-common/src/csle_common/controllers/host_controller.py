@@ -43,8 +43,9 @@ class HostController:
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start host manager on SDN controller container
-            HostController.start_host_manager(emulation_env_config=emulation_env_config,
-                                              ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+            HostController.start_host_manager(
+                emulation_env_config=emulation_env_config,
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
 
     @staticmethod
     def start_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:

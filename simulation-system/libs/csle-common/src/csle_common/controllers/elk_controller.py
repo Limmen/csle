@@ -40,7 +40,6 @@ class ELKController:
             conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_ELK_MANAGER not in str(o):
-
             Logger.__call__().get_logger().info(f"Starting elk manager on node: "
                                                 f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
@@ -49,7 +48,8 @@ class ELKController:
                    constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
+                conn=emulation_env_config.get_connection(
+                    ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
             # Start the elk_manager
             cmd = constants.COMMANDS.START_ELK_MANAGER.format(

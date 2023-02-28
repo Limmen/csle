@@ -1,7 +1,6 @@
 import logging
 import subprocess
 import time
-from csle_common.logging.log import Logger
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -30,7 +29,7 @@ class OVSController:
             for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
                 if ovs_image in c.name:
                     logger.info(f"Creating OVS bridge and ports "
-                                                        f"on container: {c.get_full_name()}")
+                                f"on container: {c.get_full_name()}")
                     container_name = c.get_full_name()
                     bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} {constants.OVS.OVS_VSCTL} " \
@@ -61,7 +60,8 @@ class OVSController:
                         idx += 1
 
     @staticmethod
-    def apply_ovs_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
+    def apply_ovs_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                         logger: logging.Logger) -> None:
         """
         Aplies the OVS configuration on the OVS switches
 

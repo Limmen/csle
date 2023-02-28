@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Union
 import gpytorch
+import numpy as np
 import torch
 from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
 
@@ -92,11 +93,36 @@ class GPConditional:
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
-    def generate_distribution(self):
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "GPConditional":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return GPConditional.from_dict(json.loads(json_str))
+
+    def generate_distribution(self) -> None:
+        """
+        Updates the distribution
+
+        :return: None
+        """
         self.sample_space.sort()
         self.distribution = list(self.generate_distributions_for_samples(samples=self.sample_space).tolist())
 
-    def generate_distributions_for_samples(self, samples):
+    def generate_distributions_for_samples(self, samples) -> np.ndarray:
+        """
+        Generates distributions for a given sample
+
+        :param samples: the sample
+        :return: the created distributions
+        """
         samples = torch.tensor(samples)
         likelihood = gpytorch.likelihoods.GaussianLikelihood()
         model = GPRegressionModelWithGaussianNoise(torch.tensor(self.observed_x), torch.tensor(self.observed_y),
