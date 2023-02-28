@@ -26,6 +26,7 @@ from csle_common.controllers.host_controller import HostController
 from csle_common.controllers.elk_controller import ELKController
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
+from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
 
 
 class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer):
@@ -1530,21 +1531,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 == GeneralUtil.get_host_ip():
             clients_dto = TrafficController.get_num_active_clients(emulation_env_config=execution.emulation_env_config,
                                                      logger=logging.getLogger())
-            return csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO(
-                num_clients=clients_dto.num_clients,
-                client_process_active = clients_dto.client_process_active,
-                producer_active = clients_dto.producer_active,
-                clients_time_step_len_seconds = clients_dto.clients_time_step_len_seconds,
-                producer_time_step_len_seconds = clients_dto.producer_time_step_len_seconds
-            )
+            return ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(clients_dto=clients_dto)
         else:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO(
-                num_clients=0,
-                client_process_active =False,
-                producer_active = False,
-                clients_time_step_len_seconds = 0,
-                producer_time_step_len_seconds = 0
-            )
+            return ClusterManagerUtil.get_empty_get_num_clients_dto()
 
     def stopTrafficGenerators(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopTrafficGeneratorsMsg,
@@ -1616,6 +1605,37 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
+    def getClientManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetClientManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Gets the info of client managers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Gets the info of client managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip \
+                == GeneralUtil.get_host_ip():
+            client_managers_dto = TrafficController.get_client_managers_info(
+                emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+                active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config))
+            return csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO(
+                ips = client_managers_dto.ips,
+                ports = client_managers_dto.ports,
+                emulationName = client_managers_dto.emulation_name,
+                executionId = client_managers_dto.execution_id,
+                clientManagersRunning = client_managers_dto.client_managers_running,
+                clientManagersStatuses =
+                list(map(lambda x: ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(x),
+                         client_managers_dto.client_managers_statuses))
+            )
+        else:
+            return ClusterManagerUtil.get_empty_client_managers_info_dto()
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

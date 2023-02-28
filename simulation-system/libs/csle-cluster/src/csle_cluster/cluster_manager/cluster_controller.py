@@ -1305,7 +1305,7 @@ class ClusterController:
         """
         Sends a request to clean a given execution
 
-        :param ip: the ip of the node where to stop the execution
+        :param ip: the ip of the node where to clean the execution
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1325,7 +1325,7 @@ class ClusterController:
         """
         Sends a request to start a specific traffic manager
 
-        :param ip: the ip of the node where to stop the execution
+        :param ip: the ip of the node where to stop the traffic manager
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1346,7 +1346,7 @@ class ClusterController:
         """
         Sends a request to stop a specific traffic manager
 
-        :param ip: the ip of the node where to stop the execution
+        :param ip: the ip of the node where to stop the traffic manager
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1367,7 +1367,7 @@ class ClusterController:
         """
         Sends a request to stop the traffic managers of a given execution
 
-        :param ip: the ip of the node where to start the traffic managers
+        :param ip: the ip of the node where to stop the traffic managers
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1387,7 +1387,7 @@ class ClusterController:
         """
         Sends a request to start the client manager of a given execution
 
-        :param ip: the ip of the node where to start the client population
+        :param ip: the ip of the node where to start the client manager
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1407,7 +1407,7 @@ class ClusterController:
         """
         Sends a request to stop the client manager of a given execution
 
-        :param ip: the ip of the node where to start the client population
+        :param ip: the ip of the node where to start the client manager
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1427,7 +1427,7 @@ class ClusterController:
         """
         Sends a request to stop the client population of a given execution
 
-        :param ip: the ip of the node where to start the client population
+        :param ip: the ip of the node where to stop the client population
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1447,7 +1447,7 @@ class ClusterController:
         """
         Sends a request to get the number of active clients of a given execution
 
-        :param ip: the ip of the node where to start the client population
+        :param ip: the ip of the node where query for the number of active clients
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1467,7 +1467,7 @@ class ClusterController:
         """
         Sends a request to stop the traffic generators of a given execution
 
-        :param ip: the ip of the node where to start the traffic generators
+        :param ip: the ip of the node where to stop the traffic generators
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1487,7 +1487,7 @@ class ClusterController:
         """
         Sends a request to start a specific traffic generator
 
-        :param ip: the ip of the node where to stop the execution
+        :param ip: the ip of the node where to start the traffic generator
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1508,7 +1508,7 @@ class ClusterController:
         """
         Sends a request to stop a specific traffic generator
 
-        :param ip: the ip of the node where to stop the execution
+        :param ip: the ip of the node where to stop the traffic generator
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1522,3 +1522,23 @@ class ClusterController:
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, container_ip=container_ip
             )
             return operation_outcome_dto
+
+    @staticmethod
+    def get_client_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO:
+        """
+        Sends a request to get the client managers infos of a given execution
+
+        :param ip: the ip of the node where to get the client managers info
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            client_managers_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_client_managers_info(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+            )
+            return client_managers_info_dto

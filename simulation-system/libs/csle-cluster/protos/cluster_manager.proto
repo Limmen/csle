@@ -85,6 +85,45 @@ service ClusterManager {
   rpc startTrafficGenerator(StartTrafficGeneratorMsg) returns (OperationOutcomeDTO) {}
   rpc stopTrafficGenerators(StopTrafficGeneratorsMsg) returns (OperationOutcomeDTO) {}
   rpc stopTrafficGenerator(StopTrafficGeneratorMsg) returns (OperationOutcomeDTO) {}
+  rpc getClientManagersInfo(GetClientManagersInfoMsg) returns (ClientManagersInfoDTO) {}
+  rpc getTrafficManagersInfo(GetTrafficManagersInfoMsg) returns (TrafficManagerInfoDTO) {}
+}
+
+// Message that the client sends when requesting to get the traffic managers info
+message GetTrafficManagersInfoMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the server returns when requested for the traffic managers info
+message TrafficManagersInfoDTO {
+  repeated string ips = 1;
+  repeated int32 ports = 2;
+  string emulationName = 3;
+  int32 executionId = 4;
+  repeated bool trafficManagersRunning = 5;
+  repeated TrafficManagerInfoDTO trafficManagersStatuses = 6;
+}
+
+message TrafficManagerInfoDTO {
+  bool running = 1;
+  string script = 2;
+}
+
+// Message that the server returns when requested for the client managers info
+message ClientManagersInfoDTO {
+  repeated string ips = 1;
+  repeated int32 ports = 2;
+  string emulationName = 3;
+  int32 executionId = 4;
+  repeated bool clientManagersRunning = 5;
+  repeated GetNumClientsDTO clientManagersStatuses = 6;
+}
+
+// Message that the client sends when requesting to get the client managers info
+message GetClientManagersInfoMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start a specific traffic generator

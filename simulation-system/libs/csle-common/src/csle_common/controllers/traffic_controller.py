@@ -536,12 +536,14 @@ class TrafficController:
         return [emulation_env_config.traffic_config.client_population_config.client_manager_port]
 
     @staticmethod
-    def get_client_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> ClientManagersInfo:
+    def get_client_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                                 logger: logging.Logger) -> ClientManagersInfo:
         """
         Extracts the information of the Client managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
+        :param logger: the logger to use for logging
         :return: a DTO with the status of the Client managers
         """
         client_managers_ips = TrafficController.get_client_managers_ips(emulation_env_config=emulation_env_config)
@@ -559,7 +561,7 @@ class TrafficController:
                     port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
                 running = True
             except Exception as e:
-                Logger.__call__().get_logger().debug(
+                logger.debug(
                     f"Could not fetch client manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 client_managers_statuses.append(status)
@@ -619,13 +621,16 @@ class TrafficController:
         return ports
 
     @staticmethod
-    def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) \
+    def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                                  physical_host_ip: str, logger: logging.Logger) \
             -> TrafficManagersInfo:
         """
         Extracts the information of the traffic managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
+        :param physical_host_ip: the ip of the physical host
+        :param logger: the logger to use for logging
         :return: a DTO with the status of the traffic managers
         """
         traffic_managers_ips = TrafficController.get_traffic_managers_ips(emulation_env_config=emulation_env_config)
@@ -633,7 +638,8 @@ class TrafficController:
         traffic_managers_statuses = []
         traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            if node_traffic_config.docker_gw_bridge_ip not in active_ips:
+            if node_traffic_config.docker_gw_bridge_ip not in active_ips \
+                    or node_traffic_config.physical_host_ip != physical_host_ip:
                 continue
             running = False
             status = None
@@ -643,7 +649,7 @@ class TrafficController:
                         port=node_traffic_config.traffic_manager_port, ip=node_traffic_config.docker_gw_bridge_ip)
                     running = True
                 except Exception as e:
-                    Logger.__call__().get_logger().debug(f"Could not fetch traffic manager status on IP"
+                    logger.debug(f"Could not fetch traffic manager status on IP"
                                                          f":{node_traffic_config}, error: {str(e)}, {repr(e)}")
                 if status is not None:
                     traffic_managers_statuses.append(status)
