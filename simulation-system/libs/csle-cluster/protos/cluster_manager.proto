@@ -70,10 +70,38 @@ service ClusterManager {
   rpc startMetricbeats(StartMetricBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startHeartbeats(StartHeartBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc stopAllExecutionsOfEmulation(StopAllExecutionsOfEmulationMsg) returns (OperationOutcomeDTO) {}
+  rpc stopExecution(StopExecutionMsg) returns (OperationOutcomeDTO) {}
+  rpc stopAllExecutions(StopAllExecutionsMsg) returns (OperationOutcomeDTO) {}
+  rpc cleanAllExecutions(CleanAllExecutionsMsg) returns (OperationOutcomeDTO) {}
+  rpc cleanAllExecutionsOfEmulation(CleanAllExecutionsOfEmulationMsg) returns (OperationOutcomeDTO) {}
+  rpc cleanExecution(CleanExecutionMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends to clean all executions
+message CleanAllExecutionsMsg {}
+
+// Message that the client sends to stop all executions
+message StopAllExecutionsMsg {}
+
+// Message that the client sends to stop a given execution
+message StopExecutionMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends to clean a given execution
+message CleanExecutionMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends to stop all executions of a given emulation
 message StopAllExecutionsOfEmulationMsg {
+  string emulation = 1;
+}
+
+// Message that the client sends to clean all executions of a given emulation
+message CleanAllExecutionsOfEmulationMsg {
   string emulation = 1;
 }
 

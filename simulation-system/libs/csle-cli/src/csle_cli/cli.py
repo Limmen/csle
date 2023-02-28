@@ -828,11 +828,14 @@ def stop_emulation_execution(emulation_env_config: "EmulationEnvConfig", executi
     :param execution_id: id of the execution to stop
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Stopping execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvController.stop_execution_of_emulation(emulation_env_config=emulation_env_config,
-                                                       execution_id=execution_id)
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.stop_execution(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                         emulation=emulation_env_config.name, ip_first_octet=execution_id)
 
 
 def clean_emulation_statistics() -> None:
@@ -854,10 +857,13 @@ def clean_emulation_executions() -> None:
 
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho("Stopping and cleaning all emulation executions", bold=False)
-    EmulationEnvController.clean_all_executions()
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.clean_all_executions(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def stop_emulation_executions() -> None:
@@ -866,10 +872,13 @@ def stop_emulation_executions() -> None:
 
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho("Stopping all emulation executions", bold=False)
-    EmulationEnvController.stop_all_executions()
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.stop_all_executions(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
 def clean_emulation_traces() -> None:
@@ -905,10 +914,18 @@ def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -
     :param emulation_env_config: the configuration of the emulation
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvController.clean_all_emulation_executions(emulation_env_config=emulation_env_config)
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.clean_all_executions_of_emulation(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
+    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+        emulation_name=emulation_env_config.name)
+    for exec in executions:
+        MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
 
 def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execution_id: int) -> None:
@@ -919,10 +936,19 @@ def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execut
     :param emulation_env_config: the configuration of the emulation
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Cleaning execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvController.clean_emulation_execution(emulation_env_config, execution_id)
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.clean_execution(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name,
+            ip_first_octet=execution_id)
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
+                                                        emulation_name=emulation_env_config.name)
+    if execution is not None:
+        MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
 
 
 def stop_shell_complete(ctx, param, incomplete) -> List[str]:

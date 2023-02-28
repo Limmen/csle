@@ -355,6 +355,31 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StopAllExecutionsOfEmulationMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.stopExecution = channel.unary_unary(
+                '/ClusterManager/stopExecution',
+                request_serializer=cluster__manager__pb2.StopExecutionMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopAllExecutions = channel.unary_unary(
+                '/ClusterManager/stopAllExecutions',
+                request_serializer=cluster__manager__pb2.StopAllExecutionsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.cleanAllExecutions = channel.unary_unary(
+                '/ClusterManager/cleanAllExecutions',
+                request_serializer=cluster__manager__pb2.CleanAllExecutionsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.cleanAllExecutionsOfEmulation = channel.unary_unary(
+                '/ClusterManager/cleanAllExecutionsOfEmulation',
+                request_serializer=cluster__manager__pb2.CleanAllExecutionsOfEmulationMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.cleanExecution = channel.unary_unary(
+                '/ClusterManager/cleanExecution',
+                request_serializer=cluster__manager__pb2.CleanExecutionMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -769,6 +794,36 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopExecution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopAllExecutions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def cleanAllExecutions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def cleanAllExecutionsOfEmulation(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def cleanExecution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1110,6 +1165,31 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'stopAllExecutionsOfEmulation': grpc.unary_unary_rpc_method_handler(
                     servicer.stopAllExecutionsOfEmulation,
                     request_deserializer=cluster__manager__pb2.StopAllExecutionsOfEmulationMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopExecution': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopExecution,
+                    request_deserializer=cluster__manager__pb2.StopExecutionMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopAllExecutions': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopAllExecutions,
+                    request_deserializer=cluster__manager__pb2.StopAllExecutionsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'cleanAllExecutions': grpc.unary_unary_rpc_method_handler(
+                    servicer.cleanAllExecutions,
+                    request_deserializer=cluster__manager__pb2.CleanAllExecutionsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'cleanAllExecutionsOfEmulation': grpc.unary_unary_rpc_method_handler(
+                    servicer.cleanAllExecutionsOfEmulation,
+                    request_deserializer=cluster__manager__pb2.CleanAllExecutionsOfEmulationMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'cleanExecution': grpc.unary_unary_rpc_method_handler(
+                    servicer.cleanExecution,
+                    request_deserializer=cluster__manager__pb2.CleanExecutionMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
@@ -2275,6 +2355,91 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopAllExecutionsOfEmulation',
             cluster__manager__pb2.StopAllExecutionsOfEmulationMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopExecution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopExecution',
+            cluster__manager__pb2.StopExecutionMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopAllExecutions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopAllExecutions',
+            cluster__manager__pb2.StopAllExecutionsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def cleanAllExecutions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/cleanAllExecutions',
+            cluster__manager__pb2.CleanAllExecutionsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def cleanAllExecutionsOfEmulation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/cleanAllExecutionsOfEmulation',
+            cluster__manager__pb2.CleanAllExecutionsOfEmulationMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def cleanExecution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/cleanExecution',
+            cluster__manager__pb2.CleanExecutionMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

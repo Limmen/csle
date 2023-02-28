@@ -51,29 +51,32 @@ class EmulationEnvController:
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
-    def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int) -> None:
+    def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int,
+                                    physical_server_ip: str) -> None:
         """
         Stops an execution of a given emulation
 
         :param emulation_env_config: the emulation for which executions should be stopped
         :param execution_id: the id of the execution to stop
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_env_config.name,
                                                             ip_first_octet=execution_id)
-        EmulationEnvController.stop_containers(execution=execution)
+        EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip)
         ContainerController.stop_docker_stats_thread(execution=execution)
 
     @staticmethod
-    def stop_all_executions() -> None:
+    def stop_all_executions(physical_server_ip: str) -> None:
         """
         Stops all emulation executions
 
+        :param physical_server_ip: ip of the physical server
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
@@ -282,22 +285,26 @@ class EmulationEnvController:
             ContainerController.remove_network(name=net.name)
 
     @staticmethod
-    def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:
+    def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
+            -> None:
         """
         Deletes the docker networks
 
         :param emulation_env_config: the emulation env config
+        :param physical_server_ip: the ip of the physical server to remove the networks
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip == physical_server_ip:
+                for ip_net in c.ips_and_networks:
+                    ip, net = ip_net
+                    ContainerController.remove_network(name=net.name)
+
+        c = emulation_env_config.kafka_config.container
+        if c.physical_host_ip == physical_server_ip:
             for ip_net in c.ips_and_networks:
                 ip, net = ip_net
                 ContainerController.remove_network(name=net.name)
-
-        c = emulation_env_config.kafka_config.container
-        for ip_net in c.ips_and_networks:
-            ip, net = ip_net
-            ContainerController.remove_network(name=net.name)
 
     @staticmethod
     def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str]) -> EmulationExecution:
@@ -524,78 +531,83 @@ class EmulationEnvController:
                 subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig) -> None:
+    def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Cleans an emulation
 
         :param emulation_env_config: the config of the emulation to clean
+        :param physical_server_ip: the ip of the physical server to clean the emulation executions
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
             emulation_name=emulation_env_config.name)
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec)
-            EmulationEnvController.rm_containers(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
+            EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip)
             try:
                 ContainerController.stop_docker_stats_thread(execution=exec)
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config)
-            MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
+                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip)
 
     @staticmethod
-    def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int) -> None:
+    def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int,
+                                  physical_server_ip: str) -> None:
         """
-        Cleans an emulation
+        Cleans an emulation execution
 
         :param execution_id: the id of the execution to clean
         :param emulation_env_config: the config of the emulation to clean
+        :param physical_server_ip: the ip of the physical server to clean the execution
         :return: None
         """
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                             emulation_name=emulation_env_config.name)
-        EmulationEnvController.stop_containers(execution=execution)
-        EmulationEnvController.rm_containers(execution=execution)
+        EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip)
+        EmulationEnvController.rm_containers(execution=execution, physical_server_ip=physical_server_ip)
         try:
             ContainerController.stop_docker_stats_thread(execution=execution)
         except Exception:
             pass
         EmulationEnvController.delete_networks_of_emulation_env_config(
-            emulation_env_config=execution.emulation_env_config)
-        MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip)
 
     @staticmethod
-    def clean_all_executions() -> None:
+    def clean_all_executions(physical_server_ip: str) -> None:
         """
-        Cleans an emulation
+        Cleans all executions of a given emulation on a given physical server
 
         :param emulation_env_config: the config of the emulation to clean
+        :param physical_server_ip: the ip of the physical server to clean the executions
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec)
-            EmulationEnvController.rm_containers(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
+            EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip)
             try:
                 ContainerController.stop_docker_stats_thread(execution=exec)
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config)
+                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
-    def rm_containers(execution: EmulationExecution) -> None:
+    def rm_containers(execution: EmulationExecution, physical_server_ip: str) -> None:
         """
         Remove containers in the emulation env config for a given execution
 
         :param execution: the execution to remove
+        :param physical_server_ip: the ip of the physical server to remove the containers
         :return: None
         """
 
         # Remove regular containers
         for c in execution.emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
@@ -603,25 +615,28 @@ class EmulationEnvController:
 
         # Remove the kafka container
         c = execution.emulation_env_config.kafka_config.container
-        name = c.get_full_name()
-        Logger.__call__().get_logger().info(f"Removing container:{name}")
-        cmd = f"docker rm {name}"
-        subprocess.call(cmd, shell=True)
-
-        # Remove the elk container
-        c = execution.emulation_env_config.elk_config.container
-        name = c.get_full_name()
-        Logger.__call__().get_logger().info(f"Removing container:{name}")
-        cmd = f"docker rm {name}"
-        subprocess.call(cmd, shell=True)
-
-        if execution.emulation_env_config.sdn_controller_config is not None:
-            # Remove the SDN controller container
-            c = execution.emulation_env_config.sdn_controller_config.container
+        if c.physical_host_ip == physical_server_ip:
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
+
+        # Remove the elk container
+        c = execution.emulation_env_config.elk_config.container
+        if c.physical_host_ip == physical_server_ip:
+            name = c.get_full_name()
+            Logger.__call__().get_logger().info(f"Removing container:{name}")
+            cmd = f"docker rm {name}"
+            subprocess.call(cmd, shell=True)
+
+        if execution.emulation_env_config.sdn_controller_config is not None:
+            # Remove the SDN controller container
+            c = execution.emulation_env_config.sdn_controller_config.container
+            if c.physical_host_ip == physical_server_ip:
+                name = c.get_full_name()
+                Logger.__call__().get_logger().info(f"Removing container:{name}")
+                cmd = f"docker rm {name}"
+                subprocess.call(cmd, shell=True)
 
     @staticmethod
     def install_emulation(config: EmulationEnvConfig) -> None:
