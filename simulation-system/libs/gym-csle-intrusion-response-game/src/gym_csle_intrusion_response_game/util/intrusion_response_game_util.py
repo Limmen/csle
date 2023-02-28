@@ -57,7 +57,7 @@ class IntrusionResponseGameUtil:
         :param X_max: the maximum observation
         :return: O
         """
-        return np.array(list(range(X_max + 1)))
+        return np.array(list(range(X_max)))
 
     @staticmethod
     def local_workflow_cost(beta: float, reachable: bool, s: np.ndarray, initial_zone: int):
@@ -149,30 +149,30 @@ class IntrusionResponseGameUtil:
     def local_transition_probability(s: np.ndarray, s_prime: np.ndarray, a1: int, a2: int,
                                      zone_detection_probabilities: np.ndarray, attack_success_probabilities: np.ndarray):
         if s_prime[0] == -1 and s_prime[1] == -1 and a2 != 0:
-            return zone_detection_probabilities[s]
+            return zone_detection_probabilities[s[0]]
         if a1 != 0:
             if s_prime[0] == a1 and s_prime[1] == 0:
-                return 1
+                return 1*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
             else:
                 return 0
         else:
             if a2 == 0 and s_prime[0] == s[0] and s_prime[1] == s[1]:
-                return 1
+                return 1*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
             # Recon
             if a2 == 1 and s_prime[0] == s[0] and s[1] < 2 and s_prime[1] == 1:
-                return 1
+                return 1*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
             # Brute-force
             if a2 == 2 and s[1] == 1:
                 if s_prime[1] == 2:
-                    return attack_success_probabilities[0]
+                    return (attack_success_probabilities[0])*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
                 elif s_prime[1] == 1:
-                    return 1-attack_success_probabilities[0]
+                    return (1-attack_success_probabilities[0])*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
             # Exploit
             if a2 == 3 and s[1] == 1 and s_prime[1] == 2:
                 if s_prime[1] == 2:
-                    return attack_success_probabilities[1]
+                    return attack_success_probabilities[1]*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
                 elif s_prime[1] == 1:
-                    return 1-attack_success_probabilities[1]
+                    return (1-attack_success_probabilities[1])*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
         return 0
 
     @staticmethod
@@ -190,10 +190,12 @@ class IntrusionResponseGameUtil:
                 for s in state_space:
                     a1_a2_s_probs = []
                     for s_prime in state_space:
-                        a1_a2_s_probs.append(IntrusionResponseGameUtil.local_transition_probability(
+                        p = IntrusionResponseGameUtil.local_transition_probability(
                             s=s,s_prime=s_prime, a1=a1, a2=a2,
                             zone_detection_probabilities=zone_detection_probabilities,
-                            attack_success_probabilities=attack_success_probabilities))
+                            attack_success_probabilities=attack_success_probabilities,
+                        )
+                        a1_a2_s_probs.append(p)
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             T.append(a1_probs)
@@ -208,11 +210,9 @@ class IntrusionResponseGameUtil:
         """
         intrusion_dist = []
         no_intrusion_dist = []
-        terminal_dist = np.zeros(X_max + 1)
-        terminal_dist[-1] = 1
-        intrusion_rv = betabinom(n=X_max, a=1, b=0.7)
-        no_intrusion_rv = betabinom(n=X_max, a=0.7, b=3)
-        for i in range(X_max + 1):
+        intrusion_rv = betabinom(n=X_max-1, a=1, b=0.7)
+        no_intrusion_rv = betabinom(n=X_max-1, a=0.7, b=3)
+        for i in range(X_max):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
         Z = []
@@ -221,16 +221,10 @@ class IntrusionResponseGameUtil:
             for a2 in attacker_actions:
                 a1_a2_probs = []
                 for s in state_space:
-                    a1_a2_s_probs = []
-                    for o in observation_space:
-                        # Terminal state observation
-                        if s[0] == -1 and s[1] == -1 and o == X_max:
-                            a1_a2_s_probs.append(1)
-                            continue
-                        if a2 != 0 and o != X_max:
-                            a1_a2_s_probs.append(intrusion_dist[o])
-                            continue
-                        a1_a2_s_probs.append(no_intrusion_dist[o])
+                    if a2 != 0:
+                        a1_a2_s_probs = intrusion_dist
+                    else:
+                        a1_a2_s_probs = no_intrusion_dist
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             Z.append(a1_probs)
@@ -251,28 +245,29 @@ class IntrusionResponseGameUtil:
         :return: s'
         """
         state_probs = []
-        for s_prime in S:
+        for s_prime in range(len(S)):
             state_probs.append(T[a1][a2][s][s_prime])
         s_prime = np.random.choice(np.arange(0, len(S)), p=state_probs)
         return s_prime
 
     @staticmethod
-    def sample_initial_state(b1: np.ndarray) -> np.ndarray:
+    def sample_initial_state(b1: np.ndarray, state_space: np.ndarray) -> np.ndarray:
         """
         Samples the initial state
 
         :param b1: the initial belief
+        :param state_space: the state space
         :return: s1
         """
         s1 = np.random.choice(np.arange(0, len(b1)), p=b1)
-        return s1
+        return state_space[s1]
 
     @staticmethod
     def sample_next_observation(Z: np.ndarray, a1: int, a2: int, s_prime: int, O: np.ndarray) -> int:
         """
         Samples the next observation
         """
-        o = np.random.choice(np.arange(0, len(O)), p=Z[a1][a2][s_prime])
+        o = np.random.choice(O, p=Z[a1][a2][s_prime])
         return int(o)
 
     @staticmethod

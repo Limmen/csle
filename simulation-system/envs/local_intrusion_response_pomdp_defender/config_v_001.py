@@ -162,7 +162,6 @@ def default_joint_observation_space_config(X_max: int) -> JointObservationSpaceC
         observations.append(
             Observation(id=i, val=i, descr=f"{i} weighted alerts")
         )
-
     observation_spaces = [
         ObservationSpaceConfig(
             observations=observations,
@@ -279,7 +278,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         d_b1=np.array(initial_state_distribution_config.initial_state_distribution),
         a_b1=np.array(initial_state_distribution_config.initial_state_distribution),
         T=np.array(transition_tensor_config.transition_tensor),
-        O=np.array(list(defender_observation_space_config.observation_id_to_observation_vector.keys())),
+        O=np.array(list(map(lambda x: x.val, defender_observation_space_config.observations))),
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
         S=IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones),

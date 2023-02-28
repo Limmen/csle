@@ -91,9 +91,9 @@ if __name__ == '__main__':
     # simulation_env_config.simulation_env_input_config
     import gym
     orig_env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
-    print(simulation_env_config.gym_env_name)
     orig_env.reset()
-    print(orig_env.step(1))
+    orig_env.step(1)
+    orig_env.reset()
     # agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
     #                  experiment_config=experiment_config)
     # experiment_execution = agent.train()

@@ -24,12 +24,11 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         :param config: the environment configuration
         :param attacker_strategy: the strategy of the static attacker
         """
-        print("CREATING THE ENV")
-        print(f"config: {config}")
         self.config = config
 
         # Initialize environment state
-        self.state = IntrusionResponseGameStateLocal(b1=self.config.intrusion_response_game_config.d_b1)
+        self.state = IntrusionResponseGameStateLocal(b1=self.config.intrusion_response_game_config.d_b1,
+                                                     S=self.config.intrusion_response_game_config.S)
 
         # Setup spaces
         self.observation_space = self.config.intrusion_response_game_config.defender_observation_space()
@@ -73,11 +72,12 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             a2 = np.random.choice(np.array([1,2,3]), p=[1/3,1/3,1/3])
 
         r = self.config.intrusion_response_game_config.R[a1][a2][self.state.s]
-        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(self.state.s)
+        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
         state_idx = IntrusionResponseGameUtil.sample_next_state(
             a1=a1, a2=a2, T=self.config.intrusion_response_game_config.T,
             S=self.config.intrusion_response_game_config.S, s=s_idx)
         self.state.s = self.config.intrusion_response_game_config.S[state_idx]
+        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
 
         o = max(self.config.intrusion_response_game_config.O)
         if self.state.s[0] == -1 and self.state.s[1] == -1:
@@ -86,7 +86,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             o = IntrusionResponseGameUtil.sample_next_observation(
                 Z=self.config.intrusion_response_game_config.Z,
                 O=self.config.intrusion_response_game_config.O,
-                s_prime=self.state.s, a1=a1, a2=a2)
+                s_prime=s_idx, a1=a1, a2=a2)
 
         # Update time-step
         self.state.t += 1
@@ -205,3 +205,11 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
+
+    def manual_play(self) -> None:
+        """
+        An interactive loop to test the environment manually
+
+        :return: None
+        """
+        return
