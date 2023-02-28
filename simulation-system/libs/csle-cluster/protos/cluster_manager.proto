@@ -79,6 +79,20 @@ service ClusterManager {
   rpc stopTrafficManager(StartTrafficManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopTrafficManagers(StartTrafficManagersMsg) returns (OperationOutcomeDTO) {}
   rpc startClientManager(StartClientManagerMsg) returns (OperationOutcomeDTO) {}
+  rpc stopClientPopulation(StopClientPopulationMsg) returns (OperationOutcomeDTO) {}
+  rpc stopClientManager(StopClientManagerMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to stop the client population of a specific execution
+message StopClientPopulationMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to stop the client manager of a specific execution
+message StopClientManagerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start the client manager of a specific execution

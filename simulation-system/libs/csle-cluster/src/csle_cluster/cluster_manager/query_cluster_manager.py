@@ -1444,3 +1444,45 @@ def start_client_manager(
     )
     operation_outcome_dto = stub.startClientManager(operation_msg, timeout=timeout)
     return operation_outcome_dto
+
+
+def stop_client_manager(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops the client manager of a given execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopClientManagerMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet
+    )
+    operation_outcome_dto = stub.stopClientManager(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_client_population(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops the client population of a given execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopClientPopulationMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet
+    )
+    operation_outcome_dto = stub.stopClientPopulation(operation_msg, timeout=timeout)
+    return operation_outcome_dto

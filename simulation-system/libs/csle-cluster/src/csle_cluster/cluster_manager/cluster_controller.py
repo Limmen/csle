@@ -1400,3 +1400,43 @@ class ClusterController:
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
             return operation_outcome_dto
+
+    @staticmethod
+    def stop_client_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the client manager of a given execution
+
+        :param ip: the ip of the node where to start the client population
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_client_manager(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+            )
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_client_population(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the client population of a given execution
+
+        :param ip: the ip of the node where to start the client population
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_client_population(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+            )
+            return operation_outcome_dto
