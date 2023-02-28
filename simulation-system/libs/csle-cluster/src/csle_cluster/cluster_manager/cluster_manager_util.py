@@ -4,12 +4,36 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.controllers.container_controller import ContainerController
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_collector.client_manager.client_manager_pb2
+import csle_collector.traffic_manager.traffic_manager_pb2
 
 
 class ClusterManagerUtil:
     """
     Class with utility functions related to the cluster manager
     """
+
+    @staticmethod
+    def convert_traffic_dto_to_traffic_manager_info_dto(
+            traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagerInfoDTO:
+        """
+        Converts a TrafficDTO to a TrafficManagerInfoDTO
+
+        :param traffic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagerInfoDTO(
+            running=traffic_dto.running, script = traffic_dto.script)
+
+    @staticmethod
+    def get_empty_traffic_managers_info_dto() -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO:
+        """
+        :return: an empty TrafficManagersInfoDTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO(
+            ips = [], ports = [], emulationName = "", executionId = -1, trafficManagersRunning = [],
+            trafficManagersStatuses = [])
 
     @staticmethod
     def get_empty_client_managers_info_dto() -> csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO:
@@ -26,12 +50,8 @@ class ClusterManagerUtil:
         :return: an empty GetNumClientsDTO
         """
         return csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO(
-            num_clients=0,
-            client_process_active =False,
-            producer_active = False,
-            clients_time_step_len_seconds = 0,
-            producer_time_step_len_seconds = 0
-        )
+            num_clients=0, client_process_active =False, producer_active = False, clients_time_step_len_seconds = 0,
+            producer_time_step_len_seconds = 0)
 
     @staticmethod
     def convert_client_dto_to_get_num_clients_dto(
@@ -135,3 +155,58 @@ class ClusterManagerUtil:
         active_ips.append(constants.COMMON.LOCALHOST_127_0_0_1)
         active_ips.append(constants.COMMON.LOCALHOST_127_0_1_1)
         return active_ips
+
+    @staticmethod
+    def client_managers_info_dto_to_dict(
+            clients_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a ClientManagersInfoDTO to a dict
+
+        :param clients_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(clients_managers_info_dto.ips)
+        d["ports"] = list(clients_managers_info_dto.ports)
+        d["emulationName"] = clients_managers_info_dto.emulationName
+        d["executionId"] = clients_managers_info_dto.executionId
+        d["clientManagersRunning"] = list(clients_managers_info_dto.clientManagersRunning)
+        d["clientManagersRunning"] = list(map(lambda x: ClusterManagerUtil.get_num_clients_dto_to_dict(x),
+                                         list(clients_managers_info_dto.clientManagersRunning)))
+        return d
+
+    @staticmethod
+    def traffic_manager_info_dto_to_dict(
+            traffic_manager_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagerInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a TrafficManagerInfoDTO to a dict
+
+        :param traffic_manager_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["running"] = traffic_manager_info_dto.running
+        d["script"] = traffic_manager_info_dto.script
+        return d
+
+    @staticmethod
+    def traffic_managers_info_dto_to_dict(
+            traffic_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a TrafficManagersInfoDTO to a dict
+
+        :param traffic_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(traffic_managers_info_dto.ips)
+        d["ports"] = list(traffic_managers_info_dto.ports)
+        d["trafficManagersRunning"] = list(traffic_managers_info_dto.trafficManagersRunning)
+        d["trafficManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.traffic_manager_info_dto_to_dict(x),
+                                         list(traffic_managers_info_dto.trafficManagersStatuses)))
+        d["emulationName"] = list(traffic_managers_info_dto.emulationName)
+        d["executionId"] = list(traffic_managers_info_dto.executionId)
+        return d

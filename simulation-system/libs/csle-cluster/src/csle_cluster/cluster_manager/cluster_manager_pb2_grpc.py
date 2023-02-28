@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster__manager__pb2
+import cluster_manager_pb2 as cluster__manager__pb2
 
 
 class ClusterManagerStub(object):
@@ -434,6 +434,11 @@ class ClusterManagerStub(object):
                 '/ClusterManager/getClientManagersInfo',
                 request_serializer=cluster__manager__pb2.GetClientManagersInfoMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.ClientManagersInfoDTO.FromString,
+                )
+        self.getTrafficManagersInfo = channel.unary_unary(
+                '/ClusterManager/getTrafficManagersInfo',
+                request_serializer=cluster__manager__pb2.GetTrafficManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.TrafficManagerInfoDTO.FromString,
                 )
 
 
@@ -945,6 +950,12 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getTrafficManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1367,6 +1378,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getClientManagersInfo,
                     request_deserializer=cluster__manager__pb2.GetClientManagersInfoMsg.FromString,
                     response_serializer=cluster__manager__pb2.ClientManagersInfoDTO.SerializeToString,
+            ),
+            'getTrafficManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getTrafficManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetTrafficManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.TrafficManagerInfoDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2804,5 +2820,22 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getClientManagersInfo',
             cluster__manager__pb2.GetClientManagersInfoMsg.SerializeToString,
             cluster__manager__pb2.ClientManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getTrafficManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getTrafficManagersInfo',
+            cluster__manager__pb2.GetTrafficManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.TrafficManagerInfoDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

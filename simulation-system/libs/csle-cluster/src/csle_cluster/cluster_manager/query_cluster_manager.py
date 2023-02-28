@@ -1586,10 +1586,31 @@ def get_client_managers_info(
     :param timeout: the GRPC timeout (seconds)
     :param emulation: the name of the emulation
     :param ip_first_octet: the first octet of the subnet of the execution
-    :return: an OperationOutcomeDTO with the outcome of the operation
+    :return: a ClientManagersInfoDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetClientManagersInfoMsg(
         emulation=emulation, ipFirstOctet=ip_first_octet
     )
     client_managers_info_dto = stub.getClientManagersInfo(operation_msg, timeout=timeout)
     return client_managers_info_dto
+
+
+def get_traffic_managers_info(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO:
+    """
+    Gets the info of traffic managers of a given execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: a TrafficManagersInfoDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetTrafficManagersInfoMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet
+    )
+    traffic_managers_info_dto = stub.getTrafficManagersInfo(operation_msg, timeout=timeout)
+    return traffic_managers_info_dto

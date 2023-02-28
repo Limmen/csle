@@ -1607,13 +1607,13 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
     def getClientManagersInfo(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetClientManagersInfoMsg,
-            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO:
         """
         Gets the info of client managers
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: an OperationOutcomeDTO
+        :return: a ClientManagersInfoDTO
         """
         logging.info(f"Gets the info of client managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
@@ -1636,6 +1636,36 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             )
         else:
             return ClusterManagerUtil.get_empty_client_managers_info_dto()
+
+    def getTrafficManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetTrafficManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO:
+        """
+        Gets the info of traffic managers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a TrafficManagersInfoDTO
+        """
+        logging.info(f"Gets the info of traffic managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        traffic_managers_dto = TrafficController.get_traffic_managers_info(
+            emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+            active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
+            physical_host_ip=GeneralUtil.get_host_ip()
+        )
+        return csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO(
+            ips = traffic_managers_dto.ips,
+            ports = traffic_managers_dto.ports,
+            emulationName = traffic_managers_dto.emulation_name,
+            executionId = traffic_managers_dto.execution_id,
+            trafficManagersRunning = traffic_managers_dto.traffic_managers_running,
+            trafficManagersStatuses =
+            list(map(lambda x: ClusterManagerUtil.convert_traffic_dto_to_traffic_manager_info_dto(x),
+                     traffic_managers_dto.traffic_managers_statuses))
+        )
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

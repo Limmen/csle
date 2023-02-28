@@ -1533,7 +1533,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
-        :return: The operation outcome
+        :return: a ClientManagersInfoDTO
         """
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
@@ -1542,3 +1542,23 @@ class ClusterController:
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
             return client_managers_info_dto
+
+    @staticmethod
+    def get_traffic_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO:
+        """
+        Sends a request to get the client managers infos of a given execution
+
+        :param ip: the ip of the node where to get the client managers info
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: a TrafficManagersInfoDTO
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            traffic_managers_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_traffic_managers_info(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+            )
+            return traffic_managers_info_dto
