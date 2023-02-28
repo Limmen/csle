@@ -1,13 +1,17 @@
 import numpy as np
+from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 
 
-class IntrusionResponseGameState:
+class IntrusionResponseGameStateLocal:
     """
     Represents the state of the intrusion response game
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, b1: np.ndarray):
+        self.b1 = b1
+        self.b = self.b1.copy()
+        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1)
+        self.t = 1
 
     def reset(self) -> None:
         """
@@ -15,7 +19,9 @@ class IntrusionResponseGameState:
 
         :return: None
         """
-        pass
+        self.t = 1
+        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1)
+        self.b = self.b1.copy()
 
     def attacker_observation(self) -> np.ndarray:
         """

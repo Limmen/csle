@@ -1,37 +1,35 @@
 from typing import Dict, Any
-from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
+from gym_csle_intrusion_response_game.dao.intrusion_response_game_config import IntrusionResponseGameConfig
 
 
-class IntrusionResponseGameDefenderPOMDPConfig(SimulationEnvInputConfig):
+class IntrusionResponseGameLocalPOMDPDefenderConfig(SimulationEnvInputConfig):
     """
-    DTO class representing the configuration of the POMDP environment of the defender
+    DTO class representing the configuration of the local POMDP environment of the defender for a specific node
     when facing a static attacker strategy
     """
 
-    def __init__(self, env_name: str, stopping_game_config: StoppingGameConfig, attacker_strategy: Policy,
-                 game_name: str = "csle-intrusion-response-game-v1"):
+    def __init__(self, env_name: str, intrusion_response_game_config: IntrusionResponseGameConfig,
+                 attacker_strategy: Policy):
         """
         Initializes the DTO
 
         :param env_name: the environment name
-        :param stopping_game_config: The underlying stopping game config
+        :param intrusion_response_game_config: The underlying game config
         :param attacker_strategy: the attacker's strategy name
-        :param game_name: the name of the underlying stopping game
         """
         super().__init__()
         self.env_name = env_name
-        self.stopping_game_config = stopping_game_config
+        self.intrusion_response_game_config = intrusion_response_game_config
         self.attacker_strategy = attacker_strategy
-        self.stopping_game_name = game_name
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "IntrusionResponseGameDefenderPOMDPConfig":
+    def from_dict(d: Dict[str, Any]) -> "IntrusionResponseGameLocalPOMDPDefenderConfig":
         """
         Converts a dict representation to an instance
 
@@ -50,11 +48,9 @@ class IntrusionResponseGameDefenderPOMDPConfig(SimulationEnvInputConfig):
                 except Exception:
                     attacker_strategy = TabularPolicy.from_dict(d["attacker_strategy"])
 
-        obj = IntrusionResponseGameDefenderPOMDPConfig(
-            stopping_game_config=StoppingGameConfig.from_dict(d["stopping_game_config"]),
-            attacker_strategy=attacker_strategy, game_name=d["stopping_game_name"],
-            env_name=d["env_name"]
-        )
+        obj = IntrusionResponseGameLocalPOMDPDefenderConfig(
+            intrusion_response_game_config=IntrusionResponseGameConfig.from_dict(d["intrusion_response_game_config"]),
+            attacker_strategy=attacker_strategy, env_name=d["env_name"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -62,9 +58,8 @@ class IntrusionResponseGameDefenderPOMDPConfig(SimulationEnvInputConfig):
         :return: a dict representation of the object
         """
         d = {}
-        d["stopping_game_config"] = self.stopping_game_config.to_dict()
+        d["intrusion_response_game_config"] = self.intrusion_response_game_config.to_dict()
         d["attacker_strategy"] = self.attacker_strategy.to_dict()
-        d["stopping_game_name"] = self.stopping_game_name
         d["env_name"] = self.env_name
         return d
 
@@ -72,6 +67,6 @@ class IntrusionResponseGameDefenderPOMDPConfig(SimulationEnvInputConfig):
         """
         :return:  a string representation of the object
         """
-        return f"stopping_game_config: {self.stopping_game_config}, " \
-               f"attacker_strategy: {self.attacker_strategy}, stopping_game_name: {self.stopping_game_name}," \
+        return f"intrusion_response_game_config: {self.intrusion_response_game_config}, " \
+               f"attacker_strategy: {self.attacker_strategy}," \
                f"env_name: {self.env_name}"

@@ -13,6 +13,8 @@ from csle_common.dao.simulation_config.env_parameters_config import EnvParameter
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
+    import IntrusionResponseGameLocalPOMDPDefenderConfig
 
 
 class SimulationEnvConfig:
@@ -91,7 +93,11 @@ class SimulationEnvConfig:
             try:
                 input_config = StoppingGameAttackerMdpConfig.from_dict(d["simulation_env_input_config"])
             except Exception:
-                input_config = StoppingGameDefenderPomdpConfig.from_dict(d["simulation_env_input_config"])
+                try:
+                    input_config = StoppingGameDefenderPomdpConfig.from_dict(d["simulation_env_input_config"])
+                except Exception:
+                    input_config = IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict(
+                        d["simulation_env_input_config"])
         obj = SimulationEnvConfig(
             name=d["name"], descr=d["descr"],
             simulation_env_input_config=input_config,

@@ -81,6 +81,7 @@ class PPOAgent(BaseAgent):
         # Setup gym environment
         config = self.simulation_env_config.simulation_env_input_config
         orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        print(orig_env)
         env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
                            n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
                            env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
