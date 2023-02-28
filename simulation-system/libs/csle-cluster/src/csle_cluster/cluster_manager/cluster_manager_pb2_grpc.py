@@ -395,6 +395,11 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StartTrafficManagersMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.startClientManager = channel.unary_unary(
+                '/ClusterManager/startClientManager',
+                request_serializer=cluster__manager__pb2.StartClientManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -857,6 +862,12 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startClientManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1238,6 +1249,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'stopTrafficManagers': grpc.unary_unary_rpc_method_handler(
                     servicer.stopTrafficManagers,
                     request_deserializer=cluster__manager__pb2.StartTrafficManagersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startClientManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startClientManager,
+                    request_deserializer=cluster__manager__pb2.StartClientManagerMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
@@ -2539,6 +2555,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopTrafficManagers',
             cluster__manager__pb2.StartTrafficManagersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startClientManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startClientManager',
+            cluster__manager__pb2.StartClientManagerMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

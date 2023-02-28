@@ -78,6 +78,13 @@ service ClusterManager {
   rpc startTrafficManager(StartTrafficManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopTrafficManager(StartTrafficManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopTrafficManagers(StartTrafficManagersMsg) returns (OperationOutcomeDTO) {}
+  rpc startClientManager(StartClientManagerMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to start the client manager of a specific execution
+message StartClientManagerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop all traffic managers of a given execution
@@ -232,85 +239,85 @@ message StartTrafficGeneratorsMsg {
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the client population
+// Message that the client sends when requesting to start the client population of a specific execution
 message StartClientPopulationMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the client Kafka producer
+// Message that the client sends when requesting to start the client Kafka producer of a specific execution
 message StartKafkaClientProducerMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to stop the client Kafka producer
+// Message that the client sends when requesting to stop the client Kafka producer of a specific execution
 message StopKafkaClientProducerMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the Snort IDSes
+// Message that the client sends when requesting to start the Snort IDSes of a specific execution
 message StartSnortIdsesMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the Snort IDSes Monitor threads
+// Message that the client sends when requesting to start the Snort IDSes Monitor threads of a specific execution
 message StartSnortIdsesMonitorThreadsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the OSSEC IDSes
+// Message that the client sends when requesting to start the OSSEC IDSes of a specific execution
 message StartOSSECIdsesMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the OSSEC IDSes monitor threads
+// Message that the client sends when requesting to start the OSSEC IDSes monitor threads of a specific execution
 message StartOSSECIdsesMonitorThreadsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the ELK stack
+// Message that the client sends when requesting to start the ELK stack of a specific execution
 message StartElkStackMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the Host managers
+// Message that the client sends when requesting to start the Host managers of a specific execution
 message StartHostManagersMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to apply the filebeat configurations
+// Message that the client sends when requesting to apply the filebeat configurations of a specific execution
 message ApplyFileBeatConfigsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to apply the packetbeat configurations
+// Message that the client sends when requesting to apply the packetbeat configurations of a specific execution
 message ApplyPacketBeatConfigsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to apply the metricbeat configurations
+// Message that the client sends when requesting to apply the metricbeat configurations of a specific execution
 message ApplyMetricBeatConfigsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to apply the heartbeat configurations
+// Message that the client sends when requesting to apply the heartbeat configurations of a specific execution
 message ApplyHeartBeatConfigsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to start the filebeats of an execution
+// Message that the client sends when requesting to start the filebeats of an execution of a specific execution
 message StartFileBeatsMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
@@ -338,7 +345,7 @@ message StartHeartBeatsMsg {
   bool initialStart = 3;
 }
 
-// Message that the client sends to get the docker stastmanager logs
+// Message that the client sends to get the docker statsmanager logs
 message GetDockerStatsManagerLogsMsg {}
 
 // Message that the client sends to get the Prometheus logs
