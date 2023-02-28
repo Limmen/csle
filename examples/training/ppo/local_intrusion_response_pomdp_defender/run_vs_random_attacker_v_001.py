@@ -89,14 +89,20 @@ if __name__ == '__main__':
     #     ],
     #     agent_type=AgentType.RANDOM, avg_R=-1)
     # simulation_env_config.simulation_env_input_config
-    import gym
-    orig_env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
-    orig_env.reset()
-    orig_env.step(1)
-    orig_env.reset()
-    # agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-    #                  experiment_config=experiment_config)
-    # experiment_execution = agent.train()
+    # import gym
+    # orig_env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
+    # res=orig_env.reset()
+    # print(res)
+    # o, r, done, info = orig_env.step(1)
+    # print(o)
+    # print(r)
+    # print(done)
+    # print(info)
+    # res = orig_env.reset()
+    # print(res)
+    agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+                     experiment_config=experiment_config)
+    experiment_execution = agent.train()
     # MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():
     #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)

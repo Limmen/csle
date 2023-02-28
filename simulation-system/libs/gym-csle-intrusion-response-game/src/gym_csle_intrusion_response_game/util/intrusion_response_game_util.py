@@ -118,7 +118,7 @@ class IntrusionResponseGameUtil:
                                                                         defender_action_costs=defender_action_costs,
                                                                         reachable=reachable, s=s,
                                                                         zone_utilities=zone_utilities)
-        return lamb*workflow_cost + mu*intrusion_cost
+        return -(lamb*workflow_cost + mu*intrusion_cost)
 
     @staticmethod
     def local_reward_tensor(lamb: float, mu: float,
@@ -158,21 +158,28 @@ class IntrusionResponseGameUtil:
         else:
             if a2 == 0 and s_prime[0] == s[0] and s_prime[1] == s[1]:
                 return 1*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
+
             # Recon
             if a2 == 1 and s_prime[0] == s[0] and s[1] < 2 and s_prime[1] == 1:
                 return 1*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
+
             # Brute-force
             if a2 == 2 and s[1] == 1:
-                if s_prime[1] == 2:
+                if s_prime[1] == 2 and s_prime[0] == s[0]:
                     return (attack_success_probabilities[0])*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
-                elif s_prime[1] == 1:
+                elif s_prime[1] == 1 and s_prime[0] == s[0]:
                     return (1-attack_success_probabilities[0])*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
+            elif a2 == 2 and s[1] == 2 and s_prime[1] == 2 and s_prime[0] == s[0]:
+                return (1-int(a2 != 0)*zone_detection_probabilities[s[0]])
+
             # Exploit
-            if a2 == 3 and s[1] == 1 and s_prime[1] == 2:
-                if s_prime[1] == 2:
+            if a2 == 3 and s[1] == 1:
+                if s_prime[1] == 2 and s_prime[0] == s[0]:
                     return attack_success_probabilities[1]*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
-                elif s_prime[1] == 1:
+                elif s_prime[1] == 1 and s_prime[0] == s[0]:
                     return (1-attack_success_probabilities[1])*(1-int(a2 != 0)*zone_detection_probabilities[s[0]])
+            elif a2 == 3 and s[1] == 2 and s_prime[1] == 2 and s_prime[0] == s[0]:
+                return (1-int(a2 != 0)*zone_detection_probabilities[s[0]])
         return 0
 
     @staticmethod

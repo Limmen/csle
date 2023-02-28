@@ -69,10 +69,13 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         if eps < 0.7:
             a2 = 0
         else:
-            a2 = np.random.choice(np.array([1,2,3]), p=[1/3,1/3,1/3])
+            if self.state.s[1] == 0:
+                a2 = 1
+            else:
+                a2 = np.random.choice(np.array([2,3]), p=[1/2,1/2])
 
-        r = self.config.intrusion_response_game_config.R[a1][a2][self.state.s]
         s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
+        r = self.config.intrusion_response_game_config.R[a1][a2][s_idx]
         state_idx = IntrusionResponseGameUtil.sample_next_state(
             a1=a1, a2=a2, T=self.config.intrusion_response_game_config.T,
             S=self.config.intrusion_response_game_config.S, s=s_idx)
@@ -141,11 +144,14 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
-        self.trace.attacker_observations.append(attacker_obs)
-        self.trace.defender_observations.append(defender_obs)
-        return defender_obs, attacker_obs
+        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
+        o = IntrusionResponseGameUtil.sample_next_observation(
+            Z=self.config.intrusion_response_game_config.Z,
+            O=self.config.intrusion_response_game_config.O,
+            s_prime=s_idx, a1=0, a2=0)
+        self.trace.attacker_observations.append(o)
+        self.trace.defender_observations.append(o)
+        return o
 
     def render(self, mode: str = 'human'):
         """
