@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="docs/img/csle_logo_cropped.png" width="40%", height="40%">
+<img src="docs/img/csle_logo_cropped.png" width="40%" height="40%">
 </p>
 
 <p align="center">
@@ -69,7 +69,7 @@ currently support each release for a window of 6 months.
 <p align="center">
 <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/OS_X-Logo.svg" width="7%" height="7%"/>
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%" height="7%" style="margin-left:20px;"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%" height="7%" style="margin-left:70px;"/>
 </p>
 
 ## Author & Maintainer
@@ -102,11 +102,11 @@ Kim Hammar <kimham@kth.se>
 <p align="center" style="align-items:center; display:inline-block">
 Made with &#10084; &nbsp;
 at &nbsp; <a href="https://www.kth.se/" target="_blank">
-<img align="absmiddle" src="docs/img/kth_logo.png" width="10%", height="10%">
+<img align="absmiddle" src="docs/img/kth_logo.png" width="10%" height="10%">
 </a>
 &nbsp;
 and
 &nbsp;<a href="https://www.kth.se/cdis" target="_blank">
-<img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%", height="10%">
+<img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%" height="10%">
 </a>
 </p>
