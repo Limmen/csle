@@ -64,10 +64,12 @@ Maintenance releases have a stable API and dependency tree,
 and receive bug fixes and critical improvements but not new features. We
 currently support each release for a window of 6 months.
 
-## Supported Platforms:
+## Supported Platforms
 
-[<img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/OS_X-Logo.svg" height=40px>](http://www.apple.com/osx/)
-[<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" height=40px>](https://en.wikipedia.org/wiki/List_of_Linux_distributions)
+<p align="center">
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/OS_X-Logo.svg" />
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" />
+</p>
 
 ## Author & Maintainer
 
