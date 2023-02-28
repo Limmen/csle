@@ -12,7 +12,7 @@ from gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local im
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 
-class IntrusionResponseGamePOMDPDefenderEnv(BaseEnv):
+class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
     """
     OpenAI Gym Env for the MDP of the defender when facing a static attacker
     """
