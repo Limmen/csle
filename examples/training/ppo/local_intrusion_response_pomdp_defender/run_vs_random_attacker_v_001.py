@@ -13,7 +13,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-intrusion-response-game-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="PPO test", random_seeds=[399, 98912, 999, 121], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -23,11 +23,11 @@ if __name__ == '__main__':
                 value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
-                value=1096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
+                value=2056, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
                 descr="number of steps in the environment for doing rollouts between policy updates"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
-            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.0001,
+            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.00005,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
@@ -56,9 +56,9 @@ if __name__ == '__main__':
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(150000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(500000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
-            agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
+            agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="the batch size for evaluation"),
