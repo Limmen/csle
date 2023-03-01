@@ -17,17 +17,19 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
     plt.rcParams['axes.linewidth'] = 0.8
     plt.rcParams.update({'font.size': fontsize})
     plt.rcParams['font.family'] = ['serif']
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10, 4))
-    ax.plot(list(range(len(returns_means))), returns_means, label=r"$\pi$ simulation",
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10, 6))
+    ax.plot(list(range(len(returns_means))), returns_means, label=r"$\pi^{(i)}_D$ simulation",
         marker="o", ls='-', color="r", markevery=1, markersize=3, lw=0.75)
     ax.fill_between(list(range(len(returns_means))), returns_means - returns_stds,
                        returns_means + returns_stds , alpha=0.35, color="r", lw=0.75)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.set_xlabel(r"$x$")
-    ax.legend(loc='upper center', bbox_to_anchor=(0.51, 1.4),
+    ax.set_xlabel(r"iteration $k$")
+    ax.set_ylabel(r"Avg cumulative reward")
+    ax.legend(loc='upper center', bbox_to_anchor=(0.51, -0.15),
                  ncol=4, fancybox=True, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65,
                  fontsize=fontsize)
+    ax.set_title("Local defender $\pi^{(i)}_D$ against random attacker")
     fig.tight_layout()
     fig.subplots_adjust(wspace=0.0, hspace=0.75)
     fig.savefig(file_name + ".png", format="png", dpi=600)
@@ -36,13 +38,15 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
 
 
 if __name__ == '__main__':
-    experiment = MetastoreFacade.get_experiment_execution(id=27)
+    experiment = MetastoreFacade.get_experiment_execution(id=28)
     metric = "average_return"
     returns = []
     confidence=0.95
-    running_avg = 10
+    running_avg = 30
     # avg_rewards_data = np.array(avg_rewards_data_novice_ppo).reshape(max_len, num_seeds)
     seeds = list(experiment.result.all_metrics.keys())
+    seeds = [seeds[0]]
+    print(seeds)
     for seed in seeds:
         returns.append(PlottingUtil.running_average(experiment.result.all_metrics[seed][metric], running_avg))
     returns = np.array(returns)

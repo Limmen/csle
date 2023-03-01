@@ -56,7 +56,7 @@ if __name__ == '__main__':
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(500000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(300000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
@@ -78,28 +78,6 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    # simulation_env_config.simulation_env_input_config.attacker_strategy = TabularPolicy(
-    #     player_type=PlayerType.ATTACKER,
-    #     actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
-    #     simulation_name=simulation_env_config.name, value_function=None, q_table=None,
-    #     lookup_table=[
-    #         [0.8, 0.2],
-    #         [1, 0],
-    #         [1, 0]
-    #     ],
-    #     agent_type=AgentType.RANDOM, avg_R=-1)
-    # simulation_env_config.simulation_env_input_config
-    # import gym
-    # orig_env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
-    # res=orig_env.reset()
-    # print(res)
-    # o, r, done, info = orig_env.step(1)
-    # print(o)
-    # print(r)
-    # print(done)
-    # print(info)
-    # res = orig_env.reset()
-    # print(res)
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config)
     experiment_execution = agent.train()
