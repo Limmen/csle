@@ -186,14 +186,14 @@ def default_reward_function_config(lamb: float, mu: float, reachable: bool, init
     state_space = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     defender_actions = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     attacker_actions = IntrusionResponseGameUtil.local_attacker_actions()
-    defender_action_costs = IntrusionResponseGameUtil.defender_action_costs(defender_actions=defender_actions)
+    defender_action_costs = IntrusionResponseGameUtil.costant_defender_action_costs(defender_actions=defender_actions)
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    zone_utilities = IntrusionResponseGameUtil.zone_utilities(zones=zones)
+    zone_utilities = IntrusionResponseGameUtil.constant_zone_utilities(zones=zones)
     reward_function_config = RewardFunctionConfig(
         reward_tensor=list(IntrusionResponseGameUtil.local_reward_tensor(
             lamb=lamb, mu=mu, reachable=reachable, initial_zone=initial_zone, beta=beta,
-            state_space=state_space, defender_actions=defender_actions, attacker_actions=attacker_actions,
-            defender_action_costs=defender_action_costs, zone_utilities=zone_utilities
+            S=state_space, A1=defender_actions, A2=attacker_actions,
+            D_C=defender_action_costs, Z_U=zone_utilities
         )))
     return reward_function_config
 
@@ -203,17 +203,17 @@ def default_transition_operator_config(num_zones: int) -> TransitionOperatorConf
     :return: the default transition tensor configuration
     """
     zones = IntrusionResponseGameUtil.zones(num_zones=num_zones)
-    zone_detection_probabilities = IntrusionResponseGameUtil.zone_detection_probabilities(zones=zones)
-    attack_success_probabilities = IntrusionResponseGameUtil.local_attack_success_probabilities()
+    zone_detection_probabilities = IntrusionResponseGameUtil.uniform_zone_detection_probabilities(zones=zones)
+    attack_success_probabilities = IntrusionResponseGameUtil.local_attack_success_probabilities_uniform()
     state_space = IntrusionResponseGameUtil.local_state_space(number_of_zones=num_zones)
     defender_actions = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=num_zones)
     attacker_actions = IntrusionResponseGameUtil.local_attacker_actions()
     transition_operator_config = TransitionOperatorConfig(
         transition_tensor=list(IntrusionResponseGameUtil.local_transition_tensor(
-            zone_detection_probabilities=zone_detection_probabilities,
-            attack_success_probabilities=attack_success_probabilities,
-            state_space=state_space, defender_actions=defender_actions,
-            attacker_actions=attacker_actions
+            Z_D=zone_detection_probabilities,
+            A_P=attack_success_probabilities,
+            S=state_space, A1=defender_actions,
+            A2=attacker_actions
         )))
     return transition_operator_config
 
@@ -225,9 +225,9 @@ def default_observation_function_config(
     defender_actions = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     attacker_actions = IntrusionResponseGameUtil.local_attacker_actions()
     observation_space = IntrusionResponseGameUtil.local_observation_space(X_max=len(defender_obs_space.observations))
-    observation_tensor = IntrusionResponseGameUtil.local_observation_tensor(
-        X_max=len(defender_obs_space.observations), state_space=state_space, defender_actions=defender_actions,
-        attacker_actions=attacker_actions, observation_space=observation_space
+    observation_tensor = IntrusionResponseGameUtil.local_observation_tensor_betabinom(
+        X_max=len(defender_obs_space.observations), S=state_space, A1=defender_actions,
+        A2=attacker_actions, O=observation_space
     )
     observation_function_config = ObservationFunctionConfig(observation_tensor=observation_tensor,
                                                             component_observation_tensors={})
@@ -241,7 +241,7 @@ def default_initial_state_distribution_config(initial_zone: int, number_of_zones
     state_space = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     initial_state_distribution_config = InitialStateDistributionConfig(
         initial_state_distribution=list(IntrusionResponseGameUtil.local_initial_defender_belief(
-            state_space=state_space, initial_zone=initial_zone
+            S=state_space, initial_zone=initial_zone
         ))
     )
     return initial_state_distribution_config

@@ -78,7 +78,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         r = self.config.intrusion_response_game_config.R[a1][a2][s_idx]
         state_idx = IntrusionResponseGameUtil.sample_next_state(
             a1=a1, a2=a2, T=self.config.intrusion_response_game_config.T,
-            S=self.config.intrusion_response_game_config.S, s=s_idx)
+            S=self.config.intrusion_response_game_config.S, s_idx=s_idx)
         self.state.s = self.config.intrusion_response_game_config.S[state_idx]
         s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
 
@@ -89,7 +89,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             o = IntrusionResponseGameUtil.sample_next_observation(
                 Z=self.config.intrusion_response_game_config.Z,
                 O=self.config.intrusion_response_game_config.O,
-                s_prime=s_idx, a1=a1, a2=a2)
+                s_prime_idx=s_idx, a1=a1, a2=a2)
 
         # Update time-step
         self.state.t += 1
@@ -148,7 +148,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         o = IntrusionResponseGameUtil.sample_next_observation(
             Z=self.config.intrusion_response_game_config.Z,
             O=self.config.intrusion_response_game_config.O,
-            s_prime=s_idx, a1=0, a2=0)
+            s_prime_idx=s_idx, a1=0, a2=0)
         self.trace.attacker_observations.append(o)
         self.trace.defender_observations.append(o)
         return o

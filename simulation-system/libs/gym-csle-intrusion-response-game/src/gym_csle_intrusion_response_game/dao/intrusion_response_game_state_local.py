@@ -11,7 +11,7 @@ class IntrusionResponseGameStateLocal:
         self.b1 = b1
         self.S = S
         self.b = self.b1.copy()
-        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1, state_space=self.S)
+        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1, S=self.S)
         self.t = 1
 
     def reset(self) -> None:
@@ -21,7 +21,7 @@ class IntrusionResponseGameStateLocal:
         :return: None
         """
         self.t = 1
-        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1, state_space=self.S)
+        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1, S=self.S)
         self.b = self.b1.copy()
 
     def attacker_observation(self) -> np.ndarray:

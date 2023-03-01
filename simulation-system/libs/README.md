@@ -56,6 +56,11 @@ This folder contains python projects that implement the functionality of the sim
   - [![PyPI version](https://badge.fury.io/py/csle-cluster.svg)](https://badge.fury.io/py/csle-cluster)
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-cluster)
   - The CSLE cluster manager
+  
+- **gym-csle-intrusion-response-game** ([gym-csle-intrusion-response-game](./gym-csle-intrusion-response-game)):
+  - [![PyPI version](https://badge.fury.io/py/gym-csle-intrusion-response-game.svg)](https://badge.fury.io/py/gym-csle-intrusion-response-game)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-intrusion-response-game)
+  - A gym environment for an intrusion response game
 
 ## Commands
 To generate API docs, execute:

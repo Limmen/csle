@@ -25,6 +25,9 @@ RELEASE_CONFIG = {
     "gym-csle-stopping-game": {
         "new_version": "'0.1.1'",
     },
+    "gym-intrusion-response-game": {
+        "new_version": "'0.1.1'",
+    },
     "csle-agents": {
         "new_version": "'0.1.1'",
     },
