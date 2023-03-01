@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=3))
-    simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5, 0.5, 0])
+    simulation_env_config.simulation_env_input_config.stopping_game_config.d_b1 = np.array([0.5, 0.5, 0])
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     experiment_execution = agent.train()

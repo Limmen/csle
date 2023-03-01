@@ -1,17 +1,33 @@
 import numpy as np
-from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 
 
 class IntrusionResponseGameStateLocal:
     """
-    Represents the state of the intrusion response game
+    Represents the state of the intrusion response game (A PO-POSG, i.e a partially observed stochastic game
+    with public observations)
     """
 
-    def __init__(self, b1: np.ndarray, S: np.ndarray):
-        self.b1 = b1
+    def __init__(self, d_b1: np.ndarray, a_b1: np.ndarray, s_1_idx: int, S: np.ndarray, S_A: np.ndarray,
+                 S_D: np.ndarray) -> None:
+        """
+        Initializes the DTO
+        
+        :param d_b1: the initial belief of the defender
+        :param a_b1: the initial belief of the attakcer
+        :param s_1_idx: the initial state of the game
+        :param S: the local state space
+        :param S_A: the local attacker state space
+        :param S_D: the local defender state space
+        """
+        self.d_b1 = d_b1
+        self.a_b1 = a_b1
+        self.s_1_idx = s_1_idx
+        self.s_idx = s_1_idx
         self.S = S
-        self.b = self.b1.copy()
-        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1, S=self.S)
+        self.S_A = S_A
+        self.S_D = S_D
+        self.d_b = self.d_b1.copy()
+        self.a_b = self.a_b1.copy()
         self.t = 1
 
     def reset(self) -> None:
@@ -21,8 +37,9 @@ class IntrusionResponseGameStateLocal:
         :return: None
         """
         self.t = 1
-        self.s = IntrusionResponseGameUtil.sample_initial_state(b1=self.b1, S=self.S)
-        self.b = self.b1.copy()
+        self.s_idx = self.s_1_idx
+        self.d_b = self.d_b1.copy()
+        self.a_b = self.a_b1.copy()
 
     def attacker_observation(self) -> np.ndarray:
         """
@@ -36,8 +53,15 @@ class IntrusionResponseGameStateLocal:
         """
         pass
 
+    def state_vector(self) -> np.ndarray:
+        """
+        :return: the state vector
+        """
+        return self.S[self.s_idx]
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        pass
+        return f"d_b1: {self.d_b1}, a_b1: {self.a_b1}, s_1_idx:{self.s_1_idx}, S:{self.S}, S_A:{self.S_A}, " \
+               f"S_D: {self.S_D}, t: {self.t}, s_idx: {self.s_idx}, s: {self.state_vector()}"

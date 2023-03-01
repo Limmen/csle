@@ -19,7 +19,7 @@ class ATTACK_STATES:
     """
     HEALTHY = 0
     RECON = 1
-    COMPROMISED = 1
+    COMPROMISED = 2
 
 
 class ATTACKER_ACTIONS:

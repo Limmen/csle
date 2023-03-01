@@ -57,7 +57,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
+        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, (pi2, a2)))
@@ -75,7 +75,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
+        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step_test((a1, (pi2, a2)), sample_Z=sample_Z)

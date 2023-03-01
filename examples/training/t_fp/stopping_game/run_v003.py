@@ -183,8 +183,8 @@ if __name__ == '__main__':
     defender_simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(
         StoppingGameUtil.reward_tensor(
             R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
-    defender_simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5, 0.5, 0])
-    attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5, 0.5, 0])
+    defender_simulation_env_config.simulation_env_input_config.stopping_game_config.d_b1 = np.array([0.5, 0.5, 0])
+    attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.d_b1 = np.array([0.5, 0.5, 0])
     Z, O = get_obs_tensor()
     attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.Z = Z
     attacker_simulation_env_config.simulation_env_input_config.stopping_game_config.O = O

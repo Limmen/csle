@@ -14,7 +14,10 @@ import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
     """
-    OpenAI Gym Env for the MDP of the defender when facing a static attacker
+    OpenAI Gym Env for the POMDP of the defender when facing a static attacker.
+
+    (A PO-POSG, i.e a partially observed stochastic game with public observations) where the attacker strategy
+    is fixed)
     """
 
     def __init__(self, config: IntrusionResponseGameLocalPOMDPDefenderConfig):
@@ -27,12 +30,17 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.config = config
 
         # Initialize environment state
-        self.state = IntrusionResponseGameStateLocal(b1=self.config.intrusion_response_game_config.d_b1,
-                                                     S=self.config.intrusion_response_game_config.S)
+        self.state = IntrusionResponseGameStateLocal(
+            d_b1=self.config.local_intrusion_response_game_config.d_b1,
+            a_b1=self.config.local_intrusion_response_game_config.a_b1,
+            S=self.config.local_intrusion_response_game_config.S,
+            S_A=self.config.local_intrusion_response_game_config.S_A,
+            S_D=self.config.local_intrusion_response_game_config.S_D,
+            s_1_idx=self.config.local_intrusion_response_game_config.s_1_idx)
 
         # Setup spaces
-        self.observation_space = self.config.intrusion_response_game_config.defender_observation_space()
-        self.action_space = self.config.intrusion_response_game_config.defender_action_space()
+        self.observation_space = self.config.local_intrusion_response_game_config.defender_observation_space()
+        self.action_space = self.config.local_intrusion_response_game_config.defender_action_space()
 
         # Setup static attacker strategy
         self.static_attacker_strategy = self.config.attacker_strategy
@@ -53,7 +61,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -69,33 +77,41 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         if eps < 0.7:
             a2 = 0
         else:
-            if self.state.s[1] == 0:
+            if self.state.state_vector()[1] == 0:
                 a2 = 1
             else:
                 a2 = np.random.choice(np.array([2,3]), p=[1/2,1/2])
 
-        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
-        r = self.config.intrusion_response_game_config.R[a1][a2][s_idx]
-        state_idx = IntrusionResponseGameUtil.sample_next_state(
-            a1=a1, a2=a2, T=self.config.intrusion_response_game_config.T,
-            S=self.config.intrusion_response_game_config.S, s_idx=s_idx)
-        self.state.s = self.config.intrusion_response_game_config.S[state_idx]
-        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
+        # Compute the reward
+        if isinstance(a1, List) or isinstance(a1, np.ndarray):
+            a1 = a1[0]
+        r = self.config.local_intrusion_response_game_config.R[a1][a2][self.state.s_idx]
 
-        o = max(self.config.intrusion_response_game_config.O)
-        if self.state.s[0] == -1 and self.state.s[1] == -1:
-            done = True
-        else:
-            o = IntrusionResponseGameUtil.sample_next_observation(
-                Z=self.config.intrusion_response_game_config.Z,
-                O=self.config.intrusion_response_game_config.O,
-                s_prime_idx=s_idx, a1=a1, a2=a2)
+        # Sample the next state
+        s_idx_prime = IntrusionResponseGameUtil.sample_next_state(
+            a1=a1, a2=a2, T=self.config.local_intrusion_response_game_config.T,
+            S=self.config.local_intrusion_response_game_config.S, s_idx=self.state.s_idx)
+
+        # Sample the next observation
+        o = IntrusionResponseGameUtil.sample_next_observation(
+            Z=self.config.local_intrusion_response_game_config.Z,
+            O=self.config.local_intrusion_response_game_config.O,
+            s_prime_idx=s_idx_prime, a1=a1, a2=a2)
+
+
 
         # Update time-step
         self.state.t += 1
 
+        # Move to the next state
+        self.state.s_idx = s_idx_prime
+
+        # Check if game is done
+        if IntrusionResponseGameUtil.is_local_state_terminal(self.state.state_vector()):
+            done = True
+
         # Populate info dict
-        info[env_constants.ENV_METRICS.STATE] = self.state.s
+        info[env_constants.ENV_METRICS.STATE] = self.state.state_vector()
         info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
         info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
         info[env_constants.ENV_METRICS.OBSERVATION] = o
@@ -107,8 +123,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.trace.attacker_actions.append(a2)
         self.trace.defender_actions.append(a1)
         self.trace.infos.append(info)
-        self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
+        self.trace.states.append(self.state.s_idx)
+        self.trace.beliefs.append(self.state.d_b)
         self.trace.infrastructure_metrics.append(o)
         if not done:
             self.trace.attacker_observations.append(o)
@@ -117,7 +133,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return o, r, done, info
+        return np.array([o]), r, done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -127,14 +143,14 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         """
         R = 0
         for i in range(len(self.trace.defender_rewards)):
-            R += self.trace.defender_rewards[i] * math.pow(self.config.intrusion_response_game_config.gamma, i)
+            R += self.trace.defender_rewards[i] * math.pow(self.config.local_intrusion_response_game_config.gamma, i)
         info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
         upper_bound_return = 0
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
         return info
 
-    def reset(self, soft: bool = False) -> Tuple[np.ndarray, np.ndarray]:
+    def reset(self, soft: bool = False) -> np.ndarray:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -144,14 +160,13 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        s_idx = list(self.config.intrusion_response_game_config.S.tolist()).index(list(self.state.s.tolist()))
         o = IntrusionResponseGameUtil.sample_next_observation(
-            Z=self.config.intrusion_response_game_config.Z,
-            O=self.config.intrusion_response_game_config.O,
-            s_prime_idx=s_idx, a1=0, a2=0)
+            Z=self.config.local_intrusion_response_game_config.Z,
+            O=self.config.local_intrusion_response_game_config.O,
+            s_prime_idx=self.state.s_idx, a1=0, a2=0)
         self.trace.attacker_observations.append(o)
         self.trace.defender_observations.append(o)
-        return o
+        return np.array([o])
 
     def render(self, mode: str = 'human'):
         """
@@ -218,4 +233,28 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         :return: None
         """
-        return
+        done = False
+        while True:
+            raw_input = input("> ")
+            raw_input = raw_input.strip()
+            if raw_input == "help":
+                print("Enter an action id to execute the action, "
+                      "press R to reset,"
+                      "press S to print the state, press A to print the actions, "
+                      "press D to check if done"
+                      "press H to print the history of actions")
+            elif raw_input == "A":
+                print(f"Action space: {self.action_space}")
+            elif raw_input == "S":
+                print(self.state)
+            elif raw_input == "D":
+                print(done)
+            elif raw_input == "H":
+                print(self.trace)
+            elif raw_input == "R":
+                print("Resetting the state")
+                self.reset()
+            else:
+                a1 = int(raw_input)
+                o, r, done, _ = self.step(a1=a1)
+                print(f"o:{o[0]}, r:{r}, done: {done}")

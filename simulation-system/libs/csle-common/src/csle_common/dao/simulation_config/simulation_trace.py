@@ -33,10 +33,12 @@ class SimulationTrace:
         :return: a string representation of the trace
         """
         return f"simulation_env: {self.simulation_env}, attacker_rewards:{self.attacker_rewards}, " \
-               f"defender_rewards:{self.defender_rewards}, attacker_observations:{self.attacker_observations}, " \
+               f"defender_rewards:{self.defender_rewards}, attacker_actions:{self.attacker_actions}, " \
+               f"defender_actions:{self.defender_actions}, " \
+               f"attacker_observations:{self.attacker_observations}, " \
                f"defender_observations:{self.defender_observations}, " \
-               f"infos:{self.infos}, dones:{self.dones}, attacker_actions:{self.attacker_actions}, " \
-               f"defender_actions:{self.defender_actions}, states: {self.states}, beliefs: {self.beliefs}, " \
+               f"infos:{self.infos}, dones:{self.dones}, " \
+               f"states: {self.states}, beliefs: {self.beliefs}, " \
                f"infrastructure_metrics: {self.infrastructure_metrics}, id: {self.id}"
 
     def to_dict(self) -> Dict[str, Any]:

@@ -95,21 +95,74 @@ class IntrusionResponseGameUtil:
         """
         return s[env_constants.STATES.A_STATE_INDEX] == s_prime[env_constants.STATES.A_STATE_INDEX]
 
+
     @staticmethod
-    def local_initial_defender_belief(initial_zone: int, S: np.ndarray) -> np.ndarray:
+    def local_initial_state(initial_zone: int, S: np.ndarray) -> np.ndarray:
         """
-        Gets the initial defender belief for a local version of the game
+        Gets the initial state for a local version of the game
 
         :param initial_zone: the initial zone of the local node
         :param S: the state space of the local game
-        :return: the initial defender belief
+        :return: the initial state belief
         """
-        b1 = np.zeros((len(S)))
         for i in range(len(S)):
             if IntrusionResponseGameUtil.is_local_state_in_zone(s=S[i][0], zone=initial_zone) and \
                     IntrusionResponseGameUtil.is_local_state_healthy(s=S[i][1]):
-                b1[i] = 1  # In the initial state there is no attack and the node is located in the initial zone
-        return b1
+                return S[i]
+        raise ValueError("Initial state not recognized")
+
+    @staticmethod
+    def local_initial_state_idx(initial_zone: int, S: np.ndarray) -> int:
+        """
+        Gets the initial state for a local version of the game
+
+        :param initial_zone: the initial zone of the local node
+        :param S: the state space of the local game
+        :return: the initial state belief
+        """
+        for i in range(len(S)):
+            if IntrusionResponseGameUtil.is_local_state_in_zone(s=S[i], zone=initial_zone) and \
+                    IntrusionResponseGameUtil.is_local_state_healthy(s=S[i]):
+                return i
+        raise ValueError("Initial state not recognized")
+
+    @staticmethod
+    def local_initial_state_distribution(initial_state_idx, S: np.ndarray) -> np.ndarray:
+        """
+        Gets the initial state distribution
+
+        :param initial_state_idx: the initial state index
+        :param S: the state space
+        :return: the initial state distribution
+        """
+        rho = np.zeros((len(S),))
+        rho[initial_state_idx] = 1
+        return rho
+
+    @staticmethod
+    def local_initial_defender_belief(S_A: np.ndarray) -> np.ndarray:
+        """
+        Gets the initial defender belief for a local version of the game
+
+        :param S_A: the attacker's state space of the local game
+        :return: the initial defender belief
+        """
+        d_b1 = np.zeros((len(S_A),))
+        d_b1[env_constants.ATTACK_STATES.HEALTHY] = 1 # the node is not compromised or discovered initially
+        return d_b1
+
+    @staticmethod
+    def local_initial_attacker_belief(S_D: np.ndarray) -> np.ndarray:
+        """
+        Gets the initial attacker belief for a local version of the game
+
+        :param S_D: the defender's state space of the local game
+        :return: the initial defender belief
+        """
+        d_b1 = np.zeros((len(S_D),))
+        for i in range(len(S_D)):
+            d_b1[i] = 1/len(S_D) # The attacker has no clue about the zones initially
+        return d_b1
 
     @staticmethod
     def local_state_space(number_of_zones: int) -> np.ndarray:
@@ -121,10 +174,36 @@ class IntrusionResponseGameUtil:
         """
         S = []
         S.append(env_constants.STATES.TERMINAL_STATE)
-        for i in range(number_of_zones):
+        for i in range(1, number_of_zones+1):
             S.append([i, env_constants.ATTACK_STATES.HEALTHY])
             S.append([i, env_constants.ATTACK_STATES.RECON])
             S.append([i, env_constants.ATTACK_STATES.COMPROMISED])
+        return np.array(S)
+
+    @staticmethod
+    def local_defender_state_space(number_of_zones: int) -> np.ndarray:
+        """
+        Gets the defender state space of the local version of the game
+
+        :param number_of_zones: the number of zones in the network
+        :return: the local defender state space
+        """
+        S = []
+        for i in range(1,number_of_zones+1):
+            S.append(i)
+        return np.array(S)
+
+    @staticmethod
+    def local_attacker_state_space() -> np.ndarray:
+        """
+        Gets the attacker state space of the local version of the game
+
+        :return: the local attacker state space
+        """
+        S = []
+        S.append(env_constants.ATTACK_STATES.HEALTHY)
+        S.append(env_constants.ATTACK_STATES.RECON)
+        S.append(env_constants.ATTACK_STATES.COMPROMISED)
         return np.array(S)
 
     @staticmethod
@@ -169,7 +248,7 @@ class IntrusionResponseGameUtil:
         :return: the workflow utility
         """
         impact = 0
-        if reachable and IntrusionResponseGameUtil.is_local_state_healthy(s):
+        if reachable and not IntrusionResponseGameUtil.is_local_state_compromised(s):
             impact = 1
         return beta * impact * int(IntrusionResponseGameUtil.is_local_state_in_zone(s=s,zone=initial_zone))
 
@@ -257,8 +336,8 @@ class IntrusionResponseGameUtil:
         """
         if not reachable:
             return D_C[a1]  # No intrusion cost if the node is not reachable
-        return Z_U[s[env_constants.STATES.D_STATE_INDEX]] * \
-               int((s[s[env_constants.STATES.A_STATE_INDEX]] == env_constants.ATTACK_STATES.COMPROMISED)) + D_C[a1]
+        return Z_U[s[env_constants.STATES.D_STATE_INDEX]-1] * \
+               int((s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED)) + D_C[a1]
 
     @staticmethod
     def local_defender_utility_function(s: np.ndarray, a1: int, eta: float, reachable: bool, initial_zone: int,
@@ -330,11 +409,19 @@ class IntrusionResponseGameUtil:
         :param A_P: the attack success probabilities
         :return: the transition probabilitiy
         """
+        # If you are in terminal state you stay there
+        if IntrusionResponseGameUtil.is_local_state_terminal(s):
+            if IntrusionResponseGameUtil.is_local_state_terminal(s_prime):
+                return 1
+            else:
+                return 0
+
         # Detection probability
         if IntrusionResponseGameUtil.is_local_state_terminal(s_prime) and a2 != env_constants.ATTACKER_ACTIONS.WAIT:
-            return Z_D_P[s[env_constants.STATES.D_STATE_INDEX]]
+            return Z_D_P[s[env_constants.STATES.D_STATE_INDEX]-1]
 
-        P_not_detected = (1 - int(a2 != 0) * Z_D_P[s[0]])
+        P_not_detected = (1 - int(a2 != env_constants.ATTACKER_ACTIONS.WAIT) *
+                          Z_D_P[s[env_constants.STATES.D_STATE_INDEX]-1])
 
         # Defender takes defensive action
         if a1 != env_constants.DEFENDER_ACTIONS.WAIT:
@@ -374,6 +461,15 @@ class IntrusionResponseGameUtil:
                                                                         zone=s[env_constants.STATES.D_STATE_INDEX]):
                     return 0
 
+                # The node cannot become undiscovered as a result of an attacker action
+                if IntrusionResponseGameUtil.is_local_state_healthy(s_prime):
+                    return 0
+
+                # If the node is compromised, it cannot become uncompromised
+                if IntrusionResponseGameUtil.is_local_state_compromised(s) \
+                        and not IntrusionResponseGameUtil.is_local_state_compromised(s_prime):
+                    return 0
+
                 # If the node is already compromised, the state remains the same
                 if IntrusionResponseGameUtil.is_local_state_compromised(s):
                     return P_not_detected
@@ -395,6 +491,13 @@ class IntrusionResponseGameUtil:
                 if a2 in [env_constants.ATTACKER_ACTIONS.BRUTE_FORCE, env_constants.ATTACKER_ACTIONS.EXPLOIT] \
                         and not IntrusionResponseGameUtil.is_local_state_compromised(s_prime):
                     return P_not_detected
+
+            # If the attacker would try to attack a node that it has not discovered (illegal action)
+            # then the action has no effect
+            if a2 in [env_constants.ATTACKER_ACTIONS.BRUTE_FORCE, env_constants.ATTACKER_ACTIONS.EXPLOIT] \
+                and IntrusionResponseGameUtil.is_local_state_healthy(s) and \
+                    IntrusionResponseGameUtil.are_local_states_equal(s=s,s_prime=s_prime):
+                return P_not_detected
 
         # If none of the above cases match, the transition is impossible ans has probability 0
         return 0
@@ -461,7 +564,7 @@ class IntrusionResponseGameUtil:
                         a1_a2_s_probs = intrusion_dist
                     else:
                         a1_a2_s_probs = no_intrusion_dist
-                    assert sum(a1_a2_s_probs) == 1
+                    assert round(sum(a1_a2_s_probs),5) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             Z.append(a1_probs)
@@ -486,17 +589,6 @@ class IntrusionResponseGameUtil:
             state_probs.append(T[a1][a2][s_idx][s_prime])
         s_prime = np.random.choice(np.arange(0, len(S)), p=state_probs)
         return s_prime
-
-    @staticmethod
-    def sample_initial_state(b1: np.ndarray, S: np.ndarray) -> int:
-        """
-        Samples the initial state
-
-        :param b1: the initial belief
-        :param S: the state space
-        :return: s1
-        """
-        return np.random.choice(np.arange(0, len(b1)), p=b1)
 
     @staticmethod
     def sample_next_observation(Z: np.ndarray, a1: int, a2: int, s_prime_idx: int, O: np.ndarray) -> int:
@@ -536,7 +628,7 @@ class IntrusionResponseGameUtil:
                 temp += config.Z[a1][a2][s_prime][o] * config.T[a1][a2][s][s_prime] * b[s] * pi2[s][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
-            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, l:{l}, o:{o}, pi2:{pi2}")
+            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")
         assert round(b_prime_s_prime, 2) <= 1
         if s_prime == 2 and o != config.O[-1]:
             assert round(b_prime_s_prime, 2) <= 0.01

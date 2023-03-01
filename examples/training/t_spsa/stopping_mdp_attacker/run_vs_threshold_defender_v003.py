@@ -187,7 +187,7 @@ if __name__ == '__main__':
                [[0.99], [1]]])
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
-    simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.99, 0.01, 0])
+    simulation_env_config.simulation_env_input_config.stopping_game_config.d_b1 = np.array([0.99, 0.01, 0])
     Z, O = get_obs_tensor()
     simulation_env_config.simulation_env_input_config.stopping_game_config.Z = Z
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = O

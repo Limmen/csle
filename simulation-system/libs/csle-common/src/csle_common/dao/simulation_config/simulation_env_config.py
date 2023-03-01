@@ -87,17 +87,18 @@ class SimulationEnvConfig:
         :return: the created instance
         """
         input_config = None
-        try:
-            input_config = StoppingGameConfig.from_dict(d["simulation_env_input_config"])
-        except Exception:
+        parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
+                           StoppingGameDefenderPomdpConfig.from_dict,
+                           IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict]
+        input_config = IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict(d["simulation_env_input_config"])
+        for parse_fun in parse_functions:
             try:
-                input_config = StoppingGameAttackerMdpConfig.from_dict(d["simulation_env_input_config"])
+                input_config = parse_fun(d["simulation_env_input_config"])
+                break
             except Exception:
-                try:
-                    input_config = StoppingGameDefenderPomdpConfig.from_dict(d["simulation_env_input_config"])
-                except Exception:
-                    input_config = IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict(
-                        d["simulation_env_input_config"])
+                pass
+        if input_config is None:
+            raise ValueError("Could not parse the input configuration")
         obj = SimulationEnvConfig(
             name=d["name"], descr=d["descr"],
             simulation_env_input_config=input_config,
