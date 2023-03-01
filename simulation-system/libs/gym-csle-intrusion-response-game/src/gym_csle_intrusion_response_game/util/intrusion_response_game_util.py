@@ -1,7 +1,7 @@
 from typing import List
 import numpy as np
 from scipy.stats import betabinom
-from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+from gym_csle_intrusion_response_game.dao.intrusion_response_game_config import LocalIntrusionResponseGameConfig
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 
@@ -598,44 +598,46 @@ class IntrusionResponseGameUtil:
         return int(np.random.choice(O, p=Z[a1][a2][s_prime_idx]))
 
     @staticmethod
-    def bayes_filter(s_prime: int, o: int, a1: int, b: np.ndarray, pi2: np.ndarray,
-                     config: StoppingGameConfig) -> float:
+    def bayes_filter_defender_belief(s_a_prime: int, o: int, a1: int, d_b: np.ndarray, pi2: np.ndarray,
+                                     config: LocalIntrusionResponseGameConfig, s_d: int) -> float:
         """
-        A Bayesian filter to compute the belief of player 1
-        of being in s_prime when observing o after taking action a in belief b given that the opponent follows
-        strategy pi2
+        A Bayesian filter to compute the belief of player 1 of being in s_prime when observing o after
+        taking action a in belief b given that the opponent follows strategy pi2
 
-        :param s_prime: the state to compute the belief of
+        :param s_a_prime: the attacker state to compute the belief of
         :param o: the observation
         :param a1: the action of player 1
-        :param b: the current belief point
+        :param d_b: the current defender belief point
         :param pi2: the policy of player 2
-        :param l: stops remaining
+        :param s_d: the defender state
         :return: b_prime(s_prime)
         """
         norm = 0
-        for s in config.S:
+        for s in config.S_A:
+            s_idx = config.states_to_idx[(s_d, s)]
             for a2 in config.A2:
-                for s_prime_1 in config.S:
-                    prob_1 = config.Z[a1][a2][s_prime_1][o]
-                    norm += b[s] * prob_1 * config.T[a1][a2][s][s_prime_1] * pi2[s][a2]
+                for s_prime_1 in config.S_A:
+                    s_prime_idx = config.states_to_idx[(s_d, s_prime_1)]
+                    prob_1 = config.Z[a1][a2][s_prime_idx][o]
+                    norm += d_b[s] * prob_1 * config.T[a1][a2][s_idx][s_prime_idx] * pi2[s][a2]
         if norm == 0:
             return 0
         temp = 0
-
-        for s in config.S:
+        s_prime_idx = config.states_to_idx[(s_d, s_a_prime)]
+        for s in config.S_A:
+            s_idx = config.states_to_idx[(s_d, s)]
             for a2 in config.A2:
-                temp += config.Z[a1][a2][s_prime][o] * config.T[a1][a2][s][s_prime] * b[s] * pi2[s][a2]
+                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[a1][a2][s_idx][s_prime_idx] * d_b[s] \
+                        * pi2[s][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
-            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")
+            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_a_prime}, o:{o}, pi2:{pi2}")
         assert round(b_prime_s_prime, 2) <= 1
-        if s_prime == 2 and o != config.O[-1]:
-            assert round(b_prime_s_prime, 2) <= 0.01
         return b_prime_s_prime
 
     @staticmethod
-    def p_o_given_b_a1_a2(o: int, b: List, a1: int, a2: int, config: StoppingGameConfig) -> float:
+    def p_o_given_b_1_a1_a2(o: int, b: List, a1: int, a2: int, config: LocalIntrusionResponseGameConfig,
+                            s_d: int) -> float:
         """
         Computes P[o|a,b]
 
@@ -643,38 +645,43 @@ class IntrusionResponseGameUtil:
         :param b: the belief point
         :param a1: the action of player 1
         :param a2: the action of player 2
+        :param s_d: the defender state
         :param config: the game config
         :return: the probability of observing o when taking action a in belief point b
         """
         prob = 0
-        for s in config.S:
-            for s_prime in config.S:
-                prob += b[s] * config.T[a1][a2][s][s_prime] * config.Z[a1][a2][s_prime][o]
+        for s in config.S_A:
+            s_idx = config.states_to_idx[(s_d, s)]
+            for s_prime in config.S_A:
+                s_prime_idx = config.states_to_idx[(s_d, s_prime)]
+                prob += b[s] * config.T[a1][a2][s_idx][s_prime_idx] * config.Z[a1][a2][s_prime_idx][o]
         assert prob < 1
         return prob
 
     @staticmethod
-    def next_belief(o: int, a1: int, b: np.ndarray, pi2: np.ndarray, config: StoppingGameConfig,
-                    a2: int = 0, s: int = 0) -> np.ndarray:
+    def next_local_defender_belief(o: int, a1: int, d_b: np.ndarray, pi2: np.ndarray,
+                                   config: LocalIntrusionResponseGameConfig, a2: int, s_a: int,
+                                   s_d: int) -> np.ndarray:
         """
         Computes the next belief using a Bayesian filter
 
         :param o: the latest observation
         :param a1: the latest action of player 1
-        :param b: the current belief
+        :param d_b: the current defender belief
         :param pi2: the policy of player 2
         :param config: the game config
         :param a2: the attacker action (for debugging, should be consistent with pi2)
-        :param s: the true state (for debugging)
+        :param s_a: the true current attacker state (for debugging)
+        :param s_d: the defender state
         :return: the new belief
         """
-        b_prime = np.zeros(len(config.S))
-        for s_prime in config.S:
-            b_prime[s_prime] = IntrusionResponseGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b,
-                                                                      pi2=pi2, config=config)
+        b_prime = np.zeros(len(config.S_A))
+        for s_a_prime in config.S_A:
+            b_prime[s_a_prime] = IntrusionResponseGameUtil.bayes_filter_defender_belief(
+                s_a_prime=s_a_prime, o=o, a1=a1, d_b=d_b, pi2=pi2, config=config, s_d=s_d)
         if round(sum(b_prime), 2) != 1:
-            print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, b:{b}, pi2:{pi2}, "
-                  f"a2: {a2}, s:{s}")
+            print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, d_b:{d_b}, pi2:{pi2}, "
+                  f"a2: {a2}, s:{s_a}")
         assert round(sum(b_prime), 2) == 1
         return b_prime
 

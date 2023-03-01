@@ -23,9 +23,10 @@ from csle_common.dao.simulation_config.observation_function_config import Observ
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
-from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
-from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.training.agent_type import AgentType
+import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 from gym_csle_intrusion_response_game.dao.intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
@@ -40,7 +41,7 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
 
     :param name: the name of the environment
     :param version: the version string
-    :return:the default configuration
+    :return: the default configuration
     """
     players_config = default_players_config()
     state_space_config = default_state_space_config(number_of_zones=number_of_zones)
@@ -294,10 +295,12 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
+    S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
+    S_A = IntrusionResponseGameUtil.local_attacker_state_space()
     game_config = LocalIntrusionResponseGameConfig(
         A1=A1, A2=A2, zones=zones,
-        d_b1=np.array(initial_state_distribution_config.initial_state_distribution),
-        a_b1=np.array(initial_state_distribution_config.initial_state_distribution),
+        d_b1=IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A),
+        a_b1=IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D),
         T=np.array(transition_tensor_config.transition_tensor),
         O=np.array(list(map(lambda x: x.val, defender_observation_space_config.observations))),
         Z=np.array(observation_function_config.observation_tensor),
@@ -306,17 +309,34 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         gamma=1, A_P=IntrusionResponseGameUtil.local_attack_success_probabilities_uniform(
             p=attack_success_probability, A2=A2),
         C_D=IntrusionResponseGameUtil.constant_defender_action_costs(A1=A1, constant_cost=defender_action_cost),
-        S_A=IntrusionResponseGameUtil.local_attacker_state_space(), S_D=
-        IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones),
+        S_A=S_A, S_D=S_D,
         Z_D_P=IntrusionResponseGameUtil.uniform_zone_detection_probabilities(zones=zones),
         Z_U=IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility),
         beta=beta, eta=eta, s_1_idx=IntrusionResponseGameUtil.local_initial_state_idx(initial_zone=initial_zone, S=S)
     )
+    attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()),len(A2)))
+    for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
+        if s_a == env_constants.ATTACK_STATES.HEALTHY:
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.2
+        elif s_a == env_constants.ATTACK_STATES.RECON:
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.7
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.15
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.15
+        else:
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 1
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0
+    attacker_strategy = TabularPolicy(
+        player_type=PlayerType.ATTACKER,
+        actions=attacker_action_space_config.actions,
+        simulation_name="csle-intrusion-response-game-pomdp-defender-001",
+        value_function=None, q_table=None,
+        lookup_table=list(attacker_stage_strategy.tolist()),
+        agent_type=AgentType.RANDOM, avg_R=-1)
     config = IntrusionResponseGameLocalPOMDPDefenderConfig(
         local_intrusion_response_game_config=game_config,
-        attacker_strategy=RandomPolicy(actions=attacker_action_space_config.actions,
-                                       player_type=PlayerType.ATTACKER,
-                                       stage_policy_tensor=list(attacker_stage_strategy)),
+        attacker_strategy=attacker_strategy,
         env_name="csle-stopping-game-pomdp-defender-v1")
     return config
 

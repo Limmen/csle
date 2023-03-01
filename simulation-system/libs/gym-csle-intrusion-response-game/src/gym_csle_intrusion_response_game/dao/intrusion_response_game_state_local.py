@@ -1,4 +1,5 @@
 import numpy as np
+import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 
 class IntrusionResponseGameStateLocal:
@@ -58,6 +59,18 @@ class IntrusionResponseGameStateLocal:
         :return: the state vector
         """
         return self.S[self.s_idx]
+
+    def attacker_state(self) -> int:
+        """
+        :return: the attacker state
+        """
+        return self.S[self.s_idx][env_constants.STATES.A_STATE_INDEX]
+
+    def defender_state(self) -> int:
+        """
+        :return: the defender state
+        """
+        return self.S[self.s_idx][env_constants.STATES.D_STATE_INDEX]
 
     def __str__(self) -> str:
         """

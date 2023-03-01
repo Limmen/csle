@@ -68,19 +68,11 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         :param a1: defender action
         :return: (obs, reward, done, info)
         """
+        done, info = False, {}
+
         # Get attacker action from static strategy
-        # pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        # a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
-        done = False
-        info = {}
-        eps = np.random.uniform(0., 1.)
-        if eps < 0.7:
-            a2 = 0
-        else:
-            if self.state.state_vector()[1] == 0:
-                a2 = 1
-            else:
-                a2 = np.random.choice(np.array([2,3]), p=[1/2,1/2])
+        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
+        a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.state.attacker_state())
 
         # Compute the reward
         if isinstance(a1, List) or isinstance(a1, np.ndarray):
@@ -98,17 +90,22 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             O=self.config.local_intrusion_response_game_config.O,
             s_prime_idx=s_idx_prime, a1=a1, a2=a2)
 
+        # Check if game is done
+        if IntrusionResponseGameUtil.is_local_state_terminal(self.state.state_vector()):
+            done = True
 
+        if not done:
+            # Update the beliefs
+            self.state.d_b = IntrusionResponseGameUtil.next_local_defender_belief(
+                o=o, a1=a1, d_b=self.state.d_b, pi2=pi2, config=self.config.local_intrusion_response_game_config,
+                a2=a2, s_a=self.state.attacker_state(),
+                s_d=self.state.defender_state())
 
         # Update time-step
         self.state.t += 1
 
         # Move to the next state
         self.state.s_idx = s_idx_prime
-
-        # Check if game is done
-        if IntrusionResponseGameUtil.is_local_state_terminal(self.state.state_vector()):
-            done = True
 
         # Populate info dict
         info[env_constants.ENV_METRICS.STATE] = self.state.state_vector()

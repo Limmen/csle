@@ -1,6 +1,7 @@
 from typing import Dict, Any
 import numpy as np
 import gym
+import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 
 class LocalIntrusionResponseGameConfig:
@@ -59,6 +60,9 @@ class LocalIntrusionResponseGameConfig:
         self.S_D = S_D
         self.s_1_idx = s_1_idx
         self.zones = zones
+        self.states_to_idx = {}
+        for i,s in enumerate(self.S):
+            self.states_to_idx[(s[env_constants.STATES.D_STATE_INDEX], s[env_constants.STATES.A_STATE_INDEX])] = i
 
     def attacker_observation_space(self) -> gym.spaces.Discrete:
         """
