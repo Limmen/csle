@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import cluster_manager_pb2 as cluster__manager__pb2
+import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster__manager__pb2
 
 
 class ClusterManagerStub(object):
@@ -605,11 +605,6 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StopContainersOfExecutionMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
-        self.getExecutionInfo = channel.unary_unary(
-                '/ClusterManager/getExecutionInfo',
-                request_serializer=cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.ExecutionInfoDTO.FromString,
-                )
         self.startHostManager = channel.unary_unary(
                 '/ClusterManager/startHostManager',
                 request_serializer=cluster__manager__pb2.StartHostManagerMsg.SerializeToString,
@@ -918,12 +913,17 @@ class ClusterManagerStub(object):
         self.getSnortIdsMonitorThreadStatuses = channel.unary_unary(
                 '/ClusterManager/getSnortIdsMonitorThreadStatuses',
                 request_serializer=cluster__manager__pb2.GetSnortIdsMonitorThreadStatusesMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.FromString,
+                response_deserializer=cluster__manager__pb2.SnortIdsMonitorThreadStatusesDTO.FromString,
                 )
         self.getSnortIdsManagersInfo = channel.unary_unary(
                 '/ClusterManager/getSnortIdsManagersInfo',
                 request_serializer=cluster__manager__pb2.GetSnortIdsManagersInfoMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.SnortIdsManagersInfoDTO.FromString,
+                )
+        self.getExecutionInfo = channel.unary_unary(
+                '/ClusterManager/getExecutionInfo',
+                request_serializer=cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ExecutionInfoDTO.FromString,
                 )
 
 
@@ -1639,12 +1639,6 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def getExecutionInfo(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def startHostManager(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -2018,6 +2012,12 @@ class ClusterManagerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def getSnortIdsManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getExecutionInfo(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -2616,11 +2616,6 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     request_deserializer=cluster__manager__pb2.StopContainersOfExecutionMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
-            'getExecutionInfo': grpc.unary_unary_rpc_method_handler(
-                    servicer.getExecutionInfo,
-                    request_deserializer=cluster__manager__pb2.GetExecutionInfoMsg.FromString,
-                    response_serializer=cluster__manager__pb2.ExecutionInfoDTO.SerializeToString,
-            ),
             'startHostManager': grpc.unary_unary_rpc_method_handler(
                     servicer.startHostManager,
                     request_deserializer=cluster__manager__pb2.StartHostManagerMsg.FromString,
@@ -2929,12 +2924,17 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'getSnortIdsMonitorThreadStatuses': grpc.unary_unary_rpc_method_handler(
                     servicer.getSnortIdsMonitorThreadStatuses,
                     request_deserializer=cluster__manager__pb2.GetSnortIdsMonitorThreadStatusesMsg.FromString,
-                    response_serializer=cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.SerializeToString,
+                    response_serializer=cluster__manager__pb2.SnortIdsMonitorThreadStatusesDTO.SerializeToString,
             ),
             'getSnortIdsManagersInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.getSnortIdsManagersInfo,
                     request_deserializer=cluster__manager__pb2.GetSnortIdsManagersInfoMsg.FromString,
                     response_serializer=cluster__manager__pb2.SnortIdsManagersInfoDTO.SerializeToString,
+            ),
+            'getExecutionInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getExecutionInfo,
+                    request_deserializer=cluster__manager__pb2.GetExecutionInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ExecutionInfoDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -4954,23 +4954,6 @@ class ClusterManager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def getExecutionInfo(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getExecutionInfo',
-            cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
-            cluster__manager__pb2.ExecutionInfoDTO.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
     def startHostManager(request,
             target,
             options=(),
@@ -6020,7 +6003,7 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getSnortIdsMonitorThreadStatuses',
             cluster__manager__pb2.GetSnortIdsMonitorThreadStatusesMsg.SerializeToString,
-            cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.FromString,
+            cluster__manager__pb2.SnortIdsMonitorThreadStatusesDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -6038,5 +6021,22 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getSnortIdsManagersInfo',
             cluster__manager__pb2.GetSnortIdsManagersInfoMsg.SerializeToString,
             cluster__manager__pb2.SnortIdsManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getExecutionInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getExecutionInfo',
+            cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
+            cluster__manager__pb2.ExecutionInfoDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

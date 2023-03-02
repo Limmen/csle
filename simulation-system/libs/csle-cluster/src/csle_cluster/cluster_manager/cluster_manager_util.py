@@ -7,6 +7,10 @@ import csle_collector.client_manager.client_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.elk_manager.elk_manager_pb2
+import csle_collector.snort_ids_manager.snort_ids_manager_pb2
+import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
+import csle_collector.kafka_manager.kafka_manager_pb2
+import csle_collector.ryu_manager.ryu_manager_pb2
 
 
 class ClusterManagerUtil:
@@ -401,7 +405,7 @@ class ClusterManagerUtil:
         d = {}
         d["ips"] = list(elk_managers_info_dto.ips)
         d["ports"] = list(elk_managers_info_dto.ports)
-        d["elkManagersRunning"] = list(elk_managers_info_dto.dockerStatsManagersRunning)
+        d["elkManagersRunning"] = list(elk_managers_info_dto.elkManagersRunning)
         d["elkManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.elk_status_dto_to_dict(x),
                                                     list(elk_managers_info_dto.elkManagersStatuses)))
         d["emulationName"] = elk_managers_info_dto.emulationName
@@ -423,3 +427,275 @@ class ClusterManagerUtil:
             elasticRunning = elk_dto.elasticRunning, kibanaRunning = elk_dto.kibanaRunning,
             logstashRunning = elk_dto.logstashRunning
         )
+
+    @staticmethod
+    def convert_snort_ids_monitor_dto_to_snort_ids_status_dto(
+            snort_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsStatusDTO:
+        """
+        Converts a SnortIdsMonitorDTO to a SnortIdsStatusDTO
+
+        :param snort_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsStatusDTO(
+            monitor_running=snort_dto.monitor_running, snort_ids_running=snort_dto.snort_ids_running)
+
+    @staticmethod
+    def convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(
+            ossec_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsStatusDTO:
+        """
+        Converts a OSSECIdsMonitorDTO to a OSSECIdsStatusDTO
+
+        :param ossec_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsStatusDTO(
+            monitor_running=ossec_dto.monitor_running, ossec_ids_running=ossec_dto.ossec_ids_running)
+
+    @staticmethod
+    def convert_kafka_dto_to_kafka_status_dto(
+            kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO:
+        """
+        Converts a KafkaDTO to a KafkaStatusDTO
+
+        :param kafka_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO(
+            running=kafka_dto.running, topics=kafka_dto.topics)
+
+    @staticmethod
+    def convert_ryu_dto_to_kafka_status_dto(
+            ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO:
+        """
+        Converts a RyuDTO to a RyuManagerStatusDTO
+
+        :param ryu_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO(
+            ryu_running=ryu_dto.ryu_running, monitor_running=ryu_dto.monitor_running,
+            port=ryu_dto.port, web_port=ryu_dto.web_port,
+            controller=ryu_dto.controller, kafka_ip=ryu_dto.kafka_ip,
+            kafka_port=ryu_dto.kafka_port, time_step_len=ryu_dto.time_step_len)
+
+    @staticmethod
+    def snort_ids_status_dto_to_dict(
+            snort_ids_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsStatusDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a SnortIdsStatusDTO to a dict
+
+        :param snort_ids_status_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["monitor_running"] = snort_ids_status_dto.monitor_running
+        d["snort_ids_running"] = snort_ids_status_dto.snort_ids_running
+        return d
+
+    @staticmethod
+    def ossec_ids_status_dto_to_dict(
+            ossec_ids_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsStatusDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a OSSECIdsStatusDTO to a dict
+
+        :param ossec_ids_status_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["monitor_running"] = ossec_ids_status_dto.monitor_running
+        d["ossec_ids_running"] = ossec_ids_status_dto.ossec_ids_running
+        return d
+
+    @staticmethod
+    def snort_ids_monitor_thread_statuses_dto_to_dict(
+            snort_ids_monitor_thread_statuses_dto: csle_cluster.cluster_manager.cluster_manager_pb2.
+                SnortIdsMonitorThreadStatusesDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a SnortIdsMonitorThreadStatusesDTO to a dict
+
+        :param snort_ids_monitor_thread_statuses_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["snortIDSStatuses"] = list(map(lambda x: ClusterManagerUtil.snort_ids_status_dto_to_dict(x),
+                                         snort_ids_monitor_thread_statuses_dto.snortIDSStatuses))
+        return d
+
+    @staticmethod
+    def ossec_ids_monitor_thread_statuses_dto_to_dict(
+            ossec_ids_monitor_thread_statuses_dto: csle_cluster.cluster_manager.cluster_manager_pb2.
+                OSSECIdsMonitorThreadStatusesDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a OSSECIdsMonitorThreadStatusesDTO to a dict
+
+        :param ossec_ids_monitor_thread_statuses_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ossecIDSStatuses"] = list(map(lambda x: ClusterManagerUtil.ossec_ids_status_dto_to_dict(x),
+                                         ossec_ids_monitor_thread_statuses_dto.ossecIDSStatuses))
+        return d
+
+    @staticmethod
+    def ryu_manager_status_dto_to_dict(
+            ryu_manager_status_dto_to_dict: csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a RyuManagerStatusDTO to a dict
+
+        :param ryu_manager_status_dto_to_dict: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ryu_running"] = ryu_manager_status_dto_to_dict.ryu_running
+        d["monitor_running"] = ryu_manager_status_dto_to_dict.monitor_running
+        d["port"] = ryu_manager_status_dto_to_dict.port
+        d["web_port"] = ryu_manager_status_dto_to_dict.web_port
+        d["controller"] = ryu_manager_status_dto_to_dict.controller
+        d["kafka_ip"] = ryu_manager_status_dto_to_dict.kafka_ip
+        d["kafka_port"] = ryu_manager_status_dto_to_dict.kafka_port
+        d["time_step_len"] = ryu_manager_status_dto_to_dict.time_step_len
+        return d
+
+    @staticmethod
+    def host_manager_status_dto_to_dict(
+            host_manager_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a HostManagerStatusDTO to a dict
+
+        :param host_manager_status_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["monitor_running"] = host_manager_status_dto.monitor_running
+        d["filebeat_running"] = host_manager_status_dto.filebeat_running
+        d["packetbeat_running"] = host_manager_status_dto.packetbeat_running
+        d["metricbeat_running"] = host_manager_status_dto.metricbeat_running
+        d["heartbeat_running"] = host_manager_status_dto.heartbeat_running
+        return d
+
+    @staticmethod
+    def kafka_status_dto_to_dict(
+            kafka_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a KafkaStatusDTO to a dict
+
+        :param kafka_status_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["running"] = kafka_status_dto.running
+        d["topics"] = kafka_status_dto.topics
+        return d
+
+    @staticmethod
+    def snort_managers_info_dto_to_dict(
+            snort_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a SnortIdsManagersInfoDTO to a dict
+
+        :param snort_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(snort_managers_info_dto.ips)
+        d["ports"] = list(snort_managers_info_dto.ports)
+        d["snortIdsManagersRunning"] = list(snort_managers_info_dto.snortIdsManagersRunning)
+        d["snortIdsManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.snort_ids_status_dto_to_dict(x),
+                                            list(snort_managers_info_dto.snortIdsManagersStatuses)))
+        d["emulationName"] = snort_managers_info_dto.emulationName
+        d["executionId"] = snort_managers_info_dto.executionId
+        return d
+
+    @staticmethod
+    def ossec_managers_info_dto_to_dict(
+            ossec_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a OSSECIdsManagersInfoDTO to a dict
+
+        :param ossec_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(ossec_managers_info_dto.ips)
+        d["ports"] = list(ossec_managers_info_dto.ports)
+        d["ossecIdsManagersRunning"] = list(ossec_managers_info_dto.ossecIdsManagersRunning)
+        d["ossecIdsManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.ossec_ids_status_dto_to_dict(x),
+                                                 list(ossec_managers_info_dto.ossecIdsManagersStatuses)))
+        d["emulationName"] = ossec_managers_info_dto.emulationName
+        d["executionId"] = ossec_managers_info_dto.executionId
+        return d
+
+    @staticmethod
+    def kafka_managers_info_dto_to_dict(
+            kafka_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.KafkaManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a KafkaManagersInfoDTO to a dict
+
+        :param kafka_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(kafka_managers_info_dto.ips)
+        d["ports"] = list(kafka_managers_info_dto.ports)
+        d["kafkaManagersRunning"] = list(kafka_managers_info_dto.kafkaManagersRunning)
+        d["kafkaManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.kafka_status_dto_to_dict(x),
+                                                 list(kafka_managers_info_dto.kafkaManagersStatuses)))
+        d["emulationName"] = kafka_managers_info_dto.emulationName
+        d["executionId"] = kafka_managers_info_dto.executionId
+        return d
+
+    @staticmethod
+    def host_managers_info_dto_to_dict(
+            host_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.HostManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a HostManagersInfoDTO to a dict
+
+        :param host_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(host_managers_info_dto.ips)
+        d["ports"] = list(host_managers_info_dto.ports)
+        d["hostManagersRunning"] = list(host_managers_info_dto.hostManagersRunning)
+        d["hostManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.host_manager_status_dto_to_dict(x),
+                                              list(host_managers_info_dto.hostManagersStatuses)))
+        d["emulationName"] = host_managers_info_dto.emulationName
+        d["executionId"] = host_managers_info_dto.executionId
+        return d
+
+    @staticmethod
+    def ryu_managers_info_dto_to_dict(
+            ryu_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a RyuManagersInfoDTO to a dict
+
+        :param ryu_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(ryu_managers_info_dto.ips)
+        d["ports"] = list(ryu_managers_info_dto.ports)
+        d["ryuManagersRunning"] = list(ryu_managers_info_dto.ryuManagersRunning)
+        d["ryuManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.ryu_manager_status_dto_to_dict(x),
+                                             list(ryu_managers_info_dto.ryuManagersStatuses)))
+        d["emulationName"] = ryu_managers_info_dto.emulationName
+        d["executionId"] = ryu_managers_info_dto.executionId
+        return d
+

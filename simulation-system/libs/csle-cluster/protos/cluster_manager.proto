@@ -120,7 +120,6 @@ service ClusterManager {
   rpc startContainersOfExecution(StartContainersOfExecutionMsg) returns (OperationOutcomeDTO) {}
   rpc runContainer(RunContainerMsg) returns (OperationOutcomeDTO) {}
   rpc stopContainersOfExecution(StopContainersOfExecutionMsg) returns (OperationOutcomeDTO) {}
-  rpc getExecutionInfo(GetExecutionInfoMsg) returns (ExecutionInfoDTO) {}
   rpc startHostManager(StartHostManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopHostManagers(StopHostManagersMsg) returns (OperationOutcomeDTO) {}
   rpc stopHostManager(StopHostManagerMsg) returns (OperationOutcomeDTO) {}
@@ -184,8 +183,14 @@ service ClusterManager {
   rpc stopSnortIdsManager(StopSnortIdsManager) returns (OperationOutcomeDTO) {}
   rpc stopSnortIdsMonitorThreads(StopSnortIdsMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc getSnortIdsMonitorThreadStatuses(GetSnortIdsMonitorThreadStatusesMsg)
-      returns (OSSECIdsMonitorThreadStatusesDTO) {}
+      returns (SnortIdsMonitorThreadStatusesDTO) {}
   rpc getSnortIdsManagersInfo(GetSnortIdsManagersInfoMsg) returns (SnortIdsManagersInfoDTO) {}
+  rpc getExecutionInfo(GetExecutionInfoMsg) returns (ExecutionInfoDTO) {}
+}
+
+// Message that the client sends when requesting to get the statuses of all Snort IDS monitor threads
+message SnortIdsMonitorThreadStatusesDTO {
+  repeated SnortIdsStatusDTO snortIDSStatuses = 1;
 }
 
 // Message that the client sends when requesting to get the Snort IDS managers info
@@ -684,7 +689,7 @@ message KafkaManagersInfoDTO {
 //Message that the server returns when asked about the status of the Kafka manager
 message KafkaStatusDTO {
   bool running = 1;
-  bool topics = 2;
+  repeated string topics = 2;
 }
 
 // Message that the server returns when requested for the OSSEC IDS managers info
