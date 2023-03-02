@@ -1625,16 +1625,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             client_managers_dto = TrafficController.get_client_managers_info(
                 emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
                 active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config))
-            return csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO(
-                ips=client_managers_dto.ips,
-                ports=client_managers_dto.ports,
-                emulationName=client_managers_dto.emulation_name,
-                executionId=client_managers_dto.execution_id,
-                clientManagersRunning=client_managers_dto.client_managers_running,
-                clientManagersStatuses=
-                list(map(lambda x: ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(x),
-                         client_managers_dto.client_managers_statuses))
-            )
+            return ClusterManagerUtil.convert_client_info_dto(client_managers_dto=client_managers_dto)
         else:
             return ClusterManagerUtil.get_empty_client_managers_info_dto()
 
@@ -1657,16 +1648,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip()
         )
-        return csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO(
-            ips=traffic_managers_dto.ips,
-            ports=traffic_managers_dto.ports,
-            emulationName=traffic_managers_dto.emulation_name,
-            executionId=traffic_managers_dto.execution_id,
-            trafficManagersRunning=traffic_managers_dto.traffic_managers_running,
-            trafficManagersStatuses=
-            list(map(lambda x: ClusterManagerUtil.convert_traffic_dto_to_traffic_manager_info_dto(x),
-                     traffic_managers_dto.traffic_managers_statuses))
-        )
+        return ClusterManagerUtil.convert_traffic_info_dto(traffic_managers_dto=traffic_managers_dto)
 
     def stopAllRunningContainers(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopAllRunningContainersMsg,
@@ -1969,16 +1951,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip()
         )
-        return csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO(
-            ips=docker_stats_managers_dto.ips,
-            ports=docker_stats_managers_dto.ports,
-            emulationName=docker_stats_managers_dto.emulation_name,
-            executionId=docker_stats_managers_dto.execution_id,
-            dockerStatsManagersRunning=docker_stats_managers_dto.docker_stats_managers_running,
-            dockerStatsManagersStatuses=
-            list(map(lambda x: ClusterManagerUtil.convert_docker_stats_monitor_dto(x),
-                     docker_stats_managers_dto.docker_stats_managers_statuses))
-        )
+        return ClusterManagerUtil.convert_docker_info_dto(docker_stats_managers_dto=docker_stats_managers_dto)
 
     def stopElkManager(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElkManagerMsg,
@@ -2210,14 +2183,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip())
-        return csle_cluster.cluster_manager.cluster_manager_pb2.ElkManagersInfoDTO(
-            ips=elk_managers_dto.ips,
-            ports=elk_managers_dto.ports,
-            emulationName=elk_managers_dto.emulation_name,
-            executionId=elk_managers_dto.execution_id,
-            elkManagersRunning=elk_managers_dto.elk_managers_running,
-            elkManagersStatuses=
-            list(map(lambda x: ClusterManagerUtil.convert_elk_dto(x), elk_managers_dto.elk_managers_statuses)))
+        return ClusterManagerUtil.convert_elk_dto(elk_managers_dto=elk_managers_dto)
 
     def startContainersOfExecution(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartContainersOfExecutionMsg,
@@ -2782,16 +2748,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip()
         )
-        return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagersInfoDTO(
-            ips=host_managers_dto.ips,
-            ports=host_managers_dto.ports,
-            emulationName=host_managers_dto.emulation_name,
-            executionId=host_managers_dto.execution_id,
-            hostManagersRunning=host_managers_dto.host_managers_running,
-            hostManagersStatuses=
-            list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
-                     host_managers_dto.host_managers_statuses))
-        )
+        return ClusterManagerUtil.convert_host_info_dto(host_managers_dto=host_managers_dto)
 
     def stopKafkaManager(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopKafkaManagerMsg,
@@ -2931,16 +2888,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip())
-        return csle_cluster.cluster_manager.cluster_manager_pb2.KafkaManagersInfoDTO(
-            ips=kafka_managers_info_dto.ips,
-            ports=kafka_managers_info_dto.ports,
-            emulationName=kafka_managers_info_dto.emulation_name,
-            executionId=kafka_managers_info_dto.execution_id,
-            kafkaManagersRunning=kafka_managers_info_dto.kafka_managers_running,
-            kafkaManagersStatuses=
-            list(map(lambda x: ClusterManagerUtil.convert_kafka_dto_to_kafka_status_dto(x),
-                     kafka_managers_info_dto.kafka_managers_statuses))
-        )
+        return ClusterManagerUtil.convert_kafka_info_dto(kafka_managers_info_dto=kafka_managers_info_dto)
+
 
     def stopOSSECIDSes(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopOSSECIDSesMsg,
@@ -3053,7 +3002,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Stopping the OSSEC IDS maangers "
+        logging.info(f"Stopping the OSSEC IDS managers "
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3212,16 +3161,421 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip())
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsManagersInfoDTO(
-            ips=ossec_ids_managers_info_dto.ips,
-            ports=ossec_ids_managers_info_dto.ports,
-            emulationName=ossec_ids_managers_info_dto.emulation_name,
-            executionId=ossec_ids_managers_info_dto.execution_id,
-            ossecIdsManagersRunning=ossec_ids_managers_info_dto.ossec_ids_managers_running,
-            ossecIdsManagersStatuses=
-            list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(x),
-                     ossec_ids_managers_info_dto.ossec_ids_managers_statuses))
-        )
+        return ClusterManagerUtil.convert_ossec_info_dto(ossec_ids_managers_info_dto=ossec_ids_managers_info_dto)
+
+    def startRyuManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuManagerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Ryu manager for a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Ryu manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            SDNControllerManager.start_ryu_manager(emulation_env_config=execution.emulation_env_config,
+                                                   logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopRyuManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuManagerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Ryu manager for a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Ryu manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            SDNControllerManager.stop_ryu_manager(emulation_env_config=execution.emulation_env_config)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def getRyuStatus(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuStatusMsg,
+            context: grpc.ServicerContext) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO:
+        """
+        Gets the Ryu status
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a RyuManagerStatusDTO
+        """
+        logging.info(f"Getting the Ryu status "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            status_dto = SDNControllerManager.get_ryu_status(emulation_env_config=execution.emulation_env_config,
+                                                             logger=logging.getLogger())
+            status_dto = ClusterManagerUtil.convert_ryu_dto_to_kafka_status_dto(status_dto)
+            return status_dto
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO(
+                ryu_running = False, monitor_running = False, port = -1, web_port = -1, controller = "", kafka_ip = "",
+                kafka_port = -1, time_step_len = -1
+            )
+
+    def startRyu(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts Ryu
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting Ryu "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            SDNControllerManager.start_ryu(emulation_env_config=execution.emulation_env_config,
+                                           physical_server_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopRyu(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops Ryu
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping Ryu "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            SDNControllerManager.stop_ryu(emulation_env_config=execution.emulation_env_config,
+                                           logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def getRyuManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagersInfoDTO:
+        """
+        Gets the info of Ryu managers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a RyuManagersInfoDTO
+        """
+        logging.info(f"Gets the info of Ryu managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ryu_managers_info_dto = SDNControllerManager.get_ryu_managers_info(
+            emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+            active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
+            physical_server_ip=GeneralUtil.get_host_ip())
+        return ClusterManagerUtil.convert_ryu_info_dto(ryu_managers_info_dto=ryu_managers_info_dto)
+
+    def stopSnortIdses(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsesMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDSes for a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDSes "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        SnortIDSController.stop_snort_idses(
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopSnortIdsesMonitorThreads(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsesMonitorThreadsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDSes monitor threads for a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDSes monitor threads  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        SnortIDSController.stop_snort_idses_monitor_threads(
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopSnortIds(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS on a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDS on the container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            SnortIDSController.stop_snort_ids(emulation_env_config=execution.emulation_env_config,
+                                              ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopSnortIdsMonitorThread(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsMonitorThreadMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS Monitor Thread on a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDS on the container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            SnortIDSController.stop_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
+                                                               ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startSnortIds(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS on a specific container in a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Snort IDS on the container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            SnortIDSController.start_snort_ids(emulation_env_config=execution.emulation_env_config,
+                                               ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startSnortIdsMonitorThread(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsMonitorThreadMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS monitor thread on a specific container in a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Snort IDS monitor thread on the container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
+                                               ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startSnortIdsMonitorThreads(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsMonitorThreadsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS monitor threads of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Snort IDS monitor threads "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config,
+                                                             physical_server_ip=GeneralUtil.get_host_ip(),
+                                                             logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def startSnortIdsManagers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsManagers,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS managers of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Snort IDS managers "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        SnortIDSController.start_snort_managers(emulation_env_config=execution.emulation_env_config,
+                                                physical_server_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopSnortIdsManagers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsManagers,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS managers of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDS managers "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        SnortIDSController.stop_snort_managers(emulation_env_config=execution.emulation_env_config,
+                                                physical_server_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def startSnortIdsManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsManagerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS manager at a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Snort IDS monitor thread on the container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            SnortIDSController.start_snort_manager(emulation_env_config=execution.emulation_env_config,
+                                                   ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopSnortIdsManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsManager,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS manager at a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDS monitor thread on the container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            SnortIDSController.stop_snort_manager(emulation_env_config=execution.emulation_env_config,
+                                                  ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopSnortIdsMonitorThreads(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsMonitorThreadsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS managers of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the Snort IDS monitor threads "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        SnortIDSController.stop_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config,
+                                                            physical_server_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def getSnortIdsManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetSnortIdsManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsManagersInfoDTO:
+        """
+        Gets the info of Snort IDS managers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a OSSECIdsManagersInfoDTO
+        """
+        logging.info(f"Gets the info of Snort IDS managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        snort_ids_managers_info_dto = SnortIDSController.get_snort_managers_info(
+            emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+            active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
+            physical_server_ip=GeneralUtil.get_host_ip())
+        return ClusterManagerUtil.convert_snort_info_dto(snort_ids_managers_info_dto=snort_ids_managers_info_dto)
+
+    def getExecutionInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetExecutionInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ExecutionInfoDTO:
+        """
+        Gets the info of a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a OSSECIdsManagersInfoDTO
+        """
+        logging.info(f"Gets the info of the execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        execution_info_dto = EmulationEnvController.get_execution_info(
+            execution=execution, logger=logging.getLogger(), physical_server_ip=GeneralUtil.get_host_ip())
+        return ClusterManagerUtil.convert_execution_info_dto(execution_info_dto=execution_info_dto)
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

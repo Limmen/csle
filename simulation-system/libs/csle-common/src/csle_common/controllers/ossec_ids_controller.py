@@ -374,8 +374,8 @@ class OSSECIDSController:
         ossec_ids_managers_statuses = []
         ossec_ids_managers_running = []
         for ip in ossec_ids_managers_ips:
-            node_container_config = emulation_env_config.containers_config.get_container_from_ip(ip=ip)
-            if ip not in active_ips or node_container_config.physical_host_ip != physical_host_ip:
+            if ip not in active_ips or not EmulationUtil.physical_ip_match(
+                    emulation_env_config=emulation_env_config, ip=ip, physical_host_ip=physical_host_ip):
                 continue
             running = False
             status = None

@@ -690,11 +690,14 @@ class EmulationEnvController:
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
     @staticmethod
-    def get_execution_info(execution: EmulationExecution) -> EmulationExecutionInfo:
+    def get_execution_info(execution: EmulationExecution, logger: logging.Logger, physical_server_ip: str) \
+            -> EmulationExecutionInfo:
         """
         Gets runtime information about an execution
 
         :param execution: the emulation execution to get the information for
+        :param logger: the logger to use for logging
+        :param physical_server_ip: the IP of the physical server
         :return: execution information
         """
         running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
@@ -712,34 +715,42 @@ class EmulationEnvController:
         execution_id = execution.ip_first_octet
         snort_ids_managers_info = \
             SnortIDSController.get_snort_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                       active_ips=active_ips)
+                                                       active_ips=active_ips, logger=logger,
+                                                       physical_server_ip=physical_server_ip)
         ossec_ids_managers_info = \
             OSSECIDSController.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                       active_ips=active_ips)
+                                                       active_ips=active_ips, logger=logger,
+                                                       physical_host_ip=physical_server_ip)
         kafka_managers_info = \
             KafkaController.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                    active_ips=active_ips)
+                                                    active_ips=active_ips, logger=logger,
+                                                    physical_host_ip=physical_server_ip)
         host_managers_info = \
             HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                  active_ips=active_ips)
+                                                  active_ips=active_ips, logger=logger,
+                                                  physical_host_ip=physical_server_ip)
         client_managers_info = \
             TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                       active_ips=active_ips)
+                                                       active_ips=active_ips, logger=logger)
         traffic_managers_info = \
             TrafficController.get_traffic_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                        active_ips=active_ips)
+                                                        active_ips=active_ips, logger=logger,
+                                                        physical_host_ip=physical_server_ip)
         docker_stats_managers_info = \
             ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                               active_ips=active_ips)
+                                                               active_ips=active_ips, logger=logger,
+                                                               physical_host_ip=physical_server_ip)
         elk_managers_info = \
             ELKController.get_elk_managers_info(emulation_env_config=execution.emulation_env_config,
-                                                active_ips=active_ips)
+                                                active_ips=active_ips, logger=logger,
+                                                physical_host_ip=physical_server_ip)
         active_networks, inactive_networks = ContainerController.list_all_active_networks_for_emulation(
             emulation_env_config=execution.emulation_env_config)
         ryu_managers_info = None
         if execution.emulation_env_config.sdn_controller_config is not None:
             ryu_managers_info = SDNControllerManager.get_ryu_managers_info(
-                emulation_env_config=execution.emulation_env_config, active_ips=active_ips)
+                emulation_env_config=execution.emulation_env_config, active_ips=active_ips,
+                logger=logger, physical_server_ip=physical_server_ip)
         execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,
                                                 snort_ids_managers_info=snort_ids_managers_info,
                                                 ossec_ids_managers_info=ossec_ids_managers_info,

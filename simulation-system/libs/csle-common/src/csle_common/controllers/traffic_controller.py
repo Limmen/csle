@@ -638,8 +638,9 @@ class TrafficController:
         traffic_managers_statuses = []
         traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            if node_traffic_config.docker_gw_bridge_ip not in active_ips \
-                    or node_traffic_config.physical_host_ip != physical_host_ip:
+            if node_traffic_config.docker_gw_bridge_ip not in active_ips or not EmulationUtil.physical_ip_match(
+                    emulation_env_config=emulation_env_config, ip=node_traffic_config.docker_gw_bridge_ip,
+                    physical_host_ip=physical_host_ip):
                 continue
             running = False
             status = None

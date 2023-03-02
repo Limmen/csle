@@ -432,3 +432,28 @@ class EmulationUtil:
             return psutil.Process(pid).is_running()
         except Exception:
             return False
+
+    @staticmethod
+    def physical_ip_match(emulation_env_config: EmulationEnvConfig, ip, physical_host_ip: str) -> bool:
+        """
+        Utility method for checking if a container ip matches a physical ip
+
+        :param emulation_env_config: the emulation config
+        :param ip: the ip to check
+        :param physical_host_ip:  the physical ip
+        :return: True or False
+        """
+        if ip == emulation_env_config.kafka_config.container.docker_gw_bridge_ip and \
+                emulation_env_config.kafka_config.container.physical_host_ip == physical_host_ip:
+            return True
+        if ip == emulation_env_config.elk_config.container.docker_gw_bridge_ip and \
+                emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
+            return True
+        if emulation_env_config.sdn_controller_config is not None and \
+                ip ==emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip and \
+                emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_host_ip:
+            return True
+        node_config = emulation_env_config.containers_config.get_container_from_ip(ip=ip)
+        if node_config is not None and node_config.physical_host_ip == physical_host_ip:
+            return True
+        return False

@@ -336,24 +336,24 @@ class ELKController:
         elk_managers_ports = ELKController.get_elk_managers_ports(emulation_env_config=emulation_env_config)
         elk_managers_statuses = []
         elk_managers_running = []
-        for ip in elk_managers_ips:
-            node_container_config = emulation_env_config.containers_config.get_container_from_ip(ip=ip)
-            if ip not in active_ips or node_container_config.physical_host_ip != physical_host_ip:
-                continue
-            status = None
-            try:
-                status = ELKController.get_elk_status_by_port_and_ip(
-                    port=emulation_env_config.elk_config.elk_manager_port, ip=ip)
-                running = True
-            except Exception as e:
-                running = False
-                logger.debug(
-                    f"Could not fetch Elk manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            if status is not None:
-                elk_managers_statuses.append(status)
-            else:
-                elk_managers_statuses.append(csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
-            elk_managers_running.append(running)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
+            for ip in elk_managers_ips:
+                if ip not in active_ips:
+                    continue
+                status = None
+                try:
+                    status = ELKController.get_elk_status_by_port_and_ip(
+                        port=emulation_env_config.elk_config.elk_manager_port, ip=ip)
+                    running = True
+                except Exception as e:
+                    running = False
+                    logger.debug(
+                        f"Could not fetch Elk manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
+                if status is not None:
+                    elk_managers_statuses.append(status)
+                else:
+                    elk_managers_statuses.append(csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
+                elk_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         elk_manager_info_dto = ELKManagersInfo(

@@ -19,11 +19,12 @@ class SDNControllerManager:
     """
 
     @staticmethod
-    def start_ryu_manager(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_ryu_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method for starting the Ryu manager
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -40,7 +41,7 @@ class SDNControllerManager:
                 ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_RYU_MANAGER not in str(o):
-            Logger.__call__().get_logger().info(
+            logger.info(
                 f"Starting ryu manager on node: "
                 f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
 
@@ -92,15 +93,16 @@ class SDNControllerManager:
         time.sleep(2)
 
     @staticmethod
-    def get_ryu_status(emulation_env_config: EmulationEnvConfig) -> \
+    def get_ryu_status(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for querying the RyuManager about the status of the Ryu SDN controller
 
         :param emulation_env_config: the emulation config
+        :param logger: the logger to use for logging
         :return: a RyuDTO with the status
         """
-        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
+        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
         ryu_dto = SDNControllerManager.get_ryu_status_by_port_and_ip(
             ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.sdn_controller_config.manager_port)
@@ -125,17 +127,18 @@ class SDNControllerManager:
             return ryu_dto
 
     @staticmethod
-    def stop_ryu(emulation_env_config: EmulationEnvConfig) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+    def stop_ryu(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) \
+            -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for requesting the RyuManager to stop the RYU SDN controller
 
         :param emulation_env_config: the emulation env config
         :return: a RyuDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping RYU SDN controller on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
-        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
+        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -146,7 +149,7 @@ class SDNControllerManager:
             return ryu_dto
 
     @staticmethod
-    def start_ryu(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: Logger) \
+    def start_ryu(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) \
             -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for requesting the RyuManager to start the Ryu SDN controller
@@ -161,7 +164,7 @@ class SDNControllerManager:
         logger.info(
             f"Starting Ryu SDN controller on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
-        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
+        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -194,7 +197,7 @@ class SDNControllerManager:
         logger.info(
             f"Starting the ryu monitor on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
-        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
+        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -208,18 +211,19 @@ class SDNControllerManager:
             return ryu_dto
 
     @staticmethod
-    def stop_ryu_monitor(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_ryu_monitor(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for requesting the RyuManager to stop the ryu monitor
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an RyuDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping Ryu monitor on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
-        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config)
+        SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -250,12 +254,15 @@ class SDNControllerManager:
         return [emulation_env_config.sdn_controller_config.manager_port]
 
     @staticmethod
-    def get_ryu_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> RyuManagersInfo:
+    def get_ryu_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                              logger: logging.Logger, physical_server_ip: str) -> RyuManagersInfo:
         """
         Extracts the information of the Ryu managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
+        :param logger: the logger to use for logging
+        :param physical_server_ip: the ip of the physical server
         :return: a DTO with the status of the Ryu managers
         """
         ryu_managers_ips = SDNControllerManager.get_ryu_managers_ips(emulation_env_config=emulation_env_config)
@@ -263,7 +270,8 @@ class SDNControllerManager:
         ryu_managers_statuses = []
         ryu_managers_running = []
         for ip in ryu_managers_ips:
-            if ip not in active_ips:
+            if ip not in active_ips or EmulationUtil.physical_ip_match(
+                    emulation_env_config=emulation_env_config, ip=ip, physical_host_ip=physical_server_ip):
                 continue
             status = None
             try:
@@ -272,8 +280,7 @@ class SDNControllerManager:
                 running = True
             except Exception as e:
                 running = False
-                Logger.__call__().get_logger().debug(
-                    f"Could not fetch Ryu manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
+                logger.debug(f"Could not fetch Ryu manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 ryu_managers_statuses.append(status)
             else:

@@ -174,13 +174,13 @@ service ClusterManager {
   rpc stopSnortIdsesMonitorThreads(StopSnortIdsesMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc stopSnortIds(StopSnortIdsMsg) returns (OperationOutcomeDTO) {}
   rpc stopSnortIdsMonitorThread(StopSnortIdsMonitorThreadMsg) returns (OperationOutcomeDTO) {}
-  rpc startSnortIds(StopSnortIdsMsg) returns (OperationOutcomeDTO) {}
-  rpc startSnortIdsMonitorThreads(StartSnortIdsMonitorThreadMsg) returns (OperationOutcomeDTO) {}
+  rpc startSnortIds(StartSnortIdsMsg) returns (OperationOutcomeDTO) {}
+  rpc startSnortIdsMonitorThreads(StartSnortIdsMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc startSnortIdsMonitorThread(StartSnortIdsMonitorThreadMsg) returns (OperationOutcomeDTO) {}
-  rpc startSnortIdsManagers(StartSnortIdsManagers) returns (OperationOutcomeDTO) {}
-  rpc stopSnortIdsManagers(StopSnortIdsManagers) returns (OperationOutcomeDTO) {}
-  rpc startSnortIdsManager(StartSnortIdsManager) returns (OperationOutcomeDTO) {}
-  rpc stopSnortIdsManager(StopSnortIdsManager) returns (OperationOutcomeDTO) {}
+  rpc startSnortIdsManagers(StartSnortIdsManagersMsg) returns (OperationOutcomeDTO) {}
+  rpc stopSnortIdsManagers(StopSnortIdsManagersMsg) returns (OperationOutcomeDTO) {}
+  rpc startSnortIdsManager(StartSnortIdsManagerMsg) returns (OperationOutcomeDTO) {}
+  rpc stopSnortIdsManager(StopSnortIdsManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopSnortIdsMonitorThreads(StopSnortIdsMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc getSnortIdsMonitorThreadStatuses(GetSnortIdsMonitorThreadStatusesMsg)
       returns (SnortIdsMonitorThreadStatusesDTO) {}
@@ -212,27 +212,27 @@ message StopSnortIdsMonitorThreadsMsg {
 }
 
 // Message that the client sends when requesting to stop a specific Snort IDS manager
-message StopSnortIdsManager {
+message StopSnortIdsManagerMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
   string containerIp = 3;
 }
 
 // Message that the client sends when requesting to start a specific Snort manager
-message StartSnortIdsManager {
+message StartSnortIdsManagerMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
   string containerIp = 3;
 }
 
 // Message that the client sends when requesting to stop Snort managers
-message StopSnortIdsManagers {
+message StopSnortIdsManagersMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start Snort IDS managers
-message StartSnortIdsManagers {
+message StartSnortIdsManagersMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
@@ -249,6 +249,12 @@ message StartSnortIdsMonitorThreadMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
   string containerIp = 3;
+}
+
+// Message that the client sends when requesting to start all Snort IDS monitor thread of a given execution
+message StartSnortIdsMonitorThreadsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop a specific Snort IDS
@@ -624,10 +630,10 @@ message ExecutionInfoDTO {
   HostManagersInfoDTO hostManagersInfo = 6;
   ClientManagersInfoDTO clientManagersInfo = 7;
   DockerStatsManagersInfoDTO dockerStatsManagersInfo = 8;
-  repeated RunningContainersDTO runningContainers = 9;
-  repeated StoppedContainersDTO stoppedContainers = 10;
+  RunningContainersDTO runningContainers = 9;
+  StoppedContainersDTO stoppedContainers = 10;
   TrafficManagerInfoDTO trafficManagersInfoDTO = 11;
-  repeated DockerNetworksDTO activeNetworks = 12;
+  DockerNetworksDTO activeNetworks = 12;
   ElkManagersInfoDTO elkManagersInfoDTO = 13;
   RyuManagersInfoDTO ryuManagersInfoDTO = 14;
 }
