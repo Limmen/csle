@@ -26,7 +26,7 @@ class TrafficConfig:
         :return: the node traffic config or None
         """
         for node_traffic_config in self.node_traffic_configs:
-            if node_traffic_config.ip == ip:
+            if node_traffic_config.ip == ip or ip == node_traffic_config.docker_gw_bridge_ip:
                 return node_traffic_config
         return None
 

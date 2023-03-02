@@ -392,12 +392,14 @@ message StartOSSECIDSManagers {
 message StartOSSECIDSMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
+  string containerIp = 3;
 }
 
 // Message that the client sends when requesting to stop a specific OSSEC IDS
 message StopOSSECIDSMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
+  string containerIp = 3;
 }
 
 // Message that the client sends when requesting to start the OSSEC IDSes

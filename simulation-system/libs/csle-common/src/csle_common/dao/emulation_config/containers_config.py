@@ -112,7 +112,7 @@ class ContainersConfig:
         :return: the container with the given ip or None
         """
         for c in self.containers:
-            if ip in c.get_ips():
+            if ip in c.get_ips() or ip == c.docker_gw_bridge_ip:
                 return c
         return None
 

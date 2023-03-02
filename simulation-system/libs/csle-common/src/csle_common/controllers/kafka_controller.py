@@ -1,6 +1,7 @@
 from typing import List
 import grpc
 import time
+import logging
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
 import csle_common.constants.constants as constants
@@ -215,35 +216,39 @@ class KafkaController:
         return [emulation_env_config.kafka_config.kafka_manager_port]
 
     @staticmethod
-    def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> KafkaManagersInfo:
+    def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                                logger: logging.Logger, physical_host_ip: str) -> KafkaManagersInfo:
         """
         Extracts the information of the Kafka managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param logger: the logger to use for logging
+        :param physical_host_ip: the IP of the physical host
         :return: a DTO with the status of the Kafka managers
         """
         kafka_managers_ips = KafkaController.get_kafka_managers_ips(emulation_env_config=emulation_env_config)
         kafka_managers_ports = KafkaController.get_kafka_managers_ports(emulation_env_config=emulation_env_config)
         kafka_managers_statuses = []
         kafka_managers_running = []
-        for ip in kafka_managers_ips:
-            if ip not in active_ips:
-                continue
-            running = False
-            status = None
-            try:
-                status = KafkaController.get_kafka_status_by_port_and_ip(
-                    port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
-                running = True
-            except Exception as e:
-                Logger.__call__().get_logger().debug(
-                    f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            if status is not None:
-                kafka_managers_statuses.append(status)
-            else:
-                kafka_managers_statuses.append(
-                    csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty())
-            kafka_managers_running.append(running)
+        if physical_host_ip == emulation_env_config.kafka_config.container.physical_host_ip:
+            for ip in kafka_managers_ips:
+                if ip not in active_ips:
+                    continue
+                running = False
+                status = None
+                try:
+                    status = KafkaController.get_kafka_status_by_port_and_ip(
+                        port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
+                    running = True
+                except Exception as e:
+                    logger.debug(
+                        f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
+                if status is not None:
+                    kafka_managers_statuses.append(status)
+                else:
+                    kafka_managers_statuses.append(
+                        csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty())
+                kafka_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         kafka_manager_info_dto = KafkaManagersInfo(

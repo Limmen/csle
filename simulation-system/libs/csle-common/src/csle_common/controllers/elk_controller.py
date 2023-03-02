@@ -322,12 +322,13 @@ class ELKController:
 
     @staticmethod
     def get_elk_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
-                              logger: logging.Logger) -> ELKManagersInfo:
+                              logger: logging.Logger, physical_host_ip: str) -> ELKManagersInfo:
         """
         Extracts the information of the ELK managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
+        :param physical_host_ip: the physical host ip
         :param logger: the logger to use for logging
         :return: a DTO with the status of the ELK managers
         """
@@ -336,7 +337,8 @@ class ELKController:
         elk_managers_statuses = []
         elk_managers_running = []
         for ip in elk_managers_ips:
-            if ip not in active_ips:
+            node_container_config = emulation_env_config.containers_config.get_container_from_ip(ip=ip)
+            if ip not in active_ips or node_container_config.physical_host_ip != physical_host_ip:
                 continue
             status = None
             try:

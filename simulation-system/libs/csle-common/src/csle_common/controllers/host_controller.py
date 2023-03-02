@@ -1156,13 +1156,14 @@ class HostController:
 
     @staticmethod
     def get_host_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
-                               logger: logging.Logger) -> HostManagersInfo:
+                               logger: logging.Logger, physical_host_ip: str) -> HostManagersInfo:
         """
         Extracts the information of the Host managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
         :param logger: the logger to use for logging
+        :param physical_host_ip: the ip of the physical host
         :return: a DTO with the status of the Host managers
         """
         host_managers_ips = HostController.get_host_managers_ips(emulation_env_config=emulation_env_config)
@@ -1170,7 +1171,8 @@ class HostController:
         host_managers_statuses = []
         host_managers_running = []
         for ip in host_managers_ips:
-            if ip not in active_ips:
+            node_config = emulation_env_config.containers_config.get_container_from_ip(ip=ip)
+            if ip not in active_ips or node_config.physical_host_ip != physical_host_ip:
                 continue
             status = None
             running = False
