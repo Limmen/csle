@@ -19,11 +19,12 @@ class ELKController:
     """
 
     @staticmethod
-    def start_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_elk_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method for starting the ELK manager
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
 
@@ -40,7 +41,7 @@ class ELKController:
             conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_ELK_MANAGER not in str(o):
-            Logger.__call__().get_logger().info(f"Starting elk manager on node: "
+            logger.info(f"Starting elk manager on node: "
                                                 f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
             # Stop old background job if running
@@ -63,11 +64,12 @@ class ELKController:
             time.sleep(2)
 
     @staticmethod
-    def stop_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_elk_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method for stopping the ELK manager
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -75,7 +77,7 @@ class ELKController:
                                     ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
-        Logger.__call__().get_logger().info(f"Stopping elk manager on node: "
+        logger.info(f"Stopping elk manager on node: "
                                             f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
         # Stop background job
@@ -89,7 +91,7 @@ class ELKController:
         time.sleep(2)
 
     @staticmethod
-    def get_elk_status(emulation_env_config: EmulationEnvConfig) -> \
+    def get_elk_status(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for querying the ELKManager about the status of the ELK stack
@@ -97,7 +99,7 @@ class ELKController:
         :param emulation_env_config: the emulation config
         :return: an ELKDTO with the status of the server
         """
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
         elk_dto = ELKController.get_elk_status_by_port_and_ip(
             ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
             port=emulation_env_config.elk_config.elk_manager_port)
@@ -122,7 +124,7 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def stop_elk_stack(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_elk_stack(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to stop the ELK server
@@ -167,17 +169,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def start_elastic(emulation_env_config: EmulationEnvConfig) -> \
+    def start_elastic(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start elasticsearch
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -188,17 +191,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def start_kibana(emulation_env_config: EmulationEnvConfig) -> \
+    def start_kibana(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start kibana
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -209,17 +213,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def start_logstash(emulation_env_config: EmulationEnvConfig) -> \
+    def start_logstash(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start Logstash
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -230,17 +235,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def stop_elastic(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_elastic(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start elasticsearch
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -251,17 +257,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def stop_kibana(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_kibana(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start kibana
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -272,17 +279,18 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def stop_logstash(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_logstash(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to start Logstash
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: an ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -313,12 +321,14 @@ class ELKController:
         return [emulation_env_config.elk_config.elk_manager_port]
 
     @staticmethod
-    def get_elk_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> ELKManagersInfo:
+    def get_elk_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                              logger: logging.Logger) -> ELKManagersInfo:
         """
         Extracts the information of the ELK managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
+        :param logger: the logger to use for logging
         :return: a DTO with the status of the ELK managers
         """
         elk_managers_ips = ELKController.get_elk_managers_ips(emulation_env_config=emulation_env_config)
@@ -335,7 +345,7 @@ class ELKController:
                 running = True
             except Exception as e:
                 running = False
-                Logger.__call__().get_logger().debug(
+                logger.debug(
                     f"Could not fetch Elk manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 elk_managers_statuses.append(status)

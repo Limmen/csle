@@ -48,7 +48,7 @@ class EmulationEnvController:
             emulation_name=emulation_env_config.name)
         for exec in executions:
             EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
-            ContainerController.stop_docker_stats_thread(execution=exec)
+            ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
 
     @staticmethod
     def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int,
@@ -64,7 +64,7 @@ class EmulationEnvController:
         execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_env_config.name,
                                                             ip_first_octet=execution_id)
         EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip)
-        ContainerController.stop_docker_stats_thread(execution=execution)
+        ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip)
 
     @staticmethod
     def stop_all_executions(physical_server_ip: str) -> None:
@@ -77,7 +77,7 @@ class EmulationEnvController:
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
             EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
-            ContainerController.stop_docker_stats_thread(execution=exec)
+            ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
 
     @staticmethod
     def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
@@ -259,17 +259,6 @@ class EmulationEnvController:
         TrafficController.start_client_producer(emulation_env_config=emulation_env_config,
                                                 physical_server_ip=physical_server_ip,
                                                 logger=Logger.__call__().get_logger())
-
-    @staticmethod
-    def stop_custom_traffic(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Stops the traffic generators on all internal nodes and stops the arrival process of clients
-
-        :param emulation_env_config: the configuration for connecting to the emulation
-        :return: None
-        """
-        TrafficController.stop_internal_traffic_generators(emulation_env_config=emulation_env_config)
-        TrafficController.stop_client_population(emulation_env_config=emulation_env_config)
 
     @staticmethod
     def delete_networks_of_kafka_container(kafka_config: KafkaConfig) -> None:
@@ -568,7 +557,7 @@ class EmulationEnvController:
         EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip)
         EmulationEnvController.rm_containers(execution=execution, physical_server_ip=physical_server_ip)
         try:
-            ContainerController.stop_docker_stats_thread(execution=execution)
+            ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip)
         except Exception:
             pass
         EmulationEnvController.delete_networks_of_emulation_env_config(
@@ -588,7 +577,7 @@ class EmulationEnvController:
             EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
             EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip)
             try:
-                ContainerController.stop_docker_stats_thread(execution=exec)
+                ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(

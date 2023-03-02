@@ -6,6 +6,7 @@ import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
+import csle_collector.elk_manager.elk_manager_pb2
 
 
 class ClusterManagerUtil:
@@ -208,8 +209,8 @@ class ClusterManagerUtil:
         d["trafficManagersRunning"] = list(traffic_managers_info_dto.trafficManagersRunning)
         d["trafficManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.traffic_manager_info_dto_to_dict(x),
                                                 list(traffic_managers_info_dto.trafficManagersStatuses)))
-        d["emulationName"] = list(traffic_managers_info_dto.emulationName)
-        d["executionId"] = list(traffic_managers_info_dto.executionId)
+        d["emulationName"] = traffic_managers_info_dto.emulationName
+        d["executionId"] = traffic_managers_info_dto.executionId
         return d
 
     @staticmethod
@@ -242,10 +243,11 @@ class ClusterManagerUtil:
         d["ips"] = list(docker_stats_managers_info_dto.ips)
         d["ports"] = list(docker_stats_managers_info_dto.ports)
         d["dockerStatsManagersRunning"] = list(docker_stats_managers_info_dto.dockerStatsManagersRunning)
-        d["dockerStatsManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.traffic_manager_info_dto_to_dict(x),
+        d["dockerStatsManagersStatuses"] = list(map(lambda x:
+                                                    ClusterManagerUtil.docker_stats_monitor_status_dto_to_dict(x),
                                                     list(docker_stats_managers_info_dto.dockerStatsManagersStatuses)))
-        d["emulationName"] = list(docker_stats_managers_info_dto.emulationName)
-        d["executionId"] = list(docker_stats_managers_info_dto.executionId)
+        d["emulationName"] = docker_stats_managers_info_dto.emulationName
+        d["executionId"] = docker_stats_managers_info_dto.executionId
         return d
 
     @staticmethod
@@ -369,4 +371,55 @@ class ClusterManagerUtil:
         return csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsMonitorStatusDTO(
             num_monitors=monitor_dto.num_monitors, emulations=monitor_dto.emulations,
             emulation_executions=monitor_dto.emulation_executions
+        )
+
+    @staticmethod
+    def elk_status_dto_to_dict(
+            elk_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO) -> Dict[str, Any]:
+        """
+        Converts a ElkStatusDTO to a dict
+
+        :param elk_status_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["elasticRunning"] = elk_status_dto.elasticRunning
+        d["kibanaRunning"] = elk_status_dto.kibanaRunning
+        d["logstashRunning"] = elk_status_dto.logstashRunning
+        return d
+
+    @staticmethod
+    def elk_managers_info_dto_to_dict(
+            elk_managers_info_dto: csle_cluster.cluster_manager.cluster_manager_pb2.ElkManagersInfoDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a ElkManagersInfoDTO to a dict
+
+        :param elk_managers_info_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ips"] = list(elk_managers_info_dto.ips)
+        d["ports"] = list(elk_managers_info_dto.ports)
+        d["elkManagersRunning"] = list(elk_managers_info_dto.dockerStatsManagersRunning)
+        d["elkManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.elk_status_dto_to_dict(x),
+                                                    list(elk_managers_info_dto.elkManagersStatuses)))
+        d["emulationName"] = elk_managers_info_dto.emulationName
+        d["executionId"] = elk_managers_info_dto.executionId
+        d["localKibanaPort"] = elk_managers_info_dto.localKibanaPort
+        return d
+
+    @staticmethod
+    def convert_elk_dto(
+            elk_dto: csle_collector.elk_manager.elk_manager_pb2.ElkDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO:
+        """
+        Converts an ElkDTO to a ElkStatusDTO
+
+        :param elk_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO(
+            elasticRunning = elk_dto.elasticRunning, kibanaRunning = elk_dto.kibanaRunning,
+            logstashRunning = elk_dto.logstashRunning
         )

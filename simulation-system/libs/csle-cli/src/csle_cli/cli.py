@@ -352,12 +352,20 @@ def stop_traffic(emulation: str, id: int) -> None:
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
-
-    emulation_execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
-    if emulation_execution is not None:
-        EmulationEnvController.stop_custom_traffic(emulation_env_config=emulation_execution.emulation_env_config)
-    else:
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    import csle_common.constants.constants as constants
+    exec = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
+    if exec is None:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
+        return
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        ClusterController.stop_traffic_generators(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=exec.emulation_env_config.name,
+            ip_first_octet=exec.ip_first_octet)
+        ClusterController.stop_client_population(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=exec.emulation_env_config.name,
+            ip_first_octet=exec.ip_first_octet)
 
 
 def shell_shell_complete(ctx, param, incomplete) -> List[str]:

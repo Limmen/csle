@@ -495,8 +495,8 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.ListAllRunningContainersMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.RunningContainersDTO.FromString,
                 )
-        self.listAllRunningEmulationsMsg = channel.unary_unary(
-                '/ClusterManager/listAllRunningEmulationsMsg',
+        self.listAllRunningEmulations = channel.unary_unary(
+                '/ClusterManager/listAllRunningEmulations',
                 request_serializer=cluster__manager__pb2.ListAllRunningEmulationsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.RunningEmulationsDTO.FromString,
                 )
@@ -513,7 +513,7 @@ class ClusterManagerStub(object):
         self.stopDockerStatsManagerThread = channel.unary_unary(
                 '/ClusterManager/stopDockerStatsManagerThread',
                 request_serializer=cluster__manager__pb2.StopDockerStatsManagerThreadMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.ServiceStatusDTO.FromString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.getDockerStatsManagerStatus = channel.unary_unary(
                 '/ClusterManager/getDockerStatsManagerStatus',
@@ -534,6 +534,61 @@ class ClusterManagerStub(object):
                 '/ClusterManager/getDockerStatsManagersInfo',
                 request_serializer=cluster__manager__pb2.GetDockerStatsManagersInfoMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.DockerStatsManagersInfoDTO.FromString,
+                )
+        self.startElkManager = channel.unary_unary(
+                '/ClusterManager/startElkManager',
+                request_serializer=cluster__manager__pb2.StartElkManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopElkManager = channel.unary_unary(
+                '/ClusterManager/stopElkManager',
+                request_serializer=cluster__manager__pb2.StopElkManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getElkStatus = channel.unary_unary(
+                '/ClusterManager/getElkStatus',
+                request_serializer=cluster__manager__pb2.GetElkStatusMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ElkStatusDTO.FromString,
+                )
+        self.stopElkStack = channel.unary_unary(
+                '/ClusterManager/stopElkStack',
+                request_serializer=cluster__manager__pb2.StopElkStackMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startElastic = channel.unary_unary(
+                '/ClusterManager/startElastic',
+                request_serializer=cluster__manager__pb2.StartElasticMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopElastic = channel.unary_unary(
+                '/ClusterManager/stopElastic',
+                request_serializer=cluster__manager__pb2.StopElasticMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startKibana = channel.unary_unary(
+                '/ClusterManager/startKibana',
+                request_serializer=cluster__manager__pb2.StartKibanaMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopKibana = channel.unary_unary(
+                '/ClusterManager/stopKibana',
+                request_serializer=cluster__manager__pb2.StopKibanaMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startLogstash = channel.unary_unary(
+                '/ClusterManager/startLogstash',
+                request_serializer=cluster__manager__pb2.StartLogstashMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopLogstash = channel.unary_unary(
+                '/ClusterManager/stopLogstash',
+                request_serializer=cluster__manager__pb2.StopLogstashMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getElkManagersInfo = channel.unary_unary(
+                '/ClusterManager/getElkManagersInfo',
+                request_serializer=cluster__manager__pb2.GetElkManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ElkManagersInfoDTO.FromString,
                 )
 
 
@@ -1117,7 +1172,7 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def listAllRunningEmulationsMsg(self, request, context):
+    def listAllRunningEmulations(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1160,6 +1215,72 @@ class ClusterManagerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def getDockerStatsManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startElkManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopElkManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getElkStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopElkStack(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startElastic(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopElastic(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startKibana(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopKibana(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startLogstash(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopLogstash(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getElkManagersInfo(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1648,8 +1769,8 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     request_deserializer=cluster__manager__pb2.ListAllRunningContainersMsg.FromString,
                     response_serializer=cluster__manager__pb2.RunningContainersDTO.SerializeToString,
             ),
-            'listAllRunningEmulationsMsg': grpc.unary_unary_rpc_method_handler(
-                    servicer.listAllRunningEmulationsMsg,
+            'listAllRunningEmulations': grpc.unary_unary_rpc_method_handler(
+                    servicer.listAllRunningEmulations,
                     request_deserializer=cluster__manager__pb2.ListAllRunningEmulationsMsg.FromString,
                     response_serializer=cluster__manager__pb2.RunningEmulationsDTO.SerializeToString,
             ),
@@ -1666,7 +1787,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'stopDockerStatsManagerThread': grpc.unary_unary_rpc_method_handler(
                     servicer.stopDockerStatsManagerThread,
                     request_deserializer=cluster__manager__pb2.StopDockerStatsManagerThreadMsg.FromString,
-                    response_serializer=cluster__manager__pb2.ServiceStatusDTO.SerializeToString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'getDockerStatsManagerStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.getDockerStatsManagerStatus,
@@ -1687,6 +1808,61 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getDockerStatsManagersInfo,
                     request_deserializer=cluster__manager__pb2.GetDockerStatsManagersInfoMsg.FromString,
                     response_serializer=cluster__manager__pb2.DockerStatsManagersInfoDTO.SerializeToString,
+            ),
+            'startElkManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startElkManager,
+                    request_deserializer=cluster__manager__pb2.StartElkManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopElkManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopElkManager,
+                    request_deserializer=cluster__manager__pb2.StopElkManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getElkStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.getElkStatus,
+                    request_deserializer=cluster__manager__pb2.GetElkStatusMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ElkStatusDTO.SerializeToString,
+            ),
+            'stopElkStack': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopElkStack,
+                    request_deserializer=cluster__manager__pb2.StopElkStackMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startElastic': grpc.unary_unary_rpc_method_handler(
+                    servicer.startElastic,
+                    request_deserializer=cluster__manager__pb2.StartElasticMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopElastic': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopElastic,
+                    request_deserializer=cluster__manager__pb2.StopElasticMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startKibana': grpc.unary_unary_rpc_method_handler(
+                    servicer.startKibana,
+                    request_deserializer=cluster__manager__pb2.StartKibanaMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopKibana': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopKibana,
+                    request_deserializer=cluster__manager__pb2.StopKibanaMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startLogstash': grpc.unary_unary_rpc_method_handler(
+                    servicer.startLogstash,
+                    request_deserializer=cluster__manager__pb2.StartLogstashMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopLogstash': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopLogstash,
+                    request_deserializer=cluster__manager__pb2.StopLogstashMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getElkManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getElkManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetElkManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ElkManagersInfoDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -3332,7 +3508,7 @@ class ClusterManager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def listAllRunningEmulationsMsg(request,
+    def listAllRunningEmulations(request,
             target,
             options=(),
             channel_credentials=None,
@@ -3342,7 +3518,7 @@ class ClusterManager(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllRunningEmulationsMsg',
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllRunningEmulations',
             cluster__manager__pb2.ListAllRunningEmulationsMsg.SerializeToString,
             cluster__manager__pb2.RunningEmulationsDTO.FromString,
             options, channel_credentials,
@@ -3395,7 +3571,7 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopDockerStatsManagerThread',
             cluster__manager__pb2.StopDockerStatsManagerThreadMsg.SerializeToString,
-            cluster__manager__pb2.ServiceStatusDTO.FromString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -3464,5 +3640,192 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getDockerStatsManagersInfo',
             cluster__manager__pb2.GetDockerStatsManagersInfoMsg.SerializeToString,
             cluster__manager__pb2.DockerStatsManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startElkManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startElkManager',
+            cluster__manager__pb2.StartElkManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopElkManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopElkManager',
+            cluster__manager__pb2.StopElkManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getElkStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getElkStatus',
+            cluster__manager__pb2.GetElkStatusMsg.SerializeToString,
+            cluster__manager__pb2.ElkStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopElkStack(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopElkStack',
+            cluster__manager__pb2.StopElkStackMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startElastic(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startElastic',
+            cluster__manager__pb2.StartElasticMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopElastic(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopElastic',
+            cluster__manager__pb2.StopElasticMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startKibana(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startKibana',
+            cluster__manager__pb2.StartKibanaMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopKibana(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopKibana',
+            cluster__manager__pb2.StopKibanaMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startLogstash(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startLogstash',
+            cluster__manager__pb2.StartLogstashMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopLogstash(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopLogstash',
+            cluster__manager__pb2.StopLogstashMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getElkManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getElkManagersInfo',
+            cluster__manager__pb2.GetElkManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.ElkManagersInfoDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

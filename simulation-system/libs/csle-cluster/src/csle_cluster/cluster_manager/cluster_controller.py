@@ -1870,7 +1870,6 @@ class ClusterController:
 
         :param ip: the ip of the node where to stop the traffic generator
         :param port: the port of the cluster manager
-        :param networks: the list of networks to remove
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -1890,7 +1889,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
-        :return: a TrafficManagersInfoDTO
+        :return: a DockerStatsManagersInfoDTO
         """
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
@@ -1900,3 +1899,215 @@ class ClusterController:
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
             return docker_stats_managers_info_dto
+
+    @staticmethod
+    def stop_elk_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the elk manager of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_elk_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_elk_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start the elk manager of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_elk_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_elk_status(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO:
+        """
+        Sends a request to get the status of the ELK stack of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The status of the ELK stack
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            elk_status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_elk_status(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return elk_status_dto
+
+    @staticmethod
+    def stop_elk_stack(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the ELK stack of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_elk_stack(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_elastic(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start elastic of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_elastic(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_elastic(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop elastic on a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_elastic(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_kibana(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start Kibana of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kibana(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+
+    @staticmethod
+    def stop_kibana(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop Kibana of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kibana(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_logstash(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start Logstash of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_logstash(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_logstash(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop Logstash of a given execution
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_logstash(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_elk_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkManagersInfoDTO:
+        """
+        Sends a request to get the elk managers infos of a given execution
+
+        :param ip: the ip of the node where to get the client managers info
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: an ElkManagersInfoDTO
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            elk_managers_info_dto = \
+                csle_cluster.cluster_manager.query_cluster_manager.get_elk_managers_info(
+                    stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+                )
+            return elk_managers_info_dto

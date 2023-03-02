@@ -1359,7 +1359,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info(f"Cleaning executions of emulation: {request.emulation}")
         emulation = MetastoreFacade.get_emulation_by_name(name=request.emulation)
         EmulationEnvController.clean_all_emulation_executions(emulation_env_config=emulation,
-                                                                physical_server_ip=GeneralUtil.get_host_ip())
+                                                              physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def cleanExecution(
@@ -1422,8 +1422,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
             TrafficController.stop_traffic_manager(emulation_env_config=execution.emulation_env_config,
-                                                    node_traffic_config=node_traffic_config,
-                                                    logger=logging.getLogger())
+                                                   node_traffic_config=node_traffic_config,
+                                                   logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -1443,8 +1443,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.stop_traffic_managers(emulation_env_config=execution.emulation_env_config,
-                                                 physical_server_ip=GeneralUtil.get_host_ip(),
-                                                 logger=logging.getLogger())
+                                                physical_server_ip=GeneralUtil.get_host_ip(),
+                                                logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startClientManager(
@@ -1486,7 +1486,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip \
                 == GeneralUtil.get_host_ip():
             TrafficController.stop_client_manager(emulation_env_config=execution.emulation_env_config,
-                                                   logger=logging.getLogger())
+                                                  logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -1530,7 +1530,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip \
                 == GeneralUtil.get_host_ip():
             clients_dto = TrafficController.get_num_active_clients(emulation_env_config=execution.emulation_env_config,
-                                                     logger=logging.getLogger())
+                                                                   logger=logging.getLogger())
             return ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(clients_dto=clients_dto)
         else:
             return ClusterManagerUtil.get_empty_get_num_clients_dto()
@@ -1550,8 +1550,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         TrafficController.stop_internal_traffic_generators(emulation_env_config=execution.emulation_env_config,
-                                                            physical_server_ip=GeneralUtil.get_host_ip(),
-                                                            logger=logging.getLogger())
+                                                           physical_server_ip=GeneralUtil.get_host_ip(),
+                                                           logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startTrafficGenerator(
@@ -1599,8 +1599,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
             TrafficController.stop_internal_traffic_generator(emulation_env_config=execution.emulation_env_config,
-                                                               node_traffic_config=node_traffic_config,
-                                                               logger=logging.getLogger())
+                                                              node_traffic_config=node_traffic_config,
+                                                              logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -1625,12 +1625,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
                 active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config))
             return csle_cluster.cluster_manager.cluster_manager_pb2.ClientManagersInfoDTO(
-                ips = client_managers_dto.ips,
-                ports = client_managers_dto.ports,
-                emulationName = client_managers_dto.emulation_name,
-                executionId = client_managers_dto.execution_id,
-                clientManagersRunning = client_managers_dto.client_managers_running,
-                clientManagersStatuses =
+                ips=client_managers_dto.ips,
+                ports=client_managers_dto.ports,
+                emulationName=client_managers_dto.emulation_name,
+                executionId=client_managers_dto.execution_id,
+                clientManagersRunning=client_managers_dto.client_managers_running,
+                clientManagersStatuses=
                 list(map(lambda x: ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(x),
                          client_managers_dto.client_managers_statuses))
             )
@@ -1657,12 +1657,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             physical_host_ip=GeneralUtil.get_host_ip()
         )
         return csle_cluster.cluster_manager.cluster_manager_pb2.TrafficManagersInfoDTO(
-            ips = traffic_managers_dto.ips,
-            ports = traffic_managers_dto.ports,
-            emulationName = traffic_managers_dto.emulation_name,
-            executionId = traffic_managers_dto.execution_id,
-            trafficManagersRunning = traffic_managers_dto.traffic_managers_running,
-            trafficManagersStatuses =
+            ips=traffic_managers_dto.ips,
+            ports=traffic_managers_dto.ports,
+            emulationName=traffic_managers_dto.emulation_name,
+            executionId=traffic_managers_dto.execution_id,
+            trafficManagersRunning=traffic_managers_dto.traffic_managers_running,
+            trafficManagersStatuses=
             list(map(lambda x: ClusterManagerUtil.convert_traffic_dto_to_traffic_manager_info_dto(x),
                      traffic_managers_dto.traffic_managers_statuses))
         )
@@ -1767,8 +1767,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         for img_info in imgs_infos:
             images.append(
                 csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImageDTO(
-                    repoTags = img_info[0], created = img_info[1], os = img_info[2],
-                    architecture = img_info[3], size = img_info[4]
+                    repoTags=img_info[0], created=img_info[1], os=img_info[2],
+                    architecture=img_info[3], size=img_info[4]
                 )
             )
         return csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImagesDTO(images=images)
@@ -1831,7 +1831,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         running_containers = []
         for rci in running_container_infos:
             running_containers.append(csle_cluster.cluster_manager.cluster_manager_pb2.DockerContainerDTO(
-                name=rci[0], image=rci[1], ip = rci[2]))
+                name=rci[0], image=rci[1], ip=rci[2]))
         return csle_cluster.cluster_manager.cluster_manager_pb2.RunningContainersDTO(
             runningContainers=running_containers)
 
@@ -1865,7 +1865,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         stopped_containers = []
         for rci in stopped_container_infos:
             stopped_containers.append(csle_cluster.cluster_manager.cluster_manager_pb2.DockerContainerDTO(
-                name=rci[0], image=rci[1], ip = rci[2]))
+                name=rci[0], image=rci[1], ip=rci[2]))
         return csle_cluster.cluster_manager.cluster_manager_pb2.StoppedContainersDTO(
             stoppedContainers=stopped_containers)
 
@@ -1900,7 +1900,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         ContainerController.stop_docker_stats_thread(execution=execution,
-                                                      physical_server_ip=GeneralUtil.get_host_ip())
+                                                     physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getDockerStatsManagerStatus(
@@ -1950,7 +1950,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
     def getDockerStatsManagersInfo(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagersInfoMsg,
-            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO:
+            context: grpc.ServicerContext) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO:
         """
         Gets the info of docker stats maangers
 
@@ -1968,15 +1969,253 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             physical_host_ip=GeneralUtil.get_host_ip()
         )
         return csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO(
-            ips = docker_stats_managers_dto.ips,
-            ports = docker_stats_managers_dto.ports,
-            emulationName = docker_stats_managers_dto.emulation_name,
-            executionId = docker_stats_managers_dto.execution_id,
-            dockerStatsManagersRunning = docker_stats_managers_dto.docker_stats_managers_running,
-            dockerStatsManagersStatuses =
+            ips=docker_stats_managers_dto.ips,
+            ports=docker_stats_managers_dto.ports,
+            emulationName=docker_stats_managers_dto.emulation_name,
+            executionId=docker_stats_managers_dto.execution_id,
+            dockerStatsManagersRunning=docker_stats_managers_dto.docker_stats_managers_running,
+            dockerStatsManagersStatuses=
             list(map(lambda x: ClusterManagerUtil.convert_docker_stats_monitor_dto(x),
                      docker_stats_managers_dto.docker_stats_managers_statuses))
         )
+
+    def stopElkManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElkManagerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a specific elk manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping elk manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.stop_elk_manager(emulation_env_config=execution.emulation_env_config,
+                                           logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startElkManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartElkManagerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts a specific elk manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting elk manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.start_elk_manager(emulation_env_config=execution.emulation_env_config,
+                                            logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def getElkStatus(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetElkStatusMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO:
+        """
+        Gets the status of the Elk stack  for a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an ElkStatusDTO
+        """
+        logging.info(f"Getting the status of the elk stack "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            elk_dto = ELKController.get_elk_status(emulation_env_config=execution.emulation_env_config,
+                                         logger=logging.getLogger())
+            return ClusterManagerUtil.convert_elk_dto(elk_dto=elk_dto)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO(
+                kibanaRunning=False, elasticRunning=False, logstashRunning=False
+            )
+
+    def stopElkStack(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElkStackMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the elk stack of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the ELK stack "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.stop_elk_stack(emulation_env_config=execution.emulation_env_config,
+                                         logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startElastic(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartElasticMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts elastic in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting elastic "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.start_elastic(emulation_env_config=execution.emulation_env_config,
+                                         logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopElastic(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElasticMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops elastic in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping elastic "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.stop_elastic(emulation_env_config=execution.emulation_env_config,
+                                        logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startKibana(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartKibanaMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts Kibana in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting KIbana "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.start_kibana(emulation_env_config=execution.emulation_env_config,
+                                        logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopKibana(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopKibanaMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops Kibana in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping Kibana "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.stop_kibana(emulation_env_config=execution.emulation_env_config,
+                                        logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startLogstash(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartLogstashMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts Logstash in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting logstash "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.start_logstash(emulation_env_config=execution.emulation_env_config,
+                                        logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopLogstash(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopLogstashMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops Logstash in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stops logstash "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            ELKController.stop_logstash(emulation_env_config=execution.emulation_env_config,
+                                        logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def getElkManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetElkManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkManagersInfoDTO:
+        """
+        Gets the info of elk managers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a ElkManagersInfoDTO
+        """
+        logging.info(f"Gets the info of elk managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        elk_managers_dto = ELKController.get_elk_managers_info(
+            emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+            active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config))
+        return csle_cluster.cluster_manager.cluster_manager_pb2.ElkManagersInfoDTO(
+            ips=elk_managers_dto.ips,
+            ports=elk_managers_dto.ports,
+            emulationName=elk_managers_dto.emulation_name,
+            executionId=elk_managers_dto.execution_id,
+            elkManagersRunning=elk_managers_dto.elk_managers_running,
+            elkManagersStatuses=
+            list(map(lambda x: ClusterManagerUtil.convert_elk_dto(x), elk_managers_dto.elk_managers_statuses)))
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

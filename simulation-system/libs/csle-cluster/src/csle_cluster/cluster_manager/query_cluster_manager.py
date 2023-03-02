@@ -1844,7 +1844,7 @@ def create_emulation_networks(
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.CreateEmulationNetworksMsg(
-        emulation=emulation, ip_first_octet=ip_first_octet
+        emulation=emulation, ipFirstOctet=ip_first_octet
     )
     operation_outcome_dto = stub.createEmulationNetworks(operation_msg, timeout=timeout)
     return operation_outcome_dto
@@ -1865,7 +1865,7 @@ def stop_docker_stats_manager_thread(
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerStatsManagerThreadMsg(
-        emulation=emulation, ip_first_octet=ip_first_octet
+        emulation=emulation, ipFirstOctet=ip_first_octet
     )
     operation_outcome_dto = stub.stopDockerStatsManagerThread(operation_msg, timeout=timeout)
     return operation_outcome_dto
@@ -1914,7 +1914,6 @@ def remove_all_docker_networks(
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
-    :param networks: the list of docker networks to remove
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllDockerNetworksMsg()
@@ -1941,3 +1940,234 @@ def get_docker_stats_manager_info(
     )
     stats_managers_info_dto = stub.getDockerStatsManagersInfo(operation_msg, timeout=timeout)
     return stats_managers_info_dto
+
+
+def stop_elk_manager(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stop elk manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopElkManagerMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.stopElkManager(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def start_elk_manager(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts the elk manager
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartElkManagerMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.startElkManager(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def get_elk_status(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO:
+    """
+    Gets the status of the Elk stack
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an ElkStatusDTO with the status
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetElkStatusMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    elk_status_dto = stub.getElkStatus(operation_msg, timeout=timeout)
+    return elk_status_dto
+
+
+def stop_elk_stack(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops the ELK stack
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopElkStackMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.stopElkStack(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def start_elastic(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts elastic
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartElasticMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.startElastic(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_elastic(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops elastic
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopElasticMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.stopElastic(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def start_kibana(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts Kibana
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartKibanaMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.startKibana(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_kibana(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops Kibana
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopKibanaMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.stopKibana(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def start_logstash(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts Logstash
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartLogstashMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.startLogstash(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_logstash(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops Logstash
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopLogstashMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome_dto = stub.stopLogstash(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def get_elk_managers_info(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkManagersInfoDTO:
+    """
+    Gets the Elk managers info
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: a ElkManagersInfoDTO with the infos
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetElkManagersInfoMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    elk_managers_info_dto = stub.getElkManagersInfo(operation_msg, timeout=timeout)
+    return elk_managers_info_dto
