@@ -2183,7 +2183,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip())
-        return ClusterManagerUtil.convert_elk_dto(elk_managers_dto=elk_managers_dto)
+        return ClusterManagerUtil.convert_elk_dto(elk_dto=elk_managers_dto)
 
     def startContainersOfExecution(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartContainersOfExecutionMsg,
@@ -2240,7 +2240,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startHostManager(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostManagersMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostManagerMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts a specific host manager
@@ -2399,7 +2399,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startHostMonitorThread(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostMonitorThreadsMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostMonitorThreadMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts a specific host monitor thread
@@ -2889,7 +2889,6 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
             physical_host_ip=GeneralUtil.get_host_ip())
         return ClusterManagerUtil.convert_kafka_info_dto(kafka_managers_info_dto=kafka_managers_info_dto)
-
 
     def stopOSSECIDSes(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopOSSECIDSesMsg,
@@ -3499,7 +3498,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopSnortIdsManager(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsManager,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsManagerMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops the Snort IDS manager at a specific container

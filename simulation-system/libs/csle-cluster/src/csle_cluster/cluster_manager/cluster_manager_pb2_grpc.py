@@ -872,12 +872,12 @@ class ClusterManagerStub(object):
                 )
         self.startSnortIds = channel.unary_unary(
                 '/ClusterManager/startSnortIds',
-                request_serializer=cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartSnortIdsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startSnortIdsMonitorThreads = channel.unary_unary(
                 '/ClusterManager/startSnortIdsMonitorThreads',
-                request_serializer=cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartSnortIdsMonitorThreadsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startSnortIdsMonitorThread = channel.unary_unary(
@@ -887,22 +887,22 @@ class ClusterManagerStub(object):
                 )
         self.startSnortIdsManagers = channel.unary_unary(
                 '/ClusterManager/startSnortIdsManagers',
-                request_serializer=cluster__manager__pb2.StartSnortIdsManagers.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartSnortIdsManagersMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopSnortIdsManagers = channel.unary_unary(
                 '/ClusterManager/stopSnortIdsManagers',
-                request_serializer=cluster__manager__pb2.StopSnortIdsManagers.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopSnortIdsManagersMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startSnortIdsManager = channel.unary_unary(
                 '/ClusterManager/startSnortIdsManager',
-                request_serializer=cluster__manager__pb2.StartSnortIdsManager.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartSnortIdsManagerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopSnortIdsManager = channel.unary_unary(
                 '/ClusterManager/stopSnortIdsManager',
-                request_serializer=cluster__manager__pb2.StopSnortIdsManager.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopSnortIdsManagerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopSnortIdsMonitorThreads = channel.unary_unary(
@@ -2883,12 +2883,12 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'startSnortIds': grpc.unary_unary_rpc_method_handler(
                     servicer.startSnortIds,
-                    request_deserializer=cluster__manager__pb2.StopSnortIdsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startSnortIdsMonitorThreads': grpc.unary_unary_rpc_method_handler(
                     servicer.startSnortIdsMonitorThreads,
-                    request_deserializer=cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsMonitorThreadsMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startSnortIdsMonitorThread': grpc.unary_unary_rpc_method_handler(
@@ -2898,22 +2898,22 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'startSnortIdsManagers': grpc.unary_unary_rpc_method_handler(
                     servicer.startSnortIdsManagers,
-                    request_deserializer=cluster__manager__pb2.StartSnortIdsManagers.FromString,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsManagersMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopSnortIdsManagers': grpc.unary_unary_rpc_method_handler(
                     servicer.stopSnortIdsManagers,
-                    request_deserializer=cluster__manager__pb2.StopSnortIdsManagers.FromString,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsManagersMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startSnortIdsManager': grpc.unary_unary_rpc_method_handler(
                     servicer.startSnortIdsManager,
-                    request_deserializer=cluster__manager__pb2.StartSnortIdsManager.FromString,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsManagerMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopSnortIdsManager': grpc.unary_unary_rpc_method_handler(
                     servicer.stopSnortIdsManager,
-                    request_deserializer=cluster__manager__pb2.StopSnortIdsManager.FromString,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsManagerMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopSnortIdsMonitorThreads': grpc.unary_unary_rpc_method_handler(
@@ -5866,7 +5866,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIds',
-            cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+            cluster__manager__pb2.StartSnortIdsMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5883,7 +5883,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsMonitorThreads',
-            cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.StartSnortIdsMonitorThreadsMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5917,7 +5917,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsManagers',
-            cluster__manager__pb2.StartSnortIdsManagers.SerializeToString,
+            cluster__manager__pb2.StartSnortIdsManagersMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5934,7 +5934,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsManagers',
-            cluster__manager__pb2.StopSnortIdsManagers.SerializeToString,
+            cluster__manager__pb2.StopSnortIdsManagersMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5951,7 +5951,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsManager',
-            cluster__manager__pb2.StartSnortIdsManager.SerializeToString,
+            cluster__manager__pb2.StartSnortIdsManagerMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5968,7 +5968,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsManager',
-            cluster__manager__pb2.StopSnortIdsManager.SerializeToString,
+            cluster__manager__pb2.StopSnortIdsManagerMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
