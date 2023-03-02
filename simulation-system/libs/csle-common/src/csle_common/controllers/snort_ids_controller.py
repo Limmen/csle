@@ -308,34 +308,6 @@ class SnortIDSController:
             return status
 
     @staticmethod
-    def get_snort_idses_log_data(emulation_env_config: EmulationEnvConfig, timestamp: float) \
-            -> List[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO]:
-        """
-        A method that sends a request to the Snort IDSManager on every container to get contents of the IDS log from
-        a given timestamp
-
-        :param emulation_env_config: the emulation env config
-        :param timestamp: the timestamp to read the IDS log from
-        :return: List of monitor thread statuses
-        """
-        ids_log_data_list = []
-        SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config)
-
-        for c in emulation_env_config.containers_config.containers:
-            for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
-                if ids_image in c.name:
-                    # Open a gRPC session
-                    with grpc.insecure_channel(
-                            f'{c.docker_gw_bridge_ip}:'
-                            f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
-                        stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
-                        ids_log_data = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts(
-                            stub=stub, timestamp=timestamp,
-                            log_file_path=csle_collector_constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE)
-                        ids_log_data_list.append(ids_log_data)
-        return ids_log_data_list
-
-    @staticmethod
     def get_snort_ids_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
         """
         A method that extracts the IPs of the snort IDS managers in a given emulation

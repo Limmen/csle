@@ -251,8 +251,8 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
             for exec in executions:
                 click.secho(f"Host manager statuses for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
-                host_manager_dtos = HostController.get_host_monitor_thread_status(emulation_env_config=exec.
-                                                                                  emulation_env_config)
+                host_manager_dtos = HostController.get_host_monitor_threads_statuses(emulation_env_config=exec.
+                                                                                     emulation_env_config)
                 for ip_hmd in host_manager_dtos:
                     hmd, ip = ip_hmd
                     if not hmd.running:

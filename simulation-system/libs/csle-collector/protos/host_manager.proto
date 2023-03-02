@@ -116,7 +116,6 @@ message HostMetricsDTO {
   float timestamp = 8;
 }
 
-
 // Message that the client sends to stop heartbeat
 message StopHeartbeatMsg {}
 

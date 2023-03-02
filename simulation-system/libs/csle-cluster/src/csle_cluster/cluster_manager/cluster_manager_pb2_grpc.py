@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster__manager__pb2
+import cluster_manager_pb2 as cluster__manager__pb2
 
 
 class ClusterManagerStub(object):
@@ -589,6 +589,341 @@ class ClusterManagerStub(object):
                 '/ClusterManager/getElkManagersInfo',
                 request_serializer=cluster__manager__pb2.GetElkManagersInfoMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.ElkManagersInfoDTO.FromString,
+                )
+        self.startContainersOfExecution = channel.unary_unary(
+                '/ClusterManager/startContainersOfExecution',
+                request_serializer=cluster__manager__pb2.StartContainersOfExecutionMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.runContainer = channel.unary_unary(
+                '/ClusterManager/runContainer',
+                request_serializer=cluster__manager__pb2.RunContainerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopContainersOfExecution = channel.unary_unary(
+                '/ClusterManager/stopContainersOfExecution',
+                request_serializer=cluster__manager__pb2.StopContainersOfExecutionMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getExecutionInfo = channel.unary_unary(
+                '/ClusterManager/getExecutionInfo',
+                request_serializer=cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ExecutionInfoDTO.FromString,
+                )
+        self.startHostManager = channel.unary_unary(
+                '/ClusterManager/startHostManager',
+                request_serializer=cluster__manager__pb2.StartHostManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopHostManagers = channel.unary_unary(
+                '/ClusterManager/stopHostManagers',
+                request_serializer=cluster__manager__pb2.StopHostManagersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopHostManager = channel.unary_unary(
+                '/ClusterManager/stopHostManager',
+                request_serializer=cluster__manager__pb2.StopHostManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startHostMonitorThreads = channel.unary_unary(
+                '/ClusterManager/startHostMonitorThreads',
+                request_serializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopFilebeats = channel.unary_unary(
+                '/ClusterManager/stopFilebeats',
+                request_serializer=cluster__manager__pb2.StopFilebeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopPacketbeats = channel.unary_unary(
+                '/ClusterManager/stopPacketbeats',
+                request_serializer=cluster__manager__pb2.StopPacketbeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopMetricbeats = channel.unary_unary(
+                '/ClusterManager/stopMetricbeats',
+                request_serializer=cluster__manager__pb2.StopMetricbeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopHeartbeats = channel.unary_unary(
+                '/ClusterManager/stopHeartbeats',
+                request_serializer=cluster__manager__pb2.StopHeartbeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startHostMonitorThread = channel.unary_unary(
+                '/ClusterManager/startHostMonitorThread',
+                request_serializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startFilebeat = channel.unary_unary(
+                '/ClusterManager/startFilebeat',
+                request_serializer=cluster__manager__pb2.StartFileBeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startPacketbeat = channel.unary_unary(
+                '/ClusterManager/startPacketbeat',
+                request_serializer=cluster__manager__pb2.StartPacketBeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startMetricbeat = channel.unary_unary(
+                '/ClusterManager/startMetricbeat',
+                request_serializer=cluster__manager__pb2.StartMetricBeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startHeartbeat = channel.unary_unary(
+                '/ClusterManager/startHeartbeat',
+                request_serializer=cluster__manager__pb2.StartHeartBeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopFilebeat = channel.unary_unary(
+                '/ClusterManager/stopFilebeat',
+                request_serializer=cluster__manager__pb2.StopFileBeatMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopPacketbeat = channel.unary_unary(
+                '/ClusterManager/stopPacketbeat',
+                request_serializer=cluster__manager__pb2.StopPacketBeatMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopMetricbeat = channel.unary_unary(
+                '/ClusterManager/stopMetricbeat',
+                request_serializer=cluster__manager__pb2.StopMetricBeatMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopHeartbeat = channel.unary_unary(
+                '/ClusterManager/stopHeartbeat',
+                request_serializer=cluster__manager__pb2.StopHeartBeatMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.applyFileBeatConfig = channel.unary_unary(
+                '/ClusterManager/applyFileBeatConfig',
+                request_serializer=cluster__manager__pb2.ApplyFileBeatConfigMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.applyPacketBeatConfig = channel.unary_unary(
+                '/ClusterManager/applyPacketBeatConfig',
+                request_serializer=cluster__manager__pb2.ApplyPacketBeatConfigMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.applyMetricBeatConfig = channel.unary_unary(
+                '/ClusterManager/applyMetricBeatConfig',
+                request_serializer=cluster__manager__pb2.ApplyMetricBeatConfigMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.applyHeartBeatConfig = channel.unary_unary(
+                '/ClusterManager/applyHeartBeatConfig',
+                request_serializer=cluster__manager__pb2.ApplyHeartBeatConfigMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getHostMonitorThreadsStatuses = channel.unary_unary(
+                '/ClusterManager/getHostMonitorThreadsStatuses',
+                request_serializer=cluster__manager__pb2.GetHostMonitorThreadsStatusesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.hostManagerStatusesDTO.FromString,
+                )
+        self.getHostManagersInfo = channel.unary_unary(
+                '/ClusterManager/getHostManagersInfo',
+                request_serializer=cluster__manager__pb2.GetHostManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.HostManagersInfoDTO.FromString,
+                )
+        self.stopKafkaManager = channel.unary_unary(
+                '/ClusterManager/stopKafkaManager',
+                request_serializer=cluster__manager__pb2.StopKafkaManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startKafkaManager = channel.unary_unary(
+                '/ClusterManager/startKafkaManager',
+                request_serializer=cluster__manager__pb2.StartKafkaManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.createKafkaTopics = channel.unary_unary(
+                '/ClusterManager/createKafkaTopics',
+                request_serializer=cluster__manager__pb2.CreateKafkaTopicsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getKafkaStatus = channel.unary_unary(
+                '/ClusterManager/getKafkaStatus',
+                request_serializer=cluster__manager__pb2.CreateKafkaTopicsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.KafkaStatusDTO.FromString,
+                )
+        self.stopKafkaServer = channel.unary_unary(
+                '/ClusterManager/stopKafkaServer',
+                request_serializer=cluster__manager__pb2.StopKafkaServerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startKafkaServer = channel.unary_unary(
+                '/ClusterManager/startKafkaServer',
+                request_serializer=cluster__manager__pb2.StopKafkaServerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getKafkaManagersInfo = channel.unary_unary(
+                '/ClusterManager/getKafkaManagersInfo',
+                request_serializer=cluster__manager__pb2.GetKafkaManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.KafkaManagersInfoDTO.FromString,
+                )
+        self.stopOSSECIDSes = channel.unary_unary(
+                '/ClusterManager/stopOSSECIDSes',
+                request_serializer=cluster__manager__pb2.StopOSSECIDSesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startOSSECIDSes = channel.unary_unary(
+                '/ClusterManager/startOSSECIDSes',
+                request_serializer=cluster__manager__pb2.StartOSSECIDSesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopOSSECIDS = channel.unary_unary(
+                '/ClusterManager/stopOSSECIDS',
+                request_serializer=cluster__manager__pb2.StopOSSECIDSMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startOSSECIDS = channel.unary_unary(
+                '/ClusterManager/startOSSECIDS',
+                request_serializer=cluster__manager__pb2.StartOSSECIDSMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startOSSECIDSManagers = channel.unary_unary(
+                '/ClusterManager/startOSSECIDSManagers',
+                request_serializer=cluster__manager__pb2.StartOSSECIDSManagers.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopOSSECIDSManagers = channel.unary_unary(
+                '/ClusterManager/stopOSSECIDSManagers',
+                request_serializer=cluster__manager__pb2.StopOSSECIDSManagers.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startOSSECIDSManager = channel.unary_unary(
+                '/ClusterManager/startOSSECIDSManager',
+                request_serializer=cluster__manager__pb2.StartOSSECIDSManager.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopOSSECIDSManager = channel.unary_unary(
+                '/ClusterManager/stopOSSECIDSManager',
+                request_serializer=cluster__manager__pb2.StopOSSECIDSManager.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startOSSECIDSMonitorThread = channel.unary_unary(
+                '/ClusterManager/startOSSECIDSMonitorThread',
+                request_serializer=cluster__manager__pb2.StartOSSECIDSMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopOSSECIDSMonitorThread = channel.unary_unary(
+                '/ClusterManager/stopOSSECIDSMonitorThread',
+                request_serializer=cluster__manager__pb2.StopOSSECIDSMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopOSSECIDSMonitorThreads = channel.unary_unary(
+                '/ClusterManager/stopOSSECIDSMonitorThreads',
+                request_serializer=cluster__manager__pb2.StopOSSECIDSMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getOSSECIDSMonitorThreadStatuses = channel.unary_unary(
+                '/ClusterManager/getOSSECIDSMonitorThreadStatuses',
+                request_serializer=cluster__manager__pb2.GetOSSECIDSMonitorThreadStatusesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.FromString,
+                )
+        self.getOSSECIdsManagersInfo = channel.unary_unary(
+                '/ClusterManager/getOSSECIdsManagersInfo',
+                request_serializer=cluster__manager__pb2.GetOSSECIDSManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OSSECIdsManagersInfoDTO.FromString,
+                )
+        self.startRyuManager = channel.unary_unary(
+                '/ClusterManager/startRyuManager',
+                request_serializer=cluster__manager__pb2.StartRyuManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopRyuManager = channel.unary_unary(
+                '/ClusterManager/stopRyuManager',
+                request_serializer=cluster__manager__pb2.StopRyuManagerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getRyuStatus = channel.unary_unary(
+                '/ClusterManager/getRyuStatus',
+                request_serializer=cluster__manager__pb2.GetRyuStatusMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.RyuManagerStatusDTO.FromString,
+                )
+        self.startRyu = channel.unary_unary(
+                '/ClusterManager/startRyu',
+                request_serializer=cluster__manager__pb2.StartRyuMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopRyu = channel.unary_unary(
+                '/ClusterManager/stopRyu',
+                request_serializer=cluster__manager__pb2.StopRyuMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getRyuManagersInfo = channel.unary_unary(
+                '/ClusterManager/getRyuManagersInfo',
+                request_serializer=cluster__manager__pb2.GetRyuManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.RyuManagersInfoDTO.FromString,
+                )
+        self.stopSnortIdses = channel.unary_unary(
+                '/ClusterManager/stopSnortIdses',
+                request_serializer=cluster__manager__pb2.StopSnortIdsesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSnortIdsesMonitorThreads = channel.unary_unary(
+                '/ClusterManager/stopSnortIdsesMonitorThreads',
+                request_serializer=cluster__manager__pb2.StopSnortIdsesMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSnortIds = channel.unary_unary(
+                '/ClusterManager/stopSnortIds',
+                request_serializer=cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSnortIdsMonitorThread = channel.unary_unary(
+                '/ClusterManager/stopSnortIdsMonitorThread',
+                request_serializer=cluster__manager__pb2.StopSnortIdsMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startSnortIds = channel.unary_unary(
+                '/ClusterManager/startSnortIds',
+                request_serializer=cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startSnortIdsMonitorThreads = channel.unary_unary(
+                '/ClusterManager/startSnortIdsMonitorThreads',
+                request_serializer=cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startSnortIdsMonitorThread = channel.unary_unary(
+                '/ClusterManager/startSnortIdsMonitorThread',
+                request_serializer=cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startSnortIdsManagers = channel.unary_unary(
+                '/ClusterManager/startSnortIdsManagers',
+                request_serializer=cluster__manager__pb2.StartSnortIdsManagers.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSnortIdsManagers = channel.unary_unary(
+                '/ClusterManager/stopSnortIdsManagers',
+                request_serializer=cluster__manager__pb2.StopSnortIdsManagers.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startSnortIdsManager = channel.unary_unary(
+                '/ClusterManager/startSnortIdsManager',
+                request_serializer=cluster__manager__pb2.StartSnortIdsManager.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSnortIdsManager = channel.unary_unary(
+                '/ClusterManager/stopSnortIdsManager',
+                request_serializer=cluster__manager__pb2.StopSnortIdsManager.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSnortIdsMonitorThreads = channel.unary_unary(
+                '/ClusterManager/stopSnortIdsMonitorThreads',
+                request_serializer=cluster__manager__pb2.StopSnortIdsMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getSnortIdsMonitorThreadStatuses = channel.unary_unary(
+                '/ClusterManager/getSnortIdsMonitorThreadStatuses',
+                request_serializer=cluster__manager__pb2.GetSnortIdsMonitorThreadStatusesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.FromString,
+                )
+        self.getSnortIdsManagersInfo = channel.unary_unary(
+                '/ClusterManager/getSnortIdsManagersInfo',
+                request_serializer=cluster__manager__pb2.GetSnortIdsManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.SnortIdsManagersInfoDTO.FromString,
                 )
 
 
@@ -1286,6 +1621,408 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startContainersOfExecution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def runContainer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopContainersOfExecution(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getExecutionInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startHostManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopHostManagers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopHostManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startHostMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopFilebeats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopPacketbeats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopMetricbeats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopHeartbeats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startHostMonitorThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startFilebeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startPacketbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startMetricbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startHeartbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopFilebeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopPacketbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopMetricbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopHeartbeat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def applyFileBeatConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def applyPacketBeatConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def applyMetricBeatConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def applyHeartBeatConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getHostMonitorThreadsStatuses(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getHostManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopKafkaManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startKafkaManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createKafkaTopics(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getKafkaStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopKafkaServer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startKafkaServer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getKafkaManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopOSSECIDSes(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOSSECIDSes(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopOSSECIDS(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOSSECIDS(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOSSECIDSManagers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopOSSECIDSManagers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOSSECIDSManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopOSSECIDSManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOSSECIDSMonitorThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopOSSECIDSMonitorThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopOSSECIDSMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getOSSECIDSMonitorThreadStatuses(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getOSSECIdsManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startRyuManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopRyuManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getRyuStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startRyu(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopRyu(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getRyuManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIdses(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIdsesMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIds(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIdsMonitorThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSnortIds(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSnortIdsMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSnortIdsMonitorThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSnortIdsManagers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIdsManagers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSnortIdsManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIdsManager(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSnortIdsMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getSnortIdsMonitorThreadStatuses(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getSnortIdsManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1863,6 +2600,341 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getElkManagersInfo,
                     request_deserializer=cluster__manager__pb2.GetElkManagersInfoMsg.FromString,
                     response_serializer=cluster__manager__pb2.ElkManagersInfoDTO.SerializeToString,
+            ),
+            'startContainersOfExecution': grpc.unary_unary_rpc_method_handler(
+                    servicer.startContainersOfExecution,
+                    request_deserializer=cluster__manager__pb2.StartContainersOfExecutionMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'runContainer': grpc.unary_unary_rpc_method_handler(
+                    servicer.runContainer,
+                    request_deserializer=cluster__manager__pb2.RunContainerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopContainersOfExecution': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopContainersOfExecution,
+                    request_deserializer=cluster__manager__pb2.StopContainersOfExecutionMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getExecutionInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getExecutionInfo,
+                    request_deserializer=cluster__manager__pb2.GetExecutionInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ExecutionInfoDTO.SerializeToString,
+            ),
+            'startHostManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startHostManager,
+                    request_deserializer=cluster__manager__pb2.StartHostManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopHostManagers': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHostManagers,
+                    request_deserializer=cluster__manager__pb2.StopHostManagersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopHostManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHostManager,
+                    request_deserializer=cluster__manager__pb2.StopHostManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startHostMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.startHostMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopFilebeats': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopFilebeats,
+                    request_deserializer=cluster__manager__pb2.StopFilebeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopPacketbeats': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopPacketbeats,
+                    request_deserializer=cluster__manager__pb2.StopPacketbeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopMetricbeats': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopMetricbeats,
+                    request_deserializer=cluster__manager__pb2.StopMetricbeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopHeartbeats': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHeartbeats,
+                    request_deserializer=cluster__manager__pb2.StopHeartbeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startHostMonitorThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.startHostMonitorThread,
+                    request_deserializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startFilebeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startFilebeat,
+                    request_deserializer=cluster__manager__pb2.StartFileBeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startPacketbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startPacketbeat,
+                    request_deserializer=cluster__manager__pb2.StartPacketBeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startMetricbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startMetricbeat,
+                    request_deserializer=cluster__manager__pb2.StartMetricBeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startHeartbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.startHeartbeat,
+                    request_deserializer=cluster__manager__pb2.StartHeartBeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopFilebeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopFilebeat,
+                    request_deserializer=cluster__manager__pb2.StopFileBeatMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopPacketbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopPacketbeat,
+                    request_deserializer=cluster__manager__pb2.StopPacketBeatMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopMetricbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopMetricbeat,
+                    request_deserializer=cluster__manager__pb2.StopMetricBeatMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopHeartbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHeartbeat,
+                    request_deserializer=cluster__manager__pb2.StopHeartBeatMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'applyFileBeatConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.applyFileBeatConfig,
+                    request_deserializer=cluster__manager__pb2.ApplyFileBeatConfigMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'applyPacketBeatConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.applyPacketBeatConfig,
+                    request_deserializer=cluster__manager__pb2.ApplyPacketBeatConfigMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'applyMetricBeatConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.applyMetricBeatConfig,
+                    request_deserializer=cluster__manager__pb2.ApplyMetricBeatConfigMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'applyHeartBeatConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.applyHeartBeatConfig,
+                    request_deserializer=cluster__manager__pb2.ApplyHeartBeatConfigMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getHostMonitorThreadsStatuses': grpc.unary_unary_rpc_method_handler(
+                    servicer.getHostMonitorThreadsStatuses,
+                    request_deserializer=cluster__manager__pb2.GetHostMonitorThreadsStatusesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.hostManagerStatusesDTO.SerializeToString,
+            ),
+            'getHostManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getHostManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetHostManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.HostManagersInfoDTO.SerializeToString,
+            ),
+            'stopKafkaManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopKafkaManager,
+                    request_deserializer=cluster__manager__pb2.StopKafkaManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startKafkaManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startKafkaManager,
+                    request_deserializer=cluster__manager__pb2.StartKafkaManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'createKafkaTopics': grpc.unary_unary_rpc_method_handler(
+                    servicer.createKafkaTopics,
+                    request_deserializer=cluster__manager__pb2.CreateKafkaTopicsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getKafkaStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.getKafkaStatus,
+                    request_deserializer=cluster__manager__pb2.CreateKafkaTopicsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.KafkaStatusDTO.SerializeToString,
+            ),
+            'stopKafkaServer': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopKafkaServer,
+                    request_deserializer=cluster__manager__pb2.StopKafkaServerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startKafkaServer': grpc.unary_unary_rpc_method_handler(
+                    servicer.startKafkaServer,
+                    request_deserializer=cluster__manager__pb2.StopKafkaServerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getKafkaManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getKafkaManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetKafkaManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.KafkaManagersInfoDTO.SerializeToString,
+            ),
+            'stopOSSECIDSes': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIDSes,
+                    request_deserializer=cluster__manager__pb2.StopOSSECIDSesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startOSSECIDSes': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOSSECIDSes,
+                    request_deserializer=cluster__manager__pb2.StartOSSECIDSesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopOSSECIDS': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIDS,
+                    request_deserializer=cluster__manager__pb2.StopOSSECIDSMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startOSSECIDS': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOSSECIDS,
+                    request_deserializer=cluster__manager__pb2.StartOSSECIDSMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startOSSECIDSManagers': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOSSECIDSManagers,
+                    request_deserializer=cluster__manager__pb2.StartOSSECIDSManagers.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopOSSECIDSManagers': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIDSManagers,
+                    request_deserializer=cluster__manager__pb2.StopOSSECIDSManagers.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startOSSECIDSManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOSSECIDSManager,
+                    request_deserializer=cluster__manager__pb2.StartOSSECIDSManager.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopOSSECIDSManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIDSManager,
+                    request_deserializer=cluster__manager__pb2.StopOSSECIDSManager.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startOSSECIDSMonitorThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOSSECIDSMonitorThread,
+                    request_deserializer=cluster__manager__pb2.StartOSSECIDSMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopOSSECIDSMonitorThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIDSMonitorThread,
+                    request_deserializer=cluster__manager__pb2.StopOSSECIDSMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopOSSECIDSMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIDSMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StopOSSECIDSMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getOSSECIDSMonitorThreadStatuses': grpc.unary_unary_rpc_method_handler(
+                    servicer.getOSSECIDSMonitorThreadStatuses,
+                    request_deserializer=cluster__manager__pb2.GetOSSECIDSMonitorThreadStatusesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.SerializeToString,
+            ),
+            'getOSSECIdsManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getOSSECIdsManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetOSSECIDSManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OSSECIdsManagersInfoDTO.SerializeToString,
+            ),
+            'startRyuManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startRyuManager,
+                    request_deserializer=cluster__manager__pb2.StartRyuManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopRyuManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopRyuManager,
+                    request_deserializer=cluster__manager__pb2.StopRyuManagerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getRyuStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.getRyuStatus,
+                    request_deserializer=cluster__manager__pb2.GetRyuStatusMsg.FromString,
+                    response_serializer=cluster__manager__pb2.RyuManagerStatusDTO.SerializeToString,
+            ),
+            'startRyu': grpc.unary_unary_rpc_method_handler(
+                    servicer.startRyu,
+                    request_deserializer=cluster__manager__pb2.StartRyuMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopRyu': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopRyu,
+                    request_deserializer=cluster__manager__pb2.StopRyuMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getRyuManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getRyuManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetRyuManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.RyuManagersInfoDTO.SerializeToString,
+            ),
+            'stopSnortIdses': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIdses,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSnortIdsesMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIdsesMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsesMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSnortIds': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIds,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSnortIdsMonitorThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIdsMonitorThread,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startSnortIds': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIds,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startSnortIdsMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIdsMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startSnortIdsMonitorThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIdsMonitorThread,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startSnortIdsManagers': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIdsManagers,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsManagers.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSnortIdsManagers': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIdsManagers,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsManagers.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startSnortIdsManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIdsManager,
+                    request_deserializer=cluster__manager__pb2.StartSnortIdsManager.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSnortIdsManager': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIdsManager,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsManager.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSnortIdsMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIdsMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StopSnortIdsMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getSnortIdsMonitorThreadStatuses': grpc.unary_unary_rpc_method_handler(
+                    servicer.getSnortIdsMonitorThreadStatuses,
+                    request_deserializer=cluster__manager__pb2.GetSnortIdsMonitorThreadStatusesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.SerializeToString,
+            ),
+            'getSnortIdsManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getSnortIdsManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetSnortIdsManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.SnortIdsManagersInfoDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -3827,5 +4899,1144 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getElkManagersInfo',
             cluster__manager__pb2.GetElkManagersInfoMsg.SerializeToString,
             cluster__manager__pb2.ElkManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startContainersOfExecution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startContainersOfExecution',
+            cluster__manager__pb2.StartContainersOfExecutionMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def runContainer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/runContainer',
+            cluster__manager__pb2.RunContainerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopContainersOfExecution(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopContainersOfExecution',
+            cluster__manager__pb2.StopContainersOfExecutionMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getExecutionInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getExecutionInfo',
+            cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
+            cluster__manager__pb2.ExecutionInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startHostManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHostManager',
+            cluster__manager__pb2.StartHostManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHostManagers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHostManagers',
+            cluster__manager__pb2.StopHostManagersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHostManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHostManager',
+            cluster__manager__pb2.StopHostManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startHostMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHostMonitorThreads',
+            cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopFilebeats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopFilebeats',
+            cluster__manager__pb2.StopFilebeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopPacketbeats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopPacketbeats',
+            cluster__manager__pb2.StopPacketbeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopMetricbeats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopMetricbeats',
+            cluster__manager__pb2.StopMetricbeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHeartbeats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHeartbeats',
+            cluster__manager__pb2.StopHeartbeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startHostMonitorThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHostMonitorThread',
+            cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startFilebeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startFilebeat',
+            cluster__manager__pb2.StartFileBeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startPacketbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startPacketbeat',
+            cluster__manager__pb2.StartPacketBeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startMetricbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startMetricbeat',
+            cluster__manager__pb2.StartMetricBeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startHeartbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHeartbeat',
+            cluster__manager__pb2.StartHeartBeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopFilebeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopFilebeat',
+            cluster__manager__pb2.StopFileBeatMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopPacketbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopPacketbeat',
+            cluster__manager__pb2.StopPacketBeatMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopMetricbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopMetricbeat',
+            cluster__manager__pb2.StopMetricBeatMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHeartbeat(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHeartbeat',
+            cluster__manager__pb2.StopHeartBeatMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def applyFileBeatConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/applyFileBeatConfig',
+            cluster__manager__pb2.ApplyFileBeatConfigMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def applyPacketBeatConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/applyPacketBeatConfig',
+            cluster__manager__pb2.ApplyPacketBeatConfigMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def applyMetricBeatConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/applyMetricBeatConfig',
+            cluster__manager__pb2.ApplyMetricBeatConfigMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def applyHeartBeatConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/applyHeartBeatConfig',
+            cluster__manager__pb2.ApplyHeartBeatConfigMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getHostMonitorThreadsStatuses(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getHostMonitorThreadsStatuses',
+            cluster__manager__pb2.GetHostMonitorThreadsStatusesMsg.SerializeToString,
+            cluster__manager__pb2.hostManagerStatusesDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getHostManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getHostManagersInfo',
+            cluster__manager__pb2.GetHostManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.HostManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopKafkaManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopKafkaManager',
+            cluster__manager__pb2.StopKafkaManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startKafkaManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startKafkaManager',
+            cluster__manager__pb2.StartKafkaManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def createKafkaTopics(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/createKafkaTopics',
+            cluster__manager__pb2.CreateKafkaTopicsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getKafkaStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getKafkaStatus',
+            cluster__manager__pb2.CreateKafkaTopicsMsg.SerializeToString,
+            cluster__manager__pb2.KafkaStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopKafkaServer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopKafkaServer',
+            cluster__manager__pb2.StopKafkaServerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startKafkaServer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startKafkaServer',
+            cluster__manager__pb2.StopKafkaServerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getKafkaManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getKafkaManagersInfo',
+            cluster__manager__pb2.GetKafkaManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.KafkaManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIDSes(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopOSSECIDSes',
+            cluster__manager__pb2.StopOSSECIDSesMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOSSECIDSes(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOSSECIDSes',
+            cluster__manager__pb2.StartOSSECIDSesMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIDS(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopOSSECIDS',
+            cluster__manager__pb2.StopOSSECIDSMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOSSECIDS(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOSSECIDS',
+            cluster__manager__pb2.StartOSSECIDSMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOSSECIDSManagers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOSSECIDSManagers',
+            cluster__manager__pb2.StartOSSECIDSManagers.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIDSManagers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopOSSECIDSManagers',
+            cluster__manager__pb2.StopOSSECIDSManagers.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOSSECIDSManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOSSECIDSManager',
+            cluster__manager__pb2.StartOSSECIDSManager.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIDSManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopOSSECIDSManager',
+            cluster__manager__pb2.StopOSSECIDSManager.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOSSECIDSMonitorThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startOSSECIDSMonitorThread',
+            cluster__manager__pb2.StartOSSECIDSMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIDSMonitorThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopOSSECIDSMonitorThread',
+            cluster__manager__pb2.StopOSSECIDSMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIDSMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopOSSECIDSMonitorThreads',
+            cluster__manager__pb2.StopOSSECIDSMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getOSSECIDSMonitorThreadStatuses(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getOSSECIDSMonitorThreadStatuses',
+            cluster__manager__pb2.GetOSSECIDSMonitorThreadStatusesMsg.SerializeToString,
+            cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getOSSECIdsManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getOSSECIdsManagersInfo',
+            cluster__manager__pb2.GetOSSECIDSManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.OSSECIdsManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startRyuManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startRyuManager',
+            cluster__manager__pb2.StartRyuManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopRyuManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopRyuManager',
+            cluster__manager__pb2.StopRyuManagerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getRyuStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getRyuStatus',
+            cluster__manager__pb2.GetRyuStatusMsg.SerializeToString,
+            cluster__manager__pb2.RyuManagerStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startRyu(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startRyu',
+            cluster__manager__pb2.StartRyuMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopRyu(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopRyu',
+            cluster__manager__pb2.StopRyuMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getRyuManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getRyuManagersInfo',
+            cluster__manager__pb2.GetRyuManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.RyuManagersInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIdses(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdses',
+            cluster__manager__pb2.StopSnortIdsesMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIdsesMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsesMonitorThreads',
+            cluster__manager__pb2.StopSnortIdsesMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIds(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIds',
+            cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIdsMonitorThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsMonitorThread',
+            cluster__manager__pb2.StopSnortIdsMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSnortIds(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIds',
+            cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSnortIdsMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsMonitorThreads',
+            cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSnortIdsMonitorThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsMonitorThread',
+            cluster__manager__pb2.StartSnortIdsMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSnortIdsManagers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsManagers',
+            cluster__manager__pb2.StartSnortIdsManagers.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIdsManagers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsManagers',
+            cluster__manager__pb2.StopSnortIdsManagers.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSnortIdsManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIdsManager',
+            cluster__manager__pb2.StartSnortIdsManager.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIdsManager(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsManager',
+            cluster__manager__pb2.StopSnortIdsManager.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIdsMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIdsMonitorThreads',
+            cluster__manager__pb2.StopSnortIdsMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getSnortIdsMonitorThreadStatuses(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getSnortIdsMonitorThreadStatuses',
+            cluster__manager__pb2.GetSnortIdsMonitorThreadStatusesMsg.SerializeToString,
+            cluster__manager__pb2.OSSECIdsMonitorThreadStatusesDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getSnortIdsManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getSnortIdsManagersInfo',
+            cluster__manager__pb2.GetSnortIdsManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.SnortIdsManagersInfoDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

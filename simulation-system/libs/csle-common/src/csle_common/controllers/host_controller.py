@@ -1016,7 +1016,7 @@ class HostController:
             csle_collector.host_manager.query_host_manager.stop_heartbeat(stub=stub)
 
     @staticmethod
-    def get_host_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
+    def get_host_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig) -> \
             List[Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]]:
         """
         A method that sends a request to the HostManager on every container to get the status of the Host monitor thread
@@ -1070,74 +1070,6 @@ class HostController:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             status = csle_collector.host_manager.query_host_manager.get_host_status(stub=stub)
             return status
-
-    @staticmethod
-    def get_hosts_log_data(emulation_env_config: EmulationEnvConfig, failed_auth_last_ts: float,
-                           login_last_ts: float) \
-            -> List[csle_collector.host_manager.host_manager_pb2.HostMetricsDTO]:
-        """
-        A method that sends a request to the HostManager on every container to get contents of the Hostmetrics
-        given timestamps
-
-        :param emulation_env_config: the emulation env config
-        :param failed_auth_last_ts: the timestamp to read the last failed login attempts from
-        :param login_last_ts: the timestamp to read the last successful login attempts from
-        :return: List of monitor thread statuses
-        """
-        host_metrics_data_list = []
-        HostController.start_host_managers(emulation_env_config=emulation_env_config)
-
-        # Get log data of emulation containers
-        for c in emulation_env_config.containers_config.containers:
-            host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-                ip=c.docker_gw_bridge_ip, port=emulation_env_config.host_manager_config.host_manager_port,
-                failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
-            host_metrics_data_list.append(host_metrics_data)
-
-        # Get log data from kafka container
-        host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-            ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
-            port=emulation_env_config.host_manager_config.host_manager_port,
-            failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
-        host_metrics_data_list.append(host_metrics_data)
-
-        # Get log data from ELK container
-        host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-            ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
-            port=emulation_env_config.host_manager_config.host_manager_port,
-            failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
-        host_metrics_data_list.append(host_metrics_data)
-
-        if emulation_env_config.sdn_controller_config is not None:
-            # Get log data from SDN controller container
-            host_metrics_data = HostController.get_host_log_data_by_port_and_ip(
-                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
-                port=emulation_env_config.host_manager_config.host_manager_port,
-                failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
-            host_metrics_data_list.append(host_metrics_data)
-
-        return host_metrics_data_list
-
-    @staticmethod
-    def get_host_log_data_by_port_and_ip(ip: str, port: int, failed_auth_last_ts: float,
-                                         login_last_ts: float) -> \
-            csle_collector.host_manager.host_manager_pb2.HostMetricsDTO:
-        """
-        A method that sends a request to the HostManager on a specific container
-        to get the host metrics given timestamps
-
-        :param ip: the ip of the container
-        :param port: the port of the host manager
-        :param failed_auth_last_ts: the timestamp to read the last failed login attempts from
-        :param login_last_ts: the timestamp to read the last successful login attempts from
-        :return: the host metrics
-        """
-        # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
-            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            host_metrics_data = csle_collector.host_manager.query_host_manager.get_host_metrics(
-                stub=stub, failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
-            return host_metrics_data
 
     @staticmethod
     def get_host_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:

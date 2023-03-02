@@ -290,34 +290,6 @@ class OSSECIDSController:
         return statuses
 
     @staticmethod
-    def get_ossec_idses_log_data(emulation_env_config: EmulationEnvConfig, timestamp: float) \
-            -> List[csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO]:
-        """
-        A method that sends a request to the OSSEC IDSManager on every container to get contents of the IDS log from
-        a given timestamp
-
-        :param emulation_env_config: the emulation env config
-        :param timestamp: the timestamp to read the IDS log from
-        :return: List of monitor thread statuses
-        """
-        ids_log_data_list = []
-        OSSECIDSController.start_ossec_idses_managers(emulation_env_config=emulation_env_config)
-
-        for c in emulation_env_config.containers_config.containers:
-            for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
-                if ids_image in c.name:
-                    # Open a gRPC session
-                    with grpc.insecure_channel(
-                            f'{c.docker_gw_bridge_ip}:'
-                            f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
-                        stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
-                        ids_log_data = csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_alerts(
-                            stub=stub, timestamp=timestamp,
-                            log_file_path=csle_collector_constants.OSSEC.OSSEC_ALERTS_FILE)
-                        ids_log_data_list.append(ids_log_data)
-        return ids_log_data_list
-
-    @staticmethod
     def get_ossec_idses_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
         """
         A method that extracts the IPS of the OSSEC IDS managers in a given emulation

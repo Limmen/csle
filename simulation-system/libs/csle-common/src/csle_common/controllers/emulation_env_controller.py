@@ -261,19 +261,6 @@ class EmulationEnvController:
                                                 logger=Logger.__call__().get_logger())
 
     @staticmethod
-    def delete_networks_of_kafka_container(kafka_config: KafkaConfig) -> None:
-        """
-        Deletes the docker networks of a kafka container
-
-        :param kafka_config: the kafka config
-        :return: None
-        """
-        c = kafka_config.container
-        for ip_net in c.ips_and_networks:
-            ip, net = ip_net
-            ContainerController.remove_network(name=net.name)
-
-    @staticmethod
     def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
             -> None:
         """
@@ -409,7 +396,7 @@ class EmulationEnvController:
             subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def start_containers(emulation_execution: EmulationExecution) -> None:
+    def start_containers_of_execution(emulation_execution: EmulationExecution) -> None:
         """
         Starts stopped containers in a given emulation execution
 
@@ -658,25 +645,6 @@ class EmulationEnvController:
         :return: None
         """
         MetastoreFacade.uninstall_emulation(config=config)
-
-    @staticmethod
-    def separate_running_and_stopped_emulations_dtos(emulations: List[EmulationEnvConfig]) \
-            -> Tuple[List[EmulationEnvConfig], List[EmulationEnvConfig]]:
-        """
-        Partitions the set of emulations into a set of running emulations and a set of stopped emulations
-
-        :param emulations: the list of emulations
-        :return: running_emulations, stopped_emulations
-        """
-        rc_emulations = ContainerController.list_running_emulations()
-        stopped_emulations = []
-        running_emulations = []
-        for em in emulations:
-            if em.name in rc_emulations:
-                running_emulations.append(em)
-            else:
-                stopped_emulations.append(em)
-        return running_emulations, stopped_emulations
 
     @staticmethod
     def ping_all(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:

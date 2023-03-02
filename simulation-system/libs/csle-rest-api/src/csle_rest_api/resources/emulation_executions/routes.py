@@ -1145,7 +1145,7 @@ def start_stop_container(execution_id: int):
                 Logger.__call__().get_logger().info(
                     f"Starting all running containers on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                EmulationEnvController.start_containers(emulation_execution=execution)
+                EmulationEnvController.start_containers_of_execution(emulation_execution=execution)
             Logger.__call__().get_logger().info(
                 f"Starting container: {container_name}, on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
