@@ -396,31 +396,36 @@ class EmulationEnvController:
             subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def start_containers_of_execution(emulation_execution: EmulationExecution) -> None:
+    def start_containers_of_execution(emulation_execution: EmulationExecution, physical_host_ip: str) -> None:
         """
         Starts stopped containers in a given emulation execution
 
         :param emulation_execution: the execution DTO
+        :param physical_host_ip: the ip of the physical host
         :return: None
         """
         emulation_env_config = emulation_execution.emulation_env_config
 
         # Start regular containers
         for c in emulation_env_config.containers_config.containers:
-            ContainerController.start_container(name=c.get_full_name())
+            if c.physical_host_ip == physical_host_ip:
+                ContainerController.start_container(name=c.get_full_name())
 
         # Start the kafka container
         c = emulation_env_config.kafka_config.container
-        ContainerController.start_container(name=c.get_full_name())
+        if c.physical_host_ip == physical_host_ip:
+            ContainerController.start_container(name=c.get_full_name())
 
         # Start the ELK container
         c = emulation_env_config.elk_config.container
-        ContainerController.start_container(name=c.get_full_name())
+        if c.physical_host_ip == physical_host_ip:
+            ContainerController.start_container(name=c.get_full_name())
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
-            ContainerController.start_container(name=c.get_full_name())
+            if c.physical_host_ip == physical_host_ip:
+                ContainerController.start_container(name=c.get_full_name())
 
     @staticmethod
     def run_container(image: str, name: str, memory: int = 4, num_cpus: int = 1, create_network: bool = True,

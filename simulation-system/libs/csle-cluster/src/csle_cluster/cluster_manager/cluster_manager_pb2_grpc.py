@@ -647,7 +647,7 @@ class ClusterManagerStub(object):
                 )
         self.startHostMonitorThread = channel.unary_unary(
                 '/ClusterManager/startHostMonitorThread',
-                request_serializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartHostMonitorThreadMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startFilebeat = channel.unary_unary(
@@ -713,7 +713,7 @@ class ClusterManagerStub(object):
         self.getHostMonitorThreadsStatuses = channel.unary_unary(
                 '/ClusterManager/getHostMonitorThreadsStatuses',
                 request_serializer=cluster__manager__pb2.GetHostMonitorThreadsStatusesMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.hostManagerStatusesDTO.FromString,
+                response_deserializer=cluster__manager__pb2.HostManagerStatusesDTO.FromString,
                 )
         self.getHostManagersInfo = channel.unary_unary(
                 '/ClusterManager/getHostManagersInfo',
@@ -2658,7 +2658,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'startHostMonitorThread': grpc.unary_unary_rpc_method_handler(
                     servicer.startHostMonitorThread,
-                    request_deserializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartHostMonitorThreadMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startFilebeat': grpc.unary_unary_rpc_method_handler(
@@ -2724,7 +2724,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'getHostMonitorThreadsStatuses': grpc.unary_unary_rpc_method_handler(
                     servicer.getHostMonitorThreadsStatuses,
                     request_deserializer=cluster__manager__pb2.GetHostMonitorThreadsStatusesMsg.FromString,
-                    response_serializer=cluster__manager__pb2.hostManagerStatusesDTO.SerializeToString,
+                    response_serializer=cluster__manager__pb2.HostManagerStatusesDTO.SerializeToString,
             ),
             'getHostManagersInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.getHostManagersInfo,
@@ -5101,7 +5101,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHostMonitorThread',
-            cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.StartHostMonitorThreadMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5323,7 +5323,7 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getHostMonitorThreadsStatuses',
             cluster__manager__pb2.GetHostMonitorThreadsStatusesMsg.SerializeToString,
-            cluster__manager__pb2.hostManagerStatusesDTO.FromString,
+            cluster__manager__pb2.HostManagerStatusesDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

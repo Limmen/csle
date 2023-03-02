@@ -128,7 +128,7 @@ service ClusterManager {
   rpc stopPacketbeats(StopPacketbeatsMsg) returns (OperationOutcomeDTO) {}
   rpc stopMetricbeats(StopMetricbeatsMsg) returns (OperationOutcomeDTO) {}
   rpc stopHeartbeats(StopHeartbeatsMsg) returns (OperationOutcomeDTO) {}
-  rpc startHostMonitorThread(StartHostMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
+  rpc startHostMonitorThread(StartHostMonitorThreadMsg) returns (OperationOutcomeDTO) {}
   rpc startFilebeat(StartFileBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startPacketbeat(StartPacketBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startMetricbeat(StartMetricBeatsMsg) returns (OperationOutcomeDTO) {}
@@ -141,7 +141,7 @@ service ClusterManager {
   rpc applyPacketBeatConfig(ApplyPacketBeatConfigMsg) returns (OperationOutcomeDTO) {}
   rpc applyMetricBeatConfig(ApplyMetricBeatConfigMsg) returns (OperationOutcomeDTO) {}
   rpc applyHeartBeatConfig(ApplyHeartBeatConfigMsg) returns (OperationOutcomeDTO) {}
-  rpc getHostMonitorThreadsStatuses(GetHostMonitorThreadsStatusesMsg) returns (hostManagerStatusesDTO) {}
+  rpc getHostMonitorThreadsStatuses(GetHostMonitorThreadsStatusesMsg) returns (HostManagerStatusesDTO) {}
   rpc getHostManagersInfo(GetHostManagersInfoMsg) returns (HostManagersInfoDTO) {}
   rpc stopKafkaManager(StopKafkaManagerMsg) returns (OperationOutcomeDTO) {}
   rpc startKafkaManager(StartKafkaManagerMsg) returns (OperationOutcomeDTO) {}
@@ -654,7 +654,7 @@ message RyuManagerStatusDTO {
 
 // Message that the server returns when requested for the Host managers info
 message HostManagersInfoDTO {
-  repeated string ips = 1;
+  repeated string ips = 21;
   repeated int32 ports = 2;
   string emulationName = 3;
   int32 executionId = 4;
@@ -663,7 +663,7 @@ message HostManagersInfoDTO {
 }
 
 //Message that the server returns when asked about the statuses of the Host managers
-message hostManagerStatusesDTO {
+message HostManagerStatusesDTO {
   repeated HostManagerStatusDTO hostManagerStatuses= 1;
 }
 

@@ -11,6 +11,7 @@ import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.ryu_manager.ryu_manager_pb2
+import csle_collector.host_manager.host_manager_pb2
 
 
 class ClusterManagerUtil:
@@ -482,7 +483,7 @@ class ClusterManagerUtil:
             port=ryu_dto.port, web_port=ryu_dto.web_port,
             controller=ryu_dto.controller, kafka_ip=ryu_dto.kafka_ip,
             kafka_port=ryu_dto.kafka_port, time_step_len=ryu_dto.time_step_len)
-
+    
     @staticmethod
     def snort_ids_status_dto_to_dict(
             snort_ids_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsStatusDTO) \
@@ -698,4 +699,22 @@ class ClusterManagerUtil:
         d["emulationName"] = ryu_managers_info_dto.emulationName
         d["executionId"] = ryu_managers_info_dto.executionId
         return d
+
+    @staticmethod
+    def convert_host_status_to_host_manager_status_dto(
+            host_status_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO) -> \
+            csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusDTO:
+        """
+        Converts a HostStatusDTO to a HostManagerStatusDTO
+
+        :param host_status_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusDTO(
+            monitor_running = host_status_dto.monitor_running,
+            filebeat_running = host_status_dto.filebeat_running,
+            packetbeat_running = host_status_dto.packetbeat_running,
+            metricbeat_running = host_status_dto.metricbeat_running,
+            heartbeat_running = host_status_dto.heartbeat_running
+        )
 

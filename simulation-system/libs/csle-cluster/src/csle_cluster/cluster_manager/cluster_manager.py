@@ -2217,6 +2217,579 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             elkManagersStatuses=
             list(map(lambda x: ClusterManagerUtil.convert_elk_dto(x), elk_managers_dto.elk_managers_statuses)))
 
+    def startContainersOfExecution(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartContainersOfExecutionMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the containers of a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starts containers "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        EmulationEnvController.start_containers_of_execution(emulation_execution=execution,
+                                                             physical_host_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def runContainer(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RunContainerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Runs a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Running container with image: {request.image}, name: {request.name}, memory: {request.memory},"
+                     f"num_cpus: {request.num_cpus}, create_network: {request.create_network}, version"
+                     f": {request.version} ")
+        EmulationEnvController.run_container(image=request.image, name=request.name, memory=request.memory,
+                                             num_cpus=request.num_cpus, create_network=request.create_network,
+                                             version = request.version)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopContainersOfExecution(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopContainersOfExecutionMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the containers of a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stops containers "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        EmulationEnvController.start_containers_of_execution(emulation_execution=execution,
+                                                             physical_host_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def startHostManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostManagersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts a specific host manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting host manager with ip: {request.containerIp} in  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.start_host_manager(emulation_env_config=execution.emulation_env_config,
+                                              ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopHostManagers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHostManagersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the host managers of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping host managers in  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.stop_host_managers(emulation_env_config=execution.emulation_env_config,
+                                          physical_host_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopHostManager(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHostManagersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a specific host manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping host manager with ip: {request.containerIp} in  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.stop_host_manager(emulation_env_config=execution.emulation_env_config,
+                                              ip=node_container_config.docker_gw_bridge_ip)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startHostMonitorThreads(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostMonitorThreadsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the host monitor threads of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting host monitor threads  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.start_host_monitor_threads(emulation_env_config=execution.emulation_env_config,
+                                                  physical_server_ip=GeneralUtil.get_host_ip(),
+                                                  logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopFilebeats(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopFilebeatsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops filebeats in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping filebeats  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.stop_filebeats(emulation_env_config=execution.emulation_env_config,
+                                                  physical_server_ip=GeneralUtil.get_host_ip(),
+                                                  logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopPacketbeats(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopPacketbeatsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops packetbeats in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping packetbeats  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.stop_packetbeats(emulation_env_config=execution.emulation_env_config,
+                                      physical_server_ip=GeneralUtil.get_host_ip(),
+                                      logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopMetricbeats(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopMetricbeatsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops Metricbeats in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping metricbeats  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.stop_metricbeats(emulation_env_config=execution.emulation_env_config,
+                                        physical_server_ip=GeneralUtil.get_host_ip(),
+                                        logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopHeartbeats(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHeartbeatsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops Heartbeats in a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping heartbeats  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.stop_heartbeats(emulation_env_config=execution.emulation_env_config,
+                                        physical_server_ip=GeneralUtil.get_host_ip(),
+                                        logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def startHostMonitorThread(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHostMonitorThreadsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts a specific host monitor thread
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting host monitor thread on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.start_host_monitor_thread(emulation_env_config=execution.emulation_env_config,
+                                                     ip=node_container_config.docker_gw_bridge_ip,
+                                                     logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startFilebeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartFileBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts filebeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting filebeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.start_filebeat(emulation_env_config=execution.emulation_env_config,
+                                          ips=[node_container_config.docker_gw_bridge_ip],
+                                          logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startPacketbeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartPacketBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts packetbeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting packetbeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.start_packetbeat(emulation_env_config=execution.emulation_env_config,
+                                            ips=[node_container_config.docker_gw_bridge_ip],
+                                            logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startMetricbeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartMetricBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts metricbeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting metricbeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.start_metricbeat(emulation_env_config=execution.emulation_env_config,
+                                            ips=[node_container_config.docker_gw_bridge_ip],
+                                            logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startHeartbeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartHeartBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts heartbeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting heartbeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.start_heartbeat(emulation_env_config=execution.emulation_env_config,
+                                            ips=[node_container_config.docker_gw_bridge_ip],
+                                            logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopFilebeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopFileBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops filebeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping filebeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.stop_filebeat(emulation_env_config=execution.emulation_env_config,
+                                           ip=node_container_config.docker_gw_bridge_ip,
+                                           logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopPacketbeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopPacketBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops packetbeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping packetbeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.stop_packetbeat(emulation_env_config=execution.emulation_env_config,
+                                           ip=node_container_config.docker_gw_bridge_ip,
+                                           logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopMetricbeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopMetricBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops metricbeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping metricbeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.stop_metricbeat(emulation_env_config=execution.emulation_env_config,
+                                           ip=node_container_config.docker_gw_bridge_ip,
+                                           logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopHeartbeat(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHeartBeatMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops heartbeat on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping heartbeat on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.stop_heartbeat(emulation_env_config=execution.emulation_env_config,
+                                           ip=node_container_config.docker_gw_bridge_ip,
+                                           logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def applyFileBeatConfig(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ApplyFileBeatConfigMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the filebeat config on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Applying the filebeat config to container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.config_filebeat(emulation_env_config=execution.emulation_env_config,
+                                          container=node_container_config,
+                                          logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def applyPacketBeatConfig(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ApplyPacketBeatConfigMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the packetbeat config on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Applying the packetbeat config to container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.config_packetbeat(emulation_env_config=execution.emulation_env_config,
+                                             container=node_container_config, logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def applyMetricBeatConfig(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ApplyMetricBeatConfigMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the metricbeat config on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Applying the metricbeat config to container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.config_metricbeat(emulation_env_config=execution.emulation_env_config,
+                                             container=node_container_config, logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def applyHeartBeatConfig(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ApplyHeartBeatConfigMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the heartbeat config on a specific host
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Applying the heartbeat config to container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.config_heartbeat(emulation_env_config=execution.emulation_env_config,
+                                             container=node_container_config, logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def getHostMonitorThreadsStatuses(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetHostMonitorThreadsStatusesMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO:
+        """
+        Gets the host monitor thread statuses of a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a HostManagerStatusesDTO
+        """
+        logging.info(f"Gets the host monitor thread statuses "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        host_statuses_and_ips = \
+            HostController.get_host_monitor_threads_statuses(emulation_env_config=execution.emulation_env_config)
+        host_statuses = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x[0]),
+                                 host_statuses_and_ips))
+        return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO(
+            hostManagerStatuses = host_statuses
+        )
+
+    def getgetHostManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetHostManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.HostManagersInfoDTO:
+        """
+        Gets the info of host managers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a HostManagersInfoDTO
+        """
+        logging.info(f"Gets the info of host managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        host_managers_dto = HostController.get_host_managers_info(
+            emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+            active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config)
+        )
+        return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagersInfoDTO(
+            ips=host_managers_dto.ips,
+            ports=host_managers_dto.ports,
+            emulationName=host_managers_dto.emulation_name,
+            executionId=host_managers_dto.execution_id,
+            hostManagersRunning=host_managers_dto.host_managers_running,
+            hostManagersStatuses=
+            list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
+                     host_managers_dto.host_managers_statuses))
+        )
+
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "cluster_manager.log") -> None:
