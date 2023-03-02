@@ -90,7 +90,6 @@ class SimulationEnvConfig:
         parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
                            StoppingGameDefenderPomdpConfig.from_dict,
                            IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict]
-        input_config = IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict(d["simulation_env_input_config"])
         for parse_fun in parse_functions:
             try:
                 input_config = parse_fun(d["simulation_env_input_config"])

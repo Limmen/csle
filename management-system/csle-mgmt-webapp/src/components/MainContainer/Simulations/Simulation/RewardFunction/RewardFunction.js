@@ -34,7 +34,6 @@ const RewardFunction = (props) => {
         setLR(l)
     }
 
-
     if (props.simulation.plot_reward_function) {
         return (
             <div className="rewardFun">

@@ -263,7 +263,10 @@ class IntrusionResponseGameUtil:
         """
         action_costs = []
         for a1 in A1:
-            action_costs.append(constant_cost)
+            if a1 == env_constants.DEFENDER_ACTIONS.WAIT:
+                action_costs.append(0)
+            else:
+                action_costs.append(constant_cost)
         return np.array(action_costs)
 
     @staticmethod

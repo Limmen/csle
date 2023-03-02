@@ -23,6 +23,7 @@ from csle_common.dao.simulation_config.observation_function_config import Observ
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
+from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.agent_type import AgentType
@@ -67,7 +68,7 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
         attack_success_probability=attack_success_probability, beta=beta, eta=eta, initial_zone=initial_zone,
         defender_action_cost=defender_action_cost, zone_utility=zone_utility)
     env_parameters_config = default_env_parameters_config()
-    descr = "TODO"
+    descr = "A local intrusion response game"
     simulation_env_config = SimulationEnvConfig(
         name=name, version=version, descr=descr,
         players_config=players_config, state_space_config=state_space_config,
@@ -87,7 +88,11 @@ def default_env_parameters_config() -> EnvParametersConfig:
     """
     :return: the default env parameters config
     """
-    config = EnvParametersConfig(parameters=[])
+    config = EnvParametersConfig(
+        parameters=[
+            EnvParameter(id=0, name="default", descr="default"),
+        ]
+    )
     return config
 
 
@@ -111,17 +116,23 @@ def default_state_space_config(number_of_zones: int) -> StateSpaceConfig:
     :return: the default state space configuration of the simulation
     """
     states = []
-    state_id = 0
+    states.append(State(
+        id=0, name=f"terminal", descr=f"Terminal state", state_type=StateType.TERMINAL
+    ))
+    state_id = 1
     for i in range(number_of_zones):
         states.append(State(
             id=state_id, name=f"{i}_{0}", descr=f"Zone: {i}, no intrusion", state_type=StateType.ACTIVE
         ))
+        state_id+=1
         states.append(State(
             id=state_id, name=f"{i}_{1}", descr=f"Zone: {i}, recon", state_type=StateType.ACTIVE
         ))
+        state_id+=1
         states.append(State(
             id=state_id, name=f"{i}_{2}", descr=f"Zone: {2}, compromised", state_type=StateType.ACTIVE
         ))
+        state_id+=1
     state_space_config = StateSpaceConfig(states=states)
     return state_space_config
 
@@ -162,20 +173,27 @@ def default_joint_observation_space_config(X_max: int) -> JointObservationSpaceC
     """
     obs = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     observations = []
+    observation_id_to_observation_id_vector = {}
+    observation_id_to_observation_vector = {}
     for i in range(len(obs)):
         observations.append(
             Observation(id=i, val=i, descr=f"{i} weighted alerts")
         )
+        observation_id_to_observation_id_vector[i] = [i]
+        observation_id_to_observation_vector[i] = [i]
+    component_observations = {}
+    component_observations["weighted_alerts"] = observations
+    observation_component_name_to_index = {"weighted_alerts": 0}
     observation_spaces = [
         ObservationSpaceConfig(
             observations=observations,
             observation_type=ValueType.INTEGER,
             player_id=1,
             descr="The observation space of the defender. The defender observes the weighted sum of alerts",
-            observation_id_to_observation_id_vector={},
-            observation_component_name_to_index={},
-            component_observations={},
-            observation_id_to_observation_vector={}
+            observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
+            observation_component_name_to_index=observation_component_name_to_index,
+            component_observations=component_observations,
+            observation_id_to_observation_vector=observation_id_to_observation_vector
         )
     ]
     joint_observation_space_config = JointObservationSpaceConfig(observation_spaces=observation_spaces)
@@ -196,11 +214,11 @@ def default_reward_function_config(reachable: bool, initial_zone: int, beta: flo
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
     zone_utilities = IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility)
     reward_function_config = RewardFunctionConfig(
-        reward_tensor=list(IntrusionResponseGameUtil.local_reward_tensor(
+        reward_tensor=[list(IntrusionResponseGameUtil.local_reward_tensor(
             eta=eta, reachable=reachable, initial_zone=initial_zone, beta=beta,
             S=state_space, A1=A1, A2=A2,
             D_C=defender_action_costs, Z_U=zone_utilities
-        )))
+        ))])
     return reward_function_config
 
 
@@ -217,12 +235,12 @@ def default_transition_operator_config(num_zones: int, attack_success_probabilit
     defender_actions = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=num_zones)
     attacker_actions = IntrusionResponseGameUtil.local_attacker_actions()
     transition_operator_config = TransitionOperatorConfig(
-        transition_tensor=list(IntrusionResponseGameUtil.local_transition_tensor(
+        transition_tensor=list([IntrusionResponseGameUtil.local_transition_tensor(
             Z_D=zone_detection_probabilities,
             A_P=attack_success_probabilities,
             S=state_space, A1=defender_actions,
             A2=attacker_actions
-        )))
+        )]))
     return transition_operator_config
 
 
@@ -235,7 +253,10 @@ def default_observation_function_config(
     O = IntrusionResponseGameUtil.local_observation_space(X_max=len(defender_obs_space.observations))
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(
         S=state_space, A1=A1, A2=A2, O=O)
-    observation_function_config = ObservationFunctionConfig(observation_tensor=Z, component_observation_tensors={})
+    component_observation_tensors = {}
+    component_observation_tensors["weighted_alerts"] = Z
+    observation_function_config = ObservationFunctionConfig(observation_tensor=Z,
+                                                            component_observation_tensors=component_observation_tensors)
     return observation_function_config
 
 
