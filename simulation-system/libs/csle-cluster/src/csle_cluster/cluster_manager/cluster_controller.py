@@ -1,9 +1,10 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 import grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
+import csle_common.constants.constants as constants
 
 
 class ClusterController:
@@ -1562,3 +1563,340 @@ class ClusterController:
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
             return traffic_managers_info_dto
+
+    @staticmethod
+    def stop_all_running_containers(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop all running containers on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_all_running_containers(
+                stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_container(ip: str, port: int, container_name) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop a specific container on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_container(
+                stub=stub, container_name=container_name)
+            return operation_outcome_dto
+
+    @staticmethod
+    def remove_all_stopped_containers(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to remove all stopped containers on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_all_stopped_containers(
+                stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def remove_container(ip: str, port: int, container_name: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to remove a specific container on a specific nodep
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param container_name: the name of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_container(
+                stub=stub, container_name=container_name)
+            return operation_outcome_dto
+
+    @staticmethod
+    def remove_all_container_images(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to remove all container images on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_all_container_images(
+                stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def remove_container_image(ip: str, port: int, image_name: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to remove a specific container image on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param image_name: the name of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_container_image(
+                stub=stub, image_name=image_name)
+            return operation_outcome_dto
+
+    @staticmethod
+    def list_all_container_images(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImagesDTO:
+        """
+        Sends a request to list all container images on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The container images
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            images_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_container_images(
+                stub=stub)
+            return images_dto
+
+    @staticmethod
+    def list_all_docker_networks(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerNetworksDTO:
+        """
+        Sends a request to list all Docker networks on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The docker networks
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            docker_networks_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_docker_networks(
+                stub=stub)
+            return docker_networks_dto
+
+    @staticmethod
+    def start_all_stopped_containers(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start all stopped containers on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_all_stopped_containers(
+                stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_container(ip: str, port: int, container_name: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start a specific container on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param container_name: the name of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_container(
+                stub=stub, container_name=container_name)
+            return operation_outcome_dto
+
+    @staticmethod
+    def list_all_running_containers(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.RunningContainersDTO:
+        """
+        Sends a request to list all running containers on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The docker networks
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            running_containers_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_running_containers(
+                stub=stub)
+            return running_containers_dto
+
+    @staticmethod
+    def list_all_running_emulations(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.RunningEmulationsDTO:
+        """
+        Sends a request to list all running emulations on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The docker networks
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            running_emulations_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_running_emulations(
+                stub=stub)
+            return running_emulations_dto
+
+    @staticmethod
+    def list_all_stopped_containers(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.StoppedContainersDTO:
+        """
+        Sends a request to list all running containers on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The docker networks
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            stopped_containers_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_stopped_containers(
+                stub=stub)
+            return stopped_containers_dto
+
+    @staticmethod
+    def create_emulation_networks(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to create the networks of a specific emulation on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_emulation_networks(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_docker_stats_manager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the docker stats manager thread
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager_thread(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_docker_stats_manager_status(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsMonitorStatusDTO:
+        """
+        Sends a request to get the docker stats manager status on a specific node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :return: The docker stats manager status
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            docker_stats_manager_status_dwto = \
+                csle_cluster.cluster_manager.query_cluster_manager.get_docker_stats_manager_status(
+                stub=stub, port = constants.GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT)
+            return docker_stats_manager_status_dwto
+
+    @staticmethod
+    def remove_docker_networks(ip: str, port: int, networks: List[str]) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to remove a list of docker networks on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param networks: the list of networks to remove
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_docker_networks(
+                stub=stub, networks=networks)
+            return operation_outcome_dto
+
+    @staticmethod
+    def remove_all_docker_networks(ip: str, port: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to remove all docker networks on a given node
+
+        :param ip: the ip of the node where to stop the traffic generator
+        :param port: the port of the cluster manager
+        :param networks: the list of networks to remove
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_all_docker_networks(
+                stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_docker_stats_manager_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO:
+        """
+        Sends a request to get the docker stats manager infos of a given execution
+
+        :param ip: the ip of the node where to get the client managers info
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: a TrafficManagersInfoDTO
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            docker_stats_managers_info_dto = \
+                csle_cluster.cluster_manager.query_cluster_manager.get_docker_stats_manager_info(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+            )
+            return docker_stats_managers_info_dto

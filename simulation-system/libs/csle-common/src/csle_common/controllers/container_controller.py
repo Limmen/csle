@@ -15,9 +15,7 @@ from csle_common.util.docker_util import DockerUtil
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
-from csle_common.dao.emulation_config.ovs_config import OVSConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
@@ -487,11 +485,12 @@ class ContainerController:
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
-    def stop_docker_stats_thread(execution: EmulationExecution) -> None:
+    def stop_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str) -> None:
         """
         Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread
 
         :param execution: the execution of the emulation for which the monitor should be stopped
+        :param physical_server_ip: the ip of the physical server
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
@@ -502,8 +501,7 @@ class ContainerController:
                 max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
             )
             time.sleep(5)
-        hostname = socket.gethostname()
-        ip = socket.gethostbyname(hostname)
+        ip = physical_server_ip
         with grpc.insecure_channel(
                 f'{ip}:'
                 f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') \
@@ -546,35 +544,6 @@ class ContainerController:
                 return docker_stats_monitor_dto
         except Exception:
             return None
-
-    @staticmethod
-    def connect_containers_to_management_network(containers_config: ContainersConfig, kafka_config: KafkaConfig,
-                                                 ovs_config: OVSConfig) -> None:
-        """
-        Connects running containers to the management network
-
-        :param containers_config: the containers configuration
-        :param kafka_config: the configuration of the kafka network
-        :param ovs_config: the OVS config
-        :return: None
-        """
-        kafka_server_ip, kafka_network = kafka_config.container.ips_and_networks[0]
-        kafka_network_prefix = ".".join(kafka_server_ip.split(".")[0:-1])
-        for c in containers_config.containers:
-            ovs = False
-            for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
-                if ovs_image in c.name:
-                    ovs = True
-            if not ovs:
-                container_name = c.get_full_name()
-
-                ip_suffix = c.ips_and_networks[0][0].split(".")[-1]
-                c_ip = kafka_network_prefix + "." + ip_suffix
-                cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {kafka_network.name} " \
-                      f"{container_name}"
-                Logger.__call__().get_logger().info(
-                    f"Connecting container:{container_name} to network:{kafka_network.name} with ip: {c_ip}")
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
     def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names=None) -> None:
@@ -696,7 +665,6 @@ class ContainerController:
         :param cmd: the command to run
         :return: None
         """
-
         if cmd == constants.MANAGEMENT.LIST_STOPPED:
             names = ContainerController.list_all_stopped_containers()
             Logger.__call__().get_logger().info(names)
@@ -744,13 +712,16 @@ class ContainerController:
         return [emulation_env_config.docker_stats_manager_config.docker_stats_manager_port]
 
     @staticmethod
-    def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) \
+    def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                                       physical_host_ip: str, logger: logging.Logger) \
             -> DockerStatsManagersInfo:
         """
         Extracts the information of the Docker stats managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
         :param active_ips: list of active IPs
+        :param physical_host_ip: the ip of the physical host
+        :param logger: the logger to use for logging
         :return: a DTO with the status of the Docker stats managers
         """
         docker_stats_managers_ips = ContainerController.get_docker_stats_managers_ips(
@@ -760,7 +731,7 @@ class ContainerController:
         docker_stats_managers_statuses = []
         docker_stats_managers_running = []
         for ip in docker_stats_managers_ips:
-            if ip not in active_ips:
+            if ip not in active_ips or ip != physical_host_ip:
                 continue
             running = False
             status = None
@@ -769,7 +740,7 @@ class ContainerController:
                     port=emulation_env_config.docker_stats_manager_config.docker_stats_manager_port, ip=ip)
                 running = True
             except Exception as e:
-                Logger.__call__().get_logger().debug(
+                logger.debug(
                     f"Could not fetch Docker stats manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 docker_stats_managers_statuses.append(status)

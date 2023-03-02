@@ -440,6 +440,101 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.GetTrafficManagersInfoMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.TrafficManagerInfoDTO.FromString,
                 )
+        self.stopAllRunningContainers = channel.unary_unary(
+                '/ClusterManager/stopAllRunningContainers',
+                request_serializer=cluster__manager__pb2.StopAllRunningContainersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopContainer = channel.unary_unary(
+                '/ClusterManager/stopContainer',
+                request_serializer=cluster__manager__pb2.StopContainerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.removeAllStoppedContainers = channel.unary_unary(
+                '/ClusterManager/removeAllStoppedContainers',
+                request_serializer=cluster__manager__pb2.RemoveAllStoppedContainersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.removeContainer = channel.unary_unary(
+                '/ClusterManager/removeContainer',
+                request_serializer=cluster__manager__pb2.RemoveContainerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.removeAllContainerImages = channel.unary_unary(
+                '/ClusterManager/removeAllContainerImages',
+                request_serializer=cluster__manager__pb2.RemoveAllContainerImagesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.removeContainerImage = channel.unary_unary(
+                '/ClusterManager/removeContainerImage',
+                request_serializer=cluster__manager__pb2.RemoveContainerImageMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.listAllContainerImages = channel.unary_unary(
+                '/ClusterManager/listAllContainerImages',
+                request_serializer=cluster__manager__pb2.ListAllContainerImagesMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ContainerImagesDTO.FromString,
+                )
+        self.listAllDockerNetworks = channel.unary_unary(
+                '/ClusterManager/listAllDockerNetworks',
+                request_serializer=cluster__manager__pb2.ListAllDockerNetworksMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.DockerNetworksDTO.FromString,
+                )
+        self.startAllStoppedContainers = channel.unary_unary(
+                '/ClusterManager/startAllStoppedContainers',
+                request_serializer=cluster__manager__pb2.StartAllStoppedContainersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startContainer = channel.unary_unary(
+                '/ClusterManager/startContainer',
+                request_serializer=cluster__manager__pb2.StartContainerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.listAllRunningContainers = channel.unary_unary(
+                '/ClusterManager/listAllRunningContainers',
+                request_serializer=cluster__manager__pb2.ListAllRunningContainersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.RunningContainersDTO.FromString,
+                )
+        self.listAllRunningEmulationsMsg = channel.unary_unary(
+                '/ClusterManager/listAllRunningEmulationsMsg',
+                request_serializer=cluster__manager__pb2.ListAllRunningEmulationsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.RunningEmulationsDTO.FromString,
+                )
+        self.listAllStoppedContainers = channel.unary_unary(
+                '/ClusterManager/listAllStoppedContainers',
+                request_serializer=cluster__manager__pb2.ListAllStoppedContainersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.StoppedContainersDTO.FromString,
+                )
+        self.createEmulationNetworks = channel.unary_unary(
+                '/ClusterManager/createEmulationNetworks',
+                request_serializer=cluster__manager__pb2.CreateEmulationNetworksMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopDockerStatsManagerThread = channel.unary_unary(
+                '/ClusterManager/stopDockerStatsManagerThread',
+                request_serializer=cluster__manager__pb2.StopDockerStatsManagerThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.ServiceStatusDTO.FromString,
+                )
+        self.getDockerStatsManagerStatus = channel.unary_unary(
+                '/ClusterManager/getDockerStatsManagerStatus',
+                request_serializer=cluster__manager__pb2.GetDockerStatsManagerStatusMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.DockerStatsMonitorStatusDTO.FromString,
+                )
+        self.removeDockerNetworks = channel.unary_unary(
+                '/ClusterManager/removeDockerNetworks',
+                request_serializer=cluster__manager__pb2.RemoveDockerNetworksMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.removeAllDockerNetworks = channel.unary_unary(
+                '/ClusterManager/removeAllDockerNetworks',
+                request_serializer=cluster__manager__pb2.RemoveAllDockerNetworksMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.getDockerStatsManagersInfo = channel.unary_unary(
+                '/ClusterManager/getDockerStatsManagersInfo',
+                request_serializer=cluster__manager__pb2.GetDockerStatsManagersInfoMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.DockerStatsManagersInfoDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -956,6 +1051,120 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopAllRunningContainers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopContainer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeAllStoppedContainers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeContainer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeAllContainerImages(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeContainerImage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listAllContainerImages(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listAllDockerNetworks(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startAllStoppedContainers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startContainer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listAllRunningContainers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listAllRunningEmulationsMsg(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listAllStoppedContainers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createEmulationNetworks(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopDockerStatsManagerThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getDockerStatsManagerStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeDockerNetworks(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeAllDockerNetworks(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getDockerStatsManagersInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1383,6 +1592,101 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getTrafficManagersInfo,
                     request_deserializer=cluster__manager__pb2.GetTrafficManagersInfoMsg.FromString,
                     response_serializer=cluster__manager__pb2.TrafficManagerInfoDTO.SerializeToString,
+            ),
+            'stopAllRunningContainers': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopAllRunningContainers,
+                    request_deserializer=cluster__manager__pb2.StopAllRunningContainersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopContainer': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopContainer,
+                    request_deserializer=cluster__manager__pb2.StopContainerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeAllStoppedContainers': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeAllStoppedContainers,
+                    request_deserializer=cluster__manager__pb2.RemoveAllStoppedContainersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeContainer': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeContainer,
+                    request_deserializer=cluster__manager__pb2.RemoveContainerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeAllContainerImages': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeAllContainerImages,
+                    request_deserializer=cluster__manager__pb2.RemoveAllContainerImagesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeContainerImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeContainerImage,
+                    request_deserializer=cluster__manager__pb2.RemoveContainerImageMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'listAllContainerImages': grpc.unary_unary_rpc_method_handler(
+                    servicer.listAllContainerImages,
+                    request_deserializer=cluster__manager__pb2.ListAllContainerImagesMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ContainerImagesDTO.SerializeToString,
+            ),
+            'listAllDockerNetworks': grpc.unary_unary_rpc_method_handler(
+                    servicer.listAllDockerNetworks,
+                    request_deserializer=cluster__manager__pb2.ListAllDockerNetworksMsg.FromString,
+                    response_serializer=cluster__manager__pb2.DockerNetworksDTO.SerializeToString,
+            ),
+            'startAllStoppedContainers': grpc.unary_unary_rpc_method_handler(
+                    servicer.startAllStoppedContainers,
+                    request_deserializer=cluster__manager__pb2.StartAllStoppedContainersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startContainer': grpc.unary_unary_rpc_method_handler(
+                    servicer.startContainer,
+                    request_deserializer=cluster__manager__pb2.StartContainerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'listAllRunningContainers': grpc.unary_unary_rpc_method_handler(
+                    servicer.listAllRunningContainers,
+                    request_deserializer=cluster__manager__pb2.ListAllRunningContainersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.RunningContainersDTO.SerializeToString,
+            ),
+            'listAllRunningEmulationsMsg': grpc.unary_unary_rpc_method_handler(
+                    servicer.listAllRunningEmulationsMsg,
+                    request_deserializer=cluster__manager__pb2.ListAllRunningEmulationsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.RunningEmulationsDTO.SerializeToString,
+            ),
+            'listAllStoppedContainers': grpc.unary_unary_rpc_method_handler(
+                    servicer.listAllStoppedContainers,
+                    request_deserializer=cluster__manager__pb2.ListAllStoppedContainersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.StoppedContainersDTO.SerializeToString,
+            ),
+            'createEmulationNetworks': grpc.unary_unary_rpc_method_handler(
+                    servicer.createEmulationNetworks,
+                    request_deserializer=cluster__manager__pb2.CreateEmulationNetworksMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopDockerStatsManagerThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopDockerStatsManagerThread,
+                    request_deserializer=cluster__manager__pb2.StopDockerStatsManagerThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.ServiceStatusDTO.SerializeToString,
+            ),
+            'getDockerStatsManagerStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.getDockerStatsManagerStatus,
+                    request_deserializer=cluster__manager__pb2.GetDockerStatsManagerStatusMsg.FromString,
+                    response_serializer=cluster__manager__pb2.DockerStatsMonitorStatusDTO.SerializeToString,
+            ),
+            'removeDockerNetworks': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeDockerNetworks,
+                    request_deserializer=cluster__manager__pb2.RemoveDockerNetworksMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeAllDockerNetworks': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeAllDockerNetworks,
+                    request_deserializer=cluster__manager__pb2.RemoveAllDockerNetworksMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getDockerStatsManagersInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.getDockerStatsManagersInfo,
+                    request_deserializer=cluster__manager__pb2.GetDockerStatsManagersInfoMsg.FromString,
+                    response_serializer=cluster__manager__pb2.DockerStatsManagersInfoDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2837,5 +3141,328 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getTrafficManagersInfo',
             cluster__manager__pb2.GetTrafficManagersInfoMsg.SerializeToString,
             cluster__manager__pb2.TrafficManagerInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopAllRunningContainers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopAllRunningContainers',
+            cluster__manager__pb2.StopAllRunningContainersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopContainer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopContainer',
+            cluster__manager__pb2.StopContainerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeAllStoppedContainers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeAllStoppedContainers',
+            cluster__manager__pb2.RemoveAllStoppedContainersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeContainer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeContainer',
+            cluster__manager__pb2.RemoveContainerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeAllContainerImages(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeAllContainerImages',
+            cluster__manager__pb2.RemoveAllContainerImagesMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeContainerImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeContainerImage',
+            cluster__manager__pb2.RemoveContainerImageMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listAllContainerImages(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllContainerImages',
+            cluster__manager__pb2.ListAllContainerImagesMsg.SerializeToString,
+            cluster__manager__pb2.ContainerImagesDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listAllDockerNetworks(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllDockerNetworks',
+            cluster__manager__pb2.ListAllDockerNetworksMsg.SerializeToString,
+            cluster__manager__pb2.DockerNetworksDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startAllStoppedContainers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startAllStoppedContainers',
+            cluster__manager__pb2.StartAllStoppedContainersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startContainer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startContainer',
+            cluster__manager__pb2.StartContainerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listAllRunningContainers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllRunningContainers',
+            cluster__manager__pb2.ListAllRunningContainersMsg.SerializeToString,
+            cluster__manager__pb2.RunningContainersDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listAllRunningEmulationsMsg(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllRunningEmulationsMsg',
+            cluster__manager__pb2.ListAllRunningEmulationsMsg.SerializeToString,
+            cluster__manager__pb2.RunningEmulationsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listAllStoppedContainers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listAllStoppedContainers',
+            cluster__manager__pb2.ListAllStoppedContainersMsg.SerializeToString,
+            cluster__manager__pb2.StoppedContainersDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def createEmulationNetworks(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/createEmulationNetworks',
+            cluster__manager__pb2.CreateEmulationNetworksMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopDockerStatsManagerThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopDockerStatsManagerThread',
+            cluster__manager__pb2.StopDockerStatsManagerThreadMsg.SerializeToString,
+            cluster__manager__pb2.ServiceStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getDockerStatsManagerStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getDockerStatsManagerStatus',
+            cluster__manager__pb2.GetDockerStatsManagerStatusMsg.SerializeToString,
+            cluster__manager__pb2.DockerStatsMonitorStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeDockerNetworks(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeDockerNetworks',
+            cluster__manager__pb2.RemoveDockerNetworksMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeAllDockerNetworks(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeAllDockerNetworks',
+            cluster__manager__pb2.RemoveAllDockerNetworksMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getDockerStatsManagersInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getDockerStatsManagersInfo',
+            cluster__manager__pb2.GetDockerStatsManagersInfoMsg.SerializeToString,
+            cluster__manager__pb2.DockerStatsManagersInfoDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

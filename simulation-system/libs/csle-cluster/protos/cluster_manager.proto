@@ -87,7 +87,163 @@ service ClusterManager {
   rpc stopTrafficGenerator(StopTrafficGeneratorMsg) returns (OperationOutcomeDTO) {}
   rpc getClientManagersInfo(GetClientManagersInfoMsg) returns (ClientManagersInfoDTO) {}
   rpc getTrafficManagersInfo(GetTrafficManagersInfoMsg) returns (TrafficManagerInfoDTO) {}
+  rpc stopAllRunningContainers(StopAllRunningContainersMsg) returns (OperationOutcomeDTO) {}
+  rpc stopContainer(StopContainerMsg) returns (OperationOutcomeDTO) {}
+  rpc removeAllStoppedContainers(RemoveAllStoppedContainersMsg) returns (OperationOutcomeDTO) {}
+  rpc removeContainer(RemoveContainerMsg) returns (OperationOutcomeDTO) {}
+  rpc removeAllContainerImages(RemoveAllContainerImagesMsg) returns (OperationOutcomeDTO) {}
+  rpc removeContainerImage(RemoveContainerImageMsg) returns (OperationOutcomeDTO) {}
+  rpc listAllContainerImages(ListAllContainerImagesMsg) returns (ContainerImagesDTO) {}
+  rpc listAllDockerNetworks(ListAllDockerNetworksMsg) returns (DockerNetworksDTO) {}
+  rpc startAllStoppedContainers(StartAllStoppedContainersMsg) returns (OperationOutcomeDTO) {}
+  rpc startContainer(StartContainerMsg) returns (OperationOutcomeDTO) {}
+  rpc listAllRunningContainers(ListAllRunningContainersMsg) returns (RunningContainersDTO) {}
+  rpc listAllRunningEmulations(ListAllRunningEmulationsMsg) returns (RunningEmulationsDTO) {}
+  rpc listAllStoppedContainers(ListAllStoppedContainersMsg) returns (StoppedContainersDTO) {}
+  rpc createEmulationNetworks(CreateEmulationNetworksMsg) returns (OperationOutcomeDTO) {}
+  rpc stopDockerStatsManagerThread(StopDockerStatsManagerThreadMsg) returns (OperationOutcomeDTO) {}
+  rpc getDockerStatsManagerStatus(GetDockerStatsManagerStatusMsg) returns (DockerStatsMonitorStatusDTO) {}
+  rpc removeDockerNetworks(RemoveDockerNetworksMsg) returns (OperationOutcomeDTO) {}
+  rpc removeAllDockerNetworks(RemoveAllDockerNetworksMsg) returns (OperationOutcomeDTO) {}
+  rpc getDockerStatsManagersInfo(GetDockerStatsManagersInfoMsg) returns (DockerStatsManagersInfoDTO) {}
 }
+
+// Message that the client sends when requesting to get the traffic managers info
+message GetDockerStatsManagersInfoMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the server returns when requested for the docker stats managers info
+message DockerStatsManagersInfoDTO {
+  repeated string ips = 1;
+  repeated int32 ports = 2;
+  string emulationName = 3;
+  int32 executionId = 4;
+  repeated bool dockerStatsManagersRunning = 5;
+  repeated DockerStatsMonitorStatusDTO dockerStatsManagersStatuses = 6;
+}
+
+// Message that the client sends to remove all CSLE docker networks
+message RemoveAllDockerNetworksMsg {}
+
+// Message that the client sends to remove a list of docker network
+message RemoveDockerNetworksMsg {
+  repeated string networks = 1;
+}
+
+// Message that the server returns when requested by the client, contains info about the docker stats monitor
+message DockerStatsMonitorStatusDTO {
+  int32 num_monitors = 1;
+  repeated string emulations = 2;
+  repeated int32 emulation_executions = 3;
+}
+
+// Message that the client sends to get the status of the docker stats manager of a specific execution
+message GetDockerStatsManagerStatusMsg {
+  int32 port = 1;
+}
+
+// Message that the client sends to stop a dockerStatsManager thread for an execution
+message StopDockerStatsManagerThreadMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to create emulation networks
+message CreateEmulationNetworksMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to list all stopped containers
+message ListAllStoppedContainersMsg {}
+
+//DTO with data related to all stopped containers
+message StoppedContainersDTO {
+  repeated DockerContainerDTO stoppedContainers = 1;
+}
+
+// Message that the client sends when requesting to list all running emulations
+message ListAllRunningEmulationsMsg {}
+
+//DTO with data related to all running emulations
+message RunningEmulationsDTO {
+  repeated string runningEmulations = 1;
+}
+
+// Message that the client sends when requesting to list all running containers
+message ListAllRunningContainersMsg {}
+
+//DTO with data related to all running containers
+message RunningContainersDTO {
+  repeated DockerContainerDTO runningContainers = 1;
+}
+
+//DTO with data related to a running container
+message DockerContainerDTO {
+  string name = 1;
+  string image = 2;
+  string ip = 3;
+}
+
+// Message that the client sends when requesting to start a specific container
+message StartContainerMsg {
+  string name = 1;
+}
+
+// Message that the client sends when requesting to start all stopped containers
+message StartAllStoppedContainersMsg {}
+
+// Message that the client sends when requesting to list all Docker networks
+message ListAllDockerNetworksMsg {}
+
+// Message that the server returns when requested for the Docker networks
+message DockerNetworksDTO {
+  repeated string networks = 1;
+  repeated int32 network_ids = 2;
+}
+
+// Message that the server returns when requested for the container images
+message ContainerImagesDTO {
+  repeated ContainerImageDTO images = 1;
+}
+
+// DTO for a specific container image
+message ContainerImageDTO {
+  string repoTags = 1;
+  string created = 2;
+  string os = 3;
+  string architecture = 4;
+  string size = 5;
+}
+
+// Message that the client sends when requesting to list all container images
+message ListAllContainerImagesMsg {}
+
+// Message that the client sends when requesting to remove a specific container image
+message RemoveContainerImageMsg {
+  string name = 1;
+}
+
+// Message that the client sends when requesting to remove all container images
+message RemoveAllContainerImagesMsg {}
+
+// Message that the client sends when requesting to remove all stopped containers
+message RemoveAllStoppedContainersMsg {}
+
+// Message that the client sends when requesting to remove a specific container
+message RemoveContainerMsg {
+  string name = 1;
+}
+
+// Message that the client sends when requesting to stop a specific container
+message StopContainerMsg {
+  string name = 1;
+}
+
+// Message that the client sends when requesting to stop all running CSLE containers
+message StopAllRunningContainersMsg {}
 
 // Message that the client sends when requesting to get the traffic managers info
 message GetTrafficManagersInfoMsg {
@@ -105,6 +261,7 @@ message TrafficManagersInfoDTO {
   repeated TrafficManagerInfoDTO trafficManagersStatuses = 6;
 }
 
+// Message that the server returns when requested for the info of a specific traffic manager
 message TrafficManagerInfoDTO {
   bool running = 1;
   string script = 2;

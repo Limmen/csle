@@ -1,3 +1,4 @@
+from typing import List
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_collector.constants.constants as constants
@@ -1614,3 +1615,329 @@ def get_traffic_managers_info(
     )
     traffic_managers_info_dto = stub.getTrafficManagersInfo(operation_msg, timeout=timeout)
     return traffic_managers_info_dto
+
+
+def stop_all_running_containers(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops a specific traffic generator
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopAllRunningContainersMsg()
+    operation_outcome_dto = stub.stopAllRunningContainers(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_container(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        container_name: str, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops a specific container
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param container_name: the name of the container
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopContainerMsg(name=container_name)
+    operation_outcome_dto = stub.stopContainer(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def remove_all_stopped_containers(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes all stopped containers
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllStoppedContainersMsg()
+    operation_outcome_dto = stub.removeAllStoppedContainers(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def remove_container(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        container_name: str, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes a specific container
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param container_name: the name of the container
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveContainerMsg(name=container_name)
+    operation_outcome_dto = stub.removeContainer(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def remove_all_container_images(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes all container images
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllContainerImagesMsg()
+    operation_outcome_dto = stub.removeAllContainerImages(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def remove_container_image(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        image_name: str, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes a specific container image
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param image_name: the name of the container imge
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveContainerImageMsg(name=image_name)
+    operation_outcome_dto = stub.removeContainerImage(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def list_all_container_images(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImagesDTO:
+    """
+    Lists all container images
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a ContainerImagesDTO with the container images
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListAllContainerImagesMsg()
+    container_images_dto = stub.listAllContainerImages(operation_msg, timeout=timeout)
+    return container_images_dto
+
+
+def list_all_docker_networks(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerNetworksDTO:
+    """
+    Lists all Docker networks
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a DockerNetworksDTO wth the docker networks
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListAllDockerNetworksMsg()
+    docker_networks_dto = stub.listAllDockerNetworks(operation_msg, timeout=timeout)
+    return docker_networks_dto
+
+
+def start_all_stopped_containers(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts all stopped containers
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartAllStoppedContainersMsg()
+    operation_outcome_dto = stub.startAllStoppedContainers(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def start_container(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        container_name: str, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Starts a specific container
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param container_name: the name of the container imge
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartContainerMsg(name=container_name)
+    operation_outcome_dto = stub.startContainer(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def list_all_running_containers(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.RunningContainersDTO:
+    """
+    Lists all running containers
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a RunningContainersDTO wth the running containers
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListAllRunningContainersMsg()
+    running_containers_dto = stub.listAllRunningContainers(operation_msg, timeout=timeout)
+    return running_containers_dto
+
+
+def list_all_running_emulations(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.RunningEmulationsDTO:
+    """
+    Lists all running emulations
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a RunningEmulationsDTO with the running emulations
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListAllRunningEmulationsMsg()
+    running_emulations_dto = stub.listAllRunningEmulations(operation_msg, timeout=timeout)
+    return running_emulations_dto
+
+
+def list_all_stopped_containers(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.StoppedContainersDTO:
+    """
+    Lists all stopped containers
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a StoppedContainersDTO wth the stopped containers
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListAllStoppedContainersMsg()
+    stopped_containers_dto = stub.listAllStoppedContainers(operation_msg, timeout=timeout)
+    return stopped_containers_dto
+
+
+def create_emulation_networks(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Creates Docker networks for a given emulation
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.CreateEmulationNetworksMsg(
+        emulation=emulation, ip_first_octet=ip_first_octet
+    )
+    operation_outcome_dto = stub.createEmulationNetworks(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def stop_docker_stats_manager_thread(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops the docker stats manager thread for a specific emulation execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerStatsManagerThreadMsg(
+        emulation=emulation, ip_first_octet=ip_first_octet
+    )
+    operation_outcome_dto = stub.stopDockerStatsManagerThread(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def get_docker_stats_manager_status(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        port: int, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsMonitorStatusDTO:
+    """
+    Stops the docker stats manager thread for a specific emulation execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param port: the port that the docker statsmanage is listening to
+    :return: a DockerStatsMonitorStatusDTO with the docker stats managers statuses
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagerStatusMsg(port=port)
+    stats_manager_status_dto = stub.getDockerStatsManagerStatus(operation_msg, timeout=timeout)
+    return stats_manager_status_dto
+
+
+def remove_docker_networks(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        networks: List[str], timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes a list of docker networks
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param networks: the list of docker networks to remove
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveDockerNetworksMsg(networks=networks)
+    operation_outcome_dto = stub.removeDockerNetworks(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def remove_all_docker_networks(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Remove all docker networks
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param networks: the list of docker networks to remove
+    :return: an OperationOutcomeDTO with the outcome of the operation
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllDockerNetworksMsg()
+    operation_outcome_dto = stub.removeAllDockerNetworks(operation_msg, timeout=timeout)
+    return operation_outcome_dto
+
+
+def get_docker_stats_manager_info(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO:
+    """
+    Gets the docker stats manager info
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: a DockerStatsManagersInfoDTO with the infos
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagersInfoMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    stats_managers_info_dto = stub.getDockerStatsManagersInfo(operation_msg, timeout=timeout)
+    return stats_managers_info_dto

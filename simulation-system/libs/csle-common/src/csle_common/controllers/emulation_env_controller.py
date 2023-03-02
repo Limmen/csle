@@ -310,6 +310,7 @@ class EmulationEnvController:
     def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str]) -> EmulationExecution:
         """
         Creates a new emulation execution
+
         :param emulation_env_config: the emulation configuration
         :param physical_servers: the physical servers to deploy the containers on
         :return: a DTO representing the execution
@@ -319,8 +320,8 @@ class EmulationEnvController:
         used_subnets = list(map(lambda x: x.ip_first_octet,
                                 MetastoreFacade.list_emulation_executions_for_a_given_emulation(
                                     emulation_name=emulation_env_config.name)))
-        available_sunets = list(filter(lambda x: x not in used_subnets, total_subnets))
-        ip_first_octet = available_sunets[0]
+        available_subnets = list(filter(lambda x: x not in used_subnets, total_subnets))
+        ip_first_octet = available_subnets[0]
         em_config = emulation_env_config.create_execution_config(ip_first_octet=ip_first_octet,
                                                                  physical_servers=physical_servers)
         emulation_execution = EmulationExecution(emulation_name=emulation_env_config.name,

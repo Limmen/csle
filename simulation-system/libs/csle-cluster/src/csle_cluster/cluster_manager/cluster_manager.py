@@ -1667,6 +1667,317 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      traffic_managers_dto.traffic_managers_statuses))
         )
 
+    def stopAllRunningContainers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopAllRunningContainersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops all running CSLE containers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info("Stopping all running CSLE containers")
+        ContainerController.stop_all_running_containers()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopContainer(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopContainerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping container: {request.name}")
+        ContainerController.stop_container(name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def removeAllStoppedContainers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllStoppedContainersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes all stopped containers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info("Removing all stopped containers")
+        ContainerController.rm_all_stopped_containers()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def removeContainer(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveContainerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes all specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Removing container: {request.name}")
+        ContainerController.rm_container(container_name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def removeAllContainerImages(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllContainerImagesMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes all CSLE container images
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info("Removing all container images")
+        ContainerController.rm_all_images()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def removeContainerImage(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveContainerImageMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes a specific container image
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Removing container image: {request.name}")
+        ContainerController.rm_image(name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def listAllContainerImages(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllContainerImagesMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImagesDTO:
+        """
+        Removes a specific container image
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a ContainerImagesDTO
+        """
+        logging.info("Listing all container images")
+        imgs_infos = ContainerController.list_all_images()
+        images = []
+        for img_info in imgs_infos:
+            images.append(
+                csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImageDTO(
+                    repoTags = img_info[0], created = img_info[1], os = img_info[2],
+                    architecture = img_info[3], size = img_info[4]
+                )
+            )
+        return csle_cluster.cluster_manager.cluster_manager_pb2.ContainerImagesDTO(images=images)
+
+    def listAllDockerNetworks(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllDockerNetworksMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerNetworksDTO:
+        """
+        Lists all docker networks
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DockerNetworksDTO
+        """
+        logging.info("Listing all docker networks")
+        networks, network_ids = ContainerController.list_docker_networks()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.DockerNetworksDTO(
+            networks=networks, network_ids=network_ids)
+
+    def startAllStoppedContainers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartAllStoppedContainersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts all stopped containers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting all stopped CSLE containers")
+        ContainerController.start_all_stopped_containers()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def startContainer(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartContainerMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the container: {request.name}")
+        ContainerController.start_container(name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def listAllRunningContainers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllRunningContainersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.RunningContainersDTO:
+        """
+        Lists all running containers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a RunningContainersDTO
+        """
+        logging.info("Listing all running containers")
+        running_container_infos = ContainerController.list_all_running_containers()
+        running_containers = []
+        for rci in running_container_infos:
+            running_containers.append(csle_cluster.cluster_manager.cluster_manager_pb2.DockerContainerDTO(
+                name=rci[0], image=rci[1], ip = rci[2]))
+        return csle_cluster.cluster_manager.cluster_manager_pb2.RunningContainersDTO(
+            runningContainers=running_containers)
+
+    def listAllRunningEmulations(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllRunningEmulationsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.RunningEmulationsDTO:
+        """
+        Lists all running emulations
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a RunningEmulationsDTO
+        """
+        logging.info("Listing all running emulations")
+        running_emulations = ContainerController.list_running_emulations()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.RunningEmulationsDTO(
+            runningEmulations=running_emulations)
+
+    def listAllStoppedContainers(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllStoppedContainersMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.StoppedContainersDTO:
+        """
+        Lists all stopped containers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a StoppedContainersDTOb
+        """
+        logging.info("Listing all stopped containers")
+        stopped_container_infos = ContainerController.list_all_stopped_containers()
+        stopped_containers = []
+        for rci in stopped_container_infos:
+            stopped_containers.append(csle_cluster.cluster_manager.cluster_manager_pb2.DockerContainerDTO(
+                name=rci[0], image=rci[1], ip = rci[2]))
+        return csle_cluster.cluster_manager.cluster_manager_pb2.StoppedContainersDTO(
+            stoppedContainers=stopped_containers)
+
+    def createEmulationNetworks(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.CreateEmulationNetworksMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Creates networks for a given emulation execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Creates networks for emulation: {request.emulation} and execution id:{request.ipFirstOctet}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopDockerStatsManagerThread(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopDockerStatsManagerThreadMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the docker stats manager thread
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping the docker stats manager thread for execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ContainerController.stop_docker_stats_thread(execution=execution,
+                                                      physical_server_ip=GeneralUtil.get_host_ip())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def getDockerStatsManagerStatus(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagerStatusMsg,
+            context: grpc.ServicerContext) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsMonitorStatusDTO:
+        """
+        Gets the docker stats manager status
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DockerStatsMonitorStatusDTO
+        """
+        logging.info(f"Getting the docker stats manager status by sending a request on port: {request.port}")
+        docker_stats_monitor_dto = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
+            ip=GeneralUtil.get_host_ip(), port=request.port)
+        dto = ClusterManagerUtil.convert_docker_stats_monitor_dto(monitor_dto=docker_stats_monitor_dto)
+        return dto
+
+    def removeDockerNetworks(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveDockerNetworksMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes a list of docker networks
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Removing docker networks: {list(request.networks)}")
+        ContainerController.remove_networks(names=request.networks)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def removeAllDockerNetworks(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllDockerNetworksMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes all docker networks related to CSLE
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Removing all docker networks")
+        ContainerController.rm_all_networks()
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def getDockerStatsManagersInfo(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerStatsManagersInfoMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO:
+        """
+        Gets the info of docker stats maangers
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a TrafficManagersInfoDTO
+        """
+        logging.info(f"Gets the info of docker stats managers in execution with id: {request.ipFirstOctet} "
+                     f"and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        docker_stats_managers_dto = ContainerController.get_docker_stats_managers_info(
+            emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
+            active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
+            physical_host_ip=GeneralUtil.get_host_ip()
+        )
+        return csle_cluster.cluster_manager.cluster_manager_pb2.DockerStatsManagersInfoDTO(
+            ips = docker_stats_managers_dto.ips,
+            ports = docker_stats_managers_dto.ports,
+            emulationName = docker_stats_managers_dto.emulation_name,
+            executionId = docker_stats_managers_dto.execution_id,
+            dockerStatsManagersRunning = docker_stats_managers_dto.docker_stats_managers_running,
+            dockerStatsManagersStatuses =
+            list(map(lambda x: ClusterManagerUtil.convert_docker_stats_monitor_dto(x),
+                     docker_stats_managers_dto.docker_stats_managers_statuses))
+        )
+
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "cluster_manager.log") -> None:
