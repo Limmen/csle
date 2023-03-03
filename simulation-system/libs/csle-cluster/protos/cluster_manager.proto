@@ -186,6 +186,54 @@ service ClusterManager {
       returns (SnortIdsMonitorThreadStatusesDTO) {}
   rpc getSnortIdsManagersInfo(GetSnortIdsManagersInfoMsg) returns (SnortIdsManagersInfoDTO) {}
   rpc getExecutionInfo(GetExecutionInfoMsg) returns (ExecutionInfoDTO) {}
+  rpc listKibanaTunnels(ListKibanaTunnelsMsg) returns (KibanaTunnelsDTO) {}
+  rpc createKibanaTunnel(CreateKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
+  rpc listRyuTunnels(ListRyuTunnelsMsg) returns (RyuTunnelsDTO) {}
+  rpc createRyuTunnel(CreateKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends to request information about Kibana tunnels
+message CreateKibanaTunnelMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends to request information about Kibana tunnels
+message ListKibanaTunnelsMsg {}
+
+// Message that the server returns when the client requests information about the Kibana tunnels
+message KibanaTunnelsDTO {
+  repeated KibanaTunnelDTO tunnels = 1;
+}
+
+// Message that the server returns when the client requests information about the Kibana tunnels
+message KibanaTunnelDTO {
+  int32 port = 1;
+  string ip = 2;
+  string emulation = 3;
+  int32 ipFirstOctet = 4;
+}
+
+// Message that the client sends to request information about Kibana tunnels
+message CreateRyuTunnelMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends to request information about Kibana tunnels
+message ListRyuTunnelsMsg {}
+
+// Message that the server returns when the client requests information about the Ryu tunnels
+message RyuTunnelsDTO {
+  repeated RyuTunnelDTO tunnels = 1;
+}
+
+// Message that the server returns when the client requests information about the Ryu tunnels
+message RyuTunnelDTO {
+  int32 port = 1;
+  string ip = 2;
+  string emulation = 3;
+  int32 ipFirstOctet = 4;
 }
 
 // Message that the client sends when requesting to get the statuses of all Snort IDS monitor threads

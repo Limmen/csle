@@ -925,6 +925,26 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.ExecutionInfoDTO.FromString,
                 )
+        self.listKibanaTunnels = channel.unary_unary(
+                '/ClusterManager/listKibanaTunnels',
+                request_serializer=cluster__manager__pb2.ListKibanaTunnelsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.KibanaTunnelsDTO.FromString,
+                )
+        self.createKibanaTunnel = channel.unary_unary(
+                '/ClusterManager/createKibanaTunnel',
+                request_serializer=cluster__manager__pb2.CreateKibanaTunnelMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.listRyuTunnels = channel.unary_unary(
+                '/ClusterManager/listRyuTunnels',
+                request_serializer=cluster__manager__pb2.ListRyuTunnelsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.RyuTunnelsDTO.FromString,
+                )
+        self.createRyuTunnel = channel.unary_unary(
+                '/ClusterManager/createRyuTunnel',
+                request_serializer=cluster__manager__pb2.CreateKibanaTunnelMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -2023,6 +2043,30 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def listKibanaTunnels(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createKibanaTunnel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listRyuTunnels(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createRyuTunnel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -2935,6 +2979,26 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getExecutionInfo,
                     request_deserializer=cluster__manager__pb2.GetExecutionInfoMsg.FromString,
                     response_serializer=cluster__manager__pb2.ExecutionInfoDTO.SerializeToString,
+            ),
+            'listKibanaTunnels': grpc.unary_unary_rpc_method_handler(
+                    servicer.listKibanaTunnels,
+                    request_deserializer=cluster__manager__pb2.ListKibanaTunnelsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.KibanaTunnelsDTO.SerializeToString,
+            ),
+            'createKibanaTunnel': grpc.unary_unary_rpc_method_handler(
+                    servicer.createKibanaTunnel,
+                    request_deserializer=cluster__manager__pb2.CreateKibanaTunnelMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'listRyuTunnels': grpc.unary_unary_rpc_method_handler(
+                    servicer.listRyuTunnels,
+                    request_deserializer=cluster__manager__pb2.ListRyuTunnelsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.RyuTunnelsDTO.SerializeToString,
+            ),
+            'createRyuTunnel': grpc.unary_unary_rpc_method_handler(
+                    servicer.createRyuTunnel,
+                    request_deserializer=cluster__manager__pb2.CreateKibanaTunnelMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -6038,5 +6102,73 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getExecutionInfo',
             cluster__manager__pb2.GetExecutionInfoMsg.SerializeToString,
             cluster__manager__pb2.ExecutionInfoDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listKibanaTunnels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listKibanaTunnels',
+            cluster__manager__pb2.ListKibanaTunnelsMsg.SerializeToString,
+            cluster__manager__pb2.KibanaTunnelsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def createKibanaTunnel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/createKibanaTunnel',
+            cluster__manager__pb2.CreateKibanaTunnelMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listRyuTunnels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/listRyuTunnels',
+            cluster__manager__pb2.ListRyuTunnelsMsg.SerializeToString,
+            cluster__manager__pb2.RyuTunnelsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def createRyuTunnel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/createRyuTunnel',
+            cluster__manager__pb2.CreateKibanaTunnelMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

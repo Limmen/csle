@@ -7,7 +7,6 @@ import paramiko
 import csle_collector.constants.constants as collector_constants
 import csle_ryu.constants.constants as ryu_constants
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.controllers.container_controller import ContainerController
@@ -784,7 +783,7 @@ class EmulationEnvController:
 
     @staticmethod
     def create_ssh_tunnel(tunnels_dict: Dict[str, Any], local_port: int,
-                          remote_port: int, remote_ip: str) -> None:
+                          remote_port: int, remote_ip: str, emulation: str, execution_id: int) -> None:
         """
         Creates an SSH tunnel to forward the port of a container
 
@@ -793,6 +792,8 @@ class EmulationEnvController:
         :param local_port: the local port to forward
         :param remote_port: the remote port to forward
         :param remote_ip: the remote ip to forward
+        :param emulation: the name of the emulation
+        :param execution_id: the id of the execution
         :return: None
         """
         config = Config.get_current_config()
@@ -811,6 +812,8 @@ class EmulationEnvController:
             tunnels_dict=tunnels_dict)
         tunnel_thread.start()
         tunnel_thread_dict = {}
-        tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY] = tunnel_thread
-        tunnel_thread_dict[api_constants.MGMT_WEBAPP.PORT_PROPERTY] = local_port
+        tunnel_thread_dict[constants.GENERAL.THREAD_PROPERTY] = tunnel_thread
+        tunnel_thread_dict[constants.GENERAL.PORT_PROPERTY] = local_port
+        tunnel_thread_dict[constants.GENERAL.EMULATION_PROPERTY] = emulation
+        tunnel_thread_dict[constants.GENERAL.EXECUTION_ID_PROPERTY] = execution_id
         tunnels_dict[remote_ip] = tunnel_thread_dict

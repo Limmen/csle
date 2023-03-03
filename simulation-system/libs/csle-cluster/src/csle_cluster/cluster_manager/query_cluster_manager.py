@@ -3593,3 +3593,77 @@ def get_snort_ids_monitor_thread_statuses(
     )
     statuses = stub.getSnortIdsMonitorThreadStatuses(operation_msg, timeout=timeout)
     return statuses
+
+
+def create_kibana_tunnel(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Creates a Kibana tunnel for a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.CreateKibanaTunnelMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome = stub.createKibanaTunnel(operation_msg, timeout=timeout)
+    return operation_outcome
+
+
+def create_ryu_tunnel(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Creates a Ryu tunnel for a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.CreateRyuTunnelMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome = stub.createRyuTunnel(operation_msg, timeout=timeout)
+    return operation_outcome
+
+
+def list_kibana_tunnels(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.KibanaTunnelsDTO:
+    """
+    Lists the Kibana tunnels of a specific server
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListKibanaTunnelsMsg()
+    kibanaTunnelsDTO = stub.listKibanaTunnels(operation_msg, timeout=timeout)
+    return kibanaTunnelsDTO
+
+
+def list_ryu_tunnels(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.KibanaTunnelsDTO:
+    """
+    Lists the Ryu tunnels of a specific server
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListRyuTunnelsMsg()
+    ryuTunnelsDTO = stub.listRyuTunnels(operation_msg, timeout=timeout)
+    return ryuTunnelsDTO

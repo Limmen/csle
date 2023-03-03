@@ -5,6 +5,17 @@ Constants for csle-common
 import re
 
 
+class GENERAL:
+    """
+    General constants
+    """
+    THREAD_PROPERTY = "thread"
+    PORT_PROPERTY = "port"
+    IP_PROPERTY = "ip"
+    EMULATION_PROPERTY = "emulation"
+    EXECUTION_ID_PROPERTY = "execution_id"
+
+
 class GRPC_SERVERS:
     """
     Constants related to grpc servers

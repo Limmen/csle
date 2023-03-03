@@ -1,4 +1,6 @@
 from typing import Dict, Any, List, Tuple
+import logging
+from requests import get
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.controllers.container_controller import ContainerController
@@ -12,6 +14,9 @@ from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.controllers.emulation_env_controller import EmulationEnvController
+from csle_common.util.general_util import GeneralUtil
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
@@ -22,6 +27,7 @@ import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.ryu_manager.ryu_manager_pb2
 import csle_collector.host_manager.host_manager_pb2
 import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster_manager_pb2
+import csle_cluster.constants.constants as cluster_constants
 
 
 class ClusterManagerUtil:
@@ -1024,7 +1030,6 @@ class ClusterManagerUtil:
             heartbeat_running=False, ip="")
 
     @staticmethod
-
     def get_empty_snort_managers_info_dto() -> cluster_manager_pb2.SnortIdsManagersInfoDTO:
         """
         :return: an empty SnortIdsManagersInfoDTO
@@ -1100,3 +1105,312 @@ class ClusterManagerUtil:
             runningContainers=[], elkManagersInfoDTO=None, ryuManagersInfoDTO=None, trafficManagersInfoDTO=None,
             stoppedContainers=[], activeNetworks=[]
         )
+
+    @staticmethod
+    def get_empty_kibana_tunnel_dto() -> cluster_manager_pb2.KibanaTunnelDTO:
+        """
+        :return: an empty KibanaTunnelDTO
+        """
+        return cluster_manager_pb2.KibanaTunnelDTO(port=1, ip="", emulation="", ipFirstOctet=-1)
+
+    @staticmethod
+    def get_empty_kibana_tunnels_dto() -> cluster_manager_pb2.KibanaTunnelsDTO:
+        """
+        :return: an empty KibanaTunnelsDTO
+        """
+        return cluster_manager_pb2.KibanaTunnelsDTO(tunnels=[])
+
+    @staticmethod
+    def kibana_tunnel_dto_to_dict(kibana_tunnel_dto: cluster_manager_pb2.KibanaTunnelDTO) -> Dict[str, Any]:
+        """
+        Converts a KibanaTunnelDTO to a dict
+
+        :param kibana_tunnel_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = kibana_tunnel_dto.ip
+        d["port"] = kibana_tunnel_dto.port
+        d["emulation"] = kibana_tunnel_dto.emulation
+        d["ipFirstOctet"] = kibana_tunnel_dto.ipFirstOctet
+        return d
+
+    @staticmethod
+    def kibana_tunnels_dto_to_dict(kibana_tunnels_dto: cluster_manager_pb2.KibanaTunnelsDTO) -> Dict[str, Any]:
+        """
+        Converts a KibanaTunnelsDTO to a dict
+
+        :param kibana_tunnels_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["tunnels"] = list(map(lambda x: ClusterManagerUtil.kibana_tunnel_dto_to_dict(kibana_tunnel_dto=x),
+                                kibana_tunnels_dto.tunnels))
+        return d
+
+    @staticmethod
+    def get_empty_ryu_tunnel_dto() -> cluster_manager_pb2.RyuTunnelDTO:
+        """
+        :return: an empty RyuTunnelDTO
+        """
+        return cluster_manager_pb2.RyuTunnelDTO(port=1, ip="", emulation="", ipFirstOctet=-1)
+
+    @staticmethod
+    def get_empty_ryu_tunnels_dto() -> cluster_manager_pb2.RyuTunnelsDTO:
+        """
+        :return: an empty RyuTunnelsDTO
+        """
+        return cluster_manager_pb2.RyuTunnelsDTO(tunnels=[])
+
+    @staticmethod
+    def ryu_tunnel_dto_to_dict(ryu_tunnel_dto: cluster_manager_pb2.RyuTunnelDTO) -> Dict[str, Any]:
+        """
+        Converts a RyuTunnelDTO to a dict
+
+        :param ryu_tunnel_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = ryu_tunnel_dto.ip
+        d["port"] = ryu_tunnel_dto.port
+        d["emulation"] = ryu_tunnel_dto.emulation
+        d["ipFirstOctet"] = ryu_tunnel_dto.ipFirstOctet
+        return d
+
+    @staticmethod
+    def ryu_tunnels_dto_to_dict(ryu_tunnels_dto: cluster_manager_pb2.RyuTunnelsDTO) -> Dict[str, Any]:
+        """
+        Converts a RyuTunnelsDTO to a dict
+
+        :param ryu_tunnels_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["tunnels"] = list(map(lambda x: ClusterManagerUtil.ryu_tunnel_dto_to_dict(ryu_tunnel_dto=x),
+                                ryu_tunnels_dto.tunnels))
+        return d
+
+    @staticmethod
+    def create_kibana_tunnel(execution: EmulationExecution, logger: logging.Logger) -> int:
+        """
+        Utility method for creating a Kibana tunnel.
+
+        :param execution: the execution to create the tunnel for
+        :param logger: the logger to use for logging
+        :return: the port of the tunnel
+        """
+        ip = GeneralUtil.get_host_ip()
+        if ip != execution.emulation_env_config.elk_config.container.physical_host_ip:
+            return -1
+        try:
+            local_kibana_port = cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNEL_BASE_PORT + execution.ip_first_octet
+            if execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip \
+                    not in cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT:
+                try:
+                    EmulationEnvController.create_ssh_tunnel(
+                        tunnels_dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT,
+                        local_port=local_kibana_port,
+                        remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                        remote_ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                        emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+                except Exception:
+                    local_kibana_port = local_kibana_port + 100
+                    EmulationEnvController.create_ssh_tunnel(
+                        tunnels_dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT,
+                        local_port=local_kibana_port,
+                        remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                        remote_ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                        emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+            else:
+                tunnel_thread_dict = cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT[
+                    execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip]
+                try:
+                    response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
+                                   f'{local_kibana_port}')
+                    if response.status_code != constants.HTTPS.OK_STATUS_CODE:
+                        tunnel_thread_dict[cluster_constants.KIBANA_TUNNELS.THREAD_PROPERTY].shutdown()
+                        del cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT[
+                            execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip]
+                        EmulationEnvController.create_ssh_tunnel(
+                            tunnels_dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT,
+                            local_port=local_kibana_port,
+                            remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                            remote_ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                            emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+                except Exception:
+                    tunnel_thread_dict[cluster_constants.KIBANA_TUNNELS.THREAD_PROPERTY].shutdown()
+                    if execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip in \
+                            cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT:
+                        del cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT[
+                            execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip]
+                    local_kibana_port = local_kibana_port + 100
+                    EmulationEnvController.create_ssh_tunnel(
+                        tunnels_dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT,
+                        local_port=local_kibana_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
+                        remote_ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                        emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+            return local_kibana_port
+        except Exception as e:
+            logger.warning(f"There was an exception creating the Kibana tunnel: {str(e)}, {repr(e)}")
+            return -1
+
+    @staticmethod
+    def remove_kibana_tunnel(execution: EmulationExecution) -> None:
+        """
+        Utility function for removing the kibana tunnel of a given execution
+
+        :param execution: the execution to remove the tunnel for
+        :return: None
+        """
+        if execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip in \
+                cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT:
+            tunnel_thread_dict = cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT[
+                execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip]
+            tunnel_thread_dict[cluster_constants.KIBANA_TUNNELS.THREAD_PROPERTY].shutdown()
+            del cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT[
+                execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip]
+
+    @staticmethod
+    def create_ryu_tunnel(execution: EmulationExecution, logger: logging.Logger) -> int:
+        """
+        Utility function for creating a Ryu tunnel
+
+        :param execution: the execution to create the tunnel for
+        :param logger: the logger to use for logging
+        :return: the port of the tunnel
+        """
+        try:
+            local_ryu_port = cluster_constants.RYU_TUNNELS.RYU_TUNNEL_BASE_PORT + execution.ip_first_octet
+            if execution.emulation_env_config.sdn_controller_config is not None:
+                if execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip \
+                        not in cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT:
+                    try:
+                        EmulationEnvController.create_ssh_tunnel(
+                            tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
+                            local_port=local_ryu_port,
+                            remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                            remote_ip=
+                            execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                            emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+                    except Exception:
+                        local_ryu_port = local_ryu_port + 100
+                        EmulationEnvController.create_ssh_tunnel(
+                            tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
+                            local_port=local_ryu_port,
+                            remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                            remote_ip=
+                            execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                            emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+                else:
+                    tunnel_thread_dict = cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[
+                        execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
+                    try:
+                        response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
+                                       f'{local_ryu_port}')
+                        if response.status_code != constants.HTTPS.OK_STATUS_CODE:
+                            tunnel_thread_dict[cluster_constants.RYU_TUNNELS.THREAD_PROPERTY].shutdown()
+                            del cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[
+                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
+                            EmulationEnvController.create_ssh_tunnel(
+                                tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
+                                local_port=local_ryu_port,
+                                remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                                remote_ip=
+                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                                emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+                    except Exception:
+                        tunnel_thread_dict[cluster_constants.RYU_TUNNELS.THREAD_PROPERTY].shutdown()
+                        if execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip in \
+                                cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT:
+                            del cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[
+                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
+                        local_ryu_port = local_ryu_port + 100
+                        EmulationEnvController.create_ssh_tunnel(
+                            tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
+                            local_port=local_ryu_port,
+                            remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                            remote_ip=
+                            execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                            emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
+            return local_ryu_port
+        except Exception as e:
+            logger.warning(
+                f"There was an exception creating the Ryu tunnel: {str(e)}, {repr(e)}")
+            return -1
+
+    @staticmethod
+    def remove_ryu_tunnel(execution: EmulationExecution) -> None:
+        """
+        Utility function for removing a Ryu tunnel for a given execution
+
+        :param execution: the execution to remove the tunnel for
+        :return: None
+        """
+        if execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip \
+                in cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT:
+            tunnel_thread_dict = cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[
+                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
+            tunnel_thread_dict[cluster_constants.RYU_TUNNELS.THREAD_PROPERTY].shutdown()
+            del cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[
+                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
+
+    @staticmethod
+    def create_kibana_tunnels_dto_from_dict(dict: Dict[str, Any]) -> cluster_manager_pb2.KibanaTunnelsDTO:
+        """
+        Utility function for creating a kibana tunnels DTO from a dict with Kibana tunnels
+
+        :param dict: the dict with the tunnels
+        :return: the DTO
+        """
+        kibana_tunnels = []
+        for k,v in dict.items():
+            kibana_tunnels.append(cluster_manager_pb2.KibanaTunnelDTO(
+                ip=k, port = v[constants.GENERAL.PORT_PROPERTY], emulation = v[constants.GENERAL.EMULATION_PROPERTY],
+                ipFirstOctet = v[constants.GENERAL.EXECUTION_ID_PROPERTY]
+            ))
+        return cluster_manager_pb2.KibanaTunnelsDTO(tunnels=kibana_tunnels)
+
+    @staticmethod
+    def create_ryu_tunnels_dto_from_dict(dict: Dict[str, Any]) -> cluster_manager_pb2.RyuTunnelsDTO:
+        """
+        Utility function for creating a ryu tunnels DTO from a dict with Ryu tunnels
+
+        :param dict: the dict with the tunnels
+        :return: the DTO
+        """
+        ryu_tunnels = []
+        for k,v in dict.items():
+            ryu_tunnels.append(cluster_manager_pb2.RyuTunnelDTO(
+                ip=k, port = v[constants.GENERAL.PORT_PROPERTY], emulation = v[constants.GENERAL.EMULATION_PROPERTY],
+                ipFirstOctet = v[constants.GENERAL.EXECUTION_ID_PROPERTY]
+            ))
+        return cluster_manager_pb2.RyuTunnelsDTO(tunnels=ryu_tunnels)
+
+    @staticmethod
+    def merge_execution_infos(execution_infos: List[cluster_manager_pb2.ExecutionInfoDTO]) \
+            -> cluster_manager_pb2.ExecutionInfoDTO:
+        """
+        Function that merges a list of execution infos into one
+
+        :param execution_infos: the list of execution infos to merge
+        :return: the merged info
+        """
+        assert len(execution_infos) > 0
+        if len(execution_infos) == 1:
+            return execution_infos[0]
+        merged_info = execution_infos[0]
+        for exec_info in execution_infos[1:]:
+            merged_info.snortIdsManagersInfo = merged_info.snortIdsManagersInfo + exec_info.snortIdsManagersInfo
+            merged_info.ossecIdsManagersInfo = merged_info.ossecIdsManagersInfo + exec_info.ossecIdsManagersInfo
+            merged_info.kafkaManagersInfo = merged_info.kafkaManagersInfo + exec_info.kafkaManagersInfo
+            merged_info.hostManagersInfo = merged_info.hostManagersInfo + exec_info.hostManagersInfo
+            merged_info.clientManagersInfo = merged_info.clientManagersInfo + exec_info.clientManagersInfo
+            merged_info.dockerStatsManagersInfo = merged_info.dockerStatsManagersInfo + \
+                                                  exec_info.dockerStatsManagersInfo
+            merged_info.runningContainers = merged_info.runningContainers + exec_info.runningContainers
+            merged_info.stoppedContainers = merged_info.stoppedContainers + exec_info.stoppedContainers
+            merged_info.trafficManagersInfoDTO = merged_info.trafficManagersInfoDTO + exec_info.trafficManagersInfoDTO
+            merged_info.activeNetworks = merged_info.activeNetworks + exec_info.activeNetworks
+            merged_info.elkManagersInfoDTO = merged_info.elkManagersInfoDTO + exec_info.elkManagersInfoDTO
+            merged_info.ryuManagersInfoDTO = merged_info.ryuManagersInfoDTO + exec_info.ryuManagersInfoDTO
+        return merged_info

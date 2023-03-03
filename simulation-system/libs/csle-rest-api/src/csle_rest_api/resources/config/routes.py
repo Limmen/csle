@@ -17,8 +17,7 @@ config_bp = Blueprint(
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}")
 
 
-@config_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                              api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
+@config_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
 def config():
     """
     The /config resource.

@@ -1,10 +1,12 @@
 from typing import Dict, Any, List
 import grpc
+import csle_common.constants.constants as constants
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
-import csle_common.constants.constants as constants
 
 
 class ClusterController:
@@ -3409,3 +3411,90 @@ class ClusterController:
                 csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_monitor_thread_statuses(
                     stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
             return statuses_dtos
+
+    @staticmethod
+    def create_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Creates a Ryu tunnel for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_ryu_tunnel(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def create_kibana_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Creates a Kibana tunnel for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_kibana_tunnel(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def list_kibana_tunnels(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.KibanaTunnelsDTO:
+        """
+        Lists the Kibana tunnels of a given server
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.list_kibana_tunnels(stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def list_ryu_tunnels(ip: str, port: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuTunnelsDTO:
+        """
+        Lists the Ryu tunnels of a given server
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.list_ryu_tunnels(stub=stub)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_merged_execution_info(execution: EmulationExecution) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ExecutionInfoDTO:
+        """
+        Gets the runtime info of a specific execution
+
+        :param execution: the execution to get the info for
+        :return: the info
+        """
+        config = MetastoreFacade.get_config(id=1)
+        infos = []
+        for node in config.cluster_config.cluster_nodes:
+            infos.append(
+                ClusterController.get_execution_info(
+                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                    ip_first_octet=execution.ip_first_octet))
+        execution_info = ClusterManagerUtil.merge_execution_infos(execution_infos=infos)
+        return execution_info

@@ -28,6 +28,7 @@ from csle_common.controllers.kafka_controller import KafkaController
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
+import csle_cluster.constants.constants as cluster_constants
 
 
 class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer):
@@ -3581,7 +3582,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a OSSECIdsManagersInfoDTO
+        :return: a SnortIdsManagersInfoDTO
         """
         logging.info(f"Gets the info of Snort IDS managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
@@ -3601,7 +3602,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a OSSECIdsManagersInfoDTO
+        :return: an ExecutionInfoDTO
         """
         logging.info(f"Gets the info of the execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
@@ -3610,6 +3611,68 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution_info_dto = EmulationEnvController.get_execution_info(
             execution=execution, logger=logging.getLogger(), physical_server_ip=GeneralUtil.get_host_ip())
         return ClusterManagerUtil.convert_execution_info_dto(execution_info_dto=execution_info_dto)
+
+    def listKibanaTunnels(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListKibanaTunnelsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.KibanaTunnelsDTO:
+        """
+        Lists the Kibana tunnels
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an KibanaTunnelsDTO
+        """
+        logging.info(f"Gets the Kibana tunnels")
+        return ClusterManagerUtil.create_kibana_tunnels_dto_from_dict(
+            dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT)
+
+    def listRyuTunnels(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListRyuTunnelsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuTunnelsDTO:
+        """
+        Lists the Ryu tunnels
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a RyuTunnelsDTO
+        """
+        logging.info(f"Gets the Ryu tunnels")
+        return ClusterManagerUtil.create_ryu_tunnels_dto_from_dict(
+            dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT)
+
+    def createKibanaTunnel(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.CreateKibanaTunnelMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Creates a new Kibana tunnel
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Creating a Kibana tunnel for emulation: {request.emulation}, "
+                     f"execution id: {request.ipFirstOctet}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ClusterManagerUtil.create_kibana_tunnel(execution=execution, logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def createRyuTunnel(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.CreateRyuTunnelMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Creates a new Ryu tunnel
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Creating a Ryu tunnel for emulation: {request.emulation}, "
+                     f"execution id: {request.ipFirstOctet}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ClusterManagerUtil.create_ryu_tunnel(execution=execution, logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

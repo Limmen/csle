@@ -221,10 +221,6 @@ class MGMT_WEBAPP:
     GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE = "gaussian_mixture"
     EMPIRICAL_SYSTEM_MODEL_TYPE = "empirical"
     GP_SYSTEM_MODEL_TYPE = "gp"
-    KIBANA_TUNNELS_DICT = {}
-    KIBANA_TUNNEL_BASE_PORT = 17000
-    RYU_TUNNELS_DICT = {}
-    RYU_TUNNEL_BASE_PORT = 18000
     WS_CONTAINER_TERMINAL_NAMESPACE = "container-terminal"
     CONTAINER_TERMINAL_SSH_SHELL = "container-terminal-ssh-shell"
     CONTAINER_TERMINAL_SSH_CONNECTION = "container-terminal-ssh-connection"
