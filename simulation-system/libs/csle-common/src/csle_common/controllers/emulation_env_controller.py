@@ -35,47 +35,54 @@ class EmulationEnvController:
     """
 
     @staticmethod
-    def stop_all_executions_of_emulation(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def stop_all_executions_of_emulation(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                         logger: logging.Logger) -> None:
         """
         Stops all executions of a given emulation
 
         :param emulation_env_config: the emulation for which executions should be stopped
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
             emulation_name=emulation_env_config.name)
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip,
+                                                   logger=logger)
             ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
 
     @staticmethod
     def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int,
-                                    physical_server_ip: str) -> None:
+                                    physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Stops an execution of a given emulation
 
         :param emulation_env_config: the emulation for which executions should be stopped
         :param execution_id: the id of the execution to stop
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_env_config.name,
                                                             ip_first_octet=execution_id)
-        EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip)
+        EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip,
+                                               logger=logger)
         ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip)
 
     @staticmethod
-    def stop_all_executions(physical_server_ip: str) -> None:
+    def stop_all_executions(physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Stops all emulation executions
 
         :param physical_server_ip: ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip,
+                                                   logger=logger)
             ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
 
     @staticmethod
@@ -427,8 +434,8 @@ class EmulationEnvController:
                 ContainerController.start_container(name=c.get_full_name())
 
     @staticmethod
-    def run_container(image: str, name: str, memory: int = 4, num_cpus: int = 1, create_network: bool = True,
-                      version: str = "0.0.1") -> None:
+    def run_container(image: str, name: str, logger: logging.Logger, memory: int = 4, num_cpus: int = 1,
+                      create_network: bool = True, version: str = "0.0.1") -> None:
         """
         Runs a given container
 
@@ -438,9 +445,10 @@ class EmulationEnvController:
         :param num_cpus: number of CPUs to allocate
         :param create_network: whether to create a virtual network or not
         :param version: the version tag
+        :param logger: the logger to use for logging
         :return: None
         """
-        Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle_{name}-"
+        logger.info(f"Starting container with image:{image} and name:csle_{name}-"
                                             f"{version.replace('.', '')}")
         if create_network:
             net_id = random.randint(128, 254)
@@ -467,12 +475,13 @@ class EmulationEnvController:
         subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def stop_containers(execution: EmulationExecution, physical_server_ip: str) -> None:
+    def stop_containers(execution: EmulationExecution, physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Stop containers in the emulation env config
 
         :param execution: the execution to stop
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         emulation_env_config = execution.emulation_env_config
@@ -482,7 +491,7 @@ class EmulationEnvController:
             if c.physical_host_ip != physical_server_ip:
                 continue
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Stopping container:{name}")
+            logger.info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
@@ -490,7 +499,7 @@ class EmulationEnvController:
         c = emulation_env_config.kafka_config.container
         if c.physical_host_ip == physical_server_ip:
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Stopping container:{name}")
+            logger.info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
@@ -498,7 +507,7 @@ class EmulationEnvController:
         c = emulation_env_config.elk_config.container
         if c.physical_host_ip == physical_server_ip:
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Stopping container:{name}")
+            logger.info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
@@ -507,24 +516,27 @@ class EmulationEnvController:
             c = emulation_env_config.sdn_controller_config.container
             if c.physical_host_ip == physical_server_ip:
                 name = c.get_full_name()
-                Logger.__call__().get_logger().info(f"Stopping container:{name}")
+                logger.info(f"Stopping container:{name}")
                 cmd = f"docker stop {name}"
                 subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                       logger: logging.Logger) -> None:
         """
         Cleans an emulation
 
         :param emulation_env_config: the config of the emulation to clean
         :param physical_server_ip: the ip of the physical server to clean the emulation executions
+        :param logger: the logger to use for logging
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
             emulation_name=emulation_env_config.name)
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
-            EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip,
+                                                   logger=logger)
+            EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip, logger=logger)
             try:
                 ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
             except Exception:
@@ -534,19 +546,21 @@ class EmulationEnvController:
 
     @staticmethod
     def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int,
-                                  physical_server_ip: str) -> None:
+                                  physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Cleans an emulation execution
 
         :param execution_id: the id of the execution to clean
         :param emulation_env_config: the config of the emulation to clean
         :param physical_server_ip: the ip of the physical server to clean the execution
+        :param logger: the logger to use for logging
         :return: None
         """
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                             emulation_name=emulation_env_config.name)
-        EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip)
-        EmulationEnvController.rm_containers(execution=execution, physical_server_ip=physical_server_ip)
+        EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip,
+                                               logger=logger)
+        EmulationEnvController.rm_containers(execution=execution, physical_server_ip=physical_server_ip, logger=logger)
         try:
             ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip)
         except Exception:
@@ -555,7 +569,7 @@ class EmulationEnvController:
             emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip)
 
     @staticmethod
-    def clean_all_executions(physical_server_ip: str) -> None:
+    def clean_all_executions(physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Cleans all executions of a given emulation on a given physical server
 
@@ -565,8 +579,9 @@ class EmulationEnvController:
         """
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
-            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
-            EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip)
+            EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip,
+                                                   logger=logger)
+            EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip, logger=logger)
             try:
                 ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
             except Exception:
@@ -576,12 +591,13 @@ class EmulationEnvController:
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
-    def rm_containers(execution: EmulationExecution, physical_server_ip: str) -> None:
+    def rm_containers(execution: EmulationExecution, physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Remove containers in the emulation env config for a given execution
 
         :param execution: the execution to remove
         :param physical_server_ip: the ip of the physical server to remove the containers
+        :param logger: the logger to use for logging
         :return: None
         """
 
@@ -590,7 +606,7 @@ class EmulationEnvController:
             if c.physical_host_ip != physical_server_ip:
                 continue
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Removing container:{name}")
+            logger.info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
@@ -598,7 +614,7 @@ class EmulationEnvController:
         c = execution.emulation_env_config.kafka_config.container
         if c.physical_host_ip == physical_server_ip:
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Removing container:{name}")
+            logger.info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
@@ -606,7 +622,7 @@ class EmulationEnvController:
         c = execution.emulation_env_config.elk_config.container
         if c.physical_host_ip == physical_server_ip:
             name = c.get_full_name()
-            Logger.__call__().get_logger().info(f"Removing container:{name}")
+            logger.info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
@@ -615,7 +631,7 @@ class EmulationEnvController:
             c = execution.emulation_env_config.sdn_controller_config.container
             if c.physical_host_ip == physical_server_ip:
                 name = c.get_full_name()
-                Logger.__call__().get_logger().info(f"Removing container:{name}")
+                logger.info(f"Removing container:{name}")
                 cmd = f"docker rm {name}"
                 subprocess.call(cmd, shell=True)
 
@@ -672,7 +688,7 @@ class EmulationEnvController:
                       f"{ovs_sw.ip} -c 5 &"
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
-                Logger.__call__().get_logger().info(f"Ping {ovs_sw.ip} to {ovs_sw.controller_ip}")
+                logger.info(f"Ping {ovs_sw.ip} to {ovs_sw.controller_ip}")
                 cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {ovs_sw.container_name} {constants.COMMANDS.PING} " \
                       f"{ovs_sw.controller_ip} -c 5 &"
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)

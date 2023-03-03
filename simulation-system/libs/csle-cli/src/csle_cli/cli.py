@@ -939,6 +939,7 @@ def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
+        click.secho(f"Cleaning containers on serverr {node.ip}", bold=False)
         ClusterController.clean_all_executions_of_emulation(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(

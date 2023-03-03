@@ -1298,7 +1298,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info(f"Stopping executions of emulation: {request.emulation}")
         emulation = MetastoreFacade.get_emulation_by_name(name=request.emulation)
         EmulationEnvController.stop_all_executions_of_emulation(emulation_env_config=emulation,
-                                                                physical_server_ip=GeneralUtil.get_host_ip())
+                                                                physical_server_ip=GeneralUtil.get_host_ip(),
+                                                                logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopExecution(
@@ -1316,7 +1317,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         EmulationEnvController.stop_execution_of_emulation(emulation_env_config=execution.emulation_env_config,
                                                            physical_server_ip=GeneralUtil.get_host_ip(),
-                                                           execution_id=execution.ip_first_octet)
+                                                           execution_id=execution.ip_first_octet,
+                                                           logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopAllExecutions(
@@ -1330,7 +1332,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info("Stopping all executions")
-        EmulationEnvController.stop_all_executions(physical_server_ip=GeneralUtil.get_host_ip())
+        EmulationEnvController.stop_all_executions(physical_server_ip=GeneralUtil.get_host_ip(),
+                                                   logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def cleanAllExecutions(
@@ -1344,7 +1347,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info("Cleaning all executions")
-        EmulationEnvController.clean_all_executions(physical_server_ip=GeneralUtil.get_host_ip())
+        EmulationEnvController.clean_all_executions(physical_server_ip=GeneralUtil.get_host_ip(),
+                                                    logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def cleanAllExecutionsOfEmulation(
@@ -1360,7 +1364,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info(f"Cleaning executions of emulation: {request.emulation}")
         emulation = MetastoreFacade.get_emulation_by_name(name=request.emulation)
         EmulationEnvController.clean_all_emulation_executions(emulation_env_config=emulation,
-                                                              physical_server_ip=GeneralUtil.get_host_ip())
+                                                              physical_server_ip=GeneralUtil.get_host_ip(),
+                                                              logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def cleanExecution(
@@ -1378,7 +1383,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         EmulationEnvController.clean_emulation_execution(emulation_env_config=execution.emulation_env_config,
                                                          physical_server_ip=GeneralUtil.get_host_ip(),
-                                                         execution_id=execution.ip_first_octet)
+                                                         execution_id=execution.ip_first_octet,
+                                                         logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startTrafficManager(
@@ -2222,7 +2228,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f": {request.version} ")
         EmulationEnvController.run_container(image=request.image, name=request.name, memory=request.memory,
                                              num_cpus=request.num_cpus, create_network=request.create_network,
-                                             version=request.version)
+                                             version=request.version, logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopContainersOfExecution(
