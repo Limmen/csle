@@ -610,22 +610,25 @@ class ContainerController:
                     pass
 
     @staticmethod
-    def remove_networks(names: List[str]) -> None:
+    def remove_networks(names: List[str]) -> bool:
         """
         Removes a network
 
         :param name: the name of the network to remove
-        :return: None
+        :return: True if at least one of the networks were successfully removed
         """
         client_1 = docker.from_env()
         networks = client_1.networks.list()
+        network_removed = False
         for net in networks:
             if net.name in names:
                 Logger.__call__().get_logger().info(f"Removing network: {net.name}")
                 try:
                     net.remove()
+                    network_removed = True
                 except Exception:
                     pass
+        return network_removed
 
     @staticmethod
     def rm_all_networks() -> None:

@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.controllers.container_controller import ContainerController
@@ -712,7 +712,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_host_status_to_host_manager_status_dto(
-            host_status_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO) -> \
+            host_status_dto_and_ip: Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]) -> \
             csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusDTO:
         """
         Converts a HostStatusDTO to a HostManagerStatusDTO
@@ -720,12 +720,15 @@ class ClusterManagerUtil:
         :param host_status_dto: the DTO to convert
         :return: the converted DTO
         """
+        host_status_dto = host_status_dto_and_ip[0]
+        ip = host_status_dto_and_ip[1]
         return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusDTO(
             monitor_running = host_status_dto.monitor_running,
             filebeat_running = host_status_dto.filebeat_running,
             packetbeat_running = host_status_dto.packetbeat_running,
             metricbeat_running = host_status_dto.metricbeat_running,
-            heartbeat_running = host_status_dto.heartbeat_running
+            heartbeat_running = host_status_dto.heartbeat_running,
+            ip=ip
         )
 
     @staticmethod

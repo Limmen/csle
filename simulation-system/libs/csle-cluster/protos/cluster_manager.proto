@@ -682,6 +682,7 @@ message HostManagerStatusDTO {
   bool packetbeat_running = 3;
   bool metricbeat_running = 4;
   bool heartbeat_running = 5;
+  string ip = 6;
 }
 
 // Message that the server returns when requested for the Kafka managers info
@@ -844,7 +845,7 @@ message StartElkManagerMsg {
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends when requesting to get the traffic managers info
+// Message that the client sends when requesting to get the docker stats managers info for a specific execution
 message GetDockerStatsManagersInfoMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;

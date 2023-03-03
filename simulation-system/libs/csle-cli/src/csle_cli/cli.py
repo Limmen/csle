@@ -12,6 +12,7 @@ from csle_common.util.cluster_util import ClusterUtil
 from csle_common.util.general_util import GeneralUtil
 from csle_common.logging.log import Logger
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerContainerDTO, ContainerImageDTO
 
 ClusterUtil.set_config_parameters_from_config_file()
 
@@ -216,49 +217,70 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                                     f"{clients_dto.producer_time_step_len_seconds} seconds", bold=False)
         if snortids:
             for exec in executions:
-                snort_ids_monitors_statuses = SnortIDSController.get_snort_idses_monitor_threads_statuses(
-                    emulation_env_config=exec.emulation_env_config)
-                for snort_ids_monitor_status in snort_ids_monitors_statuses:
+                statuses = []
+                for node in config.cluster_config.cluster_nodes:
+                    snort_ids_monitors_statuses_dto = ClusterController.get_snort_ids_monitor_thread_statuses(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=emulation_env_config.name, ip_first_octet=exec.ip_first_octet)
+                    statuses = statuses + list(snort_ids_monitors_statuses_dto.snortIDSStatuses)
+                for snort_ids_monitor_status in statuses:
                     click.secho(f"Snort IDS monitor status for execution {exec.ip_first_octet} of {emulation}",
                                 fg="magenta", bold=True)
-                    if snort_ids_monitor_status.running:
+                    if snort_ids_monitor_status.monitor_running:
                         click.secho("Snort IDS monitor status: "
                                     + f" {click.style('[running]', fg='green')}", bold=False)
                     else:
                         click.secho("Snort IDS monitor status: "
                                     + f" {click.style('[stopped]', fg='red')}", bold=False)
+                    if snort_ids_monitor_status.snort_ids_running:
+                        click.secho("Snort IDS status: "
+                                    + f" {click.style('[running]', fg='green')}", bold=False)
+                    else:
+                        click.secho("Snort IDS status: "
+                                    + f" {click.style('[stopped]', fg='red')}", bold=False)
         if kafka:
             for exec in executions:
-                kafka_dto = KafkaController.get_kafka_status(emulation_env_config=exec.emulation_env_config)
-                click.secho(f"Kafka manager status for execution {exec.ip_first_octet} of {emulation}",
-                            fg="magenta", bold=True)
-                if kafka_dto.running:
-                    click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
-                else:
-                    click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
-                click.secho("Topics:", bold=True)
-                for topic in kafka_dto.topics:
-                    click.secho(f"{topic}", bold=False)
+                for node in config.cluster_config.cluster_nodes:
+                    if node.ip == exec.emulation_env_config.kafka_config.container.physical_host_ip:
+                        kafka_dto = ClusterController.get_kafka_status(
+                            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                            emulation=emulation_env_config.name, ip_first_octet=exec.ip_first_octet)
+                        click.secho(f"Kafka manager status for execution {exec.ip_first_octet} of {emulation}",
+                                    fg="magenta", bold=True)
+                        if kafka_dto.running:
+                            click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                        else:
+                            click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                        click.secho("Topics:", bold=True)
+                        for topic in kafka_dto.topics:
+                            click.secho(f"{topic}", bold=False)
         if stats:
             for exec in executions:
-                stats_manager_dto = ContainerController.get_docker_stats_manager_status(
-                    docker_stats_manager_config=exec.emulation_env_config.docker_stats_manager_config)
-                click.secho(f"Docker stats manager status for execution {exec.ip_first_octet} of {emulation}",
-                            fg="magenta", bold=True)
-                click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
-
+                for node in config.cluster_config.cluster_nodes:
+                    stats_manager_dto = ClusterController.get_docker_stats_manager_status(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                    click.secho(f"Docker stats manager status for IP:{node.ip} and "
+                                f" execution: {exec.ip_first_octet} of {emulation}",
+                                fg="magenta", bold=True)
+                    click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
         if host:
             for exec in executions:
                 click.secho(f"Host manager statuses for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
-                host_manager_dtos = HostController.get_host_monitor_threads_statuses(emulation_env_config=exec.
-                                                                                     emulation_env_config)
-                for ip_hmd in host_manager_dtos:
-                    hmd, ip = ip_hmd
-                    if not hmd.running:
-                        click.secho(f"Host manager on {ip} " + f" {click.style('[stopped]', fg='red')}", bold=False)
-                    else:
-                        click.secho(f"Host manager on {ip}: " + f" {click.style('[running]', fg='green')}", bold=False)
+                for node in config.cluster_config.cluster_nodes:
+                    host_manager_dto = ClusterController.get_host_monitor_threads_statuses(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=emulation_env_config.name, ip_first_octet=exec.ip_first_octet
+                    )
+                    host_manager_statuses = list(host_manager_dto.hostManagerStatuses)
+                    for host_manager_status in host_manager_statuses:
+                        click.secho(f"Host manager on {host_manager_status.ip}: "
+                                    + f" {click.style('[running]', fg='green')}", bold=False)
+                        click.secho(f"monitor_running:{host_manager_status.monitor_running}, "
+                                    f"filebeat_running:{host_manager_status.filebeat_running}, "
+                                    f"packetbeat_running:{host_manager_status.packetbeat_running}, "
+                                    f"metricbeat_running:{host_manager_status.metricbeat_running}, "
+                                    f"heartbeat_running:{host_manager_status.heartbeat_running}", bold=False)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
@@ -277,57 +299,38 @@ def start_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
     return emulations + ["--mu", "--lamb", "--t", "--nc"]
 
 
-@click.option('--psf', default=None, type=float)
-@click.option('--tsf', default=None, type=float)
-@click.option('--nc', default=None, type=int)
-@click.option('--t', default=None, type=int)
-@click.option('--lamb', default=None, type=int)
-@click.option('--mu', default=None, type=float)
 @click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", type=str, shell_complete=start_traffic_shell_complete)
 @click.command("start_traffic", help="emulation-name execution-id")
-def start_traffic(emulation: str, id: int, mu: float, lamb: float, t: int,
-                  nc: int, tsf: float, psf: float) -> None:
+def start_traffic(emulation: str, id: int) -> None:
     """
     Starts the traffic and client population on a given emulation
 
     :param emulation: the emulation to start the traffic of
     :param id: the id of the execution
-    :param mu: the mu parameter of the service time of the client arrivals
-    :param lamb: the lambda parameter of the client arrival process
-    :param t: time-step length to measure the arrival process
-    :param nc: number of commands per client
-    :param psf: the period scaling factor for non-stationary Poisson processes
-    :param tsf: the time scaling factor for non-stationary Poisson processes
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    import csle_common.constants.constants as constants
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
     if execution is not None:
         emulation_env_config = execution.emulation_env_config
-        if mu is not None:
-            emulation_env_config.traffic_config.client_population_config.mu = mu
-        if lamb is not None:
-            emulation_env_config.traffic_config.client_population_config.lamb = lamb
-        if t is not None:
-            emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds = t
-        if nc is not None:
-            emulation_env_config.traffic_config.client_population_config.num_commands = nc
-        if tsf is not None:
-            emulation_env_config.traffic_config.client_population_config.time_scaling_factor = tsf
-        if psf is not None:
-            emulation_env_config.traffic_config.client_population_config.period_scaling_factor = psf
         click.secho(f"Starting client population with "
                     f"config:{emulation_env_config.traffic_config.client_population_config}")
-        EmulationEnvController.start_custom_traffic(emulation_env_config=emulation_env_config)
+        config = MetastoreFacade.get_config(id=1)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip:
+                ClusterController.start_client_population(
+                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_env_config.name,
+                    ip_first_octet=execution.ip_first_octet)
     else:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
 
 
 def stop_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
     """
-    Completion suggestiosn for the traffic command
+    Completion suggestions for the traffic command
 
     :param ctx: the command context
     :param param: the command parameter
@@ -351,7 +354,6 @@ def stop_traffic(emulation: str, id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     import csle_common.constants.constants as constants
     exec = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
@@ -363,9 +365,10 @@ def stop_traffic(emulation: str, id: int) -> None:
         ClusterController.stop_traffic_generators(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=exec.emulation_env_config.name,
             ip_first_octet=exec.ip_first_octet)
-        ClusterController.stop_client_population(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=exec.emulation_env_config.name,
-            ip_first_octet=exec.ip_first_octet)
+        if node.ip == exec.emulation_env_config.traffic_config.client_population_config.physical_host_ip:
+            ClusterController.stop_client_population(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=exec.emulation_env_config.name,
+                ip_first_octet=exec.ip_first_octet)
 
 
 def shell_shell_complete(ctx, param, incomplete) -> List[str]:
@@ -803,13 +806,19 @@ def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig
     :param emulations: the list of emulations
     :return: running_emulations, stopped_emulations
     """
-    from csle_common.controllers.container_controller import ContainerController
-
-    rc_emulations = ContainerController.list_running_emulations()
+    import csle_common.constants.constants as constants
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    running_emulations = []
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        running_emulations = running_emulations + list(ClusterController.list_all_running_emulations(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+        ).runningEmulations)
     stopped_emulations = []
     running_emulations = []
     for em in emulations:
-        if em.name in rc_emulations:
+        if em.name in running_emulations:
             running_emulations.append(em.name)
         else:
             stopped_emulations.append(em.name)
@@ -1000,12 +1009,15 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
     :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
-    from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.management_system_controller import ManagementSystemController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
     if entity == "all":
-        ContainerController.stop_all_running_containers()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.stop_all_running_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         for emulation in MetastoreFacade.list_emulations():
             stop_all_executions_of_emulation(emulation_env_config=emulation)
     elif entity == "node_exporter":
@@ -1033,7 +1045,12 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
     elif entity == "emulation_executions":
         stop_emulation_executions()
     else:
-        container_stopped = ContainerController.stop_container(name=entity)
+        container_stopped = False
+        for node in config.cluster_config.cluster_nodes:
+            outcome_dto = ClusterController.stop_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                             container_name=entity)
+            if outcome_dto.outcome:
+                container_stopped = True
         if not container_stopped:
             emulation = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation is not None:
@@ -1394,13 +1411,15 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
     :return: None
     """
-    from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
     from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
-
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
     if entity == "all":
-        ContainerController.start_all_stopped_containers()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.start_all_stopped_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     elif entity == "statsmanager":
         start_statsmanager(ip=ip)
     elif entity == "clustermanager":
@@ -1431,7 +1450,13 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     elif entity == "flask":
         start_flask(ip=ip)
     else:
-        container_started = ContainerController.start_container(name=entity)
+        container_started = False
+        for node in config.cluster_config.cluster_nodes:
+            outcome_dto = ClusterController.start_container(ip=node.ip,
+                                                            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                            container_name=entity)
+            if outcome_dto.outcome:
+                container_started = True
         if not container_started:
             emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation_env_config is not None:
@@ -1654,14 +1679,23 @@ def rm(entity: str) -> None:
     :param entity: the container(s), network(s), or images(s) to remove
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
     if entity == "containers":
-        ContainerController.rm_all_stopped_containers()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.remove_all_stopped_containers(ip=node.ip,
+                                                            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     elif entity == "images":
-        ContainerController.rm_all_images()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.remove_all_container_images(ip=node.ip,
+                                                          port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     elif entity == "networks":
-        ContainerController.rm_all_networks()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.remove_all_docker_networks(ip=node.ip,
+                                                         port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     else:
         rm_name(name=entity)
 
@@ -1698,17 +1732,20 @@ def clean(entity: str, id: int = -1) -> None:
     :param id: if cleaning a specific emulation execution
     :return: None
     """
+    import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
-
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
     if entity == "all":
-        ContainerController.stop_all_running_containers()
-        ContainerController.rm_all_stopped_containers()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.stop_all_running_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.remove_all_stopped_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         for emulation in MetastoreFacade.list_emulations():
             clean_all_emulation_executions(emulation_env_config=emulation)
     elif entity == "containers":
-        ContainerController.stop_all_running_containers()
-        ContainerController.rm_all_stopped_containers()
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.stop_all_running_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.remove_all_stopped_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     elif entity == "emulations":
         for emulation in MetastoreFacade.list_emulations():
             clean_all_emulation_executions(emulation_env_config=emulation)
@@ -1894,8 +1931,10 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
     :param stopped: flag that indicates whether stopped containers/emulations should be listed
     :return: None
     """
+    import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
     if entity == "all":
         list_all(all=all, running=running, stopped=stopped)
@@ -1955,7 +1994,11 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
                 else:
                     net = get_network(name=entity)
                     if net is not None:
-                        active_networks_names = ContainerController.list_all_networks()
+                        active_networks_names = []
+                        for node in config.cluster_config.cluster_nodes:
+                            docker_networks_dto = ClusterController.list_all_docker_networks(ip=node.ip,
+                                                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                            active_networks_names = active_networks_names + list(docker_networks_dto.networks)
                         active = net.name in active_networks_names
                         print_network(net=net, active=active)
                     else:
@@ -1970,25 +2013,25 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
                                 click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
 
 
-def print_running_container(container) -> None:
+def print_running_container(container: DockerContainerDTO) -> None:
     """
     Utility function for printing information about a running container
 
     :param container: the container to print
     :return: None
     """
-    click.secho(container[0] + f" image:{container[1]}, ip: {container[2]} {click.style('[running]', fg='green')}",
+    click.secho(container.name + f" image:{container.image}, ip: {container.ip} {click.style('[running]', fg='green')}",
                 bold=False)
 
 
-def print_stopped_container(container) -> None:
+def print_stopped_container(container: DockerContainerDTO) -> None:
     """
     Utiltiy function for printing information about a stopped container
 
     :param container: the stopped container to print
     :return: None
     """
-    click.secho(container[0] + f" image:{container[1]}, ip: {container[2]} {click.style('[stopped]', fg='red')}",
+    click.secho(container.name + f" image:{container.image}, ip: {container.ip} {click.style('[stopped]', fg='red')}",
                 bold=False)
 
 
@@ -2008,14 +2051,14 @@ def print_network(net: "ContainerNetwork", active: bool = False) -> None:
                     f"{click.style('[inactive]', fg='red')}", bold=False)
 
 
-def print_img(img: Tuple[str, str, str, str, str]) -> None:
+def print_img(img: ContainerImageDTO) -> None:
     """
     Utility function for printing a given Docker image
 
     :param img: the image to print
     :return: None
     """
-    click.secho(f"name:{img[0]}, size:{img[4]}B", bold=False)
+    click.secho(f"name:{img.repoTags}, size:{img.size}B", bold=False)
 
 
 def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> None:
@@ -2101,30 +2144,34 @@ def list_statsmanager() -> None:
 
     :return: None
     """
+    import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.management_system_controller import ManagementSystemController
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
-    if ManagementSystemController.is_statsmanager_running():
-        emulations = MetastoreFacade.list_emulations()
-        running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
-        docker_stats_monitor_status = None
-        for em in emulations:
-            if em.name in running_emulations:
-                docker_stats_monitor_status = ContainerController.get_docker_stats_manager_status(
-                    docker_stats_manager_config=em.docker_stats_manager_config)
-                break
+    emulations = MetastoreFacade.list_emulations()
+    running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
+    docker_stats_monitor_statuses = []
+    for em in emulations:
+        if em.name in running_emulations:
+            for node in config.cluster_config.cluster_nodes:
+                stats_manager_status_dto = ClusterController.get_docker_stats_manager_status(
+                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+                )
+                docker_stats_monitor_statuses.append(stats_manager_status_dto)
+            break
+    for status in docker_stats_monitor_statuses:
         active_monitor_threads = 0
         active_emulations = []
-        if docker_stats_monitor_status is not None:
-            active_monitor_threads = docker_stats_monitor_status.num_monitors
-            active_emulations = docker_stats_monitor_status.emulations
+        if status is not None:
+            active_monitor_threads = status.num_monitors
+            active_emulations = list(status.emulations)
+
         click.secho("Docker statsmanager status: " + f" {click.style('[running], ', fg='green')} "
-                                                     f"port:{50046}, num active monitor threads: "
+                                                     f"port:{constants.GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT}, "
+                                                     f"num active monitor threads: "
                                                      f"{active_monitor_threads}, "
                                                      f"active emulations: {','.join(active_emulations)}", bold=False)
-    else:
-        click.secho("Docker statsmanager status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_grafana() -> None:
@@ -2359,11 +2406,17 @@ def list_networks() -> None:
 
     :return: None
     """
+    import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
     click.secho("CSLE networks:", fg="magenta", bold=True)
-    active_networks_names = ContainerController.list_all_networks()
+    active_networks_names = []
+    for node in config.cluster_config.cluster_nodes:
+        docker_networks_dto = ClusterController.list_all_docker_networks(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        active_networks_names = active_networks_names + list(docker_networks_dto.networks)
     executions = MetastoreFacade.list_emulation_executions()
     for exec in executions:
         em = exec.emulation_env_config
@@ -2395,10 +2448,15 @@ def get_network(name: str) -> Union[None, "ContainerNetwork"]:
     :param name: the name of the network to get
     :return: None if the network was not found and otherwise returns the network
     """
+    import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
-
-    active_networks_names = ContainerController.list_all_networks()
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    active_networks_names = []
+    for node in config.cluster_config.cluster_nodes:
+        docker_networks_dto = ClusterController.list_all_docker_networks(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        active_networks_names = active_networks_names + list(docker_networks_dto.networks)
     emulations = MetastoreFacade.list_emulations()
     for em in emulations:
         for net in em.containers_config.networks:
@@ -2407,34 +2465,49 @@ def get_network(name: str) -> Union[None, "ContainerNetwork"]:
     return None
 
 
-def get_running_container(name: str) -> Union[None, Tuple[str, str, str]]:
+def get_running_container(name: str) -> Union[None, DockerContainerDTO]:
     """
     Utility function for getting a running container with a given name
 
     :param name: the name of the container to get
     :return: None if the container was not found and otherwise returns the container
     """
-    from csle_common.controllers.container_controller import ContainerController
-
-    running_containers = ContainerController.list_all_running_containers()
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    running_containers = []
+    for node in config.cluster_config.cluster_nodes:
+        running_containers_dto = ClusterController.list_all_running_containers(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        running_containers_dtos = list(running_containers_dto.runningContainers)
+        running_containers = running_containers + running_containers_dtos
     for c in running_containers:
-        if name == c[0]:
+        if name == c.name:
             return c
     return None
 
 
-def get_stopped_container(name: str) -> Union[None, Tuple[str, str, str]]:
+def get_stopped_container(name: str) -> Union[None, DockerContainerDTO]:
     """
     Utility function for stopping a given container
 
     :param name: the name of the container to stop
     :return: None if the container was not found and true otherwise
     """
-    from csle_common.controllers.container_controller import ContainerController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    stopped_containers = []
+    for node in config.cluster_config.cluster_nodes:
+        stopped_containers_dto = ClusterController.list_all_stopped_containers(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        stopped_containers_dtos = list(stopped_containers_dto.stoppedContainers)
+        stopped_containers = stopped_containers + stopped_containers_dtos
 
-    stopped_containers = ContainerController.list_all_stopped_containers()
     for c in stopped_containers:
-        if name == c[0]:
+        if name == c.name:
             return c
     return None
 
@@ -2448,14 +2521,26 @@ def list_all_containers() -> None:
     from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE Docker containers:", fg="magenta", bold=True)
-    running_containers = ContainerController.list_all_running_containers()
-    stopped_containers = ContainerController.list_all_stopped_containers()
-    containers = running_containers + stopped_containers
-    for c in containers:
-        if c in running_containers:
-            print_running_container(c)
-        else:
-            print_stopped_container(c)
+
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    running_containers = []
+    stopped_containers = []
+    for node in config.cluster_config.cluster_nodes:
+        stopped_containers_dto = ClusterController.list_all_stopped_containers(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        stopped_containers_dtos = list(stopped_containers_dto.stoppedContainers)
+        running_containers_dto = ClusterController.list_all_running_containers(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        running_containers_dtos = list(running_containers_dto.runningContainers)
+        stopped_containers = stopped_containers + stopped_containers_dtos
+        running_containers = running_containers + running_containers_dtos
+    for c in running_containers:
+        print_running_container(c)
+    for c in stopped_containers:
+        print_stopped_container(c)
 
 
 def list_running_containers() -> None:
@@ -2464,11 +2549,19 @@ def list_running_containers() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
     click.secho("CSLE running Docker containers:", fg="magenta", bold=True)
-    containers = ContainerController.list_all_running_containers()
-    for c in containers:
+    running_containers = []
+    for node in config.cluster_config.cluster_nodes:
+        running_containers_dto = ClusterController.list_all_running_containers(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        running_containers_dtos = list(running_containers_dto.runningContainers)
+        running_containers = running_containers + running_containers_dtos
+    for c in running_containers:
         print_running_container(c)
 
 
@@ -2478,11 +2571,18 @@ def list_stopped_containers() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
-
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
     click.secho("CSLE stopped Docker containers:", fg="magenta", bold=True)
-    containers = ContainerController.list_all_stopped_containers()
-    for c in containers:
+    stopped_containers = []
+    for node in config.cluster_config.cluster_nodes:
+        stopped_containers_dto = ClusterController.list_all_stopped_containers(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        stopped_containers_dtos = list(stopped_containers_dto.stoppedContainers)
+        stopped_containers = stopped_containers + stopped_containers_dtos
+    for c in stopped_containers:
         print_stopped_container(c)
 
 
@@ -2492,25 +2592,41 @@ def list_images() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
     click.secho("CSLE Docker images:", fg="magenta", bold=True)
-    image_names = ContainerController.list_all_images()
-    for img in image_names:
+    images = []
+    for node in config.cluster_config.cluster_nodes:
+        images_dto = ClusterController.list_all_container_images(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        images_dtos = list(images_dto.images)
+        images = images + images_dtos
+    for img in images:
         print_img(img)
 
 
-def get_image(name: str) -> Union[None, Tuple[str, str, str, str, str]]:
+def get_image(name: str) -> Union[None, ContainerImageDTO]:
     """
     Utility function for getting metadata of a docker image
     :param name: the name of the image to get
     :return: None or the image if it was found
     """
-    from csle_common.controllers.container_controller import ContainerController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
+    images = []
+    for node in config.cluster_config.cluster_nodes:
+        images_dto = ClusterController.list_all_container_images(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        images_dtos = list(images_dto.images)
+        images = images + images_dtos
 
-    image_names = ContainerController.list_all_images()
-    for img in image_names:
-        if img == name:
+    for img in images:
+        if img.repoTags == name:
             return img
     return None
 
@@ -2522,13 +2638,31 @@ def rm_name(name: str) -> None:
     :param name: the name of the image, network, or container to remove
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
-    container_removed = ContainerController.rm_container(name)
+    container_removed = False
+    for node in config.cluster_config.cluster_nodes:
+        outcome_dto = ClusterController.remove_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                           container_name=name)
+        if outcome_dto.outcome:
+            container_removed = True
     if not container_removed:
-        network_removed = ContainerController.rm_network(name)
+        network_removed = False
+        for node in config.cluster_config.cluster_nodes:
+            outcome_dto = ClusterController.remove_docker_networks(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, networks=[name])
+            if outcome_dto.outcome:
+                network_removed = True
         if not network_removed:
-            image_removed = ContainerController.rm_image(name)
+            image_removed = False
+            for node in config.cluster_config.cluster_nodes:
+                outcome_dto = ClusterController.remove_container_image(
+                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, image_name=name)
+                if outcome_dto.outcome:
+                    image_removed = True
             if not image_removed:
                 emulation_removed = remove_emulation(name=name)
                 if not emulation_removed:
@@ -2542,13 +2676,22 @@ def clean_name(name: str) -> None:
     :param name: the name of the container or emulation to clean
     :return: None
     """
-    from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+    config = MetastoreFacade.get_config(id=1)
 
-    container_stopped = ContainerController.stop_container(name=name)
+    container_stopped = False
+    for node in config.cluster_config.cluster_nodes:
+        outcome_dto = ClusterController.stop_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                         container_name=name)
+        if outcome_dto.outcome:
+            container_stopped = True
     if container_stopped:
-        ContainerController.rm_container(container_name=name)
+        for node in config.cluster_config.cluster_nodes:
+            ClusterController.remove_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                               container_name=name)
     else:
         em = MetastoreFacade.get_emulation_by_name(name=name)
         if em is not None:
@@ -2557,8 +2700,10 @@ def clean_name(name: str) -> None:
             try:
                 executions = MetastoreFacade.list_emulation_executions_by_id(id=int(name))
                 for exec in executions:
-                    EmulationEnvController.clean_emulation_execution(
-                        emulation_env_config=exec.emulation_env_config, execution_id=exec.ip_first_octet)
+                    for node in config.cluster_config.cluster_nodes:
+                        ClusterController.clean_execution(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                          emulation=exec.emulation_name,
+                                                          ip_first_octet=exec.ip_first_octet)
             except Exception:
                 click.secho(f"name: {name} not recognized", fg="red", bold=True)
 

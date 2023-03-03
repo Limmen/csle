@@ -2601,7 +2601,7 @@ class ClusterController:
 
     @staticmethod
     def get_host_monitor_threads_statuses(ip: str, port: int, emulation: str, ip_first_octet: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.GetHostMonitorThreadsStatusesMsg:
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO:
         """
         Gets the host monitor thread statuses of a specific execution
 

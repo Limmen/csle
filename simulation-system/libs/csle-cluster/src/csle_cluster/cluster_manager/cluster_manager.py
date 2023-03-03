@@ -1675,8 +1675,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info(f"Stopping container: {request.name}")
-        ContainerController.stop_container(name=request.name)
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        outcome = ContainerController.stop_container(name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def removeAllStoppedContainers(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllStoppedContainersMsg,
@@ -1703,8 +1703,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info(f"Removing container: {request.name}")
-        ContainerController.rm_container(container_name=request.name)
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        outcome = ContainerController.rm_container(container_name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def removeAllContainerImages(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllContainerImagesMsg,
@@ -1796,8 +1796,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info(f"Starting the container: {request.name}")
-        ContainerController.start_container(name=request.name)
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        outcome = ContainerController.start_container(name=request.name)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def listAllRunningContainers(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllRunningContainersMsg,
@@ -1914,8 +1914,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info(f"Removing docker networks: {list(request.networks)}")
-        ContainerController.remove_networks(names=request.networks)
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        outcome = ContainerController.remove_networks(names=request.networks)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def removeAllDockerNetworks(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveAllDockerNetworksMsg,
@@ -2728,7 +2728,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         host_statuses_and_ips = \
             HostController.get_host_monitor_threads_statuses(emulation_env_config=execution.emulation_env_config)
-        host_statuses = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x[0]),
+        host_statuses = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
                                  host_statuses_and_ips))
         return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO(
             hostManagerStatuses=host_statuses
@@ -3141,7 +3141,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         status_dtos = OSSECIDSController.get_ossec_idses_monitor_threads_statuses(
             emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
-        status_dtos = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
+        status_dtos = list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(x),
                                status_dtos))
         return csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsMonitorThreadStatusesDTO(
             ossecIDSStatuses=status_dtos
@@ -3328,7 +3328,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         status_dtos = SnortIDSController.get_snort_idses_monitor_threads_statuses(
             emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
-        status_dtos = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
+        status_dtos = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto(x),
                                status_dtos))
         return csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsMonitorThreadStatusesDTO(
             snortIDSStatuses=status_dtos

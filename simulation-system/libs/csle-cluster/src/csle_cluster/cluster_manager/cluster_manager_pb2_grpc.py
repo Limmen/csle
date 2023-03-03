@@ -737,7 +737,7 @@ class ClusterManagerStub(object):
                 )
         self.getKafkaStatus = channel.unary_unary(
                 '/ClusterManager/getKafkaStatus',
-                request_serializer=cluster__manager__pb2.CreateKafkaTopicsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.GetKafkaStatusMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.KafkaStatusDTO.FromString,
                 )
         self.stopKafkaServer = channel.unary_unary(
@@ -2748,7 +2748,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'getKafkaStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.getKafkaStatus,
-                    request_deserializer=cluster__manager__pb2.CreateKafkaTopicsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.GetKafkaStatusMsg.FromString,
                     response_serializer=cluster__manager__pb2.KafkaStatusDTO.SerializeToString,
             ),
             'stopKafkaServer': grpc.unary_unary_rpc_method_handler(
@@ -5407,7 +5407,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getKafkaStatus',
-            cluster__manager__pb2.CreateKafkaTopicsMsg.SerializeToString,
+            cluster__manager__pb2.GetKafkaStatusMsg.SerializeToString,
             cluster__manager__pb2.KafkaStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
