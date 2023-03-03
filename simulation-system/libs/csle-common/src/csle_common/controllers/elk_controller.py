@@ -42,7 +42,7 @@ class ELKController:
 
         if constants.COMMANDS.SEARCH_ELK_MANAGER not in str(o):
             logger.info(f"Starting elk manager on node: "
-                                                f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+                        f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -78,7 +78,7 @@ class ELKController:
                                     create_producer=False)
 
         logger.info(f"Stopping elk manager on node: "
-                                            f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+                    f"{emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
 
         # Stop background job
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -132,9 +132,9 @@ class ELKController:
         :param emulation_env_config: the emulation env config
         :return: a ELKDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -158,7 +158,7 @@ class ELKController:
             return
         logger.info(
             f"Starting ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
-        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -352,7 +352,8 @@ class ELKController:
                 if status is not None:
                     elk_managers_statuses.append(status)
                 else:
-                    elk_managers_statuses.append(csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
+                    elk_managers_statuses.append(
+                        csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
                 elk_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

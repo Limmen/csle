@@ -237,7 +237,7 @@ class TrafficController:
             f"Starting client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
-        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,

@@ -527,7 +527,7 @@ class EmulationEnvController:
             EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip)
             EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip)
             try:
-                ContainerController.stop_docker_stats_thread(execution=exec)
+                ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(

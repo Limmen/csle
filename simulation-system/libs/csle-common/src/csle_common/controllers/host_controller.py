@@ -361,7 +361,8 @@ class HostController:
                 initial_start=initial_start, logger=logger)
 
     @staticmethod
-    def stop_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
+    def stop_filebeats(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                       logger: logging.Logger) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and to stop filebeat
@@ -491,7 +492,7 @@ class HostController:
                                               ip=c.docker_gw_bridge_ip, logger=logger)
 
         # Stop heartbeat on the kafka container
-        if emulation_env_config.kafka_config.container.physical_host_ip ==physical_server_ip:
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             HostController.stop_heartbeat(emulation_env_config=emulation_env_config,
                                           ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
                                           logger=logger)
@@ -685,7 +686,7 @@ class HostController:
 
         :param emulation_env_config: the emulation env config
         :param ips: IP of the container
-        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :param initial_start: boolean indicating whether this method is called on emulation initialization or not
         :param logger: the logger to use for logging
         :return: None
         """
@@ -714,7 +715,7 @@ class HostController:
 
         :param emulation_env_config: the emulation env config
         :param ips: IP of the container
-        :param initial_start: boolean indicating whether this method is called on emulation initialziation or not
+        :param initial_start: boolean indicating whether this method is called on emulation initialization or not
         :param logger: the logger to use for logging
         :return: None
         """
