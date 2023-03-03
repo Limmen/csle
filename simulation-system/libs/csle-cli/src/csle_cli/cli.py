@@ -810,16 +810,16 @@ def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    running_emulations = []
+    running_emulation_names = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
-        running_emulations = running_emulations + list(ClusterController.list_all_running_emulations(
+        running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
         ).runningEmulations)
     stopped_emulations = []
     running_emulations = []
     for em in emulations:
-        if em.name in running_emulations:
+        if em.name in running_emulation_names:
             running_emulations.append(em.name)
         else:
             stopped_emulations.append(em.name)
@@ -2340,7 +2340,8 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
     if all or not stopped:
         for em in running_emulations:
             click.secho(em + f" {click.style('[running]', fg='green')}", bold=False)
-    if all or stopped:
+
+    if (all or stopped) and not running:
         for em in stopped_emulations:
             click.secho(em + f" {click.style('[stopped]', fg='red')}", bold=False)
 

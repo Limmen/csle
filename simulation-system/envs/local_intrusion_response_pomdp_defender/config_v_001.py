@@ -369,7 +369,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-intrusion-response-game-pomdp-defender-001", version="0.0.1",
+    config = default_config(name="csle-intrusion-response-game-local-pomdp-defender-001", version="0.0.1",
                             number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
                             attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10)
     if args.install:

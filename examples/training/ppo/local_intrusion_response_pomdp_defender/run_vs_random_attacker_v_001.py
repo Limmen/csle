@@ -9,7 +9,8 @@ import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-intrusion-response-game-pomdp-defender-001")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(
+        "csle-intrusion-response-game-local-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999, 121], agent_type=AgentType.PPO,

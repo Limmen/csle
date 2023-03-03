@@ -39,7 +39,17 @@ class ClusterManagerUtil:
         :param traffic_dto: the DTO to convert
         :return: the converted DTO
         """
-        return cluster_manager_pb2.TrafficManagerInfoDTO(running=traffic_dto.running, script=traffic_dto.script)
+        if traffic_dto is None:
+            return ClusterManagerUtil.get_empty_traffic_manager_info_dto()
+        else:
+            return cluster_manager_pb2.TrafficManagerInfoDTO(running=traffic_dto.running, script=traffic_dto.script)
+
+    @staticmethod
+    def get_empty_traffic_manager_info_dto() -> cluster_manager_pb2.TrafficManagerInfoDTO:
+        """
+        :return: an empty TrafficManagersInfoDTO
+        """
+        return cluster_manager_pb2.TrafficManagerInfoDTO(running=False, script="")
 
     @staticmethod
     def get_empty_traffic_managers_info_dto() -> cluster_manager_pb2.TrafficManagersInfoDTO:
@@ -76,6 +86,8 @@ class ClusterManagerUtil:
         :param clients_dto: the clients DTO to convert
         :return: the converted DTO
         """
+        if clients_dto is None:
+            return ClusterManagerUtil.get_empty_num_clients_dto()
         return cluster_manager_pb2.GetNumClientsDTO(
             num_clients=clients_dto.num_clients,
             client_process_active=clients_dto.client_process_active,
@@ -360,6 +372,8 @@ class ClusterManagerUtil:
         :param monitor_dto: the DTO to convert
         :return: the converted DTO
         """
+        if monitor_dto is None:
+            return ClusterManagerUtil.get_empty_docker_stats_monitor_status_dto()
         return cluster_manager_pb2.DockerStatsMonitorStatusDTO(
             num_monitors=monitor_dto.num_monitors, emulations=monitor_dto.emulations,
             emulation_executions=monitor_dto.emulation_executions
@@ -407,6 +421,8 @@ class ClusterManagerUtil:
         :param elk_dto: the DTO to convert
         :return: the converted DTO
         """
+        if elk_dto is None:
+            return ClusterManagerUtil.get_empty_elk_status_dto()
         return cluster_manager_pb2.ElkStatusDTO(
             elasticRunning=elk_dto.elasticRunning, kibanaRunning=elk_dto.kibanaRunning,
             logstashRunning=elk_dto.logstashRunning
@@ -422,6 +438,8 @@ class ClusterManagerUtil:
         :param snort_dto: the DTO to convert
         :return: the converted DTO
         """
+        if snort_dto is None:
+            return ClusterManagerUtil.get_empty_snort_ids_status_dto()
         return cluster_manager_pb2.SnortIdsStatusDTO(monitor_running=snort_dto.monitor_running,
                                                      snort_ids_running=snort_dto.snort_ids_running)
 
@@ -435,6 +453,8 @@ class ClusterManagerUtil:
         :param ossec_dto: the DTO to convert
         :return: the converted DTO
         """
+        if ossec_dto is None:
+            return ClusterManagerUtil.get_empty_ossec_ids_status_dto()
         return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=ossec_dto.monitor_running,
                                                      ossec_ids_running=ossec_dto.ossec_ids_running)
 
@@ -447,6 +467,8 @@ class ClusterManagerUtil:
         :param kafka_dto: the DTO to convert
         :return: the converted DTO
         """
+        if kafka_dto is None:
+            return ClusterManagerUtil.get_empty_kafka_dto()
         return cluster_manager_pb2.KafkaStatusDTO(running=kafka_dto.running, topics=kafka_dto.topics)
 
     @staticmethod
@@ -458,6 +480,8 @@ class ClusterManagerUtil:
         :param ryu_dto: the DTO to convert
         :return: the converted DTO
         """
+        if ryu_dto is None:
+            return ClusterManagerUtil.get_empty_ryu_manager_status_dto()
         return cluster_manager_pb2.RyuManagerStatusDTO(
             ryu_running=ryu_dto.ryu_running, monitor_running=ryu_dto.monitor_running, port=ryu_dto.port,
             web_port=ryu_dto.web_port, controller=ryu_dto.controller, kafka_ip=ryu_dto.kafka_ip,
@@ -675,6 +699,8 @@ class ClusterManagerUtil:
         """
         host_status_dto = host_status_dto_and_ip[0]
         ip = host_status_dto_and_ip[1]
+        if host_status_dto is None:
+            return ClusterManagerUtil.get_empty_host_manager_status_dto()
         return cluster_manager_pb2.HostManagerStatusDTO(
             monitor_running=host_status_dto.monitor_running,
             filebeat_running=host_status_dto.filebeat_running,
@@ -693,6 +719,8 @@ class ClusterManagerUtil:
         :param snort_ids_managers_info_dto: the DTO to convert
         :return: the converted DTO
         """
+        if snort_ids_managers_info_dto is None:
+            return ClusterManagerUtil.get_empty_snort_managers_info_dto()
         return cluster_manager_pb2.SnortIdsManagersInfoDTO(
             ips=snort_ids_managers_info_dto.ips,
             ports=snort_ids_managers_info_dto.ports,
@@ -713,6 +741,8 @@ class ClusterManagerUtil:
         :param ossec_ids_managers_info_dto: the DTO to convert
         :return: the converted DTO
         """
+        if ossec_ids_managers_info_dto is None:
+            return ClusterManagerUtil.get_empty_ossec_managers_info_dto()
         return cluster_manager_pb2.OSSECIdsManagersInfoDTO(
             ips=ossec_ids_managers_info_dto.ips,
             ports=ossec_ids_managers_info_dto.ports,
@@ -732,6 +762,8 @@ class ClusterManagerUtil:
         :param elk_managers_dto: the DTO to convert
         :return: the converted DTO
         """
+        if elk_managers_dto is None:
+            return ClusterManagerUtil.get_empty_elk_managers_info_dto()
         return cluster_manager_pb2.ElkManagersInfoDTO(
             ips=elk_managers_dto.ips,
             ports=elk_managers_dto.ports,
@@ -739,7 +771,9 @@ class ClusterManagerUtil:
             executionId=elk_managers_dto.execution_id,
             elkManagersRunning=elk_managers_dto.elk_managers_running,
             elkManagersStatuses=list(map(
-                lambda x: ClusterManagerUtil.convert_elk_dto(x), elk_managers_dto.elk_managers_statuses)))
+                lambda x: ClusterManagerUtil.convert_elk_dto(x), elk_managers_dto.elk_managers_statuses)),
+            localKibanaPort=elk_managers_dto.local_kibana_port
+        )
 
     @staticmethod
     def convert_ryu_info_dto(ryu_managers_info_dto: RyuManagersInfo) -> cluster_manager_pb2.RyuManagersInfoDTO:
@@ -749,6 +783,8 @@ class ClusterManagerUtil:
         :param ryu_managers_info_dto: the DTO to convert
         :return: the converted DTO
         """
+        if ryu_managers_info_dto is None:
+            return ClusterManagerUtil.get_empty_ryu_managers_info_dto()
         return cluster_manager_pb2.OSSECIdsManagersInfoDTO(
             ips=ryu_managers_info_dto.ips,
             ports=ryu_managers_info_dto.ports,
@@ -768,6 +804,8 @@ class ClusterManagerUtil:
         :param host_managers_dto: the DTO to convert
         :return: the converted DTO
         """
+        if host_managers_dto is None:
+            return ClusterManagerUtil.get_empty_host_managers_info_dto()
         return cluster_manager_pb2.HostManagersInfoDTO(
             ips=host_managers_dto.ips,
             ports=host_managers_dto.ports,
@@ -788,6 +826,8 @@ class ClusterManagerUtil:
         :param kafka_managers_info_dto: the DTO to convert
         :return: the converted DTO
         """
+        if kafka_managers_info_dto is None:
+            return ClusterManagerUtil.get_empty_kafka_managers_info_dto()
         return cluster_manager_pb2.KafkaManagersInfoDTO(
             ips=kafka_managers_info_dto.ips,
             ports=kafka_managers_info_dto.ports,
@@ -807,6 +847,8 @@ class ClusterManagerUtil:
         :param client_managers_dto: the DTO to convert
         :return: the converted DTO
         """
+        if client_managers_dto is None:
+            return ClusterManagerUtil.get_empty_client_managers_info_dto()
         return cluster_manager_pb2.ClientManagersInfoDTO(
             ips=client_managers_dto.ips,
             ports=client_managers_dto.ports,
@@ -826,6 +868,8 @@ class ClusterManagerUtil:
         :param traffic_managers_dto: the DTO to convert
         :return: the converted DTO
         """
+        if traffic_managers_dto is None:
+            return ClusterManagerUtil.get_empty_traffic_managers_info_dto()
         return cluster_manager_pb2.TrafficManagersInfoDTO(
             ips=traffic_managers_dto.ips,
             ports=traffic_managers_dto.ports,
@@ -846,6 +890,8 @@ class ClusterManagerUtil:
         :param docker_stats_managers_dto: the DTO to convert
         :return: the converted DTO
         """
+        if docker_stats_managers_dto is None:
+            return ClusterManagerUtil.get_empty_docker_managers_info_dto()
         return cluster_manager_pb2.DockerStatsManagersInfoDTO(
             ips=docker_stats_managers_dto.ips,
             ports=docker_stats_managers_dto.ports,
@@ -864,6 +910,8 @@ class ClusterManagerUtil:
         :param execution_info_dto: the DTO to convert
         :return: the converted DTO
         """
+        if execution_info_dto is None:
+            return ClusterManagerUtil.get_empty_execution_info_dto()
         running_containers = []
         for container in execution_info_dto.running_containers:
             running_containers.append(
@@ -927,4 +975,128 @@ class ClusterManagerUtil:
         return cluster_manager_pb2.RyuManagerStatusDTO(
             ryu_running=False, monitor_running=False, port=-1, web_port=-1, controller="", kafka_ip="",
             kafka_port=-1, time_step_len=-1
+        )
+
+    @staticmethod
+    def get_empty_docker_stats_monitor_status_dto() -> cluster_manager_pb2.DockerStatsMonitorStatusDTO:
+        """
+        :return: an empty DockerStatsMonitorStatusDTO
+        """
+        return cluster_manager_pb2.DockerStatsMonitorStatusDTO(num_monitors=0, emulations=[], emulation_executions=[])
+
+    @staticmethod
+    def get_empty_num_clients_dto() -> cluster_manager_pb2.GetNumClientsDTO:
+        """
+        :return: an empty GetNumClientsDTO
+        """
+        return cluster_manager_pb2.GetNumClientsDTO(
+            num_clients=0, client_process_active=False, producer_active=False, clients_time_step_len_seconds=-1,
+            producer_time_step_len_seconds=-1)
+
+    @staticmethod
+    def get_empty_elk_status_dto() -> cluster_manager_pb2.ElkStatusDTO:
+        """
+        :return: an empty ElkStatusDTO
+        """
+        return cluster_manager_pb2.ElkStatusDTO(elasticRunning=False, kibanaRunning=False, logstashRunning=False)
+
+    @staticmethod
+    def get_empty_snort_ids_status_dto() -> cluster_manager_pb2.SnortIdsStatusDTO:
+        """
+        :return: an empty SnortIdsStatusDTO
+        """
+        return cluster_manager_pb2.SnortIdsStatusDTO(monitor_running=False, snort_ids_running=False)
+
+    @staticmethod
+    def get_empty_ossec_ids_monitor_dto() -> cluster_manager_pb2.OSSECIdsStatusDTO:
+        """
+        :return: an empty OSSECIdsMonitorDTO
+        """
+        return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=False, ossec_ids_running=False)
+
+    @staticmethod
+    def get_empty_host_manager_status_dto() -> cluster_manager_pb2.HostManagerStatusDTO:
+        """
+        :return: an empty HostManagerStatusDTO
+        """
+        return cluster_manager_pb2.HostManagerStatusDTO(
+            monitor_running=False, filebeat_running=False, packetbeat_running=False, metricbeat_running=False,
+            heartbeat_running=False, ip="")
+
+    @staticmethod
+
+    def get_empty_snort_managers_info_dto() -> cluster_manager_pb2.SnortIdsManagersInfoDTO:
+        """
+        :return: an empty SnortIdsManagersInfoDTO
+        """
+        return cluster_manager_pb2.SnortIdsManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", snortIdsManagersRunning=[], snortIdsManagersStatuses=[]
+        )
+
+    @staticmethod
+    def get_empty_ossec_managers_info_dto() -> cluster_manager_pb2.OSSECIdsManagersInfoDTO:
+        """
+        :return: an empty OSSECIdsManagersInfoDTO
+        """
+        return cluster_manager_pb2.OSSECIdsManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", ossecIdsManagersRunning=[], ossecIdsManagersStatuses=[]
+        )
+
+    @staticmethod
+    def get_empty_elk_managers_info_dto() -> cluster_manager_pb2.ElkManagersInfoDTO:
+        """
+        :return: an empty ElkManagersInfoDTO
+        """
+        return cluster_manager_pb2.ElkManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", elkManagersRunning=[], elkManagersStatuses=[],
+            localKibanaPort=-1
+        )
+
+    @staticmethod
+    def get_empty_ryu_managers_info_dto() -> cluster_manager_pb2.RyuManagersInfoDTO:
+        """
+        :return: an empty RyuManagersInfoDTO
+        """
+        return cluster_manager_pb2.RyuManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", ryuManagersRunning=[], ryuManagersStatuses=[]
+        )
+
+    @staticmethod
+    def get_empty_host_managers_info_dto() -> cluster_manager_pb2.HostManagersInfoDTO:
+        """
+        :return: an empty HostManagersInfoDTO
+        """
+        return cluster_manager_pb2.HostManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", hostManagersRunning=[], hostManagersStatuses=[]
+        )
+
+    @staticmethod
+    def get_empty_kafka_managers_info_dto() -> cluster_manager_pb2.KafkaManagersInfoDTO:
+        """
+        :return: an empty KafkaManagersInfoDTO
+        """
+        return cluster_manager_pb2.KafkaManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", hostManagersRunning=[], hostManagersStatuses=[]
+        )
+
+    @staticmethod
+    def get_empty_docker_managers_info_dto() -> cluster_manager_pb2.DockerStatsManagersInfoDTO:
+        """
+        :return: an empty DockerStatsManagersInfoDTO
+        """
+        return cluster_manager_pb2.DockerStatsManagersInfoDTO(
+            ips=[], ports=[], emulationName="", executionId="", dockerStatsManagersRunning=[],
+            dockerStatsManagersStatuses=[]
+        )
+
+    @staticmethod
+    def get_empty_execution_info_dto() -> cluster_manager_pb2.ExecutionInfoDTO:
+        """
+        :return: an empty ExecutionInfoDTO
+        """
+        return cluster_manager_pb2.ExecutionInfoDTO(
+            emulationName="", executionId="", snortIdsManagersInfo=None, ossecIdsManagersInfo=None,
+            kafkaManagersInfo=None, hostManagersInfo=None, clientManagersInfo=None, dockerStatsManagersInfo=None,
+            runningContainers=[], elkManagersInfoDTO=None, ryuManagersInfoDTO=None, trafficManagersInfoDTO=None,
+            stoppedContainers=[], activeNetworks=[]
         )
