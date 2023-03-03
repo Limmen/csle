@@ -1622,7 +1622,7 @@ def stop_all_running_containers(
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
     """
-    Stops a specific traffic generator
+    Stops all running containers
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
@@ -2212,9 +2212,10 @@ def run_container(
     :return: the operation outcome
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RunContainerMsg(
-        image=image, name=name, num_cpus = num_cpus, create_network=create_network, version=version
+        image=image, name=name, num_cpus=num_cpus, create_network=create_network, version=version,
+        memory=memory
     )
-    operation_outcome = stub.startContainersOfExecution(operation_msg, timeout=timeout)
+    operation_outcome = stub.runContainer(operation_msg, timeout=timeout)
     return operation_outcome
 
 
@@ -2367,7 +2368,6 @@ def stop_packetbeats(
     return operation_outcome
 
 
-
 def stop_metricbeats(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int,
@@ -2472,9 +2472,9 @@ def start_packetbeat(
     :return: the operation outcome
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartPacketBeatMsg(
-        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip, initialStarT=initial_start
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip, initialStart=initial_start
     )
-    operation_outcome = stub.stopHostMstartPacketbeatanagers(operation_msg, timeout=timeout)
+    operation_outcome = stub.startPacketbeat(operation_msg, timeout=timeout)
     return operation_outcome
 
 
@@ -2512,8 +2512,8 @@ def start_heartbeat(
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
     :param container_ip: the IP of the container
-    :param emulation: the name of the emulation
     :param initial_start: boolean flag indicating whether it is an initial start or not
+    :param emulation: the name of the emulation
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
@@ -2911,27 +2911,6 @@ def stop_ossec_idses(
     return operation_outcome
 
 
-def start_ossec_idses(
-        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
-        emulation: str, ip_first_octet: int,
-        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
-        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
-    """
-    Starting the OSSEC IDSes in a given execution
-
-    :param stub: the stub to send the remote gRPC to the server
-    :param timeout: the GRPC timeout (seconds)
-    :param emulation: the name of the emulation
-    :param ip_first_octet: the first octet of the subnet of the execution
-    :return: the operation outcome
-    """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartOSSECIDSesMsg(
-        ipFirstOctet=ip_first_octet, emulation=emulation
-    )
-    operation_outcome = stub.startOSSECIDSes(operation_msg, timeout=timeout)
-    return operation_outcome
-
-
 def stop_ossec_ids(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int, container_ip: str,
@@ -3003,7 +2982,7 @@ def stop_ossec_ids_managers(
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
     """
-    Applies the heartbeat configuration to a specific node
+    Stops the OSSEC IDS managers of a specific execution
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
@@ -3381,7 +3360,7 @@ def stop_snort_ids_monitor_thread(
     return operation_outcome
 
 
-def startSnortIds(
+def start_snort_ids(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int, container_ip: str,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
@@ -3460,7 +3439,7 @@ def start_snort_ids_managers(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsManagers(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsManagersMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome = stub.startSnortIdsManagers(operation_msg, timeout=timeout)
@@ -3481,7 +3460,7 @@ def stop_snort_ids_managers(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsManagers(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsManagersMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome = stub.stopSnortIdsManagers(operation_msg, timeout=timeout)
@@ -3593,3 +3572,24 @@ def get_execution_info(
     )
     exec_info = stub.getExecutionInfo(operation_msg, timeout=timeout)
     return exec_info
+
+
+def get_snort_ids_monitor_thread_statuses(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsMonitorThreadStatusesDTO:
+    """
+    Gets the Snort IDS monitor thread statuses for a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the statuses
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetSnortIdsMonitorThreadStatusesMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    statuses = stub.getSnortIdsMonitorThreadStatuses(operation_msg, timeout=timeout)
+    return statuses

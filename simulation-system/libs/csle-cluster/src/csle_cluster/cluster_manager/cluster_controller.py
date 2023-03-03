@@ -1509,7 +1509,7 @@ class ClusterController:
         """
         Sends a request to stop a specific traffic generator
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1530,7 +1530,7 @@ class ClusterController:
         """
         Sends a request to get the client managers infos of a given execution
 
-        :param ip: the ip of the node where to get the client managers info
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1550,7 +1550,7 @@ class ClusterController:
         """
         Sends a request to get the client managers infos of a given execution
 
-        :param ip: the ip of the node where to get the client managers info
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1570,7 +1570,7 @@ class ClusterController:
         """
         Sends a request to stop all running containers on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The operation outcome
         """
@@ -1587,7 +1587,7 @@ class ClusterController:
         """
         Sends a request to stop a specific container on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The operation outcome
         """
@@ -1604,7 +1604,7 @@ class ClusterController:
         """
         Sends a request to remove all stopped containers on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The operation outcome
         """
@@ -1621,7 +1621,7 @@ class ClusterController:
         """
         Sends a request to remove a specific container on a specific nodep
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param container_name: the name of the container
         :return: The operation outcome
@@ -1639,7 +1639,7 @@ class ClusterController:
         """
         Sends a request to remove all container images on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The operation outcome
         """
@@ -1656,7 +1656,7 @@ class ClusterController:
         """
         Sends a request to remove a specific container image on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param image_name: the name of the container
         :return: The operation outcome
@@ -1674,7 +1674,7 @@ class ClusterController:
         """
         Sends a request to list all container images on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The container images
         """
@@ -1691,7 +1691,7 @@ class ClusterController:
         """
         Sends a request to list all Docker networks on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The docker networks
         """
@@ -1708,7 +1708,7 @@ class ClusterController:
         """
         Sends a request to start all stopped containers on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The operation outcome
         """
@@ -1725,7 +1725,7 @@ class ClusterController:
         """
         Sends a request to start a specific container on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param container_name: the name of the container
         :return: The operation outcome
@@ -1743,7 +1743,7 @@ class ClusterController:
         """
         Sends a request to list all running containers on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The docker networks
         """
@@ -1760,7 +1760,7 @@ class ClusterController:
         """
         Sends a request to list all running emulations on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The docker networks
         """
@@ -1777,7 +1777,7 @@ class ClusterController:
         """
         Sends a request to list all running containers on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The docker networks
         """
@@ -1794,7 +1794,7 @@ class ClusterController:
         """
         Sends a request to create the networks of a specific emulation on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1813,7 +1813,7 @@ class ClusterController:
         """
         Sends a request to stop the docker stats manager thread
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1832,7 +1832,7 @@ class ClusterController:
         """
         Sends a request to get the docker stats manager status on a specific node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The docker stats manager status
         """
@@ -1841,7 +1841,7 @@ class ClusterController:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             docker_stats_manager_status_dwto = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_docker_stats_manager_status(
-                stub=stub, port = constants.GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT)
+                    stub=stub, port=constants.GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT)
             return docker_stats_manager_status_dwto
 
     @staticmethod
@@ -1850,7 +1850,7 @@ class ClusterController:
         """
         Sends a request to remove a list of docker networks on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param networks: the list of networks to remove
         :return: The operation outcome
@@ -1868,7 +1868,7 @@ class ClusterController:
         """
         Sends a request to remove all docker networks on a given node
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :return: The operation outcome
         """
@@ -1885,7 +1885,7 @@ class ClusterController:
         """
         Sends a request to get the docker stats manager infos of a given execution
 
-        :param ip: the ip of the node where to get the client managers info
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1896,8 +1896,8 @@ class ClusterController:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             docker_stats_managers_info_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_docker_stats_manager_info(
-                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
-            )
+                    stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
+                )
             return docker_stats_managers_info_dto
 
     @staticmethod
@@ -1906,7 +1906,7 @@ class ClusterController:
         """
         Sends a request to stop the elk manager of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1925,7 +1925,7 @@ class ClusterController:
         """
         Sends a request to start the elk manager of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1944,7 +1944,7 @@ class ClusterController:
         """
         Sends a request to get the status of the ELK stack of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1963,7 +1963,7 @@ class ClusterController:
         """
         Sends a request to stop the ELK stack of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -1982,7 +1982,7 @@ class ClusterController:
         """
         Sends a request to start elastic of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -2001,7 +2001,7 @@ class ClusterController:
         """
         Sends a request to stop elastic on a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -2020,7 +2020,7 @@ class ClusterController:
         """
         Sends a request to start Kibana of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -2033,14 +2033,13 @@ class ClusterController:
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
             return operation_outcome_dto
 
-
     @staticmethod
     def stop_kibana(ip: str, port: int, emulation: str, ip_first_octet: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Sends a request to stop Kibana of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -2078,7 +2077,7 @@ class ClusterController:
         """
         Sends a request to stop Logstash of a given execution
 
-        :param ip: the ip of the node where to stop the traffic generator
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -2097,7 +2096,7 @@ class ClusterController:
         """
         Sends a request to get the elk managers infos of a given execution
 
-        :param ip: the ip of the node where to get the client managers info
+        :param ip: the ip of the physical node
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
@@ -2111,3 +2110,1302 @@ class ClusterController:
                     stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
                 )
             return elk_managers_info_dto
+
+    @staticmethod
+    def start_containers_of_execution(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start the containers of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_containers_of_execution(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def run_container(ip: str, port: int, image: str, name: str, memory: int, num_cpus: int, create_network: bool,
+                      version: str) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to run a container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param image: the docker image
+        :param name: the name of the container
+        :param memory: the memory of the container (in GB)
+        :param num_cpus: the number of CPUs of the container
+        :param version: the version of the container
+        :param create_network: boolean flag inidicating whether a network should be created for the container or not
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.run_container(
+                stub=stub, image=image, name=name, memory=memory, num_cpus=num_cpus, create_network=create_network,
+                version=version)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_containers_of_execution(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the containers of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_containers_of_execution(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_host_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start the host manager on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_host_managers(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the host managers of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_host_managers(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_host_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the host manager on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_host_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_host_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start the host monitor threads of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_monitor_threads(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_filebeats(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the filebeats of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_filebeats(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_packetbeats(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the packetbeats of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_packetbeats(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_metricbeats(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the metricbeats of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_metricbeats(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_heartbeats(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the heartbeats of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_heartbeats(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_host_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start the host monitor thread on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_monitor_thread(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_filebeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
+                       initial_start: bool = False) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start filebeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :param initial_start: boolean flag indicating whether it is an initial start or not
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_filebeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
+                initial_start=initial_start)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_packetbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
+                         initial_start: bool = False) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start packetbeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :param initial_start: boolean flag indicating whether it is an initial start or not
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_packetbeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
+                initial_start=initial_start)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_metricbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
+                         initial_start: bool = False) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start metricbeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param initial_start: boolean flag indicating whether it is an initial start or not
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_metricbeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
+                initial_start=initial_start)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_heartbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
+                        initial_start: bool = False) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to start heartbeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :param initial_start: boolean flag indicating whether it is an initial start or not
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_heartbeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
+                initial_start=initial_start)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_filebeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop filebeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_filebeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_packetbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops packetbeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_packetbeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_metricbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops metricbeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_metricbeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_heartbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops heartbeat on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_heartbeat(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def apply_filebeat_config(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the filebeat config to a specific node
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param container_ip: the ip of the container
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_filebeat_config(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def apply_packetbeat_config(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the packetbeat configuration to a specific node
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the node to apply the config
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_packetbeat_config(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def apply_metricbeat_config(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the metricbeat  configuration to a specific node
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the node to apply the config
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_metricbeat_config(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def apply_heartbeat_config(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Applies the heartbeat configuration to a specific node
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the node to apply the config
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_heartbeat_config(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_host_monitor_threads_statuses(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.GetHostMonitorThreadsStatusesMsg:
+        """
+        Gets the host monitor thread statuses of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The statuses
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            statuses_dtos = \
+                csle_cluster.cluster_manager.query_cluster_manager.get_host_monitor_threads_statuses(
+                    stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return statuses_dtos
+
+    @staticmethod
+    def get_host_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.HostManagersInfoDTO:
+        """
+        Gets the host managers info of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The host managers info
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            managers_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_host_managers_info(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return managers_info_dto
+
+    @staticmethod
+    def stop_kafka_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the kafka manager of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_kafka_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the kafka manager in a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def create_kafka_topics(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Creates the kafka topics in a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_kafka_topics(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_kafka_status(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO:
+        """
+        Sends a request to stop the containers of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The kafka status
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_status(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return status_dto
+
+    @staticmethod
+    def stop_kafka_server(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the kafka server in a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_server(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_kafka_server(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the kafka server in a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_server(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_kafka_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.KafkaManagersInfoDTO:
+        """
+        Gets the info of kafka managers
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The kafka managers infos
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            kafka_managers_info = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_managers_info(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return kafka_managers_info
+
+    @staticmethod
+    def stop_ossec_idses(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stop the OSSEC IDSes in a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_idses(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ossec_ids(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the OSSEC IDS on a specific host
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param container_ip: the IP of the node to apply the config
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_ossec_ids(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the OSSEC IDS on a specific host
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_ossec_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the OSSEC IDS managers for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids_managers(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ossec_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the OSSEC IDS managers of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_managers(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_ossec_ids_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the OSSEC IDS manager on a specific node
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the node to apply the config
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ossec_ids_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Sends a request to stop the containers of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the node to apply the config
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_ossec_ids_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int,
+                                       container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the OSSEC IDS monitor thread on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the node to apply the config
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids_monitor_thread(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ossec_ids_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the OSSEC IDS monitor thread on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param container_ip: the IP of the node to apply the config
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_monitor_thread(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ossec_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the OSSEC IDS monitor threads for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_monitor_threads(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_ossec_ids_monitor_thread_statuses(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsMonitorThreadStatusesDTO:
+        """
+        Gets the OSSEC IDS monitor thread statuses for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The thread statuses
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            statuses_dtos = \
+                csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_monitor_thread_statuses(
+                    stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return statuses_dtos
+
+    @staticmethod
+    def get_ossec_ids_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsManagersInfoDTO:
+        """
+        Gets the info of OSSEC IDS managers
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The managers infos
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            managers_info = csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_managers_info(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return managers_info
+
+    @staticmethod
+    def start_ryu_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Ryu manager for a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ryu_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ryu_manager(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Ryu manager for a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ryu_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_ryu_status(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO:
+        """
+        Gets the Ryu status
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The Ryu status
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            ryu_status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_status(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ryu_status_dto
+
+    @staticmethod
+    def start_ryu(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts Ryu
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ryu(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_ryu(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops Ryu
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ryu(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_ryu_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagersInfoDTO:
+        """
+        Gets the info of Ryu managers
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The ryu manager infos
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            ryu_manager_infos = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_managers_info(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ryu_manager_infos
+
+    @staticmethod
+    def stop_snort_idses(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDSes for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_idses(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_snort_idses_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDSes monitor threads for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_idses_monitor_threads(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_snort_ids(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param container_ip: the ip of the container
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_snort_ids_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS Monitor Thread on a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_monitor_thread(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_snort_ids(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS on a specific container in a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_snort_ids_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS monitor thread on a specific container in a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_monitor_thread(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_snort_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS monitor threads of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_monitor_threads(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_snort_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS managers of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_managers(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_snort_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS managers of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_managers(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def start_snort_ids_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Snort IDS manager at a specific container
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_snort_ids_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the OSSEC IDS monitor threads for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the ip of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_manager(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return operation_outcome_dto
+
+    @staticmethod
+    def stop_snort_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Snort IDS managers of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_monitor_threads(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return operation_outcome_dto
+
+    @staticmethod
+    def get_snort_ids_managers_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsManagersInfoDTO:
+        """
+        Gets the info of Snort IDS managers
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The Snort IDS managers infos
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            snort_managers_info = csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_managers_info(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return snort_managers_info
+
+    @staticmethod
+    def get_execution_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Gets the info of a given execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The execution info
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            exec_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_execution_info(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return exec_info_dto
+
+    @staticmethod
+    def get_snort_ids_monitor_thread_statuses(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsMonitorThreadStatusesDTO:
+        """
+        Gets the Snort IDS monitor thread statuses for a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The thread statuses
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            statuses_dtos = \
+                csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_monitor_thread_statuses(
+                    stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return statuses_dtos
