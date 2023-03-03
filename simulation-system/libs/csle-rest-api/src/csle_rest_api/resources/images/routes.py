@@ -4,7 +4,8 @@ Routes and sub-resources for the /images resource
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
-from csle_common.controllers.container_controller import ContainerController
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -24,14 +25,19 @@ def images():
     authorized = rest_api_util.check_if_user_is_authorized(request=request)
     if authorized is not None:
         return authorized
-
-    images = ContainerController.list_all_images()
+    config = MetastoreFacade.get_config(id=1)
+    images = []
+    for node in config.cluster_config.cluster_nodes:
+        images_dto = ClusterController.list_all_container_images(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        images_dtos = list(images_dto.images)
+        images = images + images_dtos
     images_dicts = []
     for img in images:
         images_dicts.append(
             {
-                api_constants.MGMT_WEBAPP.NAME_PROPERTY: img[0],
-                api_constants.MGMT_WEBAPP.SIZE_PROPERTY: img[4]
+                api_constants.MGMT_WEBAPP.NAME_PROPERTY: img.repoTags,
+                api_constants.MGMT_WEBAPP.SIZE_PROPERTY: img.size
             }
         )
     response = jsonify(images_dicts)

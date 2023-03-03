@@ -620,11 +620,6 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StopHostManagerMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
-        self.startHostMonitorThreads = channel.unary_unary(
-                '/ClusterManager/startHostMonitorThreads',
-                request_serializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
-                )
         self.stopFilebeats = channel.unary_unary(
                 '/ClusterManager/stopFilebeats',
                 request_serializer=cluster__manager__pb2.StopFilebeatsMsg.SerializeToString,
@@ -643,6 +638,11 @@ class ClusterManagerStub(object):
         self.stopHeartbeats = channel.unary_unary(
                 '/ClusterManager/stopHeartbeats',
                 request_serializer=cluster__manager__pb2.StopHeartbeatsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startHostMonitorThreads = channel.unary_unary(
+                '/ClusterManager/startHostMonitorThreads',
+                request_serializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startHostMonitorThread = channel.unary_unary(
@@ -953,6 +953,26 @@ class ClusterManagerStub(object):
         self.removeRyuTunnel = channel.unary_unary(
                 '/ClusterManager/removeRyuTunnel',
                 request_serializer=cluster__manager__pb2.RemoveRyuTunnelMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopHostMonitorThreads = channel.unary_unary(
+                '/ClusterManager/stopHostMonitorThreads',
+                request_serializer=cluster__manager__pb2.StopHostMonitorThreadsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopHostMonitorThread = channel.unary_unary(
+                '/ClusterManager/stopHostMonitorThread',
+                request_serializer=cluster__manager__pb2.StopHostMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startRyuMonitor = channel.unary_unary(
+                '/ClusterManager/startRyuMonitor',
+                request_serializer=cluster__manager__pb2.StartRyuMonitorThreadMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopRyuMonitor = channel.unary_unary(
+                '/ClusterManager/stopRyuMonitor',
+                request_serializer=cluster__manager__pb2.StopRyuMonitorThreadMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
 
@@ -1687,12 +1707,6 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def startHostMonitorThreads(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def stopFilebeats(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -1712,6 +1726,12 @@ class ClusterManagerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def stopHeartbeats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startHostMonitorThreads(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -2084,6 +2104,30 @@ class ClusterManagerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def removeRyuTunnel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopHostMonitorThreads(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopHostMonitorThread(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startRyuMonitor(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopRyuMonitor(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -2697,11 +2741,6 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     request_deserializer=cluster__manager__pb2.StopHostManagerMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
-            'startHostMonitorThreads': grpc.unary_unary_rpc_method_handler(
-                    servicer.startHostMonitorThreads,
-                    request_deserializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.FromString,
-                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
-            ),
             'stopFilebeats': grpc.unary_unary_rpc_method_handler(
                     servicer.stopFilebeats,
                     request_deserializer=cluster__manager__pb2.StopFilebeatsMsg.FromString,
@@ -2720,6 +2759,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'stopHeartbeats': grpc.unary_unary_rpc_method_handler(
                     servicer.stopHeartbeats,
                     request_deserializer=cluster__manager__pb2.StopHeartbeatsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startHostMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.startHostMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StartHostMonitorThreadsMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startHostMonitorThread': grpc.unary_unary_rpc_method_handler(
@@ -3030,6 +3074,26 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'removeRyuTunnel': grpc.unary_unary_rpc_method_handler(
                     servicer.removeRyuTunnel,
                     request_deserializer=cluster__manager__pb2.RemoveRyuTunnelMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopHostMonitorThreads': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHostMonitorThreads,
+                    request_deserializer=cluster__manager__pb2.StopHostMonitorThreadsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopHostMonitorThread': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopHostMonitorThread,
+                    request_deserializer=cluster__manager__pb2.StopHostMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startRyuMonitor': grpc.unary_unary_rpc_method_handler(
+                    servicer.startRyuMonitor,
+                    request_deserializer=cluster__manager__pb2.StartRyuMonitorThreadMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopRyuMonitor': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopRyuMonitor,
+                    request_deserializer=cluster__manager__pb2.StopRyuMonitorThreadMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
@@ -5101,23 +5165,6 @@ class ClusterManager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def startHostMonitorThreads(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHostMonitorThreads',
-            cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
-            cluster__manager__pb2.OperationOutcomeDTO.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
     def stopFilebeats(request,
             target,
             options=(),
@@ -5181,6 +5228,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHeartbeats',
             cluster__manager__pb2.StopHeartbeatsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startHostMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHostMonitorThreads',
+            cluster__manager__pb2.StartHostMonitorThreadsMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -6235,6 +6299,74 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeRyuTunnel',
             cluster__manager__pb2.RemoveRyuTunnelMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHostMonitorThreads(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHostMonitorThreads',
+            cluster__manager__pb2.StopHostMonitorThreadsMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopHostMonitorThread(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopHostMonitorThread',
+            cluster__manager__pb2.StopHostMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startRyuMonitor(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startRyuMonitor',
+            cluster__manager__pb2.StartRyuMonitorThreadMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopRyuMonitor(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopRyuMonitor',
+            cluster__manager__pb2.StopRyuMonitorThreadMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

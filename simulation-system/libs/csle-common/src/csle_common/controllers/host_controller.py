@@ -918,34 +918,39 @@ class HostController:
                 hosts_to_monitor=node_beats_config.heartbeat_hosts_to_monitor)
 
     @staticmethod
-    def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
+    def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig, logger: logging.Logger,
+                                  physical_host_ip: str) -> None:
         """
         A method that sends a request to the HostManager on every container to stop the monitor threads
 
         :param emulation_env_config: the emulation env config
+        :param physical_host_ip: the IP of the physical host
         :param logger: the logger to use for logging
         :return: None
         """
         # Stop host monitor threads on emulation containers
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip == physical_host_ip:
+                HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
+                                                        ip=c.docker_gw_bridge_ip, logger=logger)
+        if emulation_env_config.kafka_config.container.physical_host_ip == physical_host_ip:
+            # Stop host monitor threads on the kafka container
             HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                    ip=c.docker_gw_bridge_ip, logger=logger)
+                                                    ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                                    logger=logger)
 
-        # Stop host monitor threads on the kafka container
-        HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
-                                                logger=logger)
-
-        # Stop host monitor threads on the ELK container
-        HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
-                                                ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
-                                                logger=logger)
+        if emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
+            # Stop host monitor threads on the ELK container
+            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,
+                                                    ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                                    logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
-            # Stop host monitor threads on the SDN controller container
-            HostController.stop_host_monitor_thread(
-                emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
+            if emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_host_ip:
+                # Stop host monitor threads on the SDN controller container
+                HostController.stop_host_monitor_thread(
+                    emulation_env_config=emulation_env_config,
+                    ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
     def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:

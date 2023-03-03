@@ -1063,23 +1063,35 @@ def start_stop_host_monitor_thread(execution_id: int):
                 Logger.__call__().get_logger().info(
                     f"Stopping all host monitors on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                HostController.stop_host_monitor_threads(emulation_env_config=execution.emulation_env_config)
+                for node in config.cluster_config.cluster_nodes:
+                    ClusterController.stop_host_monitor_threads(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip_first_octet=execution.ip_first_octet)
             else:
                 Logger.__call__().get_logger().info(
                     f"Stopping host monitor with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
+                for node in config.cluster_config.cluster_nodes:
+                    ClusterController.stop_host_monitor_thread(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip_first_octet=execution.ip_first_octet, container_ip=ip)
         if start:
             if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
                 Logger.__call__().get_logger().info(
                     f"Starting all host monitors on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                HostController.start_host_monitor_threads(emulation_env_config=execution.emulation_env_config)
+                for node in config.cluster_config.cluster_nodes:
+                    ClusterController.start_host_monitor_threads(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip_first_octet=execution.ip_first_octet)
             else:
                 Logger.__call__().get_logger().info(
                     f"Starting host monitor with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                HostController.start_host_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
+                for node in config.cluster_config.cluster_nodes:
+                    ClusterController.start_host_monitor_thread(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip_first_octet=execution.ip_first_octet, container_ip=ip)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -2169,12 +2181,18 @@ def start_stop_ryu_monitor(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping the ryu monitor on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            SDNControllerManager.stop_ryu_monitor(emulation_env_config=execution.emulation_env_config)
+            ClusterController.stop_ryu_monitor(
+                ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                ip_first_octet=execution.ip_first_octet)
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting the Ryu monitor on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            SDNControllerManager.start_ryu_monitor(emulation_env_config=execution.emulation_env_config)
+            ClusterController.start_ryu_monitor(
+                ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
         if len(execution_info.ryu_managers_info.ryu_managers_statuses) > 0 and \
                 execution_info.ryu_managers_info.ryu_managers_statuses[0].ryu_running:

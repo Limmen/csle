@@ -123,11 +123,11 @@ service ClusterManager {
   rpc startHostManager(StartHostManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopHostManagers(StopHostManagersMsg) returns (OperationOutcomeDTO) {}
   rpc stopHostManager(StopHostManagerMsg) returns (OperationOutcomeDTO) {}
-  rpc startHostMonitorThreads(StartHostMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc stopFilebeats(StopFilebeatsMsg) returns (OperationOutcomeDTO) {}
   rpc stopPacketbeats(StopPacketbeatsMsg) returns (OperationOutcomeDTO) {}
   rpc stopMetricbeats(StopMetricbeatsMsg) returns (OperationOutcomeDTO) {}
   rpc stopHeartbeats(StopHeartbeatsMsg) returns (OperationOutcomeDTO) {}
+  rpc startHostMonitorThreads(StartHostMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc startHostMonitorThread(StartHostMonitorThreadMsg) returns (OperationOutcomeDTO) {}
   rpc startFilebeat(StartFileBeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startPacketbeat(StartPacketBeatsMsg) returns (OperationOutcomeDTO) {}
@@ -192,6 +192,35 @@ service ClusterManager {
   rpc createRyuTunnel(CreateKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
   rpc removeKibanaTunnel(RemoveKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
   rpc removeRyuTunnel(RemoveRyuTunnelMsg) returns (OperationOutcomeDTO) {}
+  rpc stopHostMonitorThreads(StopHostMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
+  rpc stopHostMonitorThread(StopHostMonitorThreadMsg) returns (OperationOutcomeDTO) {}
+  rpc startRyuMonitor(StartRyuMonitorThreadMsg) returns (OperationOutcomeDTO) {}
+  rpc stopRyuMonitor(StopRyuMonitorThreadMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to stop the Ryu monitor thread of a given execution
+message StopRyuMonitorThreadMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the Ryu monitor thread of a given execution
+message StartRyuMonitorThreadMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to start the Host manager threads of a specific execution
+message StopHostMonitorThreadsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to stop the Host manager threads of a specific execution
+message StopHostMonitorThreadMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
 }
 
 // Message that the client sends to remove a Kibana tunnel

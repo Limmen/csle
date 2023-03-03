@@ -3197,7 +3197,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                    logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopRyuManager(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuManagerMsg,
@@ -3217,7 +3217,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             SDNControllerManager.stop_ryu_manager(emulation_env_config=execution.emulation_env_config)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def getRyuStatus(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuServiceStatusMsg,
@@ -3261,7 +3261,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                            physical_server_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopRyu(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuServiceMsg,
@@ -3282,7 +3282,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                           logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def getRyuManagersInfo(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuManagersInfoMsg,
@@ -3707,6 +3707,92 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         ClusterManagerUtil.remove_kibana_tunnel(execution=execution)
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopHostMonitorThreads(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHostMonitorThreadsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the host monitor threads of a specific execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping host monitor threads  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        HostController.stop_host_monitor_threads(emulation_env_config=execution.emulation_env_config,
+                                                  physical_host_ip=GeneralUtil.get_host_ip(),
+                                                  logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def stopHostMonitorThread(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHostMonitorThreadMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a specific host monitor thread
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping host monitor thread on container with ip: {request.containerIp}  "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
+            ip=request.containerIp)
+        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config,
+                                                     ip=node_container_config.docker_gw_bridge_ip,
+                                                     logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def startRyuMonitor(
+        self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMonitorThreadMsg,
+        context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Starts the Ryu monitor thread for a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Ryu monitor thread "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            SDNControllerManager.start_ryu_monitor(emulation_env_config=execution.emulation_env_config,
+                                                   physical_server_ip=GeneralUtil.get_host_ip(),
+                                                   logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def stopRyuMonitor(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuMonitorThreadMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops the Ryu monitor thread for a given execution
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Starting the Ryu monitor thread "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            SDNControllerManager.stop_ryu_monitor(emulation_env_config=execution.emulation_env_config,
+                                                  logger=logging.getLogger())
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        else:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
