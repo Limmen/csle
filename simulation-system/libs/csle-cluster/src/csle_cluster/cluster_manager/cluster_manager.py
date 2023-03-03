@@ -3674,6 +3674,40 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         ClusterManagerUtil.create_ryu_tunnel(execution=execution, logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
+    def removeRyuTunnel(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveRyuTunnelMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes a Ryu tunnel
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Remove the Ryu tunnel for emulation: {request.emulation}, "
+                     f"execution id: {request.ipFirstOctet}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ClusterManagerUtil.remove_ryu_tunnel(execution=execution)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def removeKibanaTunnel(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.RemoveKibanaTunnelMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Removes a Kibana tunnel
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Remove the Kibana tunnel for emulation: {request.emulation}, "
+                     f"execution id: {request.ipFirstOctet}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        ClusterManagerUtil.remove_kibana_tunnel(execution=execution)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "cluster_manager.log") -> None:

@@ -3667,3 +3667,45 @@ def list_ryu_tunnels(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.ListRyuTunnelsMsg()
     ryuTunnelsDTO = stub.listRyuTunnels(operation_msg, timeout=timeout)
     return ryuTunnelsDTO
+
+
+def remove_ryu_tunnel(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes a Ryu tunnel for a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveRyuTunnelMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome = stub.removeRyuTunnel(operation_msg, timeout=timeout)
+    return operation_outcome
+
+
+def remove_kibana_tunnel(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Removes a Kibana tunnel for a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.RemoveKibanaTunnelMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    operation_outcome = stub.removeKibanaTunnel(operation_msg, timeout=timeout)
+    return operation_outcome

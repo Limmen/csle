@@ -190,9 +190,17 @@ service ClusterManager {
   rpc createKibanaTunnel(CreateKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
   rpc listRyuTunnels(ListRyuTunnelsMsg) returns (RyuTunnelsDTO) {}
   rpc createRyuTunnel(CreateKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
+  rpc removeKibanaTunnel(RemoveKibanaTunnelMsg) returns (OperationOutcomeDTO) {}
+  rpc removeRyuTunnel(RemoveRyuTunnelMsg) returns (OperationOutcomeDTO) {}
 }
 
-// Message that the client sends to request information about Kibana tunnels
+// Message that the client sends to remove a Kibana tunnel
+message RemoveKibanaTunnelMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends to create a Kibana tunnel
 message CreateKibanaTunnelMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
@@ -214,13 +222,19 @@ message KibanaTunnelDTO {
   int32 ipFirstOctet = 4;
 }
 
-// Message that the client sends to request information about Kibana tunnels
+// Message that the client sends to remove a Ryu tunnel
+message RemoveRyuTunnelMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends to request to create a Ryu tunnel
 message CreateRyuTunnelMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
-// Message that the client sends to request information about Kibana tunnels
+// Message that the client sends to request information about Ryu tunnels
 message ListRyuTunnelsMsg {}
 
 // Message that the server returns when the client requests information about the Ryu tunnels

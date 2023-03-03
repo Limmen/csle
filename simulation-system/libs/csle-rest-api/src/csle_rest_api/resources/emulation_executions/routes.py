@@ -1470,7 +1470,10 @@ def start_stop_kibana(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping kibana on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            remove_kibana_tunnel(execution=execution)
+            ClusterController.remove_kibana_tunnel(
+                ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                ip_first_octet=execution.ip_first_octet)
             ClusterController.stop_kibana(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
@@ -2089,7 +2092,10 @@ def start_stop_ryu_controller(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping the ryu controller on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            remove_ryu_tunnel(execution=execution)
+            ClusterController.remove_ryu_tunnel(
+                ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                ip_first_octet=execution.ip_first_octet)
             ClusterController.stop_ryu(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,

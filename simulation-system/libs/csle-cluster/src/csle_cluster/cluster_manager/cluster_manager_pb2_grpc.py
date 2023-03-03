@@ -945,6 +945,16 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.CreateKibanaTunnelMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.removeKibanaTunnel = channel.unary_unary(
+                '/ClusterManager/removeKibanaTunnel',
+                request_serializer=cluster__manager__pb2.RemoveKibanaTunnelMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.removeRyuTunnel = channel.unary_unary(
+                '/ClusterManager/removeRyuTunnel',
+                request_serializer=cluster__manager__pb2.RemoveRyuTunnelMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -2067,6 +2077,18 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def removeKibanaTunnel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeRyuTunnel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -2998,6 +3020,16 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'createRyuTunnel': grpc.unary_unary_rpc_method_handler(
                     servicer.createRyuTunnel,
                     request_deserializer=cluster__manager__pb2.CreateKibanaTunnelMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeKibanaTunnel': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeKibanaTunnel,
+                    request_deserializer=cluster__manager__pb2.RemoveKibanaTunnelMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'removeRyuTunnel': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeRyuTunnel,
+                    request_deserializer=cluster__manager__pb2.RemoveRyuTunnelMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
@@ -6169,6 +6201,40 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/createRyuTunnel',
             cluster__manager__pb2.CreateKibanaTunnelMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeKibanaTunnel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeKibanaTunnel',
+            cluster__manager__pb2.RemoveKibanaTunnelMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def removeRyuTunnel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/removeRyuTunnel',
+            cluster__manager__pb2.RemoveRyuTunnelMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
