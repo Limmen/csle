@@ -952,7 +952,7 @@ message ContainerImageDTO {
   string created = 2;
   string os = 3;
   string architecture = 4;
-  string size = 5;
+  int64 size = 5;
 }
 
 // Message that the client sends when requesting to list all container images
