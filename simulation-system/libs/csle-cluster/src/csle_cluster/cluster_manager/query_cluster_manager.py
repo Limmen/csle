@@ -2434,7 +2434,7 @@ def start_host_monitor_thread(
 
 def start_filebeat(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
-        emulation: str, ip_first_octet: int, container_ip: str,
+        emulation: str, ip_first_octet: int, container_ip: str, initial_start: bool = False,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
     """
@@ -2445,10 +2445,11 @@ def start_filebeat(
     :param emulation: the name of the emulation
     :param ip_first_octet: the first octet of the subnet of the execution
     :param container_ip: the ip of the container
+    :param initial_start: boolean flag indicating whether it is an initial start or not
     :return: the operation outcome
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartFileBeatMsg(
-        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip, initialStart=initial_start
     )
     operation_outcome = stub.startFilebeat(operation_msg, timeout=timeout)
     return operation_outcome
@@ -2456,7 +2457,7 @@ def start_filebeat(
 
 def start_packetbeat(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
-        emulation: str, ip_first_octet: int, container_ip: str,
+        emulation: str, ip_first_octet: int, container_ip: str, initial_start: bool = False,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
     """
@@ -2467,10 +2468,11 @@ def start_packetbeat(
     :param emulation: the name of the emulation
     :param ip_first_octet: the first octet of the subnet of the execution
     :param container_ip: the ip of the container
+    :param initial_start: boolean flag indicating whether it is an initial start or not
     :return: the operation outcome
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartPacketBeatMsg(
-        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip, initialStarT=initial_start
     )
     operation_outcome = stub.stopHostMstartPacketbeatanagers(operation_msg, timeout=timeout)
     return operation_outcome
@@ -2478,7 +2480,7 @@ def start_packetbeat(
 
 def start_metricbeat(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
-        emulation: str, ip_first_octet: int, container_ip: str,
+        emulation: str, ip_first_octet: int, container_ip: str, initial_start: bool = False,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
     """
@@ -2488,11 +2490,12 @@ def start_metricbeat(
     :param timeout: the GRPC timeout (seconds)
     :param emulation: the name of the emulation
     :param ip_first_octet: the first octet of the subnet of the execution
+    :param initial_start: boolean flag indicating whether it is an initial start or not
     :param container_ip: the ip of the container
     :return: the operation outcome
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartMetricBeatMsg(
-        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip, initialStart=initial_start
     )
     operation_outcome = stub.startMetricbeat(operation_msg, timeout=timeout)
     return operation_outcome
@@ -2500,7 +2503,7 @@ def start_metricbeat(
 
 def start_heartbeat(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
-        emulation: str, ip_first_octet: int, container_ip: str,
+        emulation: str, ip_first_octet: int, container_ip: str, initial_start: bool = False,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
     """
@@ -2510,11 +2513,12 @@ def start_heartbeat(
     :param timeout: the GRPC timeout (seconds)
     :param container_ip: the IP of the container
     :param emulation: the name of the emulation
+    :param initial_start: boolean flag indicating whether it is an initial start or not
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartHeartBeatMsg(
-        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip, initialStart=initial_start
     )
     operation_outcome = stub.startHeartbeat(operation_msg, timeout=timeout)
     return operation_outcome

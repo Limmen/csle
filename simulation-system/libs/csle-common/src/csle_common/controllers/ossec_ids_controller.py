@@ -156,16 +156,16 @@ class OSSECIDSController:
             time.sleep(2)
 
     @staticmethod
-    def stop_ossec_idses_managers(emulation_env_config: EmulationEnvConfig, phyiscal_host_ip: str) -> None:
+    def stop_ossec_idses_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
         """
         Utility method for stopping ossec ids managers
 
         :param emulation_env_config: the emulation env config
-        :param phyiscal_host_ip: the IP of the physical host
+        :param physical_server_ip: the IP of the physical host
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            if c.physical_host_ip != phyiscal_host_ip:
+            if c.physical_host_ip != physical_server_ip:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:

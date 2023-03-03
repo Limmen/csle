@@ -146,7 +146,7 @@ service ClusterManager {
   rpc stopKafkaManager(StopKafkaManagerMsg) returns (OperationOutcomeDTO) {}
   rpc startKafkaManager(StartKafkaManagerMsg) returns (OperationOutcomeDTO) {}
   rpc createKafkaTopics(CreateKafkaTopicsMsg) returns (OperationOutcomeDTO) {}
-  rpc getKafkaStatus(CreateKafkaTopicsMsg) returns (KafkaStatusDTO) {}
+  rpc getKafkaStatus(GetKafkaStatusMsg) returns (KafkaStatusDTO) {}
   rpc stopKafkaServer(StopKafkaServerMsg) returns (OperationOutcomeDTO) {}
   rpc startKafkaServer(StopKafkaServerMsg) returns (OperationOutcomeDTO) {}
   rpc getKafkaManagersInfo(GetKafkaManagersInfoMsg) returns (KafkaManagersInfoDTO) {}

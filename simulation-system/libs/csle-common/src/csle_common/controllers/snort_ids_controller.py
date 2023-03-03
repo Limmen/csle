@@ -277,7 +277,7 @@ class SnortIDSController:
             csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor(stub=stub)
 
     @staticmethod
-    def get_snort_idses_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig,
+    def get_snort_idses_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
                                                  start_if_stopped: bool = True) -> \
             List[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO]:
         """
@@ -286,13 +286,17 @@ class SnortIDSController:
 
         :param emulation_env_config: the emulation config
         :param start_if_stopped: whether to start the IDS monitor if it is stopped
+        :param physical_server_ip: the physical server IP
         :return: List of monitor thread statuses
         """
         statuses = []
         if start_if_stopped:
-            SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config)
+            SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config,
+                                                    physical_server_ip=physical_server_ip)
 
         for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     status = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(

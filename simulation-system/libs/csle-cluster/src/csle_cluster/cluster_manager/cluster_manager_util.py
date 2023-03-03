@@ -961,3 +961,22 @@ class ClusterManagerUtil:
             ryuManagersInfoDTO=ClusterManagerUtil.convert_ryu_info_dto(execution_info_dto.ryu_managers_info),
         )
 
+    @staticmethod
+    def get_empty_kafka_dto() -> csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO:
+        """
+        :return: an empty KafkaStatusDTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO(
+            running=False, topics = []
+        )
+
+    @staticmethod
+    def get_empty_ryu_manager_status_dto() -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO:
+        """
+        :return: an empty RyuManagerStatusDTO
+        """
+        return csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO(
+            ryu_running = False, monitor_running = False, port = -1, web_port = -1, controller = "", kafka_ip = "",
+            kafka_port = -1, time_step_len = -1
+        )
+
