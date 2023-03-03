@@ -2131,16 +2131,18 @@ def list_statsmanager() -> None:
                 stats_manager_status_dto = ClusterController.get_docker_stats_manager_status(
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
                 )
-                docker_stats_monitor_statuses.append(stats_manager_status_dto)
+                docker_stats_monitor_statuses.append((stats_manager_status_dto, node.ip))
             break
-    for status in docker_stats_monitor_statuses:
+    for status_ip in docker_stats_monitor_statuses:
+        status, ip = status_ip
         active_monitor_threads = 0
         active_emulations = []
         if status is not None:
             active_monitor_threads = status.num_monitors
             active_emulations = list(status.emulations)
 
-        click.secho("Docker statsmanager status: " + f" {click.style('[running], ', fg='green')} "
+        click.secho("Docker statsmanager status: " + f"{click.style('[running]', fg='green')} "
+                                                     f"ip: {ip}, "
                                                      f"port:{constants.GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT}, "
                                                      f"num active monitor threads: "
                                                      f"{active_monitor_threads}, "
