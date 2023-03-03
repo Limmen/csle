@@ -547,7 +547,7 @@ class ClusterManagerStub(object):
                 )
         self.getElkStatus = channel.unary_unary(
                 '/ClusterManager/getElkStatus',
-                request_serializer=cluster__manager__pb2.GetElkStatusMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.GetElkStackStatusMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.ElkStatusDTO.FromString,
                 )
         self.stopElkStack = channel.unary_unary(
@@ -557,32 +557,32 @@ class ClusterManagerStub(object):
                 )
         self.startElastic = channel.unary_unary(
                 '/ClusterManager/startElastic',
-                request_serializer=cluster__manager__pb2.StartElasticMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartElasticServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopElastic = channel.unary_unary(
                 '/ClusterManager/stopElastic',
-                request_serializer=cluster__manager__pb2.StopElasticMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopElasticServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startKibana = channel.unary_unary(
                 '/ClusterManager/startKibana',
-                request_serializer=cluster__manager__pb2.StartKibanaMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartKibanaServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopKibana = channel.unary_unary(
                 '/ClusterManager/stopKibana',
-                request_serializer=cluster__manager__pb2.StopKibanaMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopKibanaServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startLogstash = channel.unary_unary(
                 '/ClusterManager/startLogstash',
-                request_serializer=cluster__manager__pb2.StartLogstashMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartLogstashServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopLogstash = channel.unary_unary(
                 '/ClusterManager/stopLogstash',
-                request_serializer=cluster__manager__pb2.StopLogstashMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopLogstashServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.getElkManagersInfo = channel.unary_unary(
@@ -737,7 +737,7 @@ class ClusterManagerStub(object):
                 )
         self.getKafkaStatus = channel.unary_unary(
                 '/ClusterManager/getKafkaStatus',
-                request_serializer=cluster__manager__pb2.GetKafkaStatusMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.GetKafkaManagerStatusMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.KafkaStatusDTO.FromString,
                 )
         self.stopKafkaServer = channel.unary_unary(
@@ -832,17 +832,17 @@ class ClusterManagerStub(object):
                 )
         self.getRyuStatus = channel.unary_unary(
                 '/ClusterManager/getRyuStatus',
-                request_serializer=cluster__manager__pb2.GetRyuStatusMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.GetRyuServiceStatusMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.RyuManagerStatusDTO.FromString,
                 )
         self.startRyu = channel.unary_unary(
                 '/ClusterManager/startRyu',
-                request_serializer=cluster__manager__pb2.StartRyuMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartRyuServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopRyu = channel.unary_unary(
                 '/ClusterManager/stopRyu',
-                request_serializer=cluster__manager__pb2.StopRyuMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopRyuServiceMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.getRyuManagersInfo = channel.unary_unary(
@@ -862,7 +862,7 @@ class ClusterManagerStub(object):
                 )
         self.stopSnortIds = channel.unary_unary(
                 '/ClusterManager/stopSnortIds',
-                request_serializer=cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StopSnortMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopSnortIdsMonitorThread = channel.unary_unary(
@@ -872,7 +872,7 @@ class ClusterManagerStub(object):
                 )
         self.startSnortIds = channel.unary_unary(
                 '/ClusterManager/startSnortIds',
-                request_serializer=cluster__manager__pb2.StartSnortIdsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartSnortMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startSnortIdsMonitorThreads = channel.unary_unary(
@@ -2558,7 +2558,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'getElkStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.getElkStatus,
-                    request_deserializer=cluster__manager__pb2.GetElkStatusMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.GetElkStackStatusMsg.FromString,
                     response_serializer=cluster__manager__pb2.ElkStatusDTO.SerializeToString,
             ),
             'stopElkStack': grpc.unary_unary_rpc_method_handler(
@@ -2568,32 +2568,32 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'startElastic': grpc.unary_unary_rpc_method_handler(
                     servicer.startElastic,
-                    request_deserializer=cluster__manager__pb2.StartElasticMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartElasticServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopElastic': grpc.unary_unary_rpc_method_handler(
                     servicer.stopElastic,
-                    request_deserializer=cluster__manager__pb2.StopElasticMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StopElasticServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startKibana': grpc.unary_unary_rpc_method_handler(
                     servicer.startKibana,
-                    request_deserializer=cluster__manager__pb2.StartKibanaMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartKibanaServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopKibana': grpc.unary_unary_rpc_method_handler(
                     servicer.stopKibana,
-                    request_deserializer=cluster__manager__pb2.StopKibanaMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StopKibanaServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startLogstash': grpc.unary_unary_rpc_method_handler(
                     servicer.startLogstash,
-                    request_deserializer=cluster__manager__pb2.StartLogstashMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartLogstashServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopLogstash': grpc.unary_unary_rpc_method_handler(
                     servicer.stopLogstash,
-                    request_deserializer=cluster__manager__pb2.StopLogstashMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StopLogstashServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'getElkManagersInfo': grpc.unary_unary_rpc_method_handler(
@@ -2748,7 +2748,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'getKafkaStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.getKafkaStatus,
-                    request_deserializer=cluster__manager__pb2.GetKafkaStatusMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.GetKafkaManagerStatusMsg.FromString,
                     response_serializer=cluster__manager__pb2.KafkaStatusDTO.SerializeToString,
             ),
             'stopKafkaServer': grpc.unary_unary_rpc_method_handler(
@@ -2843,17 +2843,17 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'getRyuStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.getRyuStatus,
-                    request_deserializer=cluster__manager__pb2.GetRyuStatusMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.GetRyuServiceStatusMsg.FromString,
                     response_serializer=cluster__manager__pb2.RyuManagerStatusDTO.SerializeToString,
             ),
             'startRyu': grpc.unary_unary_rpc_method_handler(
                     servicer.startRyu,
-                    request_deserializer=cluster__manager__pb2.StartRyuMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartRyuServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopRyu': grpc.unary_unary_rpc_method_handler(
                     servicer.stopRyu,
-                    request_deserializer=cluster__manager__pb2.StopRyuMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StopRyuServiceMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'getRyuManagersInfo': grpc.unary_unary_rpc_method_handler(
@@ -2873,7 +2873,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'stopSnortIds': grpc.unary_unary_rpc_method_handler(
                     servicer.stopSnortIds,
-                    request_deserializer=cluster__manager__pb2.StopSnortIdsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StopSnortMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopSnortIdsMonitorThread': grpc.unary_unary_rpc_method_handler(
@@ -2883,7 +2883,7 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'startSnortIds': grpc.unary_unary_rpc_method_handler(
                     servicer.startSnortIds,
-                    request_deserializer=cluster__manager__pb2.StartSnortIdsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartSnortMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startSnortIdsMonitorThreads': grpc.unary_unary_rpc_method_handler(
@@ -4761,7 +4761,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getElkStatus',
-            cluster__manager__pb2.GetElkStatusMsg.SerializeToString,
+            cluster__manager__pb2.GetElkStackStatusMsg.SerializeToString,
             cluster__manager__pb2.ElkStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -4795,7 +4795,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startElastic',
-            cluster__manager__pb2.StartElasticMsg.SerializeToString,
+            cluster__manager__pb2.StartElasticServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -4812,7 +4812,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopElastic',
-            cluster__manager__pb2.StopElasticMsg.SerializeToString,
+            cluster__manager__pb2.StopElasticServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -4829,7 +4829,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startKibana',
-            cluster__manager__pb2.StartKibanaMsg.SerializeToString,
+            cluster__manager__pb2.StartKibanaServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -4846,7 +4846,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopKibana',
-            cluster__manager__pb2.StopKibanaMsg.SerializeToString,
+            cluster__manager__pb2.StopKibanaServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -4863,7 +4863,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startLogstash',
-            cluster__manager__pb2.StartLogstashMsg.SerializeToString,
+            cluster__manager__pb2.StartLogstashServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -4880,7 +4880,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopLogstash',
-            cluster__manager__pb2.StopLogstashMsg.SerializeToString,
+            cluster__manager__pb2.StopLogstashServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5407,7 +5407,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getKafkaStatus',
-            cluster__manager__pb2.GetKafkaStatusMsg.SerializeToString,
+            cluster__manager__pb2.GetKafkaManagerStatusMsg.SerializeToString,
             cluster__manager__pb2.KafkaStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5730,7 +5730,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getRyuStatus',
-            cluster__manager__pb2.GetRyuStatusMsg.SerializeToString,
+            cluster__manager__pb2.GetRyuServiceStatusMsg.SerializeToString,
             cluster__manager__pb2.RyuManagerStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5747,7 +5747,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startRyu',
-            cluster__manager__pb2.StartRyuMsg.SerializeToString,
+            cluster__manager__pb2.StartRyuServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5764,7 +5764,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopRyu',
-            cluster__manager__pb2.StopRyuMsg.SerializeToString,
+            cluster__manager__pb2.StopRyuServiceMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5832,7 +5832,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSnortIds',
-            cluster__manager__pb2.StopSnortIdsMsg.SerializeToString,
+            cluster__manager__pb2.StopSnortMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5866,7 +5866,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSnortIds',
-            cluster__manager__pb2.StartSnortIdsMsg.SerializeToString,
+            cluster__manager__pb2.StartSnortMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

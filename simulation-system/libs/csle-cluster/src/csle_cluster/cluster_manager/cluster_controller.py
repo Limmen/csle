@@ -1695,6 +1695,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :return: The docker networks
         """
+        print(f"Connecting to ip {ip}, port: {port}")
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)

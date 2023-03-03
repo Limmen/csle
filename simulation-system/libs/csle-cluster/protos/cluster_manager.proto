@@ -108,14 +108,14 @@ service ClusterManager {
   rpc getDockerStatsManagersInfo(GetDockerStatsManagersInfoMsg) returns (DockerStatsManagersInfoDTO) {}
   rpc startElkManager(StartElkManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopElkManager(StopElkManagerMsg) returns (OperationOutcomeDTO) {}
-  rpc getElkStatus(GetElkStatusMsg) returns (ElkStatusDTO) {}
+  rpc getElkStatus(GetElkStackStatusMsg) returns (ElkStatusDTO) {}
   rpc stopElkStack(StopElkStackMsg) returns (OperationOutcomeDTO) {}
-  rpc startElastic(StartElasticMsg) returns (OperationOutcomeDTO) {}
-  rpc stopElastic(StopElasticMsg) returns (OperationOutcomeDTO) {}
-  rpc startKibana(StartKibanaMsg) returns (OperationOutcomeDTO) {}
-  rpc stopKibana(StopKibanaMsg) returns (OperationOutcomeDTO) {}
-  rpc startLogstash(StartLogstashMsg) returns (OperationOutcomeDTO) {}
-  rpc stopLogstash(StopLogstashMsg) returns (OperationOutcomeDTO) {}
+  rpc startElastic(StartElasticServiceMsg) returns (OperationOutcomeDTO) {}
+  rpc stopElastic(StopElasticServiceMsg) returns (OperationOutcomeDTO) {}
+  rpc startKibana(StartKibanaServiceMsg) returns (OperationOutcomeDTO) {}
+  rpc stopKibana(StopKibanaServiceMsg) returns (OperationOutcomeDTO) {}
+  rpc startLogstash(StartLogstashServiceMsg) returns (OperationOutcomeDTO) {}
+  rpc stopLogstash(StopLogstashServiceMsg) returns (OperationOutcomeDTO) {}
   rpc getElkManagersInfo(GetElkManagersInfoMsg) returns (ElkManagersInfoDTO) {}
   rpc startContainersOfExecution(StartContainersOfExecutionMsg) returns (OperationOutcomeDTO) {}
   rpc runContainer(RunContainerMsg) returns (OperationOutcomeDTO) {}
@@ -146,7 +146,7 @@ service ClusterManager {
   rpc stopKafkaManager(StopKafkaManagerMsg) returns (OperationOutcomeDTO) {}
   rpc startKafkaManager(StartKafkaManagerMsg) returns (OperationOutcomeDTO) {}
   rpc createKafkaTopics(CreateKafkaTopicsMsg) returns (OperationOutcomeDTO) {}
-  rpc getKafkaStatus(GetKafkaStatusMsg) returns (KafkaStatusDTO) {}
+  rpc getKafkaStatus(GetKafkaManagerStatusMsg) returns (KafkaStatusDTO) {}
   rpc stopKafkaServer(StopKafkaServerMsg) returns (OperationOutcomeDTO) {}
   rpc startKafkaServer(StopKafkaServerMsg) returns (OperationOutcomeDTO) {}
   rpc getKafkaManagersInfo(GetKafkaManagersInfoMsg) returns (KafkaManagersInfoDTO) {}
@@ -166,15 +166,15 @@ service ClusterManager {
   rpc getOSSECIdsManagersInfo(GetOSSECIDSManagersInfoMsg) returns (OSSECIdsManagersInfoDTO) {}
   rpc startRyuManager(StartRyuManagerMsg) returns (OperationOutcomeDTO) {}
   rpc stopRyuManager(StopRyuManagerMsg) returns (OperationOutcomeDTO) {}
-  rpc getRyuStatus(GetRyuStatusMsg) returns (RyuManagerStatusDTO) {}
-  rpc startRyu(StartRyuMsg) returns (OperationOutcomeDTO) {}
-  rpc stopRyu(StopRyuMsg) returns (OperationOutcomeDTO) {}
+  rpc getRyuStatus(GetRyuServiceStatusMsg) returns (RyuManagerStatusDTO) {}
+  rpc startRyu(StartRyuServiceMsg) returns (OperationOutcomeDTO) {}
+  rpc stopRyu(StopRyuServiceMsg) returns (OperationOutcomeDTO) {}
   rpc getRyuManagersInfo(GetRyuManagersInfoMsg) returns (RyuManagersInfoDTO) {}
   rpc stopSnortIdses(StopSnortIdsesMsg) returns (OperationOutcomeDTO) {}
   rpc stopSnortIdsesMonitorThreads(StopSnortIdsesMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
-  rpc stopSnortIds(StopSnortIdsMsg) returns (OperationOutcomeDTO) {}
+  rpc stopSnortIds(StopSnortMsg) returns (OperationOutcomeDTO) {}
   rpc stopSnortIdsMonitorThread(StopSnortIdsMonitorThreadMsg) returns (OperationOutcomeDTO) {}
-  rpc startSnortIds(StartSnortIdsMsg) returns (OperationOutcomeDTO) {}
+  rpc startSnortIds(StartSnortMsg) returns (OperationOutcomeDTO) {}
   rpc startSnortIdsMonitorThreads(StartSnortIdsMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc startSnortIdsMonitorThread(StartSnortIdsMonitorThreadMsg) returns (OperationOutcomeDTO) {}
   rpc startSnortIdsManagers(StartSnortIdsManagersMsg) returns (OperationOutcomeDTO) {}
@@ -238,7 +238,7 @@ message StartSnortIdsManagersMsg {
 }
 
 // Message that the client sends when requesting to start a specific Snort IDS
-message StartSnortIdsMsg {
+message StartSnortMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
   string containerIp = 3;
@@ -258,7 +258,7 @@ message StartSnortIdsMonitorThreadsMsg {
 }
 
 // Message that the client sends when requesting to stop a specific Snort IDS
-message StopSnortIdsMsg {
+message StopSnortMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
   string containerIp = 3;
@@ -290,31 +290,31 @@ message GetRyuManagersInfoMsg {
 }
 
 // Message that the client sends when requesting to stop the Ryu monitor of a specific execution
-message StopRyuMonitorMsg {
+message StopRyuMonitorServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start the Ryu monitor of a specific execution
-message StartRyuMonitorMsg {
+message StartRyuMonitorServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop Ryu of a specific execution
-message StopRyuMsg {
+message StopRyuServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start Ryu of a specific execution
-message StartRyuMsg {
+message StartRyuServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to get the status of teh Ryu manager of a given execution
-message GetRyuStatusMsg {
+message GetRyuServiceStatusMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
@@ -439,7 +439,7 @@ message StopKafkaServerMsg {
 }
 
 // Message that the client sends when requesting to get the status of Kafka in a given execution
-message GetKafkaStatusMsg {
+message GetKafkaManagerStatusMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
@@ -779,37 +779,37 @@ message ElkManagersInfoDTO {
 }
 
 // Message that the client sends when requesting to stop logstash for a specific execution
-message StopLogstashMsg {
+message StopLogstashServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start logstash for a specific execution
-message StartLogstashMsg {
+message StartLogstashServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop Kibana for a specific execution
-message StopKibanaMsg {
+message StopKibanaServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start Kibana for a specific execution
-message StartKibanaMsg {
+message StartKibanaServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop Elastic for a specific execution
-message StopElasticMsg {
+message StopElasticServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to start Elastic for a specific execution
-message StartElasticMsg {
+message StartElasticServiceMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
@@ -828,7 +828,7 @@ message ElkStatusDTO {
 }
 
 // Message that the client sends when requesting to get the status of the ELK stack and the manager
-message GetElkStatusMsg {
+message GetElkStackStatusMsg {
   string emulation = 1;
   int32 ipFirstOctet = 2;
 }
