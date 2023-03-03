@@ -18,7 +18,6 @@ from csle_common.dao.emulation_config.traffic_managers_info import TrafficManage
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
-from csle_common.logging.log import Logger
 
 
 class TrafficController:
@@ -70,9 +69,8 @@ class TrafficController:
                                                     ip=node_traffic_config.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_TRAFFIC_MANAGER not in str(o):
-
             logger.info(f"Starting traffic manager on node "
-                                                f"{node_traffic_config.docker_gw_bridge_ip}")
+                        f"{node_traffic_config.docker_gw_bridge_ip}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -244,7 +242,6 @@ class TrafficController:
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port
         )
         if not client_dto.producer_active:
-
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}:'
@@ -433,7 +430,7 @@ class TrafficController:
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
                                                 node_traffic_config=node_traffic_config, logger=logger)
         logger.info(f"Stopping traffic generator script, "
-                                            f"node ip:{node_traffic_config.docker_gw_bridge_ip}")
+                    f"node ip:{node_traffic_config.docker_gw_bridge_ip}")
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -485,7 +482,7 @@ class TrafficController:
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
                                                 node_traffic_config=node_traffic_config, logger=logger)
         logger.info(f"Starting traffic generator script, "
-                                            f"node ip:{node_traffic_config.docker_gw_bridge_ip}")
+                    f"node ip:{node_traffic_config.docker_gw_bridge_ip}")
 
         commands = []
         subnet_masks = []
@@ -651,7 +648,7 @@ class TrafficController:
                     running = True
                 except Exception as e:
                     logger.debug(f"Could not fetch traffic manager status on IP"
-                                                         f":{node_traffic_config}, error: {str(e)}, {repr(e)}")
+                                 f":{node_traffic_config}, error: {str(e)}, {repr(e)}")
                 if status is not None:
                     traffic_managers_statuses.append(status)
                 else:

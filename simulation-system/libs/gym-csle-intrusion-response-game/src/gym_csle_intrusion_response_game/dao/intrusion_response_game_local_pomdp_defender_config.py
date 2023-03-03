@@ -43,7 +43,7 @@ class IntrusionResponseGameLocalPOMDPDefenderConfig(SimulationEnvInputConfig):
             try:
                 attacker_strategy = parse_fun(d["attacker_strategy"])
                 break
-            except Exception as e:
+            except Exception:
                 pass
         if attacker_strategy is None:
             raise ValueError("Could not parse the attacker strategy")

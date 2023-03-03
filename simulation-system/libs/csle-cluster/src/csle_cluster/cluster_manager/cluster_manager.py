@@ -1329,7 +1329,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Stopping all executions")
+        logging.info("Stopping all executions")
         EmulationEnvController.stop_all_executions(physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
@@ -1343,7 +1343,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Cleaning all executions")
+        logging.info("Cleaning all executions")
         EmulationEnvController.clean_all_executions(physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
@@ -1674,8 +1674,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Stopping container: {request.name}")
         outcome = ContainerController.stop_container(name=request.name)
+        if outcome:
+            logging.info(f"Stopping container: {request.name}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def removeAllStoppedContainers(
@@ -1702,8 +1703,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Removing container: {request.name}")
         outcome = ContainerController.rm_container(container_name=request.name)
+        if outcome:
+            logging.info(f"Removing container: {request.name}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def removeAllContainerImages(
@@ -1781,7 +1783,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Starting all stopped CSLE containers")
+        logging.info("Starting all stopped CSLE containers")
         ContainerController.start_all_stopped_containers()
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
@@ -1795,8 +1797,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Starting the container: {request.name}")
         outcome = ContainerController.start_container(name=request.name)
+        if outcome:
+            logging.info(f"Starting the container: {request.name}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def listAllRunningContainers(
@@ -1913,8 +1916,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Removing docker networks: {list(request.networks)}")
         outcome = ContainerController.remove_networks(names=request.networks)
+        if outcome:
+            logging.info(f"Removing docker networks: {list(request.networks)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def removeAllDockerNetworks(
@@ -1927,7 +1931,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Removing all docker networks")
+        logging.info("Removing all docker networks")
         ContainerController.rm_all_networks()
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
@@ -2973,7 +2977,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
             OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config,
-                                              ip=node_container_config.docker_gw_bridge_ip)
+                                               ip=node_container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3011,7 +3015,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         OSSECIDSController.stop_ossec_idses_managers(emulation_env_config=execution.emulation_env_config,
-                                                      physical_server_ip=GeneralUtil.get_host_ip())
+                                                     physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startOSSECIDSManager(
@@ -3055,7 +3059,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
             OSSECIDSController.stop_ossec_ids_manager(emulation_env_config=execution.emulation_env_config,
-                                                       ip=node_container_config.docker_gw_bridge_ip)
+                                                      ip=node_container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3101,7 +3105,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
             OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                              ip=node_container_config.docker_gw_bridge_ip)
+                                                             ip=node_container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3268,7 +3272,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
             SDNControllerManager.stop_ryu(emulation_env_config=execution.emulation_env_config,
-                                           logger=logging.getLogger())
+                                          logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
@@ -3439,7 +3443,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
             SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                               ip=node_container_config.docker_gw_bridge_ip)
+                                                                ip=node_container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3496,7 +3500,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         SnortIDSController.stop_snort_managers(emulation_env_config=execution.emulation_env_config,
-                                                physical_server_ip=GeneralUtil.get_host_ip())
+                                               physical_server_ip=GeneralUtil.get_host_ip())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startSnortIdsManager(

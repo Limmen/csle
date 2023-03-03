@@ -10,7 +10,6 @@ import csle_collector.elk_manager.elk_manager_pb2
 import csle_collector.elk_manager.query_elk_server
 import csle_collector.elk_manager.elk_manager_util
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.logging.log import Logger
 
 
 class ELKController:

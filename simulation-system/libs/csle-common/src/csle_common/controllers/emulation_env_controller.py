@@ -1,5 +1,5 @@
 import logging
-from typing import List, Tuple, Dict, Any
+from typing import List, Dict, Any
 import time
 import subprocess
 import random
@@ -9,7 +9,6 @@ import csle_ryu.constants.constants as ryu_constants
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.controllers.container_controller import ContainerController
 from csle_common.controllers.snort_ids_controller import SnortIDSController

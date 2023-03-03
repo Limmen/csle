@@ -12,7 +12,6 @@ class IntrusionResponseGameStateLocal:
                  S_D: np.ndarray) -> None:
         """
         Initializes the DTO
-        
         :param d_b1: the initial belief of the defender
         :param a_b1: the initial belief of the attakcer
         :param s_1_idx: the initial state of the game

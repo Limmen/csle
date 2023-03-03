@@ -8,7 +8,7 @@ class STATES:
     """
     Constants related to the state space of the game
     """
-    TERMINAL_STATE = np.array([-1,-1])
+    TERMINAL_STATE = np.array([-1, -1])
     D_STATE_INDEX = 0
     A_STATE_INDEX = 1
 

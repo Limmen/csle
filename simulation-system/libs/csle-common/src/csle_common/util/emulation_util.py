@@ -450,7 +450,7 @@ class EmulationUtil:
                 emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
             return True
         if emulation_env_config.sdn_controller_config is not None and \
-                ip ==emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip and \
+                ip == emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip and \
                 emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_host_ip:
             return True
         node_config = emulation_env_config.containers_config.get_container_from_ip(ip=ip)

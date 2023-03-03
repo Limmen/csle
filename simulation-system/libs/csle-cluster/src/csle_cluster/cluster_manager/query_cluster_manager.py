@@ -3593,4 +3593,3 @@ def get_snort_ids_monitor_thread_statuses(
     )
     statuses = stub.getSnortIdsMonitorThreadStatuses(operation_msg, timeout=timeout)
     return statuses
-

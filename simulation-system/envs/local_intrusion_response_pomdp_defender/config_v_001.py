@@ -117,22 +117,22 @@ def default_state_space_config(number_of_zones: int) -> StateSpaceConfig:
     """
     states = []
     states.append(State(
-        id=0, name=f"terminal", descr=f"Terminal state", state_type=StateType.TERMINAL
+        id=0, name="terminal", descr="Terminal state", state_type=StateType.TERMINAL
     ))
     state_id = 1
     for i in range(number_of_zones):
         states.append(State(
             id=state_id, name=f"{i}_{0}", descr=f"Zone: {i}, no intrusion", state_type=StateType.ACTIVE
         ))
-        state_id+=1
+        state_id += 1
         states.append(State(
             id=state_id, name=f"{i}_{1}", descr=f"Zone: {i}, recon", state_type=StateType.ACTIVE
         ))
-        state_id+=1
+        state_id += 1
         states.append(State(
             id=state_id, name=f"{i}_{2}", descr=f"Zone: {2}, compromised", state_type=StateType.ACTIVE
         ))
-        state_id+=1
+        state_id += 1
     state_space_config = StateSpaceConfig(states=states)
     return state_space_config
 
@@ -146,17 +146,17 @@ def default_joint_action_space_config(number_of_zones: int) -> JointActionSpaceC
     """
     defender_actions = []
     defender_actions.append(Action(
-        id=0, descr=f"Wait"
+        id=0, descr="Wait"
     ))
     for i in range(1, number_of_zones + 1):
         defender_actions.append(Action(
             id=i, descr=f"Move node to  zone: {i}"
         ))
     attacker_actions = [
-        Action(id=0, descr=f"Wait"),
-        Action(id=1, descr=f"Recon"),
-        Action(id=2, descr=f"Brute-force"),
-        Action(id=3, descr=f"Exploit")
+        Action(id=0, descr="Wait"),
+        Action(id=1, descr="Recon"),
+        Action(id=2, descr="Brute-force"),
+        Action(id=3, descr="Exploit")
     ]
     action_spaces = [ActionSpaceConfig(actions=defender_actions, player_id=1, action_type=ValueType.INTEGER),
                      ActionSpaceConfig(actions=attacker_actions, player_id=2, action_type=ValueType.INTEGER)]
@@ -335,7 +335,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         Z_U=IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility),
         beta=beta, eta=eta, s_1_idx=IntrusionResponseGameUtil.local_initial_state_idx(initial_zone=initial_zone, S=S)
     )
-    attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()),len(A2)))
+    attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()), len(A2)))
     for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
         if s_a == env_constants.ATTACK_STATES.HEALTHY:
             attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8

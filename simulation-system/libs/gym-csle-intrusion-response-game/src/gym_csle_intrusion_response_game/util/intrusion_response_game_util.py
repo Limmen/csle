@@ -70,8 +70,8 @@ class IntrusionResponseGameUtil:
         :param s_prime: the second local state to check
         :return: True if equal, otherwise False
         """
-        return s[env_constants.STATES.D_STATE_INDEX] == s_prime[env_constants.STATES.D_STATE_INDEX] \
-               and s[env_constants.STATES.A_STATE_INDEX] == s_prime[env_constants.STATES.A_STATE_INDEX]
+        return s[env_constants.STATES.D_STATE_INDEX] == s_prime[env_constants.STATES.D_STATE_INDEX] and s[
+            env_constants.STATES.A_STATE_INDEX] == s_prime[env_constants.STATES.A_STATE_INDEX]
 
     @staticmethod
     def are_local_defense_states_equal(s: np.ndarray, s_prime: np.ndarray) -> bool:
@@ -94,7 +94,6 @@ class IntrusionResponseGameUtil:
         :return: True if equal, otherwise False
         """
         return s[env_constants.STATES.A_STATE_INDEX] == s_prime[env_constants.STATES.A_STATE_INDEX]
-
 
     @staticmethod
     def local_initial_state(initial_zone: int, S: np.ndarray) -> np.ndarray:
@@ -148,7 +147,7 @@ class IntrusionResponseGameUtil:
         :return: the initial defender belief
         """
         d_b1 = np.zeros((len(S_A),))
-        d_b1[env_constants.ATTACK_STATES.HEALTHY] = 1 # the node is not compromised or discovered initially
+        d_b1[env_constants.ATTACK_STATES.HEALTHY] = 1  # the node is not compromised or discovered initially
         return d_b1
 
     @staticmethod
@@ -161,7 +160,7 @@ class IntrusionResponseGameUtil:
         """
         d_b1 = np.zeros((len(S_D),))
         for i in range(len(S_D)):
-            d_b1[i] = 1/len(S_D) # The attacker has no clue about the zones initially
+            d_b1[i] = 1 / len(S_D)  # The attacker has no clue about the zones initially
         return d_b1
 
     @staticmethod
@@ -174,7 +173,7 @@ class IntrusionResponseGameUtil:
         """
         S = []
         S.append(env_constants.STATES.TERMINAL_STATE)
-        for i in range(1, number_of_zones+1):
+        for i in range(1, number_of_zones + 1):
             S.append([i, env_constants.ATTACK_STATES.HEALTHY])
             S.append([i, env_constants.ATTACK_STATES.RECON])
             S.append([i, env_constants.ATTACK_STATES.COMPROMISED])
@@ -189,7 +188,7 @@ class IntrusionResponseGameUtil:
         :return: the local defender state space
         """
         S = []
-        for i in range(1,number_of_zones+1):
+        for i in range(1, number_of_zones + 1):
             S.append(i)
         return np.array(S)
 
@@ -250,7 +249,7 @@ class IntrusionResponseGameUtil:
         impact = 0
         if reachable and not IntrusionResponseGameUtil.is_local_state_compromised(s):
             impact = 1
-        return beta * impact * int(IntrusionResponseGameUtil.is_local_state_in_zone(s=s,zone=initial_zone))
+        return beta * impact * int(IntrusionResponseGameUtil.is_local_state_in_zone(s=s, zone=initial_zone))
 
     @staticmethod
     def constant_defender_action_costs(A1: np.ndarray, constant_cost: float) -> np.ndarray:
@@ -339,8 +338,8 @@ class IntrusionResponseGameUtil:
         """
         if not reachable:
             return D_C[a1]  # No intrusion cost if the node is not reachable
-        return Z_U[s[env_constants.STATES.D_STATE_INDEX]-1] * \
-               int((s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED)) + D_C[a1]
+        compromised = int((s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED))
+        return Z_U[s[env_constants.STATES.D_STATE_INDEX] - 1] * compromised + D_C[a1]
 
     @staticmethod
     def local_defender_utility_function(s: np.ndarray, a1: int, eta: float, reachable: bool, initial_zone: int,
@@ -421,10 +420,10 @@ class IntrusionResponseGameUtil:
 
         # Detection probability
         if IntrusionResponseGameUtil.is_local_state_terminal(s_prime) and a2 != env_constants.ATTACKER_ACTIONS.WAIT:
-            return Z_D_P[s[env_constants.STATES.D_STATE_INDEX]-1]
+            return Z_D_P[s[env_constants.STATES.D_STATE_INDEX] - 1]
 
         P_not_detected = (1 - int(a2 != env_constants.ATTACKER_ACTIONS.WAIT) *
-                          Z_D_P[s[env_constants.STATES.D_STATE_INDEX]-1])
+                          Z_D_P[s[env_constants.STATES.D_STATE_INDEX] - 1])
 
         # Defender takes defensive action
         if a1 != env_constants.DEFENDER_ACTIONS.WAIT:
@@ -439,12 +438,12 @@ class IntrusionResponseGameUtil:
 
             # If attacker waits, then the state remains the same
             if a2 == env_constants.ATTACKER_ACTIONS.WAIT and \
-                    IntrusionResponseGameUtil.are_local_states_equal(s=s,s_prime=s_prime):
+                    IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
                 return 1 * P_not_detected
 
             # If the attacker performs recon and the node was not already compromised, then it is discovered
             if a2 == env_constants.ATTACKER_ACTIONS.RECON and \
-                    IntrusionResponseGameUtil.are_local_defense_states_equal(s=s,s_prime=s_prime) and \
+                    IntrusionResponseGameUtil.are_local_defense_states_equal(s=s, s_prime=s_prime) and \
                     not IntrusionResponseGameUtil.is_local_state_compromised(s=s) \
                     and IntrusionResponseGameUtil.is_local_state_recon(s=s_prime):
                 return 1 * P_not_detected
@@ -452,7 +451,7 @@ class IntrusionResponseGameUtil:
             # If the attacker performs recon and the node was already compromised, then the state remains the same
             if a2 == env_constants.ATTACKER_ACTIONS.RECON and \
                     IntrusionResponseGameUtil.is_local_state_compromised(s=s) \
-                    and IntrusionResponseGameUtil.are_local_states_equal(s=s,s_prime=s_prime):
+                    and IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
                 return 1 * P_not_detected
 
             # The attacker can only attack nodes it has discovered:
@@ -487,7 +486,7 @@ class IntrusionResponseGameUtil:
                 # remains uncompromised w.p 1-A_P
                 if a2 in [env_constants.ATTACKER_ACTIONS.BRUTE_FORCE, env_constants.ATTACKER_ACTIONS.EXPLOIT] \
                         and not IntrusionResponseGameUtil.is_local_state_compromised(s_prime):
-                    return (1-A_P[a2]) * P_not_detected
+                    return (1 - A_P[a2]) * P_not_detected
 
                 # If the attacker attacks a node that is already compromised, it
                 # remains compromised
@@ -498,8 +497,8 @@ class IntrusionResponseGameUtil:
             # If the attacker would try to attack a node that it has not discovered (illegal action)
             # then the action has no effect
             if a2 in [env_constants.ATTACKER_ACTIONS.BRUTE_FORCE, env_constants.ATTACKER_ACTIONS.EXPLOIT] \
-                and IntrusionResponseGameUtil.is_local_state_healthy(s) and \
-                    IntrusionResponseGameUtil.are_local_states_equal(s=s,s_prime=s_prime):
+                    and IntrusionResponseGameUtil.is_local_state_healthy(s) and \
+                    IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
                 return P_not_detected
 
         # If none of the above cases match, the transition is impossible ans has probability 0
@@ -567,7 +566,7 @@ class IntrusionResponseGameUtil:
                         a1_a2_s_probs = intrusion_dist
                     else:
                         a1_a2_s_probs = no_intrusion_dist
-                    assert round(sum(a1_a2_s_probs),5) == 1
+                    assert round(sum(a1_a2_s_probs), 5) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             Z.append(a1_probs)
@@ -630,8 +629,7 @@ class IntrusionResponseGameUtil:
         for s in config.S_A:
             s_idx = config.states_to_idx[(s_d, s)]
             for a2 in config.A2:
-                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[a1][a2][s_idx][s_prime_idx] * d_b[s] \
-                        * pi2[s][a2]
+                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[a1][a2][s_idx][s_prime_idx] * d_b[s] * pi2[s][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_a_prime}, o:{o}, pi2:{pi2}")

@@ -61,7 +61,7 @@ class LocalIntrusionResponseGameConfig:
         self.s_1_idx = s_1_idx
         self.zones = zones
         self.states_to_idx = {}
-        for i,s in enumerate(self.S):
+        for i, s in enumerate(self.S):
             self.states_to_idx[(s[env_constants.STATES.D_STATE_INDEX], s[env_constants.STATES.A_STATE_INDEX])] = i
 
     def attacker_observation_space(self) -> gym.spaces.Discrete:
@@ -127,7 +127,7 @@ class LocalIntrusionResponseGameConfig:
         obj = LocalIntrusionResponseGameConfig(
             env_name=d["env_name"], T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]),
             S=np.array(d["S"]), A1=np.array(d["A1"]), A2=np.array(d["A2"]), a_b1=np.array(d["a_b1"]),
-            d_b1=np.array(d["d_b1"]), gamma=d["gamma"], eta = d["eta"], beta = d["beta"], Z_U=np.array(d["Z_U"]),
+            d_b1=np.array(d["d_b1"]), gamma=d["gamma"], eta=d["eta"], beta=d["beta"], Z_U=np.array(d["Z_U"]),
             Z_D_P=np.array(d["Z_D_P"]), A_P=np.array(d["A_P"]), C_D=np.array(d["C_D"]), S_D=np.array(d["S_D"]),
             S_A=np.array(d["S_A"]), s_1_idx=d["s_1_idx"], zones=np.array(d["zones"]))
         return obj

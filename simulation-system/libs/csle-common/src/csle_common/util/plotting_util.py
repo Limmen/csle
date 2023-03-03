@@ -19,7 +19,7 @@ class PlottingUtil:
         """
         if len(x) >= N:
             y = np.copy(x)
-            y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+            y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
         else:
             y = np.zeros_like(x)
         return y
@@ -35,7 +35,7 @@ class PlottingUtil:
         """
         if len(x) >= N:
             y = np.copy(x)
-            y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+            y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
         else:
             y = np.zeros_like(x)
         return y
@@ -52,5 +52,5 @@ class PlottingUtil:
         a = 1.0 * np.array(data)
         n = len(a)
         m, se = np.mean(a), stats.sem(a)
-        h = se * stats.t.ppf((1 + confidence) / 2., n-1)
+        h = se * stats.t.ppf((1 + confidence) / 2., n - 1)
         return m, h

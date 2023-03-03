@@ -943,9 +943,9 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses_monitor_threads(
-                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
-            )
+            operation_outcome_dto = \
+                csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses_monitor_threads(
+                    stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
             return operation_outcome_dto
 
     @staticmethod
@@ -983,9 +983,9 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses_monitor_threads(
-                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
-            )
+            operation_outcome_dto = \
+                csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses_monitor_threads(
+                    stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
             return operation_outcome_dto
 
     @staticmethod

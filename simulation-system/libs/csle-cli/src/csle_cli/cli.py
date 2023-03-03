@@ -244,7 +244,8 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                         click.secho(f"Kafka manager status for execution {exec.ip_first_octet} of {emulation}",
                                     fg="magenta", bold=True)
                         if kafka_dto.running:
-                            click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                            click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}",
+                                        bold=False)
                         else:
                             click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
                         click.secho("Topics:", bold=True)
@@ -317,7 +318,8 @@ def start_traffic(emulation: str, id: int) -> None:
         for node in config.cluster_config.cluster_nodes:
             if node.ip == execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip:
                 ClusterController.start_client_population(
-                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_env_config.name,
+                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=execution.emulation_env_config.name,
                     ip_first_octet=execution.ip_first_octet)
     else:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
@@ -1041,7 +1043,7 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
             outcome_dto = ClusterController.stop_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                             container_name=entity)
+                                                           container_name=entity)
             if outcome_dto.outcome:
                 container_stopped = True
         if not container_stopped:
@@ -1711,13 +1713,15 @@ def clean(entity: str, id: int = -1) -> None:
     if entity == "all":
         for node in config.cluster_config.cluster_nodes:
             ClusterController.stop_all_running_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-            ClusterController.remove_all_stopped_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.remove_all_stopped_containers(ip=node.ip,
+                                                            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         for emulation in MetastoreFacade.list_emulations():
             clean_all_emulation_executions(emulation_env_config=emulation)
     elif entity == "containers":
         for node in config.cluster_config.cluster_nodes:
             ClusterController.stop_all_running_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-            ClusterController.remove_all_stopped_containers(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ClusterController.remove_all_stopped_containers(ip=node.ip,
+                                                            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     elif entity == "emulations":
         for emulation in MetastoreFacade.list_emulations():
             clean_all_emulation_executions(emulation_env_config=emulation)
@@ -1967,8 +1971,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
                     if net is not None:
                         active_networks_names = []
                         for node in config.cluster_config.cluster_nodes:
-                            docker_networks_dto = ClusterController.list_all_docker_networks(ip=node.ip,
-                                                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                            docker_networks_dto = ClusterController.list_all_docker_networks(
+                                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
                             active_networks_names = active_networks_names + list(docker_networks_dto.networks)
                         active = net.name in active_networks_names
                         print_network(net=net, active=active)
@@ -2612,7 +2616,7 @@ def rm_name(name: str) -> None:
     container_removed = False
     for node in config.cluster_config.cluster_nodes:
         outcome_dto = ClusterController.remove_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                           container_name=name)
+                                                         container_name=name)
         if outcome_dto.outcome:
             container_removed = True
     if not container_removed:
@@ -2642,7 +2646,6 @@ def clean_name(name: str) -> None:
     :param name: the name of the container or emulation to clean
     :return: None
     """
-    from csle_common.controllers.emulation_env_controller import EmulationEnvController
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
@@ -2651,7 +2654,7 @@ def clean_name(name: str) -> None:
     container_stopped = False
     for node in config.cluster_config.cluster_nodes:
         outcome_dto = ClusterController.stop_container(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                         container_name=name)
+                                                       container_name=name)
         if outcome_dto.outcome:
             container_stopped = True
     if container_stopped:
