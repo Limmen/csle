@@ -1996,7 +1996,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def getElkStatus(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetElkStatusMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetElkStackStatusMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO:
         """
         Gets the status of the Elk stack  for a specific execution
@@ -2040,7 +2040,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def startElastic(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartElasticMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartElasticServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts elastic in a given execution
@@ -2061,7 +2061,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopElastic(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElasticMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElasticServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops elastic in a given execution
@@ -2082,7 +2082,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def startKibana(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartKibanaMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartKibanaServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts Kibana in a given execution
@@ -2103,7 +2103,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopKibana(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopKibanaMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopKibanaServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops Kibana in a given execution
@@ -2124,7 +2124,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def startLogstash(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartLogstashMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartLogstashServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts Logstash in a given execution
@@ -2145,7 +2145,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopLogstash(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopLogstashMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopLogstashServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops Logstash in a given execution
@@ -2816,7 +2816,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getKafkaStatus(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaStatusMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaManagerStatusMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO:
         """
         Gets the Kafka status in a given execution
@@ -3209,7 +3209,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getRyuStatus(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuStatusMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuServiceStatusMsg,
             context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.RyuManagerStatusDTO:
         """
@@ -3232,7 +3232,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ClusterManagerUtil.get_empty_ryu_manager_status_dto()
 
     def startRyu(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts Ryu
@@ -3253,7 +3253,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopRyu(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuServiceMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops Ryu
@@ -3353,7 +3353,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopSnortIds(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops the Snort IDS on a specific container
@@ -3399,7 +3399,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def startSnortIds(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts the Snort IDS on a specific container in a specific execution

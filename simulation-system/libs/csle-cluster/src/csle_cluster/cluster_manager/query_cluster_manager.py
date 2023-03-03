@@ -1998,7 +1998,7 @@ def get_elk_status(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an ElkStatusDTO with the status
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetElkStatusMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetElkStackStatusMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     elk_status_dto = stub.getElkStatus(operation_msg, timeout=timeout)
@@ -2040,7 +2040,7 @@ def start_elastic(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartElasticMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartElasticServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome_dto = stub.startElastic(operation_msg, timeout=timeout)
@@ -2061,7 +2061,7 @@ def stop_elastic(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopElasticMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopElasticServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome_dto = stub.stopElastic(operation_msg, timeout=timeout)
@@ -2082,7 +2082,7 @@ def start_kibana(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartKibanaMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartKibanaServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome_dto = stub.startKibana(operation_msg, timeout=timeout)
@@ -2103,7 +2103,7 @@ def stop_kibana(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopKibanaMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopKibanaServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome_dto = stub.stopKibana(operation_msg, timeout=timeout)
@@ -2124,7 +2124,7 @@ def start_logstash(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartLogstashMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartLogstashServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome_dto = stub.startLogstash(operation_msg, timeout=timeout)
@@ -2145,7 +2145,7 @@ def stop_logstash(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: an OperationOutcomeDTO with the outcome of the operation
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopLogstashMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopLogstashServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome_dto = stub.stopLogstash(operation_msg, timeout=timeout)
@@ -2205,6 +2205,7 @@ def run_container(
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
     :param name: the name of the container
+    :param image: the image of the container
     :param memory: the memory (GB) of the container
     :param num_cpus: the number of CPUs of the container
     :param create_network: whether to create a network for the container or not
@@ -2819,7 +2820,7 @@ def get_kafka_status(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the kafka status
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaStatusMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaManagerStatusMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     kafka_status_dto = stub.getKafkaStatus(operation_msg, timeout=timeout)
@@ -2899,7 +2900,6 @@ def stop_ossec_idses(
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
-    :param container_ip: the IP of the node to apply the config
     :param emulation: the name of the emulation
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
@@ -3137,8 +3137,8 @@ def get_ossec_ids_managers_info(
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
-    :param container_ip: the IP of the node to apply the config
     :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
     :return: the info
     """
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetOSSECIDSManagersInfoMsg(
@@ -3204,7 +3204,7 @@ def get_ryu_status(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the status
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuStatusMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuServiceStatusMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     status = stub.getRyuStatus(operation_msg, timeout=timeout)
@@ -3225,7 +3225,7 @@ def start_ryu(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome = stub.startRyu(operation_msg, timeout=timeout)
@@ -3246,7 +3246,7 @@ def stop_ryu(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopRyuServiceMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
     operation_outcome = stub.stopRyu(operation_msg, timeout=timeout)
@@ -3331,7 +3331,7 @@ def stop_snort_ids(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
     )
     operation_outcome = stub.stopSnortIds(operation_msg, timeout=timeout)
@@ -3375,7 +3375,7 @@ def start_snort_ids(
     :param ip_first_octet: the first octet of the subnet of the execution
     :return: the operation outcome
     """
-    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortIdsMsg(
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartSnortMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
     )
     operation_outcome = stub.startSnortIds(operation_msg, timeout=timeout)
@@ -3593,3 +3593,4 @@ def get_snort_ids_monitor_thread_statuses(
     )
     statuses = stub.getSnortIdsMonitorThreadStatuses(operation_msg, timeout=timeout)
     return statuses
+
