@@ -179,10 +179,6 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.snort_ids_controller import SnortIDSController
-    from csle_common.controllers.kafka_controller import KafkaController
-    from csle_common.controllers.host_controller import HostController
     import csle_common.constants.constants as constants
 
     emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
@@ -311,7 +307,6 @@ def start_traffic(emulation: str, id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     import csle_common.constants.constants as constants
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
     if execution is not None:
@@ -354,7 +349,6 @@ def stop_traffic(emulation: str, id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     import csle_common.constants.constants as constants
     exec = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
     if exec is None:
@@ -422,8 +416,6 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     :return: None
     """
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
-    from csle_common.controllers.container_controller import ContainerController
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     import csle_common.constants.constants as constants
 
@@ -450,7 +442,9 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
                                                         ip_first_octet=execution.ip_first_octet)
 
     Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
-    ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config)
+    ClusterController.create_emulation_networks(
+        ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+        ip_first_octet=execution.ip_first_octet)
 
     current_step += 1
     Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
@@ -807,7 +801,6 @@ def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig
     :return: running_emulations, stopped_emulations
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     running_emulations = []
     config = MetastoreFacade.get_config(id=1)
@@ -833,7 +826,6 @@ def stop_all_executions_of_emulation(emulation_env_config: "EmulationEnvConfig")
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Stopping all executions of emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
@@ -851,7 +843,6 @@ def stop_emulation_execution(emulation_env_config: "EmulationEnvConfig", executi
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Stopping execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
@@ -880,7 +871,6 @@ def clean_emulation_executions() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho("Stopping and cleaning all emulation executions", bold=False)
     config = MetastoreFacade.get_config(id=1)
@@ -895,7 +885,7 @@ def stop_emulation_executions() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho("Stopping all emulation executions", bold=False)
     config = MetastoreFacade.get_config(id=1)
@@ -937,7 +927,6 @@ def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
@@ -959,7 +948,6 @@ def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execut
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Cleaning execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
@@ -1012,7 +1000,6 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
     from csle_common.controllers.management_system_controller import ManagementSystemController
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
 
     if entity == "all":
@@ -1074,7 +1061,6 @@ def stop_nginx(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1090,7 +1076,6 @@ def stop_docker_engine(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1106,7 +1091,6 @@ def stop_postgresql(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1122,7 +1106,6 @@ def stop_node_exporter(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1138,7 +1121,6 @@ def stop_prometheus(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1154,7 +1136,6 @@ def stop_cadvisor(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1170,7 +1151,6 @@ def stop_pgadmin(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1186,7 +1166,6 @@ def stop_grafana(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1202,7 +1181,6 @@ def stop_flask(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1218,7 +1196,6 @@ def stop_statsmanager(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1415,7 +1392,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+
     config = MetastoreFacade.get_config(id=1)
     if entity == "all":
         for node in config.cluster_config.cluster_nodes:
@@ -1479,7 +1456,6 @@ def start_nginx(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1495,7 +1471,6 @@ def start_docker_engine(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1511,7 +1486,6 @@ def start_postgresql(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1527,7 +1501,6 @@ def start_node_exporter(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1543,7 +1516,6 @@ def start_prometheus(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1559,7 +1531,7 @@ def start_cadvisor(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
+
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1575,7 +1547,6 @@ def start_pgadmin(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1591,7 +1562,6 @@ def start_grafana(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1607,7 +1577,6 @@ def start_flask(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1623,7 +1592,6 @@ def start_statsmanager(ip: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
@@ -1681,7 +1649,6 @@ def rm(entity: str) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
 
     if entity == "containers":
@@ -1734,7 +1701,6 @@ def clean(entity: str, id: int = -1) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     if entity == "all":
         for node in config.cluster_config.cluster_nodes:
@@ -1933,7 +1899,6 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
 
     if entity == "all":
@@ -2072,7 +2037,6 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
     list_cluster()
     list_networks()
@@ -2146,7 +2110,6 @@ def list_statsmanager() -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
 
     emulations = MetastoreFacade.list_emulations()
@@ -2518,10 +2481,7 @@ def list_all_containers() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_controller import ContainerController
-
     click.secho("CSLE Docker containers:", fg="magenta", bold=True)
-
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
