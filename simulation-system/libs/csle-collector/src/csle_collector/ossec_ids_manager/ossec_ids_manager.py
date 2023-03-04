@@ -83,9 +83,12 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
 
         :return: status and list of topics
         """
+        logging.info("Checking if OSSEC IDS is running")
         status_output = subprocess.run(constants.OSSEC.CHECK_IF_OSSEC_IS_RUNNING_CMD.split(" "),
                                        capture_output=True, text=True).stdout
+        logging.info(f"Status output: {status_output}")
         running = constants.OSSEC.OSSEC_RUNNING_SEARCH in status_output
+        logging.info(f"Running status: {running}")
         return running
 
     def getOSSECIdsAlerts(self, request: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.GetOSSECIdsAlertsMsg,

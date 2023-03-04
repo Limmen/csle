@@ -3787,8 +3787,9 @@ class ClusterController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
         for ip in physical_servers:
-            if execution.emulation_env_config.traffic_config.client_population_config.ip == ip:
-                Logger.__call__().get_logger().info(f"Stopping the kafka client producer on the server: {ip}")
+            if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip == ip:
+                Logger.__call__().get_logger().info(f"Stopping the kafka client producer on the containers on "
+                                                    f"server: {ip}")
                 ClusterController.stop_kafka_client_producer(
                     ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                     emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3800,7 +3801,7 @@ class ClusterController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client Kafka producer --")
         for ip in physical_servers:
-            if execution.emulation_env_config.traffic_config.client_population_config.ip == ip:
+            if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip == ip:
                 Logger.__call__().get_logger().info(f"Starting the kafka client producer on server: {ip}")
                 ClusterController.start_kafka_client_producer(
                     ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
@@ -3825,12 +3826,12 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step "
                                             f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
         for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Starting the OSSEC IDSes on server: {ip}")
+            Logger.__call__().get_logger().info(f"Starting the OSSEC IDSes on containers on server: {ip}")
             ClusterController.start_ossec_idses(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
             time.sleep(10)
-            Logger.__call__().get_logger().info(f"Starting the OSSEC IDSes monitor threads on server: {ip}")
+            Logger.__call__().get_logger().info(f"Starting the OSSEC IDSes monitor threads on containers on server: {ip}")
             ClusterController.start_ossec_idses_monitor_threads(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3840,7 +3841,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the ELK stack --")
         for ip in physical_servers:
             if execution.emulation_env_config.elk_config.container.physical_host_ip == ip:
-                Logger.__call__().get_logger().info(f"Starting the ELK stack on server: {ip}")
+                Logger.__call__().get_logger().info(f"Starting the ELK stack on containers on server: {ip}")
                 ClusterController.start_elk_stack(
                     ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                     emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)

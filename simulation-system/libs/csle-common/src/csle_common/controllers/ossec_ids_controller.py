@@ -382,6 +382,7 @@ class OSSECIDSController:
             try:
                 status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
                     port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
+                logger.info(status)
                 running = True
             except Exception as e:
                 logger.debug(f"Could not fetch OSSEC IDS manager status on IP:{ip}, error: {str(e)}, {repr(e)}")

@@ -376,8 +376,8 @@ class OSSEC:
     OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD = 10
     STOP_OSSEC_IDS = "/var/ossec/bin/ossec-control stop"
     START_OSSEC_IDS = "/var/ossec/bin/ossec-control start"
-    CHECK_IF_OSSEC_IS_RUNNING_CMD = "ps -aux | grep ossec"
-    OSSEC_RUNNING_SEARCH = "/var/ossec/bin/ossec-execd"
+    CHECK_IF_OSSEC_IS_RUNNING_CMD = "service ossec status"
+    OSSEC_RUNNING_SEARCH = "ossec-execd is running"
 
 
 class SNORT_IDS_ROUTER:
@@ -468,6 +468,8 @@ class SNORT_IDS_ROUTER:
     START_SNORT_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l " \
                       "/var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
     CHECK_IF_SNORT_IS_RUNNING_CMD = "ps -aux | grep snort.conf"
+    PS_AUX_CMD = "ps -aux"
+    GREP_SNORT_CONF = "grep snort.conf"
     SEARCH_SNORT_RUNNING = "/etc/snort/snort.conf"
 
 

@@ -78,6 +78,11 @@ To run the type checker, execute:
 ./type_checker.sh
 ```
 
+To make a new Python release, execute:
+```bash
+python make_release.py
+```
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
