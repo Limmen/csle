@@ -402,7 +402,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :return: a DTO with the status of the host
         """
         monitor_running = False
-        if self.host_monitor_thread is not None:
+        if self.host_monitor_thread is not None and self.host_monitor_thread.running is not None:
             monitor_running = self.host_monitor_thread.running
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()

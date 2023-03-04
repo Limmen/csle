@@ -372,7 +372,7 @@ class SnortIDSController:
         snort_managers_statuses = []
         snort_managers_running = []
         for ip in snort_ids_managers_ips:
-            if ip not in active_ips or EmulationUtil.physical_ip_match(
+            if ip not in active_ips or not EmulationUtil.physical_ip_match(
                     emulation_env_config=emulation_env_config, ip=ip, physical_host_ip=physical_server_ip):
                 continue
             running = False

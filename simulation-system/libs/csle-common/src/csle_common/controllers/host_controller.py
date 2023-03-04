@@ -1187,10 +1187,9 @@ class HostController:
                     port=emulation_env_config.host_manager_config.host_manager_port, ip=ip)
                 running = True
             except Exception as e:
-                logger.debug(
-                    f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
+                logger.debug(f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                host_managers_statuses.append(status)
+                host_managers_statuses.append((status, ip))
             else:
                 host_managers_statuses.append(
                     csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty())

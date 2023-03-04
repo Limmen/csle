@@ -189,6 +189,8 @@ class HostManagerUtil:
         :param host_dto: the dto to convert
         :return: a dict representation of the DTO
         """
+        if isinstance(host_dto, tuple):
+            host_dto = host_dto[0]
         d = {}
         d["monitor_running"] = host_dto.monitor_running
         d["filebeat_running"] = host_dto.filebeat_running

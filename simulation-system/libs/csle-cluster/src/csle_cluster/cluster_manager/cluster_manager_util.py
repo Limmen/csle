@@ -217,6 +217,7 @@ class ClusterManagerUtil:
         active_ips = []
         for container in running_containers:
             active_ips = active_ips + container.get_ips()
+            active_ips.append(container.docker_gw_bridge_ip)
         active_ips.append(constants.COMMON.LOCALHOST)
         active_ips.append(constants.COMMON.LOCALHOST_127_0_0_1)
         active_ips.append(constants.COMMON.LOCALHOST_127_0_1_1)
