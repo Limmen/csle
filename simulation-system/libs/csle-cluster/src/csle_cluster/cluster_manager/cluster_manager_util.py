@@ -19,6 +19,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.util.general_util import GeneralUtil
+from csle_common.util.emulation_util import EmulationUtil
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
@@ -1990,3 +1991,27 @@ class ClusterManagerUtil:
                 GeneralUtil.get_host_ip():
             return execution.emulation_env_config.sdn_controller_config.container
         return None
+
+    @staticmethod
+    def get_logs(execution: EmulationExecution, ip: str, path: str) -> cluster_manager_pb2.LogsDTO:
+        """
+        Utility method for getting the logs of a specific container in a specific execution and with a specific
+        path
+
+        :param execution: the execution
+        :param ip: the IP of the container
+        :return: the parsed logs
+        """
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=execution.emulation_env_config, ip=ip)
+        sftp_client = execution.emulation_env_config.get_connection(ip=ip).open_sftp()
+        remote_file = sftp_client.open(path)
+        data = []
+        try:
+            data = remote_file.read()
+            data = data.decode()
+            data = data.split("\n")
+            data = data[-100:]
+        finally:
+            remote_file.close()
+        return cluster_manager_pb2.LogsDTO(logs=data)

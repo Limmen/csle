@@ -975,6 +975,76 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.StopRyuMonitorThreadMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
+        self.getRyuControllerLogs = channel.unary_unary(
+                '/ClusterManager/getRyuControllerLogs',
+                request_serializer=cluster__manager__pb2.GetRyuControllerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getRyuManagerLogs = channel.unary_unary(
+                '/ClusterManager/getRyuManagerLogs',
+                request_serializer=cluster__manager__pb2.GetRyuManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getElkLogs = channel.unary_unary(
+                '/ClusterManager/getElkLogs',
+                request_serializer=cluster__manager__pb2.GetElkLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getElkManagerLogs = channel.unary_unary(
+                '/ClusterManager/getElkManagerLogs',
+                request_serializer=cluster__manager__pb2.GetElkManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getTrafficManagerLogs = channel.unary_unary(
+                '/ClusterManager/getTrafficManagerLogs',
+                request_serializer=cluster__manager__pb2.GetTrafficManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getHostManagerLogs = channel.unary_unary(
+                '/ClusterManager/getHostManagerLogs',
+                request_serializer=cluster__manager__pb2.GetHostManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getOSSECIdsLogs = channel.unary_unary(
+                '/ClusterManager/getOSSECIdsLogs',
+                request_serializer=cluster__manager__pb2.GetOSSECIdsLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getOSSECIdsManagerLogsMsg = channel.unary_unary(
+                '/ClusterManager/getOSSECIdsManagerLogsMsg',
+                request_serializer=cluster__manager__pb2.GetOSSECIdsManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getSnortIdsLogs = channel.unary_unary(
+                '/ClusterManager/getSnortIdsLogs',
+                request_serializer=cluster__manager__pb2.GetSnortIdsLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getSnortIdsManagerLogsMsg = channel.unary_unary(
+                '/ClusterManager/getSnortIdsManagerLogsMsg',
+                request_serializer=cluster__manager__pb2.GetSnortIdsManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getKafkaLogs = channel.unary_unary(
+                '/ClusterManager/getKafkaLogs',
+                request_serializer=cluster__manager__pb2.GetKafkaLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getKafkaManagerLogs = channel.unary_unary(
+                '/ClusterManager/getKafkaManagerLogs',
+                request_serializer=cluster__manager__pb2.GetKafkaManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getClientManagerLogsMsg = channel.unary_unary(
+                '/ClusterManager/getClientManagerLogsMsg',
+                request_serializer=cluster__manager__pb2.GetClientManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
+        self.getContainerLogs = channel.unary_unary(
+                '/ClusterManager/getContainerLogs',
+                request_serializer=cluster__manager__pb2.GetContainerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -2133,6 +2203,90 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getRyuControllerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getRyuManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getElkLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getElkManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getTrafficManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getHostManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getOSSECIdsLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getOSSECIdsManagerLogsMsg(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getSnortIdsLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getSnortIdsManagerLogsMsg(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getKafkaLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getKafkaManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getClientManagerLogsMsg(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getContainerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -3095,6 +3249,76 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.stopRyuMonitor,
                     request_deserializer=cluster__manager__pb2.StopRyuMonitorThreadMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'getRyuControllerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getRyuControllerLogs,
+                    request_deserializer=cluster__manager__pb2.GetRyuControllerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getRyuManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getRyuManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetRyuManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getElkLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getElkLogs,
+                    request_deserializer=cluster__manager__pb2.GetElkLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getElkManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getElkManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetElkManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getTrafficManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getTrafficManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetTrafficManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getHostManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getHostManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetHostManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getOSSECIdsLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getOSSECIdsLogs,
+                    request_deserializer=cluster__manager__pb2.GetOSSECIdsLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getOSSECIdsManagerLogsMsg': grpc.unary_unary_rpc_method_handler(
+                    servicer.getOSSECIdsManagerLogsMsg,
+                    request_deserializer=cluster__manager__pb2.GetOSSECIdsManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getSnortIdsLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getSnortIdsLogs,
+                    request_deserializer=cluster__manager__pb2.GetSnortIdsLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getSnortIdsManagerLogsMsg': grpc.unary_unary_rpc_method_handler(
+                    servicer.getSnortIdsManagerLogsMsg,
+                    request_deserializer=cluster__manager__pb2.GetSnortIdsManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getKafkaLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getKafkaLogs,
+                    request_deserializer=cluster__manager__pb2.GetKafkaLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getKafkaManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getKafkaManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetKafkaManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getClientManagerLogsMsg': grpc.unary_unary_rpc_method_handler(
+                    servicer.getClientManagerLogsMsg,
+                    request_deserializer=cluster__manager__pb2.GetClientManagerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getContainerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getContainerLogs,
+                    request_deserializer=cluster__manager__pb2.GetContainerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -6368,5 +6592,243 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopRyuMonitor',
             cluster__manager__pb2.StopRyuMonitorThreadMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getRyuControllerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getRyuControllerLogs',
+            cluster__manager__pb2.GetRyuControllerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getRyuManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getRyuManagerLogs',
+            cluster__manager__pb2.GetRyuManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getElkLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getElkLogs',
+            cluster__manager__pb2.GetElkLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getElkManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getElkManagerLogs',
+            cluster__manager__pb2.GetElkManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getTrafficManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getTrafficManagerLogs',
+            cluster__manager__pb2.GetTrafficManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getHostManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getHostManagerLogs',
+            cluster__manager__pb2.GetHostManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getOSSECIdsLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getOSSECIdsLogs',
+            cluster__manager__pb2.GetOSSECIdsLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getOSSECIdsManagerLogsMsg(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getOSSECIdsManagerLogsMsg',
+            cluster__manager__pb2.GetOSSECIdsManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getSnortIdsLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getSnortIdsLogs',
+            cluster__manager__pb2.GetSnortIdsLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getSnortIdsManagerLogsMsg(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getSnortIdsManagerLogsMsg',
+            cluster__manager__pb2.GetSnortIdsManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getKafkaLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getKafkaLogs',
+            cluster__manager__pb2.GetKafkaLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getKafkaManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getKafkaManagerLogs',
+            cluster__manager__pb2.GetKafkaManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getClientManagerLogsMsg(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getClientManagerLogsMsg',
+            cluster__manager__pb2.GetClientManagerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getContainerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getContainerLogs',
+            cluster__manager__pb2.GetContainerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

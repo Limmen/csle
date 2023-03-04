@@ -25,6 +25,7 @@ from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 from csle_common.controllers.host_controller import HostController
 from csle_common.controllers.elk_controller import ELKController
 from csle_common.controllers.kafka_controller import KafkaController
+import csle_ryu.constants.constants as ryu_constants
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
@@ -3762,6 +3763,340 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+
+    def getRyuManagerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Ryu manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Ryu manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config is None \
+                or execution.emulation_env_config.sdn_controller_config.container.physical_host_ip \
+                != GeneralUtil.get_host_ip():
+           return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = f"/{ryu_constants.RYU.LOG_FILE}"
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                path=path)
+
+    def getRyuControllerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuControllerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Ryu controller
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Ryu controller "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.sdn_controller_config is None \
+                or execution.emulation_env_config.sdn_controller_config.container.physical_host_ip \
+                != GeneralUtil.get_host_ip():
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.sdn_controller_config.manager_log_dir +
+                    execution.emulation_env_config.sdn_controller_config.manager_log_file)
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                path=path)
+
+    def getElkLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetElkLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific ELK stack
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the ELK stack "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip != GeneralUtil.get_host_ip():
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = collector_constants.ELK.ELK_LOG
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                path=path)
+
+    def getElkManagerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetElkManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific  ELK manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the ELK manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.elk_config.container.physical_host_ip != GeneralUtil.get_host_ip():
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.elk_config.elk_manager_log_dir +
+                    execution.emulation_env_config.elk_config.elk_manager_log_file)
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                path=path)
+
+    def getTrafficManagerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetTrafficManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific traffic manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the traffic manager with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                ip=request.containerIp).traffic_manager_log_dir +
+                    execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                        ip=request.containerIp).traffic_manager_log_file)
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=container_config.docker_gw_bridge_ip,
+                path=path)
+
+    def getHostManagerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetHostManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific host manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the host manager with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.host_manager_config.host_manager_log_dir +
+                    execution.emulation_env_config.host_manager_config.host_manager_log_file)
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=container_config.docker_gw_bridge_ip,
+                path=path)
+
+    def getOSSECIdsLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetOSSECIdsLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific OSSEC IDS
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the OSSEC IDS with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = collector_constants.OSSEC.OSSEC_LOG_FILE
+            return ClusterManagerUtil.get_logs(execution=execution,
+                                               ip=container_config.docker_gw_bridge_ip, path=path)
+
+    def getOSSECIdsManagerLogsMsg(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetOSSECIdsManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific OSSEC IDS manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the OSSEC IDS manager with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_dir +
+                    execution.emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_file)
+            return ClusterManagerUtil.get_logs(execution=execution,
+                                               ip=container_config.docker_gw_bridge_ip, path=path)
+
+    def getSnortIdsLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetSnortIdsLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Snort IDS
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Snort IDS with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = collector_constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE
+            return ClusterManagerUtil.get_logs(execution=execution, ip=container_config.docker_gw_bridge_ip, path=path)
+
+    def getSnortIdsManagerLogsMsg(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetSnortIdsManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Snort IDS manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Snort IDS manager with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_dir +
+                    execution.emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_file)
+            return ClusterManagerUtil.get_logs(execution=execution, ip=container_config.docker_gw_bridge_ip, path=path)
+
+    def getKafkaLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Kafka server
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Kafka server "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.kafka_config.container.physical_host_ip != GeneralUtil.get_host_ip():
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = collector_constants.LOG_FILES.KAFKA_LOG_FILE
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip, path=path)
+
+    def getKafkaManagerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Kafka manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Kafka manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.kafka_config.container.physical_host_ip != GeneralUtil.get_host_ip():
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.kafka_config.kafka_manager_log_dir +
+                    execution.emulation_env_config.kafka_config.kafka_manager_log_file)
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip,  path=path)
+
+    def getClientManagerLogsMsg(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetClientManagerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific Client manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the Client manager "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        if execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip != \
+                GeneralUtil.get_host_ip():
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            path = (execution.emulation_env_config.traffic_config.client_population_config.client_manager_log_dir +
+                    execution.emulation_env_config.traffic_config.client_population_config.client_manager_log_file)
+            return ClusterManagerUtil.get_logs(
+                execution=execution,
+                ip=execution.emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
+                path=path)
+
+    def getContainerLogs(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetContainerLogsMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of a specific container
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a LogsDTO with the logs
+        """
+        logging.info(f"Getting the logs of the container with ip: {request.containerIp} "
+                     f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
+                                                            emulation_name=request.emulation)
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is None:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+        else:
+            cmd = constants.COMMANDS.CONTAINER_LOGS.format(container_config.full_name_str)
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+            (output, err) = p.communicate()
+            output = output.decode("utf-8")
+            output = output.split("\n")[-100:]
+            data = output
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=data)
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

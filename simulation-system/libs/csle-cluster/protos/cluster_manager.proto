@@ -196,6 +196,111 @@ service ClusterManager {
   rpc stopHostMonitorThread(StopHostMonitorThreadMsg) returns (OperationOutcomeDTO) {}
   rpc startRyuMonitor(StartRyuMonitorThreadMsg) returns (OperationOutcomeDTO) {}
   rpc stopRyuMonitor(StopRyuMonitorThreadMsg) returns (OperationOutcomeDTO) {}
+  rpc getRyuControllerLogs(GetRyuControllerLogsMsg) returns (LogsDTO) {}
+  rpc getRyuManagerLogs(GetRyuManagerLogsMsg) returns (LogsDTO) {}
+  rpc getElkLogs(GetElkLogsMsg) returns (LogsDTO) {}
+  rpc getElkManagerLogs(GetElkManagerLogsMsg) returns (LogsDTO) {}
+  rpc getTrafficManagerLogs(GetTrafficManagerLogsMsg) returns (LogsDTO) {}
+  rpc getHostManagerLogs(GetHostManagerLogsMsg) returns (LogsDTO) {}
+  rpc getOSSECIdsLogs(GetOSSECIdsLogsMsg) returns (LogsDTO) {}
+  rpc getOSSECIdsManagerLogsMsg(GetOSSECIdsManagerLogsMsg) returns (LogsDTO) {}
+  rpc getSnortIdsLogs(GetSnortIdsLogsMsg) returns (LogsDTO) {}
+  rpc getSnortIdsManagerLogsMsg(GetSnortIdsManagerLogsMsg) returns (LogsDTO) {}
+  rpc getKafkaLogs(GetKafkaLogsMsg) returns (LogsDTO) {}
+  rpc getKafkaManagerLogs(GetKafkaManagerLogsMsg) returns (LogsDTO) {}
+  rpc getClientManagerLogsMsg(GetClientManagerLogsMsg) returns (LogsDTO) {}
+  rpc getContainerLogs(GetContainerLogsMsg) returns (LogsDTO) {}
+}
+
+// Message that the client sends when requesting to get logs of a specific container
+message GetContainerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific client manager
+message GetClientManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to get logs of a specific kafka manager
+message GetKafkaManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to get logs of a specific kafka server
+message GetKafkaLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to get logs of a specific Snort IDS
+message GetSnortIdsLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific Snort IDS manager
+message GetSnortIdsManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific OSSEC IDS manager
+message GetOSSECIdsManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific OSSEC IDS
+message GetOSSECIdsLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific host manager
+message GetHostManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific traffic manager
+message GetTrafficManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to get logs of a specific ELK manager
+message GetElkManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to get logs of a specific ELK stack
+message GetElkLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to get logs of a specific Ryu manager
+message GetRyuManagerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to get logs of a specific Ryu controller
+message GetRyuControllerLogsMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
 }
 
 // Message that the client sends when requesting to stop the Ryu monitor thread of a given execution

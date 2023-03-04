@@ -3794,3 +3794,304 @@ def stop_ryu_monitor(
     )
     operation_outcome = stub.stopRyuMonitor(operation_msg, timeout=timeout)
     return operation_outcome
+
+
+def get_ryu_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the Ryu manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getRyuManagerLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_ryu_controller_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the Ryu controller of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetRyuControllerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getRyuControllerLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_elk_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the ELK stack of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetElkLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getElkLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_elk_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the ELK manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetElkManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getElkManagerLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_traffic_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific Traffic manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetTrafficManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getTrafficManagerLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_host_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific host manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetHostManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getHostManagerLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_ossec_ids_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific OSSEC IDS of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetOSSECIdsLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getOSSECIdsLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_ossec_ids_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific OSSEC IDS Manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetOSSECIdsManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getOSSECIdsManagerLogsMsg(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_snort_ids_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific Snort IDS of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetSnortIdsLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getSnortIdsLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_snort_ids_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific Snort IDS of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetSnortIdsManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getSnortIdsManagerLogsMsg(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_kafka_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the Kafka server of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getKafkaLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_kafka_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the Kafka manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getKafkaManagerLogs(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_client_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of the Client manager of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetClientManagerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation
+    )
+    logs = stub.getClientManagerLogsMsg(operation_msg, timeout=timeout)
+    return logs
+
+
+def get_container_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, container_ip: str,
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Gets the logs of a specific container of a specific execution
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param container_ip: the ip of the container
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :return: the logs
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetContainerLogsMsg(
+        ipFirstOctet=ip_first_octet, emulation=emulation, containerIp=container_ip
+    )
+    logs = stub.getContainerLogs(operation_msg, timeout=timeout)
+    return logs

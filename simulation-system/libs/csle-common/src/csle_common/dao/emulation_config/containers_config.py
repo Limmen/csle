@@ -116,6 +116,18 @@ class ContainersConfig:
                 return c
         return None
 
+    def get_container_from_full_name(self, name: str) -> Union[NodeContainerConfig, None]:
+        """
+        Utility function for getting the container
+
+        :param name: the full name of the container
+        :return: the container with the given ip or None
+        """
+        for c in self.containers:
+            if name == c.full_name_str:
+                return c
+        return None
+
     def to_json_str(self) -> str:
         """
         Converts the DTO into a json string

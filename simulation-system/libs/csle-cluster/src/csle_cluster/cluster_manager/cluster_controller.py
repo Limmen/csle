@@ -3995,3 +3995,276 @@ class ClusterController:
             ClusterController.start_flask(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         time.sleep(2)
+
+    @staticmethod
+    def get_ryu_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the Ryu manager of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_ryu_controller_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the Ryu controller of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_controller_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_elk_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the ELK stack of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_elk_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_elk_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the ELK stack of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_elk_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_traffic_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific Traffic manager of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_traffic_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_host_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific host manager of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_host_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_ossec_ids_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific OSSEC IDS of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_ossec_ids_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific OSSEC IDS Manager of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_snort_ids_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific Snort IDS of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_snort_ids_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific Snort IDS of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_kafka_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the Kafka server of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_kafka_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the Kafka manager of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_client_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of the Client manager of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_client_manager_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_container_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+            -> Dict[str, Any]:
+        """
+        Gets the logs of a specific container of a specific execution
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_container_logs(
+                stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)

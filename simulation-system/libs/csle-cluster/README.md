@@ -21,6 +21,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_cluster/. --grpc
 - Python 3.8+
 - `csle-common`
 - `csle-collector`
+- `csle-ryu` 
 - `grpcio` (for the cluster API)
 - `grpcio-tools` (for the cluster API)
 
