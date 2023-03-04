@@ -1063,7 +1063,7 @@ class ClusterManagerUtil:
         :return: an empty RyuManagersInfoDTO
         """
         return cluster_manager_pb2.RyuManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", ryuManagersRunning=[], ryuManagersStatuses=[]
+            ips=[], ports=[], emulationName="", executionId=-1, ryuManagersRunning=[], ryuManagersStatuses=[]
         )
 
     @staticmethod
