@@ -723,7 +723,7 @@ message ExecutionInfoDTO {
   DockerStatsManagersInfoDTO dockerStatsManagersInfo = 8;
   RunningContainersDTO runningContainers = 9;
   StoppedContainersDTO stoppedContainers = 10;
-  TrafficManagerInfoDTO trafficManagersInfoDTO = 11;
+  TrafficManagersInfoDTO trafficManagersInfoDTO = 11;
   DockerNetworksDTO activeNetworks = 12;
   ElkManagersInfoDTO elkManagersInfoDTO = 13;
   RyuManagersInfoDTO ryuManagersInfoDTO = 14;
