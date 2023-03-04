@@ -935,8 +935,8 @@ class ClusterManagerUtil:
         network_names = []
         network_ids = []
         for net in execution_info_dto.active_networks:
-            network_names.append(net)
-            network_ids.append(net)
+            network_names.append(net.name)
+            network_ids.append(net.name)
         stopped_containers = cluster_manager_pb2.StoppedContainersDTO(
             stoppedContainers=stopped_containers
         )

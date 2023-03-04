@@ -57,27 +57,14 @@ def emulation_execution_ids():
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
         ).runningEmulations)
-    stopped_emulations = []
-    running_emulations = []
-    emulations = MetastoreFacade.list_emulations()
-    for em in emulations:
-        if em.name in running_emulation_names:
-            running_emulations.append(em)
-        else:
-            stopped_emulations.append(em)
     response_dicts = []
-    for running_em in running_emulations:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: running_em.id,
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: running_em.name,
-            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: True
-        })
-    for stopped_em in stopped_emulations:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: stopped_em.id,
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: stopped_em.name,
-            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: False
-        })
+    for tup in ex_ids:
+        if tup[1] in running_emulation_names:
+            response_dicts.append({
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: True
+            })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -90,7 +77,6 @@ def emulation_execution(execution_id: int):
     The /emulation-executions/id resource.
 
     :param execution_id: the id of the execution
-
     :return: The given execution
     """
     authorized = rest_api_util.check_if_user_is_authorized(request=request)
