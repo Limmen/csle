@@ -132,7 +132,8 @@ def emulation_execution_info(execution_id: int):
             if kibana_tunnel_dto.ip == execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip:
                 execution_info.elk_managers_info.local_kibana_port = kibana_tunnel_dto.port
 
-        if execution_info.ryu_managers_info is not None:
+        if execution_info.ryu_managers_info is not None \
+                and execution.emulation_env_config.sdn_controller_config is not None:
             ClusterController.create_ryu_tunnel(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,

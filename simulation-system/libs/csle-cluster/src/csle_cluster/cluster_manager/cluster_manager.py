@@ -3237,7 +3237,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
             status_dto = SDNControllerManager.get_ryu_status(emulation_env_config=execution.emulation_env_config,
                                                              logger=logging.getLogger())
-            status_dto = ClusterManagerUtil.convert_ryu_dto_to_kafka_status_dto(status_dto)
+            status_dto = ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto(status_dto)
             return status_dto
         else:
             ClusterManagerUtil.get_empty_ryu_manager_status_dto()

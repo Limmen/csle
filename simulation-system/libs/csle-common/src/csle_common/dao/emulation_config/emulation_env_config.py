@@ -22,6 +22,7 @@ from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSMa
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
 import csle_collector.constants.constants as collector_constants
@@ -431,3 +432,14 @@ class EmulationEnvConfig:
                                                     config.static_attacker_sequences[k]))
         config.static_attacker_sequences = static_attacker_sequences
         return config
+
+    def get_network_by_name(self, net_name: str) -> ContainerNetwork:
+        """
+        Gets the network by name from the config
+
+        :param net_name: the name of the network
+        :return: the network with the given name
+        """
+        for c in self.containers_config.networks:
+            if c.name == net_name:
+                return c

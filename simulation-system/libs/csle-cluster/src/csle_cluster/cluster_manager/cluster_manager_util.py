@@ -15,6 +15,7 @@ from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.util.general_util import GeneralUtil
 import csle_collector.client_manager.client_manager_pb2
@@ -51,6 +52,23 @@ class ClusterManagerUtil:
             return cluster_manager_pb2.TrafficManagerInfoDTO(running=traffic_dto.running, script=traffic_dto.script)
 
     @staticmethod
+    def convert_traffic_dto_to_traffic_manager_info_dto_reverse(
+            traffic_dto: cluster_manager_pb2.TrafficManagerInfoDTO) -> \
+            csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO:
+        """
+        Converts a TrafficManagerInfoDTO to a TrafficDTO
+
+        :param traffic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if traffic_dto is None:
+            return ClusterManagerUtil.convert_traffic_dto_to_traffic_manager_info_dto_reverse(
+                ClusterManagerUtil.get_empty_traffic_manager_info_dto())
+        else:
+            return csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO(
+                running=traffic_dto.running, script=traffic_dto.script)
+
+    @staticmethod
     def get_empty_traffic_manager_info_dto() -> cluster_manager_pb2.TrafficManagerInfoDTO:
         """
         :return: an empty TrafficManagersInfoDTO
@@ -85,7 +103,7 @@ class ClusterManagerUtil:
     @staticmethod
     def convert_client_dto_to_get_num_clients_dto(
             clients_dto: csle_collector.client_manager.client_manager_pb2.ClientsDTO) -> \
-            cluster_manager_pb2.GetNumActiveClientsMsg:
+            cluster_manager_pb2.GetNumClientsDTO:
         """
         Converts a clients DTO to a GetNumClientsDTO
 
@@ -95,6 +113,27 @@ class ClusterManagerUtil:
         if clients_dto is None:
             return ClusterManagerUtil.get_empty_num_clients_dto()
         return cluster_manager_pb2.GetNumClientsDTO(
+            num_clients=clients_dto.num_clients,
+            client_process_active=clients_dto.client_process_active,
+            producer_active=clients_dto.producer_active,
+            clients_time_step_len_seconds=clients_dto.clients_time_step_len_seconds,
+            producer_time_step_len_seconds=clients_dto.producer_time_step_len_seconds
+        )
+
+    @staticmethod
+    def convert_client_dto_to_get_num_clients_dto_reverse(
+            clients_dto: cluster_manager_pb2.GetNumClientsDTO) -> \
+            csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+        """
+        Converts a clients DTO to a GetNumClientsDTO
+
+        :param clients_dto: the clients DTO to convert
+        :return: the converted DTO
+        """
+        if clients_dto is None:
+            return ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto_reverse(
+                ClusterManagerUtil.get_empty_num_clients_dto())
+        return csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=clients_dto.num_clients,
             client_process_active=clients_dto.client_process_active,
             producer_active=clients_dto.producer_active,
@@ -386,6 +425,24 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_docker_stats_monitor_dto_reverse(
+            monitor_dto: cluster_manager_pb2.DockerStatsMonitorStatusDTO) -> \
+            csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+        """
+        Converts a DockerStatsMonitorStatusDTO to a DockerStatsMonitorDTO
+
+        :param monitor_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if monitor_dto is None:
+            return ClusterManagerUtil.convert_docker_stats_monitor_dto_reverse(
+                ClusterManagerUtil.get_empty_docker_stats_monitor_status_dto())
+        return csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
+            num_monitors=monitor_dto.num_monitors, emulations=monitor_dto.emulations,
+            emulation_executions=monitor_dto.emulation_executions
+        )
+
+    @staticmethod
     def elk_status_dto_to_dict(elk_status_dto: cluster_manager_pb2.ElkStatusDTO) -> Dict[str, Any]:
         """
         Converts a ElkStatusDTO to a dict
@@ -435,6 +492,22 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_elk_dto_reverse(
+            elk_dto: cluster_manager_pb2.ElkStatusDTO) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+        """
+        Converts an ElkStatusDTO to an ElkDTO
+
+        :param elk_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if elk_dto is None:
+            return ClusterManagerUtil.convert_elk_info_dto_reverse(ClusterManagerUtil.get_empty_elk_status_dto())
+        return csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
+            elasticRunning=elk_dto.elasticRunning, kibanaRunning=elk_dto.kibanaRunning,
+            logstashRunning=elk_dto.logstashRunning
+        )
+
+    @staticmethod
     def convert_snort_ids_monitor_dto_to_snort_ids_status_dto(
             snort_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO) -> \
             cluster_manager_pb2.SnortIdsStatusDTO:
@@ -448,6 +521,22 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_snort_ids_status_dto()
         return cluster_manager_pb2.SnortIdsStatusDTO(monitor_running=snort_dto.monitor_running,
                                                      snort_ids_running=snort_dto.snort_ids_running)
+
+    @staticmethod
+    def convert_snort_ids_monitor_dto_to_snort_ids_status_dto_reverse(
+            snort_dto: cluster_manager_pb2.SnortIdsStatusDTO) -> \
+            csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+        """
+        Converts a SnortIdsStatusDTO to a SnortIdsMonitorDTO
+
+        :param snort_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if snort_dto is None:
+            return ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_status_dto())
+        return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
+            monitor_running=snort_dto.monitor_running, snort_ids_running=snort_dto.snort_ids_running)
 
     @staticmethod
     def convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(
@@ -465,6 +554,22 @@ class ClusterManagerUtil:
                                                      ossec_ids_running=ossec_dto.ossec_ids_running)
 
     @staticmethod
+    def convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto_reverse(
+            ossec_dto: cluster_manager_pb2.OSSECIdsStatusDTO) -> \
+            csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
+        """
+        Converts a OSSECIdsStatusDTO to a OSSECIdsMonitorDTO
+
+        :param ossec_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if ossec_dto is None:
+            return ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto_reverse(
+                ClusterManagerUtil.get_empty_ossec_ids_status_dto())
+        return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
+            monitor_running=ossec_dto.monitor_running, ossec_ids_running=ossec_dto.ossec_ids_running)
+
+    @staticmethod
     def convert_kafka_dto_to_kafka_status_dto(
             kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO) -> cluster_manager_pb2.KafkaStatusDTO:
         """
@@ -478,7 +583,22 @@ class ClusterManagerUtil:
         return cluster_manager_pb2.KafkaStatusDTO(running=kafka_dto.running, topics=kafka_dto.topics)
 
     @staticmethod
-    def convert_ryu_dto_to_kafka_status_dto(
+    def convert_kafka_dto_to_kafka_status_dto_reverse(
+            kafka_dto: cluster_manager_pb2.KafkaStatusDTO) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+        """
+        Converts a KafkaStatusDTO to a KafkaDTO
+
+        :param kafka_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if kafka_dto is None:
+            return ClusterManagerUtil.convert_kafka_dto_to_kafka_status_dto_reverse(
+                ClusterManagerUtil.get_empty_kafka_dto())
+        return csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
+            running=kafka_dto.running, topics=kafka_dto.topics)
+
+    @staticmethod
+    def convert_ryu_dto_to_ryu_status_dto(
             ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO) -> cluster_manager_pb2.RyuManagerStatusDTO:
         """
         Converts a RyuDTO to a RyuManagerStatusDTO
@@ -489,6 +609,23 @@ class ClusterManagerUtil:
         if ryu_dto is None:
             return ClusterManagerUtil.get_empty_ryu_manager_status_dto()
         return cluster_manager_pb2.RyuManagerStatusDTO(
+            ryu_running=ryu_dto.ryu_running, monitor_running=ryu_dto.monitor_running, port=ryu_dto.port,
+            web_port=ryu_dto.web_port, controller=ryu_dto.controller, kafka_ip=ryu_dto.kafka_ip,
+            kafka_port=ryu_dto.kafka_port, time_step_len=ryu_dto.time_step_len)
+
+    @staticmethod
+    def convert_ryu_dto_to_ryu_status_dto_reverse(
+            ryu_dto: cluster_manager_pb2.RyuManagerStatusDTO) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+        """
+        Converts a RyuManagerStatusDTO to a RyuDTO
+
+        :param ryu_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if ryu_dto is None:
+            return ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto_reverse(
+                ClusterManagerUtil.get_empty_ryu_manager_status_dto())
+        return csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(
             ryu_running=ryu_dto.ryu_running, monitor_running=ryu_dto.monitor_running, port=ryu_dto.port,
             web_port=ryu_dto.web_port, controller=ryu_dto.controller, kafka_ip=ryu_dto.kafka_ip,
             kafka_port=ryu_dto.kafka_port, time_step_len=ryu_dto.time_step_len)
@@ -717,6 +854,26 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_host_status_to_host_manager_status_dto_reverse(
+            host_status_dto: cluster_manager_pb2.HostManagerStatusDTO) -> \
+            Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]:
+        """
+        Converts a HostManagerStatusDTO to a HostStatusDTO
+
+        :param host_status_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if host_status_dto is None:
+            return ClusterManagerUtil.convert_host_status_to_host_manager_status_dto_reverse(
+                ClusterManagerUtil.get_empty_host_manager_status_dto())
+        return (csle_collector.host_manager.host_manager_pb2.HostStatusDTO(
+            monitor_running=host_status_dto.monitor_running,
+            filebeat_running=host_status_dto.filebeat_running,
+            packetbeat_running=host_status_dto.packetbeat_running,
+            metricbeat_running=host_status_dto.metricbeat_running,
+            heartbeat_running=host_status_dto.heartbeat_running), host_status_dto.ip)
+
+    @staticmethod
     def convert_snort_info_dto(snort_ids_managers_info_dto: SnortIdsManagersInfo) -> \
             cluster_manager_pb2.SnortIdsManagersInfoDTO:
         """
@@ -736,6 +893,28 @@ class ClusterManagerUtil:
             snortIdsManagersStatuses=list(
                 map(lambda x: ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto(x),
                     snort_ids_managers_info_dto.snort_ids_managers_statuses))
+        )
+
+    @staticmethod
+    def convert_snort_info_dto_reverse(snort_ids_managers_info_dto: cluster_manager_pb2.SnortIdsManagersInfoDTO) -> \
+            SnortIdsManagersInfo:
+        """
+        Converts a SnortIdsManagersInfo into a SnortIdsManagersInfoDTO
+
+        :param snort_ids_managers_info_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if snort_ids_managers_info_dto is None:
+            return ClusterManagerUtil.convert_snort_info_dto_reverse(SnortIdsManagersInfo.get_empty_dto())
+        return SnortIdsManagersInfo(
+            ips=snort_ids_managers_info_dto.ips,
+            ports=snort_ids_managers_info_dto.ports,
+            emulation_name=snort_ids_managers_info_dto.emulationName,
+            execution_id=snort_ids_managers_info_dto.executionId,
+            snort_ids_managers_running=snort_ids_managers_info_dto.snortIdsManagersRunning,
+            snort_ids_managers_statuses=list(
+                map(lambda x: ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto_reverse(x),
+                    snort_ids_managers_info_dto.snortIdsManagersStatuses))
         )
 
     @staticmethod
@@ -761,6 +940,29 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_ossec_info_dto_reverse(ossec_ids_managers_info_dto: cluster_manager_pb2.OSSECIdsManagersInfoDTO) \
+            -> OSSECIDSManagersInfo:
+        """
+        Converts a OSSECIdsManagersInfoDTO into a OSSECIDSManagersInfo
+
+        :param ossec_ids_managers_info_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if ossec_ids_managers_info_dto is None:
+            return ClusterManagerUtil.convert_ossec_info_dto_reverse(
+                ClusterManagerUtil.get_empty_ossec_managers_info_dto())
+        return OSSECIDSManagersInfo(
+            ips=ossec_ids_managers_info_dto.ips,
+            ports=ossec_ids_managers_info_dto.ports,
+            emulation_name=ossec_ids_managers_info_dto.emulationName,
+            execution_id=ossec_ids_managers_info_dto.executionId,
+            ossec_ids_managers_running=ossec_ids_managers_info_dto.ossecIdsManagersRunning,
+            ossec_ids_managers_statuses=list(map(
+                lambda x: ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto_reverse(x),
+                ossec_ids_managers_info_dto.ossecIdsManagersStatuses))
+        )
+
+    @staticmethod
     def convert_elk_info_dto(elk_managers_dto: ELKManagersInfo) -> cluster_manager_pb2.ElkManagersInfoDTO:
         """
         Converts a ELKManagersInfo into a ElkManagersInfoDTO
@@ -782,6 +984,27 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_elk_info_dto_reverse(elk_managers_dto: cluster_manager_pb2.ElkManagersInfoDTO) -> ELKManagersInfo:
+        """
+        Converts a ELKManagersInfo into a ElkManagersInfoDTO
+
+        :param elk_managers_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if elk_managers_dto is None:
+            return ClusterManagerUtil.convert_elk_info_dto_reverse(ClusterManagerUtil.get_empty_elk_managers_info_dto())
+        return ELKManagersInfo(
+            ips=elk_managers_dto.ips,
+            ports=elk_managers_dto.ports,
+            emulation_name=elk_managers_dto.emulationName,
+            execution_id=elk_managers_dto.executionId,
+            elk_managers_running=elk_managers_dto.elkManagersRunning,
+            elk_managers_statuses=list(map(
+                lambda x: ClusterManagerUtil.convert_elk_dto_reverse(x), elk_managers_dto.elkManagersStatuses)),
+            local_kibana_port=elk_managers_dto.localKibanaPort
+        )
+
+    @staticmethod
     def convert_ryu_info_dto(ryu_managers_info_dto: RyuManagersInfo) -> cluster_manager_pb2.RyuManagersInfoDTO:
         """
         Converts a RyuManagersInfo into a RyuManagersInfoDTO
@@ -791,15 +1014,36 @@ class ClusterManagerUtil:
         """
         if ryu_managers_info_dto is None:
             return ClusterManagerUtil.get_empty_ryu_managers_info_dto()
-        return cluster_manager_pb2.OSSECIdsManagersInfoDTO(
+        return cluster_manager_pb2.RyuManagersInfoDTO(
             ips=ryu_managers_info_dto.ips,
             ports=ryu_managers_info_dto.ports,
             emulationName=ryu_managers_info_dto.emulation_name,
             executionId=ryu_managers_info_dto.execution_id,
             ryuManagersRunning=ryu_managers_info_dto.ryu_managers_running,
             ryuManagersStatuses=list(
-                map(lambda x: ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(x),
+                map(lambda x: ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto(x),
                     ryu_managers_info_dto.ryu_managers_statuses))
+        )
+
+    @staticmethod
+    def convert_ryu_info_dto_reverse(ryu_managers_info_dto: cluster_manager_pb2.RyuManagersInfoDTO) -> RyuManagersInfo:
+        """
+        Converts a RyuManagersInfoDTO into a RyuManagersInfo
+
+        :param ryu_managers_info_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if ryu_managers_info_dto is None:
+            return ClusterManagerUtil.convert_ryu_info_dto_reverse(ClusterManagerUtil.get_empty_ryu_managers_info_dto())
+        return RyuManagersInfo(
+            ips=ryu_managers_info_dto.ips,
+            ports=ryu_managers_info_dto.ports,
+            emulation_name=ryu_managers_info_dto.emulationName,
+            execution_id=ryu_managers_info_dto.executionId,
+            ryu_managers_running=ryu_managers_info_dto.ryuManagersRunning,
+            ryu_managers_statuses=list(
+                map(lambda x: ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto_reverse(x),
+                    ryu_managers_info_dto.ryuManagersStatuses))
         )
 
     @staticmethod
@@ -824,6 +1068,28 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_host_info_dto_reverse(host_managers_dto: cluster_manager_pb2.HostManagersInfoDTO) -> HostManagersInfo:
+        """
+        Converts a HostManagersInfoDTO into a HostManagersInfo
+
+        :param host_managers_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if host_managers_dto is None:
+            return ClusterManagerUtil.convert_host_info_dto_reverse(
+                ClusterManagerUtil.get_empty_host_managers_info_dto())
+        return HostManagersInfo(
+            ips=host_managers_dto.ips,
+            ports=host_managers_dto.ports,
+            emulation_name=host_managers_dto.emulationName,
+            execution_id=host_managers_dto.executionId,
+            host_managers_running=host_managers_dto.hostManagersRunning,
+            host_managers_statuses=list(
+                map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto_reverse(x),
+                    host_managers_dto.hostManagersStatuses))
+        )
+
+    @staticmethod
     def convert_kafka_info_dto(kafka_managers_info_dto: KafkaManagersInfo) \
             -> cluster_manager_pb2.KafkaManagersInfoDTO:
         """
@@ -845,6 +1111,29 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_kafka_info_dto_reverse(kafka_managers_info_dto: cluster_manager_pb2.KafkaManagersInfoDTO) \
+            -> KafkaManagersInfo:
+        """
+        Converts a KafkaManagersInfoDTO into a KafkaManagersInfo
+
+        :param kafka_managers_info_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if kafka_managers_info_dto is None:
+            return ClusterManagerUtil.convert_kafka_info_dto_reverse(
+                ClusterManagerUtil.get_empty_kafka_managers_info_dto())
+        return KafkaManagersInfo(
+            ips=kafka_managers_info_dto.ips,
+            ports=kafka_managers_info_dto.ports,
+            emulation_name=kafka_managers_info_dto.emulationName,
+            execution_id=kafka_managers_info_dto.executionId,
+            kafka_managers_running=kafka_managers_info_dto.kafkaManagersRunning,
+            kafka_managers_statuses=list(
+                map(lambda x: ClusterManagerUtil.convert_kafka_dto_to_kafka_status_dto_reverse(x),
+                    kafka_managers_info_dto.kafkaManagersStatuses))
+        )
+
+    @staticmethod
     def convert_client_info_dto(client_managers_dto: ClientManagersInfo) \
             -> cluster_manager_pb2.ClientManagersInfoDTO:
         """
@@ -863,6 +1152,29 @@ class ClusterManagerUtil:
             clientManagersRunning=client_managers_dto.client_managers_running,
             clientManagersStatuses=list(map(lambda x: ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(x),
                                             client_managers_dto.client_managers_statuses))
+        )
+
+    @staticmethod
+    def convert_client_info_dto_reverse(client_managers_dto: cluster_manager_pb2.ClientManagersInfoDTO) \
+            -> ClientManagersInfo:
+        """
+        Converts a ClientManagersInfoDTO into a ClientManagersInfo
+
+        :param client_managers_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if client_managers_dto is None:
+            return ClusterManagerUtil.convert_client_info_dto_reverse(
+                ClusterManagerUtil.get_empty_client_managers_info_dto())
+        return ClientManagersInfo(
+            ips=client_managers_dto.ips,
+            ports=client_managers_dto.ports,
+            emulation_name=client_managers_dto.emulationName,
+            execution_id=client_managers_dto.executionId,
+            client_managers_running=client_managers_dto.clientManagersRunning,
+            client_managers_statuses=list(
+                map(lambda x: ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto_reverse(x),
+                    client_managers_dto.clientManagersStatuses))
         )
 
     @staticmethod
@@ -888,6 +1200,29 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
+    def convert_traffic_info_dto_reverse(traffic_managers_dto: cluster_manager_pb2.TrafficManagerInfoDTO) \
+            -> TrafficManagersInfo:
+        """
+        Converts a TrafficManagerInfoDTO into a TrafficManagersInfo
+
+        :param traffic_managers_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if traffic_managers_dto is None:
+            return ClusterManagerUtil.convert_traffic_info_dto_reverse(
+                ClusterManagerUtil.get_empty_traffic_managers_info_dto())
+        return TrafficManagersInfo(
+            ips=traffic_managers_dto.ips,
+            ports=traffic_managers_dto.ports,
+            emulation_name=traffic_managers_dto.emulationName,
+            execution_id=traffic_managers_dto.executionId,
+            traffic_managers_running=traffic_managers_dto.trafficManagersRunning,
+            traffic_managers_statuses=list(map(
+                lambda x: ClusterManagerUtil.convert_traffic_dto_to_traffic_manager_info_dto_reverse(x),
+                traffic_managers_dto.trafficManagersStatuses))
+        )
+
+    @staticmethod
     def convert_docker_info_dto(docker_stats_managers_dto: DockerStatsManagersInfo) \
             -> cluster_manager_pb2.DockerStatsManagersInfoDTO:
         """
@@ -906,6 +1241,29 @@ class ClusterManagerUtil:
             dockerStatsManagersRunning=docker_stats_managers_dto.docker_stats_managers_running,
             dockerStatsManagersStatuses=list(map(lambda x: ClusterManagerUtil.convert_docker_stats_monitor_dto(x),
                                                  docker_stats_managers_dto.docker_stats_managers_statuses))
+        )
+
+    @staticmethod
+    def convert_docker_info_dto_reverse(docker_stats_managers_dto: cluster_manager_pb2.DockerStatsManagersInfoDTO) \
+            -> DockerStatsManagersInfo:
+        """
+        Converts a DockerStatsManagersInfoDTO into a DockerStatsManagersInfo
+
+        :param docker_stats_managers_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if docker_stats_managers_dto is None:
+            return ClusterManagerUtil.convert_docker_info_dto_reverse(
+                ClusterManagerUtil.get_empty_docker_managers_info_dto())
+        return DockerStatsManagersInfo(
+            ips=docker_stats_managers_dto.ips,
+            ports=docker_stats_managers_dto.ports,
+            emulation_name=docker_stats_managers_dto.emulationName,
+            execution_id=docker_stats_managers_dto.executionId,
+            docker_stats_managers_running=docker_stats_managers_dto.dockerStatsManagersRunning,
+            docker_stats_managers_statuses=list(
+                map(lambda x: ClusterManagerUtil.convert_docker_stats_monitor_dto_reverse(x),
+                    docker_stats_managers_dto.dockerStatsManagersStatuses))
         )
 
     @staticmethod
@@ -1012,6 +1370,13 @@ class ClusterManagerUtil:
         :return: an empty SnortIdsStatusDTO
         """
         return cluster_manager_pb2.SnortIdsStatusDTO(monitor_running=False, snort_ids_running=False)
+
+    @staticmethod
+    def get_empty_ossec_ids_status_dto() -> cluster_manager_pb2.OSSECIdsStatusDTO:
+        """
+        :return: an empty OSSECIdsStatusDTO
+        """
+        return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=False, snort_ids_running=False)
 
     @staticmethod
     def get_empty_ossec_ids_monitor_dto() -> cluster_manager_pb2.OSSECIdsStatusDTO:
@@ -1387,8 +1752,7 @@ class ClusterManagerUtil:
         return cluster_manager_pb2.RyuTunnelsDTO(tunnels=ryu_tunnels)
 
     @staticmethod
-    def merge_execution_infos(execution_infos: List[cluster_manager_pb2.ExecutionInfoDTO]) \
-            -> cluster_manager_pb2.ExecutionInfoDTO:
+    def merge_execution_infos(execution_infos: List[cluster_manager_pb2.ExecutionInfoDTO]) -> EmulationExecutionInfo:
         """
         Function that merges a list of execution infos into one
 
@@ -1396,21 +1760,202 @@ class ClusterManagerUtil:
         :return: the merged info
         """
         assert len(execution_infos) > 0
-        if len(execution_infos) == 1:
-            return execution_infos[0]
-        merged_info = execution_infos[0]
-        for exec_info in execution_infos[1:]:
-            merged_info.snortIdsManagersInfo = merged_info.snortIdsManagersInfo + exec_info.snortIdsManagersInfo
-            merged_info.ossecIdsManagersInfo = merged_info.ossecIdsManagersInfo + exec_info.ossecIdsManagersInfo
-            merged_info.kafkaManagersInfo = merged_info.kafkaManagersInfo + exec_info.kafkaManagersInfo
-            merged_info.hostManagersInfo = merged_info.hostManagersInfo + exec_info.hostManagersInfo
-            merged_info.clientManagersInfo = merged_info.clientManagersInfo + exec_info.clientManagersInfo
-            merged_info.dockerStatsManagersInfo = merged_info.dockerStatsManagersInfo + \
-                                                  exec_info.dockerStatsManagersInfo
-            merged_info.runningContainers = merged_info.runningContainers + exec_info.runningContainers
-            merged_info.stoppedContainers = merged_info.stoppedContainers + exec_info.stoppedContainers
-            merged_info.trafficManagersInfoDTO = merged_info.trafficManagersInfoDTO + exec_info.trafficManagersInfoDTO
-            merged_info.activeNetworks = merged_info.activeNetworks + exec_info.activeNetworks
-            merged_info.elkManagersInfoDTO = merged_info.elkManagersInfoDTO + exec_info.elkManagersInfoDTO
-            merged_info.ryuManagersInfoDTO = merged_info.ryuManagersInfoDTO + exec_info.ryuManagersInfoDTO
-        return merged_info
+        emulation_name=execution_infos[0].emulationName
+        execution_id=execution_infos[0].executionId
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation_name)
+        snort_ids_managers_info = []
+        ossec_ids_managers_info = []
+        kafka_managers_info = []
+        host_managers_info = []
+        client_managers_info = []
+        docker_stats_managers_info = []
+        running_containers = []
+        running_container_names = []
+        stopped_containers = []
+        traffic_managers_info = []
+        active_networks = []
+        active_network_names = []
+        inactive_networks = []
+        elk_managers_info = []
+        ryu_managers_info = []
+        for exec_info in execution_infos:
+            snort_ids_managers_info.append(ClusterManagerUtil.convert_snort_info_dto_reverse(
+                exec_info.snortIdsManagersInfo))
+            ossec_ids_managers_info.append(ClusterManagerUtil.convert_ossec_info_dto_reverse(
+                exec_info.ossecIdsManagersInfo))
+            kafka_managers_info.append(ClusterManagerUtil.convert_kafka_info_dto_reverse(
+                exec_info.kafkaManagersInfo))
+            host_managers_info.append(ClusterManagerUtil.convert_host_info_dto_reverse(
+                exec_info.hostManagersInfo))
+            client_managers_info.append(ClusterManagerUtil.convert_client_info_dto_reverse(
+                exec_info.clientManagersInfo))
+            docker_stats_managers_info.append(ClusterManagerUtil.convert_docker_info_dto_reverse(
+                exec_info.dockerStatsManagersInfo))
+            for running_c in exec_info.runningContainers.runningContainers:
+                container_dto = execution.emulation_env_config.containers_config.get_container_from_ip(ip=running_c.ip)
+                if container_dto is not None:
+                    running_containers.append(container_dto)
+                    running_container_names.append(container_dto.name)
+                elif running_c.ip in execution.emulation_env_config.kafka_config.container.get_ips() or \
+                        running_c.ip == execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip:
+                    running_containers.append(execution.emulation_env_config.kafka_config.container)
+                    running_container_names.append(execution.emulation_env_config.kafka_config.container.name)
+                elif running_c.ip in execution.emulation_env_config.elk_config.container.get_ips() or \
+                        running_c.ip == execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip:
+                    running_containers.append(execution.emulation_env_config.elk_config.container)
+                    running_container_names.append(execution.emulation_env_config.elk_config.container.name)
+                elif execution.emulation_env_config.sdn_controller_config is not None and \
+                        (running_c.ip in execution.emulation_env_config.sdn_controller_config.container.get_ips() or
+                         running_c.ip ==
+                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip):
+                    running_containers.append(execution.emulation_env_config.sdn_controller_config.container)
+                    running_container_names.append(execution.emulation_env_config.sdn_controller_config.container.name)
+            for stopped_c in exec_info.stoppedContainers.stoppedContainers:
+                container_dto = execution.emulation_env_config.containers_config.get_container_from_ip(ip=stopped_c.ip)
+                if container_dto is not None:
+                    stopped_containers.append(container_dto)
+                elif stopped_c.ip in execution.emulation_env_config.kafka_config.container.get_ips() or \
+                        stopped_c.ip == execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip:
+                    stopped_containers.append(execution.emulation_env_config.kafka_config.container)
+                elif stopped_c.ip in execution.emulation_env_config.elk_config.container.get_ips() or \
+                        stopped_c.ip == execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip:
+                    stopped_containers.append(execution.emulation_env_config.elk_config.container)
+                elif execution.emulation_env_config.sdn_controller_config is not None and \
+                        (stopped_c.ip in execution.emulation_env_config.sdn_controller_config.container.get_ips() or
+                         stopped_c.ip ==
+                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip):
+                    stopped_containers.append(execution.emulation_env_config.sdn_controller_config.container)
+            traffic_managers_info.append(ClusterManagerUtil.convert_traffic_info_dto_reverse(
+                exec_info.trafficManagersInfoDTO))
+            for net in exec_info.activeNetworks.networks:
+                if net not in active_network_names:
+                    active_network_names.append(net)
+                    active_networks.append(execution.emulation_env_config.get_network_by_name(net_name=net))
+            elk_managers_info.append(ClusterManagerUtil.convert_elk_info_dto_reverse(exec_info.elkManagersInfoDTO))
+            ryu_managers_info.append(ClusterManagerUtil.convert_ryu_info_dto_reverse(exec_info.ryuManagersInfoDTO))
+
+        for net in execution.emulation_env_config.containers_config.networks:
+            if net.name not in active_network_names:
+                inactive_networks.append(net)
+
+        stopped_containers = list(filter(lambda x: x.name not in running_container_names, stopped_containers))
+        merged_snort_ids_managers_info = snort_ids_managers_info[0]
+        for snort_ids_manager_info in snort_ids_managers_info[1:]:
+            merged_snort_ids_managers_info.ips = list(merged_snort_ids_managers_info.ips) + \
+                                                 list(snort_ids_manager_info.ips)
+            merged_snort_ids_managers_info.ports = list(merged_snort_ids_managers_info.ports) + \
+                                                   list(snort_ids_manager_info.ports)
+            merged_snort_ids_managers_info.snort_ids_managers_running = \
+                list(merged_snort_ids_managers_info.snort_ids_managers_running) + \
+                list(snort_ids_manager_info.snort_ids_managers_running)
+            merged_snort_ids_managers_info.snort_ids_managers_statuses = \
+                list(merged_snort_ids_managers_info.snort_ids_managers_statuses) + \
+                list(snort_ids_manager_info.snort_ids_managers_statuses)
+
+        merged_ossec_ids_managers_info = ossec_ids_managers_info[0]
+        for ossec_ids_manager_info in ossec_ids_managers_info[1:]:
+            merged_ossec_ids_managers_info.ips = list(merged_ossec_ids_managers_info.ips) + \
+                                                 list(ossec_ids_manager_info.ips)
+            merged_ossec_ids_managers_info.ports = list(merged_ossec_ids_managers_info.ports) + \
+                                                   list(ossec_ids_manager_info.ports)
+            merged_ossec_ids_managers_info.ossec_ids_managers_running = \
+                list(merged_ossec_ids_managers_info.ossec_ids_managers_running) + \
+                list(ossec_ids_manager_info.ossec_ids_managers_running)
+            merged_ossec_ids_managers_info.ossec_ids_managers_statuses = \
+                list(merged_ossec_ids_managers_info.ossec_ids_managers_statuses) + \
+                list(ossec_ids_manager_info.ossec_ids_managers_statuses)
+
+        merged_kafka_managers_info = kafka_managers_info[0]
+        for kafka_manager_info in kafka_managers_info[1:]:
+            merged_kafka_managers_info.ips = list(merged_kafka_managers_info.ips) + \
+                                             list(kafka_manager_info.ips)
+            merged_kafka_managers_info.ports = list(merged_kafka_managers_info.ports) + list(kafka_manager_info.ports)
+            merged_kafka_managers_info.kafka_managers_running = \
+                list(merged_kafka_managers_info.kafka_managers_running) + \
+                list(kafka_manager_info.kafka_managers_running)
+            merged_kafka_managers_info.kafka_managers_statuses = \
+                list(merged_kafka_managers_info.kafka_managers_statuses) + \
+                list(kafka_manager_info.kafka_managers_statuses)
+
+        merged_host_managers_info = host_managers_info[0]
+        for host_manager_info in host_managers_info[1:]:
+            merged_host_managers_info.ips = list(merged_host_managers_info.ips) + list(host_manager_info.ips)
+            merged_host_managers_info.ports = list(merged_host_managers_info.ports) + list(host_manager_info.ports)
+            merged_host_managers_info.host_managers_running = \
+                list(merged_host_managers_info.host_managers_running) + \
+                list(host_manager_info.host_managers_running)
+            merged_host_managers_info.host_managers_statuses = \
+                list(merged_host_managers_info.host_managers_statuses) + \
+                list(host_manager_info.host_managers_statuses)
+
+        merged_client_managers_info = client_managers_info[0]
+        for client_manager_info in client_managers_info[1:]:
+            merged_client_managers_info.ips = list(merged_client_managers_info.ips) + list(client_manager_info.ips)
+            merged_client_managers_info.ports = list(merged_client_managers_info.ports) + \
+                                                list(client_manager_info.ports)
+            merged_client_managers_info.client_managers_running = \
+                list(merged_client_managers_info.client_managers_running) + \
+                list(client_manager_info.client_managers_running)
+            merged_client_managers_info.client_managers_statuses = \
+                list(merged_client_managers_info.client_managers_statuses) + \
+                list(client_manager_info.client_managers_statuses)
+
+        merged_docker_stats_managers_info = docker_stats_managers_info[0]
+        for docker_stats_manager_info in docker_stats_managers_info[1:]:
+            merged_docker_stats_managers_info.ips = list(merged_docker_stats_managers_info.ips) + \
+                                                    list(docker_stats_manager_info.ips)
+            merged_docker_stats_managers_info.ports = list(merged_docker_stats_managers_info.ports) + \
+                                                      list(docker_stats_manager_info.ports)
+            merged_docker_stats_managers_info.docker_stats_managers_running = \
+                list(merged_docker_stats_managers_info.docker_stats_managers_running) + \
+                     list(docker_stats_manager_info.docker_stats_managers_running)
+            merged_docker_stats_managers_info.docker_stats_managers_statuses = \
+                list(merged_docker_stats_managers_info.docker_stats_managers_statuses) + \
+                list(docker_stats_manager_info.docker_stats_managers_statuses)
+
+        merged_traffic_managers_info = traffic_managers_info[0]
+        for traffic_manager_info in traffic_managers_info[1:]:
+            merged_traffic_managers_info.ips = list(merged_traffic_managers_info.ips) + list(traffic_manager_info.ips)
+            merged_traffic_managers_info.ports = list(merged_traffic_managers_info.ports) \
+                                                 + list(traffic_manager_info.ports)
+            merged_traffic_managers_info.traffic_managers_running = \
+                list(merged_traffic_managers_info.traffic_managers_running) + \
+                list(traffic_manager_info.traffic_managers_running)
+            merged_traffic_managers_info.traffic_managers_statuses = \
+                list(merged_traffic_managers_info.traffic_managers_statuses) + \
+                list(traffic_manager_info.traffic_managers_statuses)
+
+        merged_elk_managers_info = elk_managers_info[0]
+        for elk_manager_info in elk_managers_info[1:]:
+            merged_elk_managers_info.ips = list(merged_elk_managers_info.ips) + list(elk_manager_info.ips)
+            merged_elk_managers_info.ports = list(merged_elk_managers_info.ports) + list(elk_manager_info.ports)
+            merged_elk_managers_info.elk_managers_running = \
+                list(merged_elk_managers_info.elk_managers_running) + \
+                list(elk_manager_info.elk_managers_running)
+            merged_elk_managers_info.elk_managers_statuses = \
+                list(merged_elk_managers_info.elk_managers_statuses) + \
+                list(elk_manager_info.elk_managers_statuses)
+
+        merged_ryu_managers_info = ryu_managers_info[0]
+        for ryu_manager_info in ryu_managers_info[1:]:
+            merged_ryu_managers_info.ips = list(merged_ryu_managers_info.ips) + list(ryu_manager_info.ips)
+            merged_ryu_managers_info.ports = list(merged_ryu_managers_info.ports) + list(ryu_manager_info.ports)
+            merged_ryu_managers_info.ryu_managers_running = \
+                list(merged_ryu_managers_info.ryu_managers_running) + \
+                list(ryu_manager_info.ryu_managers_running)
+            merged_ryu_managers_info.ryu_managers_statuses = \
+                list(merged_ryu_managers_info.ryu_managers_statuses) + \
+                list(ryu_manager_info.ryu_managers_statuses)
+
+        merged_execution_info = EmulationExecutionInfo(
+            emulation_name=emulation_name, execution_id=execution_id,
+            snort_ids_managers_info=merged_snort_ids_managers_info,
+            ossec_ids_managers_info=merged_ossec_ids_managers_info,
+            kafka_managers_info=merged_kafka_managers_info,
+            host_managers_info=merged_host_managers_info, client_managers_info=merged_client_managers_info,
+            docker_stats_managers_info=merged_docker_stats_managers_info, running_containers=running_containers,
+            stopped_containers=stopped_containers, active_networks=active_networks, inactive_networks=inactive_networks,
+            elk_managers_info=merged_elk_managers_info, ryu_managers_info=merged_ryu_managers_info,
+            traffic_managers_info=merged_traffic_managers_info
+        )
+        return merged_execution_info

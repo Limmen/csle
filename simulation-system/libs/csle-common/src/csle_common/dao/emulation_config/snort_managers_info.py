@@ -71,3 +71,12 @@ class SnortIdsManagersInfo:
                 lambda x: snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict(x),
                 d["snort_ids_managers_statuses"])))
         return dto
+
+    @staticmethod
+    def get_empty_dto() -> "SnortIdsManagersInfo":
+        """
+        :return: an empty version of the DTO
+        """
+        return SnortIdsManagersInfo(
+            ips = [], ports = [], emulation_name="", execution_id=-1, snort_ids_managers_statuses=[],
+            snort_ids_managers_running=[])
