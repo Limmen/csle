@@ -33,6 +33,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 - `confluent-kafka` (for interacting with Kafka)
 - `docker` (for interacting with Docker)
 - `requests` (for interacting with the Ryu Controller's web interface)
+- `netifaces` (networking utility)
 
 ## Development Requirements
 

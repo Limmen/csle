@@ -9,6 +9,7 @@ from scipy.stats import poisson
 from scipy.stats import expon
 from concurrent import futures
 import socket
+import netifaces
 from confluent_kafka import Producer
 import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
@@ -151,7 +152,7 @@ class ProducerThread(threading.Thread):
         self.kafka_ip = ip
         self.port = port
         self.hostname = socket.gethostname()
-        self.ip = socket.gethostbyname(self.hostname)
+        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
         self.conf = {
             constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.port}",
             constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}

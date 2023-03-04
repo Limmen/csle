@@ -5,6 +5,7 @@ import subprocess
 from concurrent import futures
 import grpc
 import socket
+import netifaces
 import csle_collector.elk_manager.elk_manager_pb2_grpc
 import csle_collector.elk_manager.elk_manager_pb2
 import csle_collector.constants.constants as constants
@@ -23,7 +24,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.basicConfig(filename=f"{constants.LOG_FILES.ELK_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.ELK_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
-        self.ip = socket.gethostbyname(self.hostname)
+        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
         logging.info(f"Setting up ElkManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_elk_status(self) -> Tuple[bool, bool, bool]:

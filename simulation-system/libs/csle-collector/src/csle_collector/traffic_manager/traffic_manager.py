@@ -5,6 +5,7 @@ import subprocess
 from concurrent import futures
 import grpc
 import socket
+import netifaces
 import io
 import csle_collector.traffic_manager.traffic_manager_pb2_grpc
 import csle_collector.traffic_manager.traffic_manager_pb2
@@ -24,7 +25,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         logging.basicConfig(filename=f"{constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
-        self.ip = socket.gethostbyname(self.hostname)
+        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
         logging.info(f"Setting up TrafficManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_traffic_status(self) -> bool:

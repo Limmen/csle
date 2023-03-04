@@ -5,6 +5,7 @@ import socket
 import os
 import subprocess
 import json
+import netifaces
 import requests
 import csle_collector.ryu_manager.ryu_manager_pb2_grpc
 import csle_collector.ryu_manager.ryu_manager_pb2
@@ -24,7 +25,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         logging.basicConfig(filename=f"{constants.LOG_FILES.RYU_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.RYU_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
-        self.ip = socket.gethostbyname(self.hostname)
+        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
         self.ryu_port = 6633
         self.ryu_web_port = 8080
         self.controller = ""

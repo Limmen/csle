@@ -2008,7 +2008,7 @@ class ClusterManagerUtil:
         remote_file = sftp_client.open(path)
         data = []
         try:
-            data = remote_file.read()
+            data = remote_file.read(constants.SSH.MAX_FILE_READ_BYTES)
             data = data.decode()
             data = data.split("\n")
             data = data[-100:]

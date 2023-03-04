@@ -673,3 +673,12 @@ class RYU:
     TIME_STEP_LEN_SECONDS = "time_step_len_seconds"
     PRODUCER_RUNNING = "producer_running"
     KAFKA_CONF = "kafka_conf"
+
+
+class INTERFACES:
+    """
+    String constrants related to networking interfaces
+    """
+    ETH1 = "eth1"
+    ETH0 = "eth0"
+    ADDR = "addr"

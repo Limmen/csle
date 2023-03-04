@@ -6,6 +6,7 @@ import os
 from concurrent import futures
 import grpc
 import socket
+import netifaces
 import confluent_kafka
 import confluent_kafka.admin
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
@@ -26,7 +27,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         logging.basicConfig(filename=f"{constants.LOG_FILES.KAFKA_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
-        self.ip = socket.gethostbyname(self.hostname)
+        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         logging.info(f"Setting up KafkaManager hostname: {self.hostname} ip: {self.ip}")
