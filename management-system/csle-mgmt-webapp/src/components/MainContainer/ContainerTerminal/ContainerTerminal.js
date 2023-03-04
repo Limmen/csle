@@ -416,10 +416,10 @@ const ContainerTerminal = (props) => {
             delay={{show: 0, hide: 0}}
             overlay={startShellTooltip}
         >
-            <Button variant="secondary" className="startButton" size="sm"
+            <Button variant="secondary" className="connectButton" size="sm"
                     onClick={() =>  setupConnection(props.ip)}>
                 Connect to {props.ip}
-                <i className="fa fa-terminal startStopIcon startStopIcon2" aria-hidden="true"/>
+                <i className="fa fa-terminal connectButtonText" aria-hidden="true"/>
             </Button>
         </OverlayTrigger>
     );

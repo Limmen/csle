@@ -5,3 +5,11 @@
 .containerTermImg {
     width:450px;
 }
+
+.connectButtonText {
+    margin-left:20px;
+}
+
+.connectButton {
+    font-size: 14px;
+}
