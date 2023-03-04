@@ -1404,7 +1404,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         node_traffic_config = execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
             ip=request.containerIp)
-        if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
+        if node_traffic_config is not None and node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
             TrafficController.start_traffic_manager(emulation_env_config=execution.emulation_env_config,
                                                     node_traffic_config=node_traffic_config,
                                                     logger=logging.getLogger())
@@ -1428,7 +1428,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         node_traffic_config = execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
             ip=request.containerIp)
-        if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
+        if node_traffic_config is not None and node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
             TrafficController.stop_traffic_manager(emulation_env_config=execution.emulation_env_config,
                                                    node_traffic_config=node_traffic_config,
                                                    logger=logging.getLogger())
@@ -1580,7 +1580,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             ip=request.containerIp)
         node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
             ip=request.containerIp)
-        if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
+        if node_traffic_config is not None and node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
             TrafficController.start_internal_traffic_generator(emulation_env_config=execution.emulation_env_config,
                                                                node_traffic_config=node_traffic_config,
                                                                logger=logging.getLogger(),
@@ -1605,7 +1605,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         node_traffic_config = execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
             ip=request.containerIp)
-        if node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
+        if node_traffic_config is not None and node_traffic_config.physical_host_ip == GeneralUtil.get_host_ip():
             TrafficController.stop_internal_traffic_generator(emulation_env_config=execution.emulation_env_config,
                                                               node_traffic_config=node_traffic_config,
                                                               logger=logging.getLogger())
@@ -2264,11 +2264,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.start_host_manager(emulation_env_config=execution.emulation_env_config,
-                                              ip=node_container_config.docker_gw_bridge_ip)
+                                              ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2305,11 +2304,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.stop_host_manager(emulation_env_config=execution.emulation_env_config,
-                                             ip=node_container_config.docker_gw_bridge_ip)
+                                             ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2423,11 +2421,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.start_host_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                     ip=node_container_config.docker_gw_bridge_ip,
+                                                     ip=container_config.docker_gw_bridge_ip,
                                                      logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
@@ -2448,11 +2445,11 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"initial start: {request.initialStart}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.start_filebeat(emulation_env_config=execution.emulation_env_config,
-                                          ips=[node_container_config.docker_gw_bridge_ip],
+                                          ips=[container_config.docker_gw_bridge_ip],
                                           logger=logging.getLogger(), initial_start=request.initialStart)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
@@ -2473,12 +2470,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"initialStart: {request.initialStart}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.start_packetbeat(emulation_env_config=execution.emulation_env_config,
-                                            ips=[node_container_config.docker_gw_bridge_ip],
-                                            logger=logging.getLogger(),
+                                            ips=[container_config.docker_gw_bridge_ip], logger=logging.getLogger(),
                                             initial_start=request.initialStart)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
@@ -2499,11 +2494,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"initialStart: {request.initialStart}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.start_metricbeat(emulation_env_config=execution.emulation_env_config,
-                                            ips=[node_container_config.docker_gw_bridge_ip],
+                                            ips=[container_config.docker_gw_bridge_ip],
                                             logger=logging.getLogger(), initial_start=request.initialStart)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
@@ -2524,12 +2518,11 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"initialStart: {request.initialStart}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.start_heartbeat(emulation_env_config=execution.emulation_env_config,
-                                           ips=[node_container_config.docker_gw_bridge_ip],
-                                           logger=logging.getLogger(), initial_start=request.initialStart)
+                                           ips=[container_config.docker_gw_bridge_ip], logger=logging.getLogger(),
+                                           initial_start=request.initialStart)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2548,12 +2541,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.stop_filebeat(emulation_env_config=execution.emulation_env_config,
-                                         ip=node_container_config.docker_gw_bridge_ip,
-                                         logger=logging.getLogger())
+                                         ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2572,12 +2563,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.stop_packetbeat(emulation_env_config=execution.emulation_env_config,
-                                           ip=node_container_config.docker_gw_bridge_ip,
-                                           logger=logging.getLogger())
+                                           ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2596,12 +2585,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.stop_metricbeat(emulation_env_config=execution.emulation_env_config,
-                                           ip=node_container_config.docker_gw_bridge_ip,
-                                           logger=logging.getLogger())
+                                           ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2620,12 +2607,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.stop_heartbeat(emulation_env_config=execution.emulation_env_config,
-                                          ip=node_container_config.docker_gw_bridge_ip,
-                                          logger=logging.getLogger())
+                                          ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2644,11 +2629,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.config_filebeat(emulation_env_config=execution.emulation_env_config,
-                                           container=node_container_config,
+                                           container=container_config,
                                            logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
@@ -2668,11 +2652,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.config_packetbeat(emulation_env_config=execution.emulation_env_config,
-                                             container=node_container_config, logger=logging.getLogger())
+                                             container=container_config, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2691,11 +2674,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config.physical_host_ip == GeneralUtil.get_host_ip():
             HostController.config_metricbeat(emulation_env_config=execution.emulation_env_config,
-                                             container=node_container_config, logger=logging.getLogger())
+                                             container=container_config, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2714,11 +2696,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config.physical_host_ip == GeneralUtil.get_host_ip():
             HostController.config_heartbeat(emulation_env_config=execution.emulation_env_config,
-                                            container=node_container_config, logger=logging.getLogger())
+                                            container=container_config, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2738,7 +2719,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         host_statuses_and_ips = \
-            HostController.get_host_monitor_threads_statuses(emulation_env_config=execution.emulation_env_config)
+            HostController.get_host_monitor_threads_statuses(emulation_env_config=execution.emulation_env_config,
+                                                             physical_server_ip=GeneralUtil.get_host_ip())
         host_statuses = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
                                  host_statuses_and_ips))
         return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO(
@@ -2957,11 +2939,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             OSSECIDSController.stop_ossec_ids(emulation_env_config=execution.emulation_env_config,
-                                              ip=node_container_config.docker_gw_bridge_ip)
+                                              ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2980,11 +2961,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config,
-                                               ip=node_container_config.docker_gw_bridge_ip)
+                                               ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3039,11 +3019,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             OSSECIDSController.start_ossec_ids_manager(emulation_env_config=execution.emulation_env_config,
-                                                       ip=node_container_config.docker_gw_bridge_ip)
+                                                       ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3062,11 +3041,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             OSSECIDSController.stop_ossec_ids_manager(emulation_env_config=execution.emulation_env_config,
-                                                      ip=node_container_config.docker_gw_bridge_ip)
+                                                      ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3085,11 +3063,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                              ip=node_container_config.docker_gw_bridge_ip)
+                                                              ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3108,11 +3085,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                             ip=node_container_config.docker_gw_bridge_ip)
+                                                             ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3377,11 +3353,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             SnortIDSController.stop_snort_ids(emulation_env_config=execution.emulation_env_config,
-                                              ip=node_container_config.docker_gw_bridge_ip)
+                                              ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3400,11 +3375,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             SnortIDSController.stop_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                               ip=node_container_config.docker_gw_bridge_ip)
+                                                               ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3423,11 +3397,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             SnortIDSController.start_snort_ids(emulation_env_config=execution.emulation_env_config,
-                                               ip=node_container_config.docker_gw_bridge_ip)
+                                               ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3446,11 +3419,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                                ip=node_container_config.docker_gw_bridge_ip)
+                                                                ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3524,11 +3496,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             SnortIDSController.start_snort_manager(emulation_env_config=execution.emulation_env_config,
-                                                   ip=node_container_config.docker_gw_bridge_ip)
+                                                   ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3547,11 +3518,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             SnortIDSController.stop_snort_manager(emulation_env_config=execution.emulation_env_config,
-                                                  ip=node_container_config.docker_gw_bridge_ip)
+                                                  ip=container_config.docker_gw_bridge_ip)
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3741,11 +3711,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(
-            ip=request.containerIp)
-        if node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
+        if container_config is not None:
             HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                     ip=node_container_config.docker_gw_bridge_ip,
+                                                     ip=container_config.docker_gw_bridge_ip,
                                                      logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:

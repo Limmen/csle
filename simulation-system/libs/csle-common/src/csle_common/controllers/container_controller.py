@@ -6,7 +6,6 @@ import docker
 import re
 import os
 import grpc
-import socket
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
@@ -23,6 +22,7 @@ from csle_common.dao.emulation_config.docker_stats_managers_info import DockerSt
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.controllers.management_system_controller import ManagementSystemController
 from csle_common.dao.emulation_config.config import Config
+from csle_common.util.general_util import GeneralUtil
 
 
 class ContainerController:
@@ -519,8 +519,7 @@ class ContainerController:
         :param docker_stats_manager_config: the docker stats manager configuration
         :return: None
         """
-        hostname = socket.gethostname()
-        ip = socket.gethostbyname(hostname)
+        ip = GeneralUtil.get_host_ip()
         docker_stats_monitor_dto = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
             ip=ip, port=docker_stats_manager_config.docker_stats_manager_port)
         return docker_stats_monitor_dto
@@ -701,8 +700,7 @@ class ContainerController:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
-        hostname = socket.gethostname()
-        return [socket.gethostbyname(hostname)]
+        return [GeneralUtil.get_host_ip()]
 
     @staticmethod
     def get_docker_stats_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:

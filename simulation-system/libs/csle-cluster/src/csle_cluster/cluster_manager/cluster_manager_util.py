@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Union
 import logging
 from requests import get
 import csle_common.constants.constants as constants
@@ -8,6 +8,7 @@ from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManager
 from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManagersInfo
 from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
 from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
@@ -1960,3 +1961,32 @@ class ClusterManagerUtil:
             traffic_managers_info=merged_traffic_managers_info
         )
         return merged_execution_info
+
+    @staticmethod
+    def get_container_config(execution: EmulationExecution, ip: str) -> Union[NodeContainerConfig, None]:
+        """
+        Utility method for checking if a given IP matches som container IP in a given execution and then returns
+        the corresponding configuration
+
+        :param execution: the execution to check
+        :param ip: the ip to check
+        :return: the IP if it matches, otherwise None
+        """
+        node_container_config = execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip)
+        if node_container_config is not None and node_container_config.physical_host_ip == GeneralUtil.get_host_ip():
+            return node_container_config
+        elif (ip in execution.emulation_env_config.kafka_config.container.get_ips() or
+              ip == execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip) \
+                and execution.emulation_env_config.kafka_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            return execution.emulation_env_config.kafka_config.container
+        elif (ip in execution.emulation_env_config.elk_config.container.get_ips() or
+              ip == execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip) \
+                and execution.emulation_env_config.elk_config.container.physical_host_ip == GeneralUtil.get_host_ip():
+            return execution.emulation_env_config.elk_config.container
+        elif execution.emulation_env_config.sdn_controller_config is not None and \
+                (ip in execution.emulation_env_config.sdn_controller_config.container.get_ips() or
+                 ip == execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip) \
+                and execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == \
+                GeneralUtil.get_host_ip():
+            return execution.emulation_env_config.sdn_controller_config.container
+        return None
