@@ -634,7 +634,11 @@ class KAFKA:
     AUTO_OFFSET_RESET_PROPERTY = "auto.offset.reset"
     EARLIEST_OFFSET = "earliest"
     PORT = 9092
+    EXTERNAL_PORT = 9292
+    INTERNAL_IP_PLACEHOLDER = "INTERNAL_IP"
+    EXTERNAL_IP_PLACEHOLDER = "EXTERNAL_IP"
     DIR = "/usr/local/kafka/logs/"
+    KAFKA_CONFIG_FILE = "/usr/local/kafka/config/server.properties"
 
 
 class ELK:

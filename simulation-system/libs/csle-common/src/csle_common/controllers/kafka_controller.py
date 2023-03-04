@@ -9,6 +9,7 @@ import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.kafka_manager.query_kafka_server
 import csle_collector.kafka_manager.kafka_manager_util
+import csle_collector.constants.constants as collector_constants
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
@@ -173,6 +174,34 @@ class KafkaController:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
             return kafka_dto
+
+    @staticmethod
+    def configure_broker_ips(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Method for configuring the broker IPs on the Kafka container
+
+        :param emulation_env_config: the emulation env config
+        :return: a KafkaDTO with the status of the server
+        """
+        Logger.__call__().get_logger().info(
+            f"Configuring broker IPs on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
+
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
+                                    ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+        sftp_client = emulation_env_config.get_connection(
+            ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip).open_sftp()
+        remote_file = sftp_client.open(collector_constants.KAFKA.KAFKA_CONFIG_FILE)
+
+        try:
+            file_contents = remote_file.read()
+            file_contents = file_contents.decode()
+            file_contents = file_contents.replace(collector_constants.KAFKA.INTERNAL_IP_PLACEHOLDER,
+                                                  emulation_env_config.kafka_config.container.get_ips()[0])
+            file_contents = file_contents.replace(collector_constants.KAFKA.EXTERNAL_IP_PLACEHOLDER,
+                                                  emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+            remote_file.write(data=file_contents)
+        finally:
+            remote_file.close()
 
     @staticmethod
     def start_kafka_server(emulation_env_config: EmulationEnvConfig) -> \

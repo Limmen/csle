@@ -225,9 +225,13 @@ class EmulationEnvController:
         """
         if emulation_env_config.kafka_config.container.physical_host_ip != physical_server_ip:
             return
-        steps = 2
+        steps = 3
         current_step = 1
         logger.info("-- Configuring the kafka container --")
+
+        logger.info(
+            f"-- Kafka configuration step {current_step}/{steps}: Configuring the IP addresses of the kafka brokers --")
+        KafkaController.configure_broker_ips(emulation_env_config=emulation_env_config)
 
         logger.info(
             f"-- Kafka configuration step {current_step}/{steps}: Restarting the Kafka server --")
