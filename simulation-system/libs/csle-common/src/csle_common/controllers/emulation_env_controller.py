@@ -231,18 +231,19 @@ class EmulationEnvController:
 
         logger.info(
             f"-- Kafka configuration step {current_step}/{steps}: Configuring the IP addresses of the kafka brokers --")
-        KafkaController.configure_broker_ips(emulation_env_config=emulation_env_config)
+        KafkaController.configure_broker_ips(emulation_env_config=emulation_env_config, logger=logger)
+        current_step += 1
 
         logger.info(
             f"-- Kafka configuration step {current_step}/{steps}: Restarting the Kafka server --")
-        KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config)
+        KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config, logger=logger)
         time.sleep(20)
-        KafkaController.start_kafka_server(emulation_env_config=emulation_env_config)
+        KafkaController.start_kafka_server(emulation_env_config=emulation_env_config, logger=logger)
         time.sleep(20)
 
         current_step += 1
         logger.info(f"-- Kafka configuration step {current_step}/{steps}: Create topics --")
-        KafkaController.create_topics(emulation_env_config=emulation_env_config)
+        KafkaController.create_topics(emulation_env_config=emulation_env_config, logger=logger)
 
     @staticmethod
     def start_custom_traffic(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,

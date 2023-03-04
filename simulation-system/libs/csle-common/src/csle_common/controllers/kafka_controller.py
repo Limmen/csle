@@ -89,14 +89,15 @@ class KafkaController:
         time.sleep(2)
 
     @staticmethod
-    def create_topics(emulation_env_config: EmulationEnvConfig) -> None:
+    def create_topics(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         A method that sends a request to the KafkaManager to create topics according to the given configuration
 
         :param emulation_env_config: the configuration of the emulation env
+        :param logger: the logger to use for logging
         :return: None
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"creating kafka topics on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
         KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
         kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
@@ -109,13 +110,13 @@ class KafkaController:
 
             if not kafka_dto.running:
                 # Open a gRPC session
-                Logger.__call__().get_logger().info("Kafka server is not running, starting it.")
+                logger.info("Kafka server is not running, starting it.")
 
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
                 time.sleep(20)
 
             for topic in emulation_env_config.kafka_config.topics:
-                Logger.__call__().get_logger().info(f"Creating topic: {topic.name}")
+                logger.info(f"Creating topic: {topic.name}")
                 csle_collector.kafka_manager.query_kafka_server.create_topic(
                     stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas,
                     retention_time_hours=topic.retention_time_hours
@@ -155,15 +156,16 @@ class KafkaController:
             return kafka_dto
 
     @staticmethod
-    def stop_kafka_server(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_kafka_server(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Method for requesting the KafkaManager to stop the Kafka server
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: a KafkaDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping kafka server on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
         KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
 
@@ -176,22 +178,22 @@ class KafkaController:
             return kafka_dto
 
     @staticmethod
-    def configure_broker_ips(emulation_env_config: EmulationEnvConfig) -> None:
+    def configure_broker_ips(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Method for configuring the broker IPs on the Kafka container
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: a KafkaDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Configuring broker IPs on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
 
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
         sftp_client = emulation_env_config.get_connection(
             ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip).open_sftp()
-        remote_file = sftp_client.open(collector_constants.KAFKA.KAFKA_CONFIG_FILE)
-
+        remote_file = sftp_client.open(collector_constants.KAFKA.KAFKA_CONFIG_FILE, mode="r")
         try:
             file_contents = remote_file.read()
             file_contents = file_contents.decode()
@@ -199,20 +201,27 @@ class KafkaController:
                                                   emulation_env_config.kafka_config.container.get_ips()[0])
             file_contents = file_contents.replace(collector_constants.KAFKA.EXTERNAL_IP_PLACEHOLDER,
                                                   emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+        finally:
+            remote_file.close()
+
+        remote_file = sftp_client.open(collector_constants.KAFKA.KAFKA_CONFIG_FILE, mode="w")
+        try:
             remote_file.write(data=file_contents)
+            remote_file.flush()
         finally:
             remote_file.close()
 
     @staticmethod
-    def start_kafka_server(emulation_env_config: EmulationEnvConfig) -> \
+    def start_kafka_server(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> \
             csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Method for requesting the KafkaManager to start the Kafka server
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: a KafkaDTO with the status of the server
         """
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Starting kafka server on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip}")
         KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
 

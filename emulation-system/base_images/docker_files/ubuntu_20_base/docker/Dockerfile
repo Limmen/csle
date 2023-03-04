@@ -70,7 +70,7 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/kafka/3.0.0/kafk
 ADD docker_files/common/kafka /etc/init.d/kafka
 RUN chmod 755 /etc/init.d/kafka
 ADD docker_files/common/server.properties /usr/local/kafka/config/server.properties
-RUN chmod 755 /usr/local/kafka/config/server.properties
+RUN chmod 777 /usr/local/kafka/config/server.properties
 
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup

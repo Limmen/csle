@@ -2804,7 +2804,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         if execution.emulation_env_config.kafka_config.container.physical_host_ip == GeneralUtil.get_host_ip():
-            KafkaController.create_topics(emulation_env_config=execution.emulation_env_config)
+            KafkaController.create_topics(emulation_env_config=execution.emulation_env_config,
+                                          logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
@@ -2844,7 +2845,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         if execution.emulation_env_config.kafka_config.container.physical_host_ip == GeneralUtil.get_host_ip():
-            KafkaController.stop_kafka_server(emulation_env_config=execution.emulation_env_config)
+            KafkaController.stop_kafka_server(emulation_env_config=execution.emulation_env_config,
+                                              logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2864,7 +2866,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         if execution.emulation_env_config.kafka_config.container.physical_host_ip == GeneralUtil.get_host_ip():
-            KafkaController.start_kafka_server(emulation_env_config=execution.emulation_env_config)
+            KafkaController.start_kafka_server(emulation_env_config=execution.emulation_env_config,
+                                               logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)

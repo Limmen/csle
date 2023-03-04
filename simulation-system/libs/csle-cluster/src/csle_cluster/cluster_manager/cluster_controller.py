@@ -3662,8 +3662,9 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Installing libraries on containers deployed on server: {ip}")
-            ClusterController.install_libraries(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+            ClusterController.install_libraries(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
         for ip in physical_servers:
