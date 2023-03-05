@@ -958,7 +958,7 @@ const LogsAdmin = (props) => {
                 <Card className="subCard">
                     <Card.Header>
                         <Button
-                            onClick={() => props.setClusterManagerLogsOpen(!props.clusterManagerLogs)}
+                            onClick={() => props.setClusterManagerLogsOpen(!props.clusterManagerLogsOpen)}
                             aria-controls="clusterManagerLogsBody"
                             aria-expanded={props.clusterManagerLogsOpen}
                             variant="link"

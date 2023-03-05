@@ -392,8 +392,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         data = ""
         if os.path.exists(request.name):
             with open(request.name, 'r') as fp:
-                data = fp.read()
-        logs = data.split("\n")
+                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+        logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getFlaskLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetFlaskLogsMsg,
@@ -412,9 +412,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         if os.path.exists(path):
             with open(path, 'r') as fp:
-                data = fp.readlines()
-                tail = data[-100:]
-                logs = tail
+                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPostrgreSQLLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
@@ -436,9 +435,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
                     and not constants.FILE_PATTERNS.GZ_SUFFIX in item:
                 with open(item, 'r') as fp:
-                    data = fp.readlines()
-                    tail = data[-100:]
-                    logs = logs + tail
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getDockerLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
@@ -486,9 +484,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
                     and constants.FILE_PATTERNS.GZ_SUFFIX not in item:
                 with open(item, 'r') as fp:
-                    data = fp.readlines()
-                    tail = data[-100:]
-                    logs = logs + tail
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getGrafanaLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
@@ -564,9 +561,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         if os.path.exists(path):
             with open(path, 'r') as fp:
-                data = fp.readlines()
-                tail = data[-100:]
-                logs = tail
+                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPrometheusLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
@@ -585,9 +581,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         if os.path.exists(path):
             with open(path, 'r') as fp:
-                data = fp.readlines()
-                tail = data[-100:]
-                logs = tail
+                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getDockerStatsManagerLogs(
@@ -606,9 +601,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         if os.path.exists(path):
             with open(path, 'r') as fp:
-                data = fp.readlines()
-                tail = data[-100:]
-                logs = tail
+                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getCsleLogFiles(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
@@ -4118,9 +4112,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         if os.path.exists(path):
             with open(path, 'r') as fp:
-                data = fp.readlines()
-                tail = data[-100:]
-                logs = tail
+                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
 

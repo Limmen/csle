@@ -1,5 +1,6 @@
 from typing import Dict, Any, List, Tuple, Union
 import logging
+import subprocess
 from requests import get
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -2015,3 +2016,30 @@ class ClusterManagerUtil:
         finally:
             remote_file.close()
         return cluster_manager_pb2.LogsDTO(logs=data)
+
+    @staticmethod
+    def tail(f, window=1) -> str:
+        """
+        Returns the last `window` lines of file `f` as a list of bytes.
+
+        :param f: the file object
+        :param window: the window size
+        :return: the parsed lines
+        """
+        if window == 0:
+            return ''
+        BUFSIZE = 1024
+        f.seek(0, 2)
+        end = f.tell()
+        nlines = window + 1
+        data = []
+        while nlines > 0 and end > 0:
+            i = max(0, end - BUFSIZE)
+            nread = min(end, BUFSIZE)
+
+            f.seek(i)
+            chunk = f.read(nread)
+            data.append(chunk)
+            nlines -= chunk.count("\n")
+            end -= nread
+        return '\n'.join(''.join(reversed(data)).splitlines()[-window:])
