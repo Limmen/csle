@@ -433,7 +433,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         for f in os.listdir(path):
             item = os.path.join(path, f)
-            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item:
+            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
+                    and not constants.FILE_PATTERNS.GZ_SUFFIX in item:
                 with open(item, 'r') as fp:
                     data = fp.readlines()
                     tail = data[-100:]
