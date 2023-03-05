@@ -57,6 +57,8 @@ const ContainersInfo = (props) => {
                                 <th>Image</th>
                                 <th>Os</th>
                                 <th>IPs</th>
+                                <th>External IP</th>
+                                <th>Physical server</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -68,6 +70,8 @@ const ContainersInfo = (props) => {
                                     <td>{container.name}</td>
                                     <td>{container.os}</td>
                                     <td>{getIps(container.ips_and_networks).join(", ")}</td>
+                                    <td>{container.docker_gw_bridge_ip}</td>
+                                    <td>{container.physical_host_ip}</td>
                                     <td className="containerRunningStatus"> Running</td>
                                     <td>
                                         <SpinnerOrButton

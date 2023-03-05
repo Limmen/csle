@@ -482,6 +482,8 @@ const Emulation = (props) => {
                                         <tr>
                                             <th>Container name</th>
                                             <th>IP Addresses</th>
+                                            <th>External IP</th>
+                                            <th>Physical host</th>
                                             <th>Operating system</th>
                                         </tr>
                                         </thead>
@@ -490,6 +492,8 @@ const Emulation = (props) => {
                                             <tr key={container.full_name_str + "-" + index}>
                                                 <td>{container.full_name_str}</td>
                                                 <td>{getIps(container.ips_and_networks).join(", ")}</td>
+                                                <td>{container.docker_gw_bridge_ip}</td>
+                                                <td>{container.physical_host_ip}</td>
                                                 <td>{container.os}</td>
                                             </tr>
                                         )}
@@ -521,6 +525,8 @@ const Emulation = (props) => {
                                         <thead>
                                         <tr>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Flag name</th>
                                             <th>Flag ID</th>
                                             <th>Path</th>
@@ -532,6 +538,8 @@ const Emulation = (props) => {
                                             flag_config.flags.map((flag, index) =>
                                                 <tr key={flag_config.ip + "-" + flag.id}>
                                                     <td>{flag_config.ip}</td>
+                                                    <td>{flag_config.docker_gw_bridge_ip}</td>
+                                                    <td>{flag_config.physical_host_ip}</td>
                                                     <td>{flag.name}</td>
                                                     <td>{flag.id}</td>
                                                     <td>{flag.path}</td>
@@ -564,6 +572,8 @@ const Emulation = (props) => {
                                         <thead>
                                         <tr>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Username</th>
                                             <th>Password</th>
                                             <th>Root</th>
@@ -574,6 +584,8 @@ const Emulation = (props) => {
                                             user_config.users.map((user, index) =>
                                                 <tr key={user_config.ip + "-" + user.username}>
                                                     <td>{user_config.ip}</td>
+                                                    <td>{user_config.docker_gw_bridge_ip}</td>
+                                                    <td>{user_config.physical_host_ip}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.pw}</td>
                                                     <td>{getRootStr(user.root)}</td>
@@ -646,6 +658,8 @@ const Emulation = (props) => {
                                         <thead>
                                         <tr>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Name</th>
                                             <th>Port</th>
                                             <th>Transport protocol</th>
@@ -656,6 +670,8 @@ const Emulation = (props) => {
                                         {emulation.vuln_config.vulnerabilities.map((vuln, index) =>
                                             <tr key={vuln.ip + "-" + vuln.name + "-" + index}>
                                                 <td>{vuln.ip}</td>
+                                                <td>{vuln.docker_gw_bridge_ip}</td>
+                                                <td>{vuln.physical_host_ip}</td>
                                                 <td>{vuln.name}</td>
                                                 <td>{vuln.port}</td>
                                                 <td>{getTransportProtocolStr(vuln.protocol)}</td>
@@ -689,6 +705,9 @@ const Emulation = (props) => {
                                     <Table striped bordered hover>
                                         <thead>
                                         <tr>
+                                            <th>IPs</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Container</th>
                                             <th>Memory</th>
                                             <th>CPUs</th>
@@ -697,6 +716,9 @@ const Emulation = (props) => {
                                         <tbody>
                                         {emulation.resources_config.node_resources_configurations.map((rc, index) =>
                                             <tr key={rc.container_name + "-" + index}>
+                                                <td>{getIps(rc.ips_and_network_configs)}</td>
+                                                <td>{rc.docker_gw_bridge_ip}</td>
+                                                <td>{rc.physical_host_ip}</td>
                                                 <td>{rc.container_name}</td>
                                                 <td>{rc.available_memory_gb}GB</td>
                                                 <td>{rc.num_cpus}</td>
@@ -790,6 +812,8 @@ const Emulation = (props) => {
                                         <thead>
                                         <tr>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Arrival process</th>
                                             <th>λ</th>
                                             <th>μ</th>
@@ -801,6 +825,8 @@ const Emulation = (props) => {
                                         <tbody>
                                         <tr key={emulation.traffic_config.client_population_config.ip}>
                                             <td>{emulation.traffic_config.client_population_config.ip}</td>
+                                            <td>{emulation.traffic_config.client_population_config.docker_gw_bridge_ip}</td>
+                                            <td>{emulation.traffic_config.client_population_config.physical_host_ip}</td>
                                             <td>{getArrivalProcessStr(emulation.traffic_config.client_population_config.client_process_type)}</td>
                                             <td>{emulation.traffic_config.client_population_config.lamb}</td>
                                             <td>{emulation.traffic_config.client_population_config.mu}</td>
@@ -876,6 +902,8 @@ const Emulation = (props) => {
                                         <tr>
                                             <th>Container</th>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Operating system</th>
                                             <th>Kafka port</th>
                                             <th>Kafka Manager GRPC API port</th>
@@ -889,6 +917,8 @@ const Emulation = (props) => {
                                         <tr key={emulation.kafka_config.container.full_name_str}>
                                             <td>{emulation.kafka_config.container.full_name_str}</td>
                                             <td>{getIps(emulation.kafka_config.container.ips_and_networks)}</td>
+                                            <td>{emulation.kafka_config.container.docker_gw_bridge_ip}</td>
+                                            <td>{emulation.kafka_config.container.physical_host_ip}</td>
                                             <td>{emulation.kafka_config.container.os}</td>
                                             <td>{emulation.kafka_config.kafka_port}</td>
                                             <td>{emulation.kafka_config.kafka_manager_port}</td>
@@ -970,6 +1000,8 @@ const Emulation = (props) => {
                                         <tr>
                                             <th>Container</th>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>Operating system</th>
                                             <th>Elasticsearch port</th>
                                             <th>ELK Manager GRPC API port</th>
@@ -985,6 +1017,8 @@ const Emulation = (props) => {
                                         <tr key={emulation.elk_config.container.full_name_str}>
                                             <td>{emulation.elk_config.container.full_name_str}</td>
                                             <td>{getIps(emulation.elk_config.container.ips_and_networks)}</td>
+                                            <td>{emulation.elk_config.container.docker_gw_bridge_ip}</td>
+                                            <td>{emulation.elk_config.container.physical_host_ip}</td>
                                             <td>{emulation.elk_config.container.os}</td>
                                             <td>{emulation.elk_config.elastic_port}</td>
                                             <td>{emulation.elk_config.elk_manager_port}</td>
@@ -1062,6 +1096,8 @@ const Emulation = (props) => {
                                         <thead>
                                         <tr>
                                             <th>Traffic manager IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
                                             <th>GRPC API port</th>
                                             <th>Log file</th>
                                             <th>GRPC Max workers</th>
@@ -1071,6 +1107,8 @@ const Emulation = (props) => {
                                         {emulation.traffic_config.node_traffic_configs.map((node_traffic_config, index) =>
                                             <tr key={node_traffic_config.ip + "-" + index}>
                                                 <td>{node_traffic_config.ip}</td>
+                                                <td>{node_traffic_config.docker_gw_bridge_ip}</td>
+                                                <td>{node_traffic_config.physical_host_ip}</td>
                                                 <td>{node_traffic_config.traffic_manager_port}</td>
                                                 <td>{node_traffic_config.traffic_manager_log_dir}{node_traffic_config.traffic_manager_log_file}</td>
                                                 <td>{node_traffic_config.traffic_manager_max_workers}</td>

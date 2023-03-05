@@ -860,7 +860,7 @@ def statsmanager(port: int, log_file: str, log_dir: str, max_workers: int) -> No
 @click.argument('max_workers', default=10, type=int)
 @click.argument('log_file', default="cluster_manager.log", type=str)
 @click.argument('log_dir', default="/var/log/csle", type=str)
-@click.argument('port', default=50046, type=int)
+@click.argument('port', default=50041, type=int)
 @click.command("clustermanager", help="port")
 def clustermanager(port: int, log_file: str, log_dir: str, max_workers: int) -> None:
     """

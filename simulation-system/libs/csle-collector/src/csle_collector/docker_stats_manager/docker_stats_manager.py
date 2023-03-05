@@ -134,7 +134,7 @@ class DockerStatsThread(threading.Thread):
 class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.
                                  DockerStatsManagerServicer):
     """
-    gRPC server for managing a the docker statsm monitor server.
+    gRPC server for managing a the docker stats monitor server.
     Allows to start/stop the docker stats monitor remotely and also to query the
     state of the server.
     """
@@ -148,7 +148,11 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)
         self.docker_stats_monitor_threads = []
-        logging.info("Setting up DockerStatsManager")
+        self.hostname = socket.gethostname()
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.ip = s.getsockname()[0]
+        logging.info(f"Setting up DockerStatsManager, hostname: {self.hostname}, ip: {self.ip}")
 
     def getDockerStatsMonitorStatus(
             self, request: csle_collector.docker_stats_manager.docker_stats_manager_pb2.GetDockerStatsMonitorStatusMsg,

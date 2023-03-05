@@ -10,6 +10,7 @@ import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
 import csle_collector.docker_stats_manager.docker_stats_util
+import csle_collector.constants.constants as collector_constants
 from csle_common.util.docker_util import DockerUtil
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
@@ -470,18 +471,19 @@ class ContainerController:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             container_ip_dtos = []
             for c in execution.emulation_env_config.containers_config.containers:
-                name = c.get_full_name()
-                ip = c.get_ips()[0]
-                container_ip_dtos.append(csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp(
-                    ip=ip, container=name))
+                if c.physical_host_ip == physical_server_ip:
+                    name = c.get_full_name()
+                    ip = c.get_ips()[0]
+                    container_ip_dtos.append(csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp(
+                        ip=ip, container=name))
             logger.info("connected")
 
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name,
-                kafka_ip=execution.emulation_env_config.kafka_config.container.get_ips()[0],
+                kafka_ip=execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
                 stats_queue_maxsize=1000,
                 time_step_len_seconds=execution.emulation_env_config.docker_stats_manager_config.time_step_len_seconds,
-                kafka_port=execution.emulation_env_config.kafka_config.kafka_port,
+                kafka_port=collector_constants.KAFKA.EXTERNAL_PORT,
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
