@@ -4095,3 +4095,19 @@ def get_container_logs(
     )
     logs = stub.getContainerLogs(operation_msg, timeout=timeout)
     return logs
+
+
+def get_cluster_manager_logs(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+    """
+    Fetches the logs of the cluster manager on a given physical node
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a LogsDTO with the logs
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetClusterManagerLogsMsg()
+    logs_dto = stub.getClusterManagerLogs(get_msg, timeout=timeout)
+    return logs_dto

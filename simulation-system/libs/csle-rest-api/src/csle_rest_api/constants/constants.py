@@ -52,6 +52,7 @@ class MGMT_WEBAPP:
     POSTGRESQL_RESOURCE = "postgresql"
     DOCKER_RESOURCE = "docker"
     FLASK_RESOURCE = "flask"
+    CLUSTERMANAGER_RESOURCE = "clustermanager"
     NODE_EXPORTER_RESOURCE = "node-exporter"
     PROMETHEUS_RESOURCE = "prometheus"
     EMULATIONS_RESOURCE = "emulations"

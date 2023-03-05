@@ -1045,6 +1045,11 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.GetContainerLogsMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
                 )
+        self.getClusterManagerLogs = channel.unary_unary(
+                '/ClusterManager/getClusterManagerLogs',
+                request_serializer=cluster__manager__pb2.GetClusterManagerLogsMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.LogsDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -2287,6 +2292,12 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getClusterManagerLogs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -3318,6 +3329,11 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             'getContainerLogs': grpc.unary_unary_rpc_method_handler(
                     servicer.getContainerLogs,
                     request_deserializer=cluster__manager__pb2.GetContainerLogsMsg.FromString,
+                    response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
+            ),
+            'getClusterManagerLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.getClusterManagerLogs,
+                    request_deserializer=cluster__manager__pb2.GetClusterManagerLogsMsg.FromString,
                     response_serializer=cluster__manager__pb2.LogsDTO.SerializeToString,
             ),
     }
@@ -6829,6 +6845,23 @@ class ClusterManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getContainerLogs',
             cluster__manager__pb2.GetContainerLogsMsg.SerializeToString,
+            cluster__manager__pb2.LogsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getClusterManagerLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/getClusterManagerLogs',
+            cluster__manager__pb2.GetClusterManagerLogsMsg.SerializeToString,
             cluster__manager__pb2.LogsDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

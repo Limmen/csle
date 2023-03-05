@@ -210,7 +210,11 @@ service ClusterManager {
   rpc getKafkaManagerLogs(GetKafkaManagerLogsMsg) returns (LogsDTO) {}
   rpc getClientManagerLogsMsg(GetClientManagerLogsMsg) returns (LogsDTO) {}
   rpc getContainerLogs(GetContainerLogsMsg) returns (LogsDTO) {}
+  rpc getClusterManagerLogs(GetClusterManagerLogsMsg) returns (LogsDTO) {}
 }
+
+// Message that the client sends to get the flask logs
+message GetClusterManagerLogsMsg {}
 
 // Message that the client sends when requesting to get logs of a specific container
 message GetContainerLogsMsg {

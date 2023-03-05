@@ -150,6 +150,28 @@ def flask_logs():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def cluster_manager_logs():
+    """
+    The /logs/clustermanager resource.
+
+    :return: The Clustermanager logs
+    """
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+    json_data = json.loads(request.data)
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    data_dict = ClusterController.get_cluster_manager_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def docker_logs():

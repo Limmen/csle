@@ -141,6 +141,7 @@ A REST API for the CSLE management platform.
 | `/logs/postgresql?token=<valid_token>`                                                                | Get logs of PostgreSQL                                         | `GET`                                   |
 | `/logs/docker?token=<valid_token>`                                                                    | Get logs of Docker engine                                      | `GET`                                   |
 | `/logs/flask?token=<valid_token>`                                                                     | Get logs of Flask                                              | `GET`                                   |
+| `/logs/clustermanager?token=<valid_token>`                                                            | Get logs of the Cluster manager                                | `GET`                                   |
 | `/logs/cadvisor?token=<valid_token>`                                                                  | Get logs of CAdvisor                                           | `GET`                                   |
 | `/logs/pgadmin?token=<valid_token>`                                                                   | Get logs of pgAdmin                                            | `GET`                                   |
 | `/logs/container?token=<valid_token>&container=<container_name>`                                      | Get logs of a specific container                               | `POST`                                  |

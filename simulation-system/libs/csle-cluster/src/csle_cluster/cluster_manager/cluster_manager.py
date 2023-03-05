@@ -4102,6 +4102,27 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             data = output
             return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=data)
 
+    def getClusterManagerLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetClusterManagerLogsMsg,
+                     context: grpc.ServicerContext) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+        """
+        Gets the logs of the cluster manager
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with logs
+        """
+        logging.info("Getting the cluster manager logs")
+        config = Config.get_current_config()
+        path = config.cluster_manager_log_file
+        logs = []
+        if os.path.exists(path):
+            with open(path, 'r') as fp:
+                data = fp.readlines()
+                tail = data[-100:]
+                logs = tail
+        return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
+
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "cluster_manager.log") -> None:

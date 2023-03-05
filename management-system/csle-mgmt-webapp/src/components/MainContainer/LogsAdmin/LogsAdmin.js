@@ -26,7 +26,7 @@ import {
     DOCKER_STATS_MANAGER_SUBRESOURCE, HTTP_REST_POST, HTTP_REST_GET,
     LOGS_RESOURCE, TOKEN_QUERY_PARAM, FILE_RESOURCE, CADVISOR_RESOURCE, PGADMIN_RESOURCE,
     GRAFANA_RESOURCE, NODE_EXPORTER_RESOURCE, PROMETHEUS_RESOURCE, NGINX_RESOURCE, DOCKER_RESOURCE,
-    POSTGRESQL_RESOURCE, FLASK_RESOURCE
+    POSTGRESQL_RESOURCE, FLASK_RESOURCE, CLUSTER_MANAGER_RESOURCE
 } from "../../Common/constants";
 
 /**
@@ -61,6 +61,9 @@ const LogsAdmin = (props) => {
     const [loadingFlaskLogs, setLoadingFlaskLogs] = useState(true);
     const [flaskLogsOpen, setFlaskLogsOpen] = useState(false);
     const [flaskLogs, setFlaskLogs] = useState([]);
+    const [loadingClusterManagerLogs, setLoadingClusterManagerLogs] = useState(true);
+    const [clusterManagerLogsOpen, setClusterManagerLogsOpen] = useState(false);
+    const [clusterManagerLogs, setClusterManagerLogs] = useState([]);
     const [loadingPrometheusLogs, setLoadingPrometheusLogs] = useState(true);
     const [prometheusLogsOpen, setPrometheusLogsOpen] = useState(false);
     const [prometheusLogs, setPrometheusLogs] = useState([]);
@@ -404,6 +407,34 @@ const LogsAdmin = (props) => {
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
+    const fetchClusterManagerLogs = useCallback((node_ip) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${CLUSTER_MANAGER_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: node_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingClusterManagerLogs(false)
+                setClusterManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
     const fetchDockerLogs = useCallback((node_ip) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_RESOURCE}`
@@ -475,6 +506,7 @@ const LogsAdmin = (props) => {
                     setLoadingDockerLogs(true)
                     setLoadingPostgresqlLogs(true)
                     setLoadingFlaskLogs(true)
+                    setLoadingClusterManagerLogs(true)
                     fetchStatsManagerLogs(serverClusterIPIds[0].value.ip)
                     fetchNodeExporterLogs(serverClusterIPIds[0].value.ip)
                     fetchPrometheusLogs(serverClusterIPIds[0].value.ip)
@@ -484,6 +516,7 @@ const LogsAdmin = (props) => {
                     fetchCsleLogFiles(serverClusterIPIds[0].value.ip)
                     fetchNginxLogs(serverClusterIPIds[0].value.ip)
                     fetchFlaskLogs(serverClusterIPIds[0].value.ip)
+                    fetchClusterManagerLogs(serverClusterIPIds[0].value.ip)
                     fetchPostgresqlLogs(serverClusterIPIds[0].value.ip)
                     fetchDockerLogs(serverClusterIPIds[0].value.ip)
                 } else {
@@ -493,7 +526,8 @@ const LogsAdmin = (props) => {
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchStatsManagerLogs,
         fetchNodeExporterLogs, fetchPrometheusLogs, fetchCAdvisorLogs, fetchPgAdminLogs, fetchGrafanaLogs,
-        fetchCsleLogFiles, fetchNginxLogs, fetchFlaskLogs, fetchPostgresqlLogs, fetchDockerLogs]);
+        fetchCsleLogFiles, fetchNginxLogs, fetchFlaskLogs, fetchPostgresqlLogs, fetchDockerLogs,
+        fetchClusterManagerLogs]);
 
     const refresh = () => {
         setLoadingServerCluster(true)
@@ -509,6 +543,7 @@ const LogsAdmin = (props) => {
         setLoadingDockerLogs(true)
         setLoadingPostgresqlLogs(true)
         setLoadingFlaskLogs(true)
+        setLoadingClusterManagerLogs(true)
         fetchServerCluster()
     }
 
@@ -525,6 +560,7 @@ const LogsAdmin = (props) => {
         setLoadingDockerLogs(true)
         setLoadingPostgresqlLogs(true)
         setLoadingFlaskLogs(true)
+        setLoadingClusterManagerLogs(true)
         fetchStatsManagerLogs(physicalServerIp.value.ip)
         fetchNodeExporterLogs(physicalServerIp.value.ip)
         fetchPrometheusLogs(physicalServerIp.value.ip)
@@ -534,6 +570,7 @@ const LogsAdmin = (props) => {
         fetchCsleLogFiles(physicalServerIp.value.ip)
         fetchNginxLogs(physicalServerIp.value.ip)
         fetchFlaskLogs(physicalServerIp.value.ip)
+        fetchClusterManagerLogs(physicalServerIp.value.ip)
         fetchPostgresqlLogs(physicalServerIp.value.ip)
         fetchDockerLogs(physicalServerIp.value.ip)
     }
@@ -571,6 +608,7 @@ const LogsAdmin = (props) => {
                 setLoadingDockerLogs(true)
                 setLoadingPostgresqlLogs(true)
                 setLoadingFlaskLogs(true)
+                setLoadingClusterManagerLogs(true)
                 fetchStatsManagerLogs(fServerCluster[0].value.ip)
                 fetchNodeExporterLogs(fServerCluster[0].value.ip)
                 fetchPrometheusLogs(fServerCluster[0].value.ip)
@@ -580,6 +618,7 @@ const LogsAdmin = (props) => {
                 fetchCsleLogFiles(fServerCluster[0].value.ip)
                 fetchNginxLogs(fServerCluster[0].value.ip)
                 fetchFlaskLogs(fServerCluster[0].value.ip)
+                fetchClusterManagerLogs(fServerCluster[0].value.ip)
                 fetchPostgresqlLogs(fServerCluster[0].value.ip)
                 fetchDockerLogs(fServerCluster[0].value.ip)
             }
@@ -915,6 +954,32 @@ const LogsAdmin = (props) => {
                         </div>
                     </Collapse>
                 </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => props.setClusterManagerLogsOpen(!props.clusterManagerLogs)}
+                            aria-controls="clusterManagerLogsBody"
+                            aria-expanded={props.clusterManagerLogsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Cluster manager logs
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                            </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={props.clusterManagerLogsOpen}>
+                        <div id="clusterManagerLogsBody" className="cardBodyHidden">
+                            <h4>
+                                Last 100 log lines:
+                            </h4>
+                            <div className="table-responsive">
+                                <SpinnerOrLogs loadingLogs={props.loadingClusterManagerLogs}
+                                               logs={props.clusterManagerLogs}/>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
             </div>
         )
     }
@@ -1117,6 +1182,7 @@ const LogsAdmin = (props) => {
         setLoadingDockerLogs(true)
         setLoadingPostgresqlLogs(true)
         setLoadingFlaskLogs(true)
+        setLoadingClusterManagerLogs(true)
         fetchServerCluster()
     }, [fetchServerCluster]);
 
@@ -1179,6 +1245,10 @@ const LogsAdmin = (props) => {
                                 loadingFlaskLogs={loadingFlaskLogs} flaskLogs={flaskLogs}
                                 postgresqlLogsOpen={postgresqlLogsOpen} setPostgresqlLogsOpen={setPostgresqlLogsOpen}
                                 loadingPostgresqlLogs={loadingPostgresqlLogs} postgresqlLogs={postgresqlLogs}
+                                clusterManagerLogsOpen={clusterManagerLogsOpen}
+                                setClusterManagerLogsOpen={setClusterManagerLogsOpen}
+                                loadingClusterManagerLogs={loadingClusterManagerLogs}
+                                clusterManagerLogs={clusterManagerLogs}
             />
         </div>
     );

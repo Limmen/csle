@@ -4269,3 +4269,18 @@ class ClusterController:
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_container_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_cluster_manager_logs(ip: str, port: int) -> Dict[str, Any]:
+        """
+        Gets the cluster manager logs
+
+        :param ip: the ip of the node where to get the cluster manager logs
+        :param port: the port of the cluster manager
+        :return: A DTO with the log files
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_cluster_manager_logs(stub)
+            return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
