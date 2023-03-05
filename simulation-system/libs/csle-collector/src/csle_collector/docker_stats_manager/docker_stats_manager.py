@@ -54,7 +54,9 @@ class DockerStatsThread(threading.Thread):
         self.kafka_ip = kafka_ip
         self.kafka_port = kafka_port
         self.hostname = socket.gethostname()
-        self.ip = socket.gethostbyname(self.hostname)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.ip = s.getsockname()[0]
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.kafka_port}",
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
