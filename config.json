@@ -29,6 +29,7 @@
   "csle_mgmt_webapp_pid_file": "/var/log/csle/csle_mgmt_webapp.pid",
   "node_exporter_log_file": "/var/log/csle/node_exporter.log",
   "flask_log_file": "/var/log/csle/flask.log",
+  "cluster_manager_log_file": "/var/log/csle/cluster_manager.log",
   "docker_stats_manager_log_file": "docker_stats_manager.log",
   "docker_stats_manager_log_dir": "/var/log/csle/",
   "docker_stats_manager_port": 50051,

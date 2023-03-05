@@ -29,7 +29,7 @@ class Config:
                  cluster_config: ClusterConfig, node_exporter_log_file: str,
                  allow_registration: bool, grafana_username: str, grafana_password: str,
                  pgadmin_username: str, pgadmin_password: str, postgresql_log_dir: str, nginx_log_dir: str,
-                 flask_log_file: str):
+                 flask_log_file: str, cluster_manager_log_file: str):
         """
         Initializes the DTO
 
@@ -82,6 +82,7 @@ class Config:
         :param postgresql_log_dir: the log directory for postgresql
         :param nginx_log_dir: the log directory for Nginx
         :param flask_log_file: the log file of Flask
+        :param cluster_manager_log_file: the log file of the cluster manager
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
@@ -131,6 +132,7 @@ class Config:
         self.postgresql_log_dir = postgresql_log_dir
         self.nginx_log_dir = nginx_log_dir
         self.flask_log_file = flask_log_file
+        self.cluster_manager_log_file = cluster_manager_log_file
         self.id = 1
 
     def to_dict(self) -> Dict[str, Any]:
@@ -186,6 +188,7 @@ class Config:
         d["postgresql_log_dir"] = self.postgresql_log_dir
         d["nginx_log_dir"] = self.nginx_log_dir
         d["flask_log_file"] = self.flask_log_file
+        d["cluster_manager_log_file"] = self.cluster_manager_log_file
         d["id"] = 1
         return d
 
@@ -524,6 +527,13 @@ class Config:
                 "value": self.flask_log_file
             }
         )
+        d["parameters"].append(
+            {
+                "id": 48,
+                "param": "cluster_manager_log_file",
+                "value": self.cluster_manager_log_file
+            }
+        )
         d["cluster_config"] = self.cluster_config.to_dict()
         return d
 
@@ -581,7 +591,9 @@ class Config:
                      pgadmin_password=d["pgadmin_password"],
                      postgresql_log_dir=d["postgresql_log_dir"],
                      nginx_log_dir=d["nginx_log_dir"],
-                     flask_log_file=d["flask_log_file"])
+                     flask_log_file=d["flask_log_file"],
+                     cluster_manager_log_file=d["cluster_manager_log_file"]
+                     )
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -645,7 +657,8 @@ class Config:
                      pgadmin_password=d["pgadmin_password"],
                      postgresql_log_dir=d["postgresql_log_dir"],
                      nginx_log_dir=d["nginx_log_dir"],
-                     flask_log_file=d["flask_log_file"])
+                     flask_log_file=d["flask_log_file"],
+                     cluster_manager_log_file=d["cluster_manager_log_file"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -691,7 +704,7 @@ class Config:
                f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password}," \
                f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}," \
                f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir}," \
-               f"flask_log_file: {self.flask_log_file}"
+               f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file}"
 
     def to_json_str(self) -> str:
         """
