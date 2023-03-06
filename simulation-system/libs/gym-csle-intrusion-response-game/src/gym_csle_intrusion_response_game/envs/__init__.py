@@ -1,1 +1,2 @@
-from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
+from gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender \
+    import IntrusionResponseGameLocalPOMDPDefenderEnv

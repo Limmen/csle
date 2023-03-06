@@ -75,7 +75,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.state.attacker_state())
 
         # Compute the reward
-        if isinstance(a1, List) or isinstance(a1, np.ndarray):
+        if isinstance(a1, list):
             a1 = a1[0]
         r = self.config.local_intrusion_response_game_config.R[0][a1][a2][self.state.s_idx]
 
@@ -161,13 +161,11 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        o = IntrusionResponseGameUtil.sample_next_observation(
-            Z=self.config.local_intrusion_response_game_config.Z,
-            O=self.config.local_intrusion_response_game_config.O,
-            s_prime_idx=self.state.s_idx, a1=0, a2=0)
-        self.trace.attacker_observations.append(o)
-        self.trace.defender_observations.append(o)
-        return np.array([o])
+        attacker_obs = self.state.attacker_observation()
+        defender_obs = self.state.defender_observation()
+        self.trace.attacker_observations.append(attacker_obs)
+        self.trace.defender_observations.append(defender_obs)
+        return defender_obs
 
     def render(self, mode: str = 'human'):
         """

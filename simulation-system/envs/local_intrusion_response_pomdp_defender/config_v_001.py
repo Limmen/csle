@@ -78,7 +78,8 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
         time_step_type=TimeStepType.DISCRETE,
-        gym_env_name="csle-intrusion-response-game-pomdp-defender-v1", env_parameters_config=env_parameters_config,
+        gym_env_name="csle-intrusion-response-game-local-pomdp-defender-v1",
+        env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
     return simulation_env_config
