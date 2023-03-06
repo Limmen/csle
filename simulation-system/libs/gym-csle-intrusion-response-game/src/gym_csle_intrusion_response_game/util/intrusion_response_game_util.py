@@ -247,7 +247,9 @@ class IntrusionResponseGameUtil:
         :return: the workflow utility
         """
         impact = 0
-        if reachable and not IntrusionResponseGameUtil.is_local_state_compromised(s):
+        if reachable and not IntrusionResponseGameUtil.is_local_state_compromised(s) and \
+                not s[env_constants.STATES.D_STATE_INDEX] in [env_constants.ZONES.SHUTDOWN_ZONE,
+                                                              env_constants.ZONES.REDIRECTION_ZONE]:
             impact = 1
         return beta * impact * int(IntrusionResponseGameUtil.is_local_state_in_zone(s=s, zone=initial_zone))
 
@@ -293,17 +295,21 @@ class IntrusionResponseGameUtil:
         return np.array(Z_U)
 
     @staticmethod
-    def uniform_zone_detection_probabilities(zones: np.ndarray) -> np.ndarray:
+    def constant_zone_detection_probabilities(zones: np.ndarray, constant_detection_prob: float) -> np.ndarray:
         """
         Returns a vector with the zone detection probabilities where each zone as the same uniform detection
         probability
 
         :param zones: the vector with zones
+        :param constant_detection_prob: the constant detection probability
         :return: the vector with zone detection probabilities
         """
         zone_detection_probabilities = []
         for z in zones:
-            zone_detection_probabilities.append(1 / len(zones))
+            if z == env_constants.ZONES.SHUTDOWN_ZONE:
+                zone_detection_probabilities.append(0)
+            else:
+                zone_detection_probabilities.append(constant_detection_prob)
         return np.array(zone_detection_probabilities)
 
     @staticmethod
@@ -336,7 +342,7 @@ class IntrusionResponseGameUtil:
         :param Z_U: the vector with zone utilities
         :return: the intrusion cost
         """
-        if not reachable:
+        if not reachable or s[env_constants.STATES.D_STATE_INDEX] == env_constants.ZONES.SHUTDOWN_ZONE:
             return D_C[a1]  # No intrusion cost if the node is not reachable
         compromised = int((s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED))
         return Z_U[s[env_constants.STATES.D_STATE_INDEX] - 1] * compromised + D_C[a1]
@@ -436,10 +442,20 @@ class IntrusionResponseGameUtil:
         else:
             # Defender did not take defensive action
 
+            # If the node is shutdown or traffic redirect, the state remains the same
+            if s[env_constants.STATES.D_STATE_INDEX] in [env_constants.ZONES.SHUTDOWN_ZONE,
+                                                         env_constants.ZONES.REDIRECTION_ZONE]:
+                if IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
+                    return 1 * P_not_detected
+                else:
+                    return 0
+
             # If attacker waits, then the state remains the same
-            if a2 == env_constants.ATTACKER_ACTIONS.WAIT and \
-                    IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
-                return 1 * P_not_detected
+            if a2 == env_constants.ATTACKER_ACTIONS.WAIT:
+                if IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
+                    return 1 * P_not_detected
+                else:
+                    return 0
 
             # If the attacker performs recon and the node was not already compromised, then it is discovered
             if a2 == env_constants.ATTACKER_ACTIONS.RECON and \
@@ -526,10 +542,7 @@ class IntrusionResponseGameUtil:
                     a1_a2_s_probs = []
                     for s_prime in S:
                         p = IntrusionResponseGameUtil.local_transition_probability(
-                            s=s, s_prime=s_prime, a1=a1, a2=a2,
-                            Z_D_P=Z_D,
-                            A_P=A_P,
-                        )
+                            s=s, s_prime=s_prime, a1=a1, a2=a2, Z_D_P=Z_D, A_P=A_P)
                         a1_a2_s_probs.append(p)
                     assert sum(a1_a2_s_probs) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
@@ -736,18 +749,18 @@ class IntrusionResponseGameUtil:
         """
         norm = 0
         for s_d in list(range(len(config.S_D))):
-            s_idx = config.states_to_idx[(s_d+1, s_a)]
+            s_idx = config.states_to_idx[(s_d + 1, s_a)]
             for a1 in config.A1:
                 for s_prime_d_1 in list(range(len(config.S_D))):
-                    s_prime_idx = config.states_to_idx[(s_prime_d_1+1, s_a_prime)]
+                    s_prime_idx = config.states_to_idx[(s_prime_d_1 + 1, s_a_prime)]
                     obs_prob = config.Z[a1][a2][s_prime_idx][o]
                     norm += a_b[s_d] * obs_prob * config.T[0][a1][a2][s_idx][s_prime_idx] * pi1[s_d][a1]
         if norm == 0:
             return 0
         temp = 0
-        s_prime_idx = config.states_to_idx[(s_d_prime+1, s_a_prime)]
+        s_prime_idx = config.states_to_idx[(s_d_prime + 1, s_a_prime)]
         for s_d in list(range(len(config.S_D))):
-            s_idx = config.states_to_idx[(s_d+1, s_a)]
+            s_idx = config.states_to_idx[(s_d + 1, s_a)]
             for a1 in config.A1:
                 temp += config.Z[a1][a2][s_prime_idx][o] * config.T[0][a1][a2][s_idx][s_prime_idx] * \
                         a_b[s_d] * pi1[s_d][a1]

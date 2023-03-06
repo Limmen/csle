@@ -4,6 +4,14 @@ Constants for gym-csle-intrusion-response-game
 import numpy as np
 
 
+class ZONES:
+    """
+    Constants related to the zones of the network
+    """
+    HONEYPOT_ZONE = 3
+    REDIRECTION_ZONE = 2
+    SHUTDOWN_ZONE = 1
+
 class STATES:
     """
     Constants related to the state space of the game

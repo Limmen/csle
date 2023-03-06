@@ -6,6 +6,7 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
+from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
@@ -78,6 +79,21 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.ATTACKER, player_idx=0
     )
+    number_of_zones = 5
+    X_max = 10
+    zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
+    Z_D = IntrusionResponseGameUtil.constant_zone_detection_probabilities(zones=zones, constant_detection_prob=0.1)
+    simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S = \
+        IntrusionResponseGameUtil.local_state_space(number_of_zones=5)
+    simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1 = \
+        IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
+    simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.O = \
+        IntrusionResponseGameUtil.local_observation_space(X_max=10)
+    simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.T = \
+        IntrusionResponseGameUtil.local_transition_tensor(
+            S=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S,
+            A1=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
+        )
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config)
     experiment_execution = agent.train()

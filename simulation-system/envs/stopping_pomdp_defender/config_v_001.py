@@ -367,7 +367,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-stopping-pomdp-defender-002", version="0.0.1")
+    config = default_config(name="csle-stopping-pomdp-defender-001", version="0.0.1")
     if args.install:
         SimulationEnvController.install_simulation(config=config)
         img_path = ExperimentUtil.default_simulation_picture_path()

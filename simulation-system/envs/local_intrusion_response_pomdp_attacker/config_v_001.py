@@ -36,11 +36,21 @@ from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_at
 
 def default_config(name: str, number_of_zones: int, X_max: int, beta: float, reachable: bool,
                    initial_zone: int, attack_success_probability: float, eta: float, defender_action_cost: float,
-                   zone_utility: float, version: str = "0.0.1") -> SimulationEnvConfig:
+                   zone_utility: float, detection_probability: float, version: str = "0.0.1") -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
 
     :param name: the name of the environment
+    :param number_of_zones: the number of zones in the network
+    :param X_max: the maximum observation
+    :param beta: the workflow scaling parameter
+    :param reachable: whether the node is reachable or not
+    :param initial_zone: the initial zone of the node
+    :param attack_success_probability: the attack success probability
+    :param eta: the reward scaling parameter
+    :param defender_action_cost: the costs of the defender actions
+    :param zone_utility: the zone utilities
+    :param detection_probability: the detection probability
     :param version: the version string
     :return: the default configuration
     """
@@ -49,7 +59,8 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
     joint_action_space_config = default_joint_action_space_config(number_of_zones=number_of_zones)
     joint_observation_space_config = default_joint_observation_space_config(X_max=X_max)
     transition_operator_config = default_transition_operator_config(
-        num_zones=number_of_zones, attack_success_probability=attack_success_probability)
+        num_zones=number_of_zones, attack_success_probability=attack_success_probability,
+        detection_probability=detection_probability)
     observation_function_config = default_observation_function_config(
         attacker_obs_space=joint_observation_space_config.observation_spaces[0],
         number_of_zones=number_of_zones)
@@ -66,7 +77,8 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
         initial_state_distribution_config=initial_state_distribution_config,
         attacker_action_space_config=joint_action_space_config.action_spaces[1], number_of_zones=number_of_zones,
         attack_success_probability=attack_success_probability, beta=beta, eta=eta, initial_zone=initial_zone,
-        defender_action_cost=defender_action_cost, zone_utility=zone_utility)
+        defender_action_cost=defender_action_cost, zone_utility=zone_utility,
+        detection_probability=detection_probability)
     env_parameters_config = default_env_parameters_config()
     descr = "A local intrusion response game"
     simulation_env_config = SimulationEnvConfig(
@@ -223,12 +235,17 @@ def default_reward_function_config(reachable: bool, initial_zone: int, beta: flo
     return reward_function_config
 
 
-def default_transition_operator_config(num_zones: int, attack_success_probability: float) -> TransitionOperatorConfig:
+def default_transition_operator_config(num_zones: int, attack_success_probability: float,
+                                       detection_probability: float) -> TransitionOperatorConfig:
     """
+    :param num_zones: the number of zones
+    :param attack_success_probability: the attack success probability
+    :param detection_probability the detection probability
     :return: the default transition tensor configuration
     """
     zones = IntrusionResponseGameUtil.zones(num_zones=num_zones)
-    zone_detection_probabilities = IntrusionResponseGameUtil.uniform_zone_detection_probabilities(zones=zones)
+    zone_detection_probabilities = IntrusionResponseGameUtil.constant_zone_detection_probabilities(
+        zones=zones, constant_detection_prob=detection_probability)
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
     attack_success_probabilities = IntrusionResponseGameUtil.local_attack_success_probabilities_uniform(
         A2=A2, p=attack_success_probability)
@@ -288,7 +305,8 @@ def default_input_config(attacker_observation_space_config: ObservationSpaceConf
                          attacker_action_space_config: ActionSpaceConfig,
                          number_of_zones: int, attack_success_probability: float,
                          beta: float, eta: float, initial_zone: int,
-                         defender_action_cost: float, zone_utility: float) -> SimulationEnvInputConfig:
+                         defender_action_cost: float, zone_utility: float, detection_probability: float) \
+        -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
 
@@ -304,6 +322,7 @@ def default_input_config(attacker_observation_space_config: ObservationSpaceConf
     :param eta: the utility scaling parameter
     :param defender_action_cost: the cost of a defensive action
     :param zone_utility: the utility of a zone
+    :param detection_probability: the detection probability
     :return: The default input configuration to the OpenAI gym environment
     """
     defender_stage_strategy = np.zeros((3, 2))
@@ -332,7 +351,8 @@ def default_input_config(attacker_observation_space_config: ObservationSpaceConf
             p=attack_success_probability, A2=A2),
         C_D=IntrusionResponseGameUtil.constant_defender_action_costs(A1=A1, constant_cost=defender_action_cost),
         S_A=S_A, S_D=S_D,
-        Z_D_P=IntrusionResponseGameUtil.uniform_zone_detection_probabilities(zones=zones),
+        Z_D_P=IntrusionResponseGameUtil.constant_zone_detection_probabilities(
+            zones=zones,  constant_detection_prob=detection_probability),
         Z_U=IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility),
         beta=beta, eta=eta, s_1_idx=IntrusionResponseGameUtil.local_initial_state_idx(initial_zone=initial_zone, S=S)
     )
@@ -365,7 +385,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config = default_config(name="csle-intrusion-response-game-local-pomdp-attacker-001", version="0.0.1",
                             number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
-                            attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10)
+                            attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10,
+                            detection_probability=0.1)
     if args.install:
         SimulationEnvController.install_simulation(config=config)
         img_path = ExperimentUtil.default_simulation_picture_path()
