@@ -5,7 +5,7 @@ from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_config import LocalIntrusionResponseGameConfig
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 
 
 class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):

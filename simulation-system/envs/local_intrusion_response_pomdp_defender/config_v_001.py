@@ -29,7 +29,7 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.agent_type import AgentType
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_config import LocalIntrusionResponseGameConfig
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
     import IntrusionResponseGameLocalPOMDPDefenderConfig
 
@@ -325,13 +325,6 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     :param detection_probability: the detection probability
     :return: The default input configuration to the OpenAI gym environment
     """
-    attacker_stage_strategy = np.zeros((3, 2))
-    attacker_stage_strategy[0][0] = 0.9
-    attacker_stage_strategy[0][1] = 0.1
-    attacker_stage_strategy[1][0] = 0.9
-    attacker_stage_strategy[1][1] = 0.1
-    attacker_stage_strategy[2] = attacker_stage_strategy[1]
-
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
@@ -346,7 +339,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         O=np.array(list(map(lambda x: x.val, defender_observation_space_config.observations))),
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
-        S=S, env_name="csle-intrusion-response-game-pomdp-defender-v1",
+        S=S, env_name="csle-intrusion-response-game-local-pomdp-defender-v1",
         gamma=1, A_P=IntrusionResponseGameUtil.local_attack_success_probabilities_uniform(
             p=attack_success_probability, A2=A2),
         C_D=IntrusionResponseGameUtil.constant_defender_action_costs(A1=A1, constant_cost=defender_action_cost),
@@ -372,14 +365,14 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     attacker_strategy = TabularPolicy(
         player_type=PlayerType.ATTACKER,
         actions=attacker_action_space_config.actions,
-        simulation_name="csle-intrusion-response-game-pomdp-defender-001",
+        simulation_name="csle-intrusion-response-game-local-pomdp-defender-001",
         value_function=None, q_table=None,
         lookup_table=list(attacker_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
     config = IntrusionResponseGameLocalPOMDPDefenderConfig(
         local_intrusion_response_game_config=game_config,
         attacker_strategy=attacker_strategy,
-        env_name="csle-intrusion-response-game-pomdp-defender-v1")
+        env_name="csle-intrusion-response-game-local-pomdp-defender-v1")
     return config
 
 

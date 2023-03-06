@@ -1,0 +1,48 @@
+from typing import Dict, Any, List
+from csle_common.dao.training.policy import Policy
+from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config \
+    import WorkflowIntrusionResponseGameConfig
+from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
+
+
+class WorkflowIntrusionResponsePOMDPAttackerConfig(SimulationEnvInputConfig):
+    """
+    DTO representing the configuration of a workflow intrusion response POMDP when the attacker faces a static
+    defender opponent
+    """
+
+    def __init__(self, env_name: str, game_config: WorkflowIntrusionResponseGameConfig,
+                 defender_strategies: List[Policy]):
+        """
+        Initializes teh DTO
+
+        :param env_name: the name of the environment
+        :param game_config: the workflow game configuration
+        :param defender_strategies: the lsit of defender strategies for the local nodes in the workflow game
+        """
+        super().__init__()
+        self.env_name = env_name
+        self.game_config = game_config
+        self.defender_strategies = defender_strategies
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["env_name"] = self.env_name
+        d["game_config"] = self.game_config.to_dict()
+        d["defender_strategies"] = list(map(lambda x: x.to_dict(), self.defender_strategies))
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "WorkflowIntrusionResponsePOMDPAttackerConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = WorkflowIntrusionResponsePOMDPAttackerConfig(
+            env_name=d["env_name"], game_config=d["game_config"], defender_strategies=d["defender_strategies"])
+        return obj

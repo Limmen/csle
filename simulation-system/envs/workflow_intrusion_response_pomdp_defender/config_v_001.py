@@ -29,14 +29,17 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.agent_type import AgentType
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
-from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config \
-    import IntrusionResponseGameLocalPOMDPAttackerConfig
+from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config \
+    import WorkflowIntrusionResponsePOMDPDefenderConfig
+from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config \
+    import WorkflowIntrusionResponseGameConfig
 
 
 def default_config(name: str, number_of_zones: int, X_max: int, beta: float, reachable: bool,
                    initial_zone: int, attack_success_probability: float, eta: float, defender_action_cost: float,
-                   zone_utility: float, detection_probability: float, version: str = "0.0.1") -> SimulationEnvConfig:
+                   zone_utility: float, detection_probability: float, adjacency_matrix: np.ndarray,
+                   num_nodes: int, gamma: float, gw_reachable: np.ndarray,
+                   version: str = "0.0.1") -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
 
@@ -52,6 +55,9 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
     :param zone_utility: the zone utilities
     :param detection_probability: the detection probability
     :param version: the version string
+    :param gamma: the discount factor
+    :param adjacency_matrix: the adjacency matrix of the workflow DAG
+    :param num_nodes: the number of nodes in the workflow
     :return: the default configuration
     """
     players_config = default_players_config()
@@ -62,7 +68,7 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
         num_zones=number_of_zones, attack_success_probability=attack_success_probability,
         detection_probability=detection_probability)
     observation_function_config = default_observation_function_config(
-        attacker_obs_space=joint_observation_space_config.observation_spaces[0],
+        defender_obs_space=joint_observation_space_config.observation_spaces[0],
         number_of_zones=number_of_zones)
     reward_function_config = default_reward_function_config(
         number_of_zones=number_of_zones, eta=eta, beta=beta, reachable=reachable, initial_zone=initial_zone,
@@ -70,17 +76,13 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
     initial_state_distribution_config = default_initial_state_distribution_config(initial_zone=initial_zone,
                                                                                   number_of_zones=number_of_zones)
     input_config = default_input_config(
-        attacker_observation_space_config=joint_observation_space_config.observation_spaces[0],
-        reward_function_config=reward_function_config,
-        transition_tensor_config=transition_operator_config,
-        observation_function_config=observation_function_config,
-        initial_state_distribution_config=initial_state_distribution_config,
-        attacker_action_space_config=joint_action_space_config.action_spaces[1], number_of_zones=number_of_zones,
-        attack_success_probability=attack_success_probability, beta=beta, eta=eta, initial_zone=initial_zone,
+        local_attacker_action_space_config=joint_action_space_config.action_spaces[1], number_of_zones=number_of_zones,
+        attack_success_probability=attack_success_probability, beta=beta, eta=eta,
         defender_action_cost=defender_action_cost, zone_utility=zone_utility,
-        detection_probability=detection_probability)
+        detection_probability=detection_probability, num_nodes=num_nodes, adjacency_matrix=adjacency_matrix,
+        gamma=gamma, X_max=X_max, gw_reachable=gw_reachable)
     env_parameters_config = default_env_parameters_config()
-    descr = "A local intrusion response game"
+    descr = "A workflow intrusion response game"
     simulation_env_config = SimulationEnvConfig(
         name=name, version=version, descr=descr,
         players_config=players_config, state_space_config=state_space_config,
@@ -90,7 +92,7 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
         time_step_type=TimeStepType.DISCRETE,
-        gym_env_name="csle-intrusion-response-game-local-pomdp-attacker-v1",
+        gym_env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
         env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
@@ -114,8 +116,8 @@ def default_players_config() -> PlayersConfig:
     :return: the default players configuration of the simulation
     """
     player_configs = [
-        PlayerConfig(name="attacker", id=2, descr="The attacker which tries intrude on the infrastructure and "
-                                                  "deny service to clients")
+        PlayerConfig(name="defender", id=1, descr="The defender which tries to detect, prevent, "
+                                                  "and interrupt intrusions for the infrastructure")
     ]
     players_config = PlayersConfig(player_configs=player_configs)
     return players_config
@@ -202,7 +204,7 @@ def default_joint_observation_space_config(X_max: int) -> JointObservationSpaceC
             observations=observations,
             observation_type=ValueType.INTEGER,
             player_id=1,
-            descr="The observation space of the attacker. The attacker observes the weighted sum of alerts",
+            descr="The observation space of the defender. The defender observes the weighted sum of alerts",
             observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
             observation_component_name_to_index=observation_component_name_to_index,
             component_observations=component_observations,
@@ -263,12 +265,12 @@ def default_transition_operator_config(num_zones: int, attack_success_probabilit
 
 
 def default_observation_function_config(
-        attacker_obs_space: ObservationSpaceConfig,
+        defender_obs_space: ObservationSpaceConfig,
         number_of_zones: int) -> ObservationFunctionConfig:
     state_space = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
-    O = IntrusionResponseGameUtil.local_observation_space(X_max=len(attacker_obs_space.observations))
+    O = IntrusionResponseGameUtil.local_observation_space(X_max=len(defender_obs_space.observations))
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(
         S=state_space, A1=A1, A2=A2, O=O)
     component_observation_tensors = {}
@@ -297,76 +299,77 @@ def default_initial_state_distribution_config(initial_zone: int, number_of_zones
     return initial_state_distribution_config
 
 
-def default_input_config(attacker_observation_space_config: ObservationSpaceConfig,
-                         reward_function_config: RewardFunctionConfig,
-                         transition_tensor_config: TransitionOperatorConfig,
-                         observation_function_config: ObservationFunctionConfig,
-                         initial_state_distribution_config: InitialStateDistributionConfig,
-                         attacker_action_space_config: ActionSpaceConfig,
+def default_input_config(local_attacker_action_space_config: ActionSpaceConfig,
                          number_of_zones: int, attack_success_probability: float,
-                         beta: float, eta: float, initial_zone: int,
-                         defender_action_cost: float, zone_utility: float, detection_probability: float) \
-        -> SimulationEnvInputConfig:
+                         beta: float, eta: float,
+                         defender_action_cost: float, zone_utility: float, detection_probability: float,
+                         num_nodes: int, adjacency_matrix: np.ndarray, X_max: int,
+                         gamma: float, gw_reachable: np.ndarray) -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
 
-    :param attacker_observation_space_config: the configuration of the attacker's observation space
-    :param reward_function_config: the reward function configuration
-    :param transition_tensor_config: the transition tensor configuration
-    :param observation_function_config: the observation function configuration
-    :param initial_state_distribution_config: the initial state distribution configuration
-    :param attacker_action_space_config: the attacker's action space config
+    :param local_attacker_action_space_config: the local action space config
     :param number_of_zones: the number of zones
-    :param attack_success_probability: the attacke success probability
-    :param beta: the workflow scaling parameter
-    :param eta: the utility scaling parameter
-    :param defender_action_cost: the cost of a defensive action
-    :param zone_utility: the utility of a zone
-    :param detection_probability: the detection probability
-    :return: The default input configuration to the OpenAI gym environment
+    :param attack_success_probability: the attack success probabilities
+    :param beta: the beta scaling prameter for the utility function
+    :param eta: the eta scaling parameter for the utility function
+    :param defender_action_cost: the cost of the defender actions
+    :param zone_utility: the utilitites of the various zones
+    :param detection_probability: the detection probabilities in the various zones
+    :param num_nodes: the number of nodes
+    :param adjacency_matrix: the adjacency matrix
+    :param X_max: the maximum number of observations
+    :param gamma: the discount factor
+    :param gw_reachable: list of nodes reachable from the public gw
+    :return: the default inptut configuration of the environment
     """
-    A2 = IntrusionResponseGameUtil.local_attacker_actions()
-    A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
-    S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
+    local_A2 = IntrusionResponseGameUtil.local_attacker_actions()
+    local_A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
-    S_A = IntrusionResponseGameUtil.local_attacker_state_space()
-    game_config = LocalIntrusionResponseGameConfig(
-        A1=A1, A2=A2, zones=zones,
-        d_b1=IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A),
-        a_b1=IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D, initial_zone=initial_zone),
-        T=np.array(transition_tensor_config.transition_tensor),
-        O=np.array(list(map(lambda x: x.val, attacker_observation_space_config.observations))),
-        Z=np.array(observation_function_config.observation_tensor),
-        R=np.array(reward_function_config.reward_tensor),
-        S=S, env_name="csle-intrusion-response-game-local-pomdp-attacker-v1",
-        gamma=1, A_P=IntrusionResponseGameUtil.local_attack_success_probabilities_uniform(
-            p=attack_success_probability, A2=A2),
-        C_D=IntrusionResponseGameUtil.constant_defender_action_costs(A1=A1, constant_cost=defender_action_cost),
-        S_A=S_A, S_D=S_D,
-        Z_D_P=IntrusionResponseGameUtil.constant_zone_detection_probabilities(
-            zones=zones,  constant_detection_prob=detection_probability),
-        Z_U=IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility),
-        beta=beta, eta=eta, s_1_idx=IntrusionResponseGameUtil.local_initial_state_idx(initial_zone=initial_zone, S=S)
-    )
-    defender_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_defender_state_space(
-        number_of_zones=number_of_zones)), len(A1)))
-    for i, s_d in enumerate(IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)):
-        defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.8
-        for z in zones:
-            defender_stage_strategy[i][z] = 0.2/len(zones)
-    defender_strategy = TabularPolicy(
-        player_type=PlayerType.DEFENDER,
-        actions=attacker_action_space_config.actions,
-        simulation_name="csle-intrusion-response-game-local-pomdp-attacker-001",
+    local_attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()),
+                                              len(local_A2)))
+    for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
+        if s_a == env_constants.ATTACK_STATES.HEALTHY:
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.2
+        elif s_a == env_constants.ATTACK_STATES.RECON:
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.7
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.15
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.15
+        else:
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 1
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.
+            local_attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0
+    attacker_strategy = TabularPolicy(
+        player_type=PlayerType.ATTACKER,
+        actions=local_attacker_action_space_config.actions,
+        simulation_name="csle-intrusion-response-game-workflow-pomdp-defender-001",
         value_function=None, q_table=None,
-        lookup_table=list(defender_stage_strategy.tolist()),
+        lookup_table=list(local_attacker_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
-    config = IntrusionResponseGameLocalPOMDPAttackerConfig(
-        local_intrusion_response_game_config=game_config,
-        defender_strategy=defender_strategy,
-        env_name="csle-intrusion-response-game-local-pomdp-attacker-v1")
-    return config
+    Z_D_P=IntrusionResponseGameUtil.constant_zone_detection_probabilities(
+        zones=zones, constant_detection_prob=detection_probability)
+    C_D = IntrusionResponseGameUtil.constant_defender_action_costs(A1=local_A1, constant_cost=defender_action_cost)
+    Z_U = IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility)
+    A_P = IntrusionResponseGameUtil.local_attack_success_probabilities_uniform(
+        p=attack_success_probability, A2=local_A2)
+    nodes = np.array(list(range(num_nodes)))
+    initial_zones = []
+    attacker_strategies = []
+    for node in nodes:
+        initial_zones.append(np.random.choice(zones))
+        attacker_strategies.append(attacker_strategy)
+    initial_zones=np.array(initial_zones)
+    game_config = WorkflowIntrusionResponseGameConfig(
+        env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
+        nodes=nodes, initial_zones=initial_zones, X_max=X_max, beta=beta, gamma=gamma,
+        zones=zones, Z_D_P=Z_D_P,C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
+        gw_reachable=gw_reachable)
+    input_config = WorkflowIntrusionResponsePOMDPDefenderConfig(
+        game_config=game_config, env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
+        attacker_strategies=attacker_strategies
+    )
+    return input_config
 
 
 if __name__ == '__main__':
@@ -376,10 +379,21 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-intrusion-response-game-local-pomdp-attacker-001", version="0.0.1",
+    gw_reachable = np.array([0,1,2])
+    adjacency_matrix = [
+        [1,0,0,1,1,0,0],
+        [0,1,0,1,0,1,0],
+        [0,0,1,0,1,1,0],
+        [0,0,0,1,0,0,1],
+        [0,0,0,0,1,0,1],
+        [0,0,0,0,0,1,1]
+    ]
+    adjacency_matrix = np.array(adjacency_matrix)
+    config = default_config(name="csle-intrusion-response-game-workflow-pomdp-defender-001", version="0.0.1",
                             number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
                             attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10,
-                            detection_probability=0.1)
+                            detection_probability=0.1, num_nodes = 5, adjacency_matrix=adjacency_matrix,
+                            gw_reachable=gw_reachable, gamma=0.99)
     if args.install:
         SimulationEnvController.install_simulation(config=config)
         img_path = ExperimentUtil.default_simulation_picture_path()

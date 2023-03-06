@@ -17,6 +17,8 @@ from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_de
     import IntrusionResponseGameLocalPOMDPDefenderConfig
 from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config \
     import IntrusionResponseGameLocalPOMDPAttackerConfig
+from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config \
+    import WorkflowIntrusionResponsePOMDPDefenderConfig
 
 
 class SimulationEnvConfig:
@@ -92,7 +94,11 @@ class SimulationEnvConfig:
         parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
                            StoppingGameDefenderPomdpConfig.from_dict,
                            IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict,
-                           IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict]
+                           IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict,
+                           WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict]
+        # if d["simulation_env_input_config"]["env_name"] == "csle-intrusion-response-game-workflow-pomdp-defender-v1":
+        #     WorkflowIntrusionResponsePOMDPDefenderConfig.to_dict(d["simulation_env_input_config"])
+        # print(d["simulation_env_input_config"]["env_name"])
         for parse_fun in parse_functions:
             try:
                 input_config = parse_fun(d["simulation_env_input_config"])
