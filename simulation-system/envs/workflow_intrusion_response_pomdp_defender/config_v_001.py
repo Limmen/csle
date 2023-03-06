@@ -392,7 +392,7 @@ if __name__ == '__main__':
     config = default_config(name="csle-intrusion-response-game-workflow-pomdp-defender-001", version="0.0.1",
                             number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
                             attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10,
-                            detection_probability=0.1, num_nodes = 5, adjacency_matrix=adjacency_matrix,
+                            detection_probability=0.1, num_nodes = 6, adjacency_matrix=adjacency_matrix,
                             gw_reachable=gw_reachable, gamma=0.99)
     if args.install:
         SimulationEnvController.install_simulation(config=config)

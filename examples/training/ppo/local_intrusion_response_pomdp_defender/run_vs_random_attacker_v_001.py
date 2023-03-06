@@ -9,7 +9,7 @@ from csle_agents.agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_config import LocalIntrusionResponseGameConfig
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 if __name__ == '__main__':
@@ -111,13 +111,8 @@ if __name__ == '__main__':
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
-    d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(
-        S_A=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
-    )
-    a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(
-        S_D=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D,
-        initial_zone=initial_zone
-    )
+    d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
+    a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D,initial_zone=initial_zone)
     initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
                                        initial_state[env_constants.STATES.A_STATE_INDEX])]
     env_name = "csle-intrusion-response-game-pomdp-defender-v1"

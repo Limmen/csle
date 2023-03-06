@@ -5,44 +5,77 @@ import math
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config import \
+    WorkflowIntrusionResponsePOMDPDefenderConfig
+from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
+from gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender import \
+    IntrusionResponseGameLocalPOMDPDefenderEnv
 from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config import \
     IntrusionResponseGameLocalPOMDPDefenderConfig
-from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local import IntrusionResponseGameStateLocal
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 
-class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
+class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
     """
-    OpenAI Gym Env for the POMDP of the defender when facing a static attacker.
+    OpenAI Gym Env for the POMDP of the defender when facing a static attacker in the workflow game.
 
     (A PO-POSG, i.e a partially observed stochastic game with public observations) where the attacker strategy
     is fixed)
     """
 
-    def __init__(self, config: IntrusionResponseGameLocalPOMDPDefenderConfig) -> None:
+    def __init__(self, config: WorkflowIntrusionResponsePOMDPDefenderConfig) -> None:
         """
         Initializes the environment
 
         :param config: the environment configuration
         """
         self.config = config
-
-        # Initialize environment state
-        self.state = IntrusionResponseGameStateLocal(
-            d_b1=self.config.local_intrusion_response_game_config.d_b1,
-            a_b1=self.config.local_intrusion_response_game_config.a_b1,
-            S=self.config.local_intrusion_response_game_config.S,
-            S_A=self.config.local_intrusion_response_game_config.S_A,
-            S_D=self.config.local_intrusion_response_game_config.S_D,
-            s_1_idx=self.config.local_intrusion_response_game_config.s_1_idx)
+        self.local_envs = []
+        for node in config.game_config.nodes:
+            reachable = True
+            S = IntrusionResponseGameUtil.local_state_space(number_of_zones=len(self.config.game_config.zones))
+            states_to_idx = {}
+            for i, s in enumerate(S):
+                states_to_idx[(s[env_constants.STATES.D_STATE_INDEX], s[env_constants.STATES.A_STATE_INDEX])] = i
+            S_A = IntrusionResponseGameUtil.local_attacker_state_space()
+            S_D = IntrusionResponseGameUtil.local_defender_state_space(
+                number_of_zones=len(self.config.game_config.zones))
+            A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=len(self.config.game_config.zones))
+            A2 = IntrusionResponseGameUtil.local_attacker_actions()
+            O = IntrusionResponseGameUtil.local_observation_space(X_max=self.config.game_config.X_max)
+            T = np.array([IntrusionResponseGameUtil.local_transition_tensor(
+                S=S, A1=A1, A2=A2, Z_D=self.config.game_config.Z_D_P, A_P=self.config.game_config.A_P)])
+            Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
+            Z_U = np.array([0, 1, 3, 3.5, 4])
+            R = np.array(
+                [IntrusionResponseGameUtil.local_reward_tensor(
+                    eta=self.config.game_config.eta,  C_D=self.config.game_config.C_D, A1=A1, A2=A2,
+                    reachable=reachable, beta=self.config.game_config.beta, S=S, Z_U=Z_U,
+                    initial_zone=self.config.game_config.initial_zones[node])])
+            d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
+            a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(
+                S_D=S_D, initial_zone=self.config.game_config.initial_zones[node])
+            initial_state = [self.config.game_config.initial_zones[node], 0]
+            initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
+                                               initial_state[env_constants.STATES.A_STATE_INDEX])]
+            local_game_config = LocalIntrusionResponseGameConfig(
+                env_name="csle-intrusion-response-game-local-pomdp-defender-001",
+                T=T, O=O, Z=Z, R=R, S=S, S_A=S_A, S_D=S_D, s_1_idx=initial_state_idx,
+                zones=self.config.game_config.zones, A1=A1, A2=A2, d_b1=d_b1, a_b1=a_b1,
+                gamma=self.config.game_config.gamma, beta=self.config.game_config.beta,
+                C_D=self.config.game_config.C_D, A_P=self.config.game_config.A_P, Z_D_P=self.config.game_config.Z_D_P,
+                Z_U=self.config.game_config.Z_U, eta=self.config.game_config.eta)
+            local_pomdp_config = IntrusionResponseGameLocalPOMDPDefenderConfig(
+                env_name="csle-intrusion-response-game-local-pomdp-defender-v1",
+                local_intrusion_response_game_config=local_game_config,
+                attacker_strategy=self.config.attacker_strategies[node])
+            env = IntrusionResponseGameLocalPOMDPDefenderEnv(config=local_pomdp_config)
+            self.local_envs.append(env)
 
         # Setup spaces
-        self.observation_space = self.config.local_intrusion_response_game_config.defender_observation_space()
-        self.action_space = self.config.local_intrusion_response_game_config.defender_action_space()
-
-        # Setup static attacker strategy
-        self.static_attacker_strategy = self.config.attacker_strategy
+        self.observation_space = self.config.game_config.defender_observation_space()
+        self.action_space = self.config.game_config.defender_action_space()
 
         # Setup Config
         self.viewer = None
@@ -62,62 +95,15 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Get upper bound and random return estimate
         self.upper_bound_return = 0
         self.random_return = 0
-        # self.upper_bound_return = self.get_upper_bound_return(samples=100)
-        # self.random_return = self.get_random_baseline_return(samples=100)
+
+        # State metrics
+        self.t = 0
 
         # Reset
         self.reset()
         super().__init__()
 
-    def get_random_baseline_return(self, samples: int = 100) -> float:
-        """
-        Utiltiy function for estimating the average return of a random defender strategy
-
-        :param samples: the number of samples to use for estimation
-        :return: the estimated return
-        """
-        max_horizon = 1000
-        returns = []
-        for i in range(samples):
-            o = self.reset()
-            done = False
-            t = 0
-            cumulative_reward = 0
-            while not done  and t <= max_horizon:
-                a1 = np.random.choice(self.config.local_intrusion_response_game_config.A1)
-                o, r, done, info = self.step(a1)
-                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
-                t += 1
-            returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
-
-    def get_upper_bound_return(self, samples: int = 100) -> float:
-        """
-        Utiltiy method for getting an upper bound on the average return
-
-        :param samples: the number of sample returns to average
-        :return: the estimated upper bound
-        """
-        max_horizon = 1000
-        returns = []
-        initial_zone = self.config.local_intrusion_response_game_config.S[
-            self.config.local_intrusion_response_game_config.s_1_idx][env_constants.STATES.D_STATE_INDEX]
-        for i in range(samples):
-            o = self.reset()
-            done = False
-            t = 0
-            cumulative_reward = 0
-            while not done  and t <= max_horizon:
-                a1 = 0
-                if self.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
-                    a1 = initial_zone
-                o, r, done, info = self.step(a1)
-                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
-                t += 1
-            returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
-
-    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: np.ndarray) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -126,59 +112,39 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         """
         done, info = False, {}
 
-        # Extract the defender action
-        if isinstance(a1, list):
-            a1 = a1[0]
-        a1=int(a1)
+        r = 0
+        defender_obs = []
+        attacker_obs = []
+        d_b = []
+        s = []
+        a2 = []
 
-        # Get attacker action from static strategy
-        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.state.attacker_state())
-
-        # Save current defender state (needed later for updating the belief)
-        s_d = self.state.defender_state()
-
-        # Compute the reward
-        r = self.config.local_intrusion_response_game_config.R[0][a1][a2][self.state.s_idx]
-
-        # Sample the next state
-        s_idx_prime = IntrusionResponseGameUtil.sample_next_state(
-            a1=a1, a2=a2, T=self.config.local_intrusion_response_game_config.T[0],
-            S=self.config.local_intrusion_response_game_config.S, s_idx=self.state.s_idx)
-
-        # Sample the next observation
-        o = IntrusionResponseGameUtil.sample_next_observation(
-            Z=self.config.local_intrusion_response_game_config.Z,
-            O=self.config.local_intrusion_response_game_config.O,
-            s_prime_idx=s_idx_prime, a1=a1, a2=a2)
-
-        # Move to the next state
-        self.state.s_idx = s_idx_prime
-
-        # Check if game is done
-        if IntrusionResponseGameUtil.is_local_state_terminal(self.state.state_vector()):
-            done = True
-
-        if not done:
-            # Update the beliefs
-            self.state.d_b = IntrusionResponseGameUtil.next_local_defender_belief(
-                o=o, a1=a1, d_b=self.state.d_b, pi2=pi2, config=self.config.local_intrusion_response_game_config,
-                a2=a2, s_a=self.state.attacker_state(),
-                s_d_prime=self.state.defender_state(), s_d=s_d)
+        # Step the envs
+        for i, local_env in enumerate(self.local_envs):
+            local_a1 = a1[i]
+            local_o, local_r, local_done, _ = local_env.step(a1=local_a1)
+            if local_done:
+                done=True
+            r = r + local_r
+            defender_obs = defender_obs + local_o.tolist()
+            s = s + local_env.state.state_vector().tolist()
+            a2.append(local_env.trace.attacker_actions[-1])
+            attacker_obs = attacker_obs + local_env.trace.attacker_observations[-1].tolist()
+            d_b = d_b + local_env.trace.beliefs[-1].tolist()
+        defender_obs = np.array(defender_obs)
+        s = np.array(s)
+        a2 = np.array(a2)
+        d_b = np.array(d_b)
 
         # Update time-step
-        self.state.t += 1
+        self.t += 1
 
         # Populate info dict
-        info[env_constants.ENV_METRICS.STATE] = self.state.state_vector()
+        info[env_constants.ENV_METRICS.STATE] = s
         info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
         info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
-        info[env_constants.ENV_METRICS.OBSERVATION] = o
-        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
-
-        # Get observations
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
+        info[env_constants.ENV_METRICS.OBSERVATION] = defender_obs
+        info[env_constants.ENV_METRICS.TIME_STEP] = self.t
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -186,9 +152,9 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.trace.attacker_actions.append(a2)
         self.trace.defender_actions.append(a1)
         self.trace.infos.append(info)
-        self.trace.states.append(self.state.s_idx)
-        self.trace.beliefs.append(self.state.d_b)
-        self.trace.infrastructure_metrics.append(o)
+        self.trace.states.append(s)
+        self.trace.beliefs.append(d_b)
+        self.trace.infrastructure_metrics.append(defender_obs)
         if not done:
             self.trace.attacker_observations.append(attacker_obs)
             self.trace.defender_observations.append(defender_obs)
@@ -206,7 +172,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         """
         R = 0
         for i in range(len(self.trace.defender_rewards)):
-            R += self.trace.defender_rewards[i] * math.pow(self.config.local_intrusion_response_game_config.gamma, i)
+            R += self.trace.defender_rewards[i] * math.pow(self.config.game_config.gamma, i)
         info[env_constants.ENV_METRICS.RETURN] = R
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = self.upper_bound_return
@@ -219,12 +185,18 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         :return: initial observation
         """
-        self.state.reset()
-        if len(self.trace.attacker_rewards) > 0:
+        self.t = 0
+        defender_obs = []
+        attacker_obs = []
+        for local_env in self.local_envs:
+            local_o = local_env.reset()
+            defender_obs = defender_obs + local_o.tolist()
+            attacker_obs = attacker_obs + local_env.trace.attacker_observations[-1].tolist()
+        defender_obs = np.array(defender_obs)
+        attacker_obs = np.array(attacker_obs)
+        if len(self.trace.defender_rewards) > 0:
             self.traces.append(self.trace)
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
         return defender_obs
@@ -319,6 +291,6 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 o = self.reset()
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
             else:
-                a1 = int(raw_input)
+                a1 = np.array(list(map(lambda x: int(x), raw_input.split(","))))
                 o, r, done, _ = self.step(a1=a1)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")
