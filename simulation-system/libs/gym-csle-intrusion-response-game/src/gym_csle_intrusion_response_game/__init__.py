@@ -7,6 +7,11 @@ from gym.envs.registration import register
 register(
     id='csle-intrusion-response-game-local-pomdp-defender-v1',
     entry_point='gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender:'
-                'IntrusionResponseGameLocalPOMDPDefenderEnv',
-    kwargs={'config': None}
+                'IntrusionResponseGameLocalPOMDPDefenderEnv', kwargs={'config': None}
+)
+
+register(
+    id='csle-intrusion-response-game-local-pomdp-attacker-v1',
+    entry_point='gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker:'
+                'IntrusionResponseGameLocalPOMDPAttackerEnv', kwargs={'config': None}
 )

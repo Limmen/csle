@@ -10,7 +10,7 @@ import csle_agents.constants.constants as agents_constants
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-local-pomdp-defender-001")
+        "csle-intrusion-response-game-local-pomdp-attacker-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999, 121], agent_type=AgentType.PPO,
@@ -76,7 +76,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions")
         },
-        player_type=PlayerType.DEFENDER, player_idx=0
+        player_type=PlayerType.ATTACKER, player_idx=0
     )
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config)

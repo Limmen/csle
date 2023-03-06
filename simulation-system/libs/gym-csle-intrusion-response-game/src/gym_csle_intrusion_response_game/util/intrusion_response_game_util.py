@@ -601,7 +601,7 @@ class IntrusionResponseGameUtil:
 
     @staticmethod
     def bayes_filter_defender_belief(s_a_prime: int, o: int, a1: int, d_b: np.ndarray, pi2: np.ndarray,
-                                     config: LocalIntrusionResponseGameConfig, s_d_prime: int) -> float:
+                                     config: LocalIntrusionResponseGameConfig, s_d_prime: int, s_d: int) -> float:
         """
         A Bayesian filter to compute the belief of player 1 of being in s_prime when observing o after
         taking action a in belief b given that the opponent follows strategy pi2
@@ -612,11 +612,12 @@ class IntrusionResponseGameUtil:
         :param d_b: the current defender belief point
         :param pi2: the policy of player 2
         :param s_d_prime: the defender state
+        :param s_d: the previous defender state
         :return: b_prime(s_prime)
         """
         norm = 0
         for s_a in config.S_A:
-            s_idx = config.states_to_idx[(s_d_prime, s_a)]
+            s_idx = config.states_to_idx[(s_d, s_a)]
             for a2 in config.A2:
                 for s_prime_a_1 in config.S_A:
                     s_prime_idx = config.states_to_idx[(s_d_prime, s_prime_a_1)]
@@ -627,7 +628,7 @@ class IntrusionResponseGameUtil:
         temp = 0
         s_prime_idx = config.states_to_idx[(s_d_prime, s_a_prime)]
         for s_a in config.S_A:
-            s_idx = config.states_to_idx[(s_d_prime, s_a)]
+            s_idx = config.states_to_idx[(s_d, s_a)]
             for a2 in config.A2:
                 temp += config.Z[a1][a2][s_prime_idx][o] * config.T[0][a1][a2][s_idx][s_prime_idx] * \
                         d_b[s_a] * pi2[s_a][a2]
@@ -638,34 +639,11 @@ class IntrusionResponseGameUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def p_o_given_b_1_a1_a2(o: int, b: List, a1: int, a2: int, config: LocalIntrusionResponseGameConfig,
-                            s_d: int) -> float:
-        """
-        Computes P[o|a,b]
-
-        :param o: the observation
-        :param b: the belief point
-        :param a1: the action of player 1
-        :param a2: the action of player 2
-        :param s_d: the defender state
-        :param config: the game config
-        :return: the probability of observing o when taking action a in belief point b
-        """
-        prob = 0
-        for s in config.S_A:
-            s_idx = config.states_to_idx[(s_d, s)]
-            for s_prime in config.S_A:
-                s_prime_idx = config.states_to_idx[(s_d, s_prime)]
-                prob += b[s] * config.T[0][a1][a2][s_idx][s_prime_idx] * config.Z[a1][a2][s_prime_idx][o]
-        assert prob < 1
-        return prob
-
-    @staticmethod
     def next_local_defender_belief(o: int, a1: int, d_b: np.ndarray, pi2: np.ndarray,
                                    config: LocalIntrusionResponseGameConfig, a2: int, s_a: int,
-                                   s_d_prime: int) -> np.ndarray:
+                                   s_d_prime: int, s_d: int) -> np.ndarray:
         """
-        Computes the next belief using a Bayesian filter
+        Computes the next local belief of the defender using a Bayesian filter
 
         :param o: the latest observation
         :param a1: the latest action of player 1
@@ -674,13 +652,14 @@ class IntrusionResponseGameUtil:
         :param config: the game config
         :param a2: the attacker action (for debugging, should be consistent with pi2)
         :param s_a: the true current attacker state (for debugging)
+        :param s_d: the previous defender state
         :param s_d_prime: the new defender state
         :return: the new belief
         """
         b_prime = np.zeros(len(config.S_A))
         for s_a_prime in config.S_A:
             b_prime[s_a_prime] = IntrusionResponseGameUtil.bayes_filter_defender_belief(
-                s_a_prime=s_a_prime, o=o, a1=a1, d_b=d_b, pi2=pi2, config=config, s_d_prime=s_d_prime)
+                s_a_prime=s_a_prime, o=o, a1=a1, d_b=d_b, pi2=pi2, config=config, s_d_prime=s_d_prime, s_d=s_d)
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, d_b:{d_b}, pi2:{pi2}, "
                   f"a2: {a2}, s:{s_a}")
@@ -698,3 +677,82 @@ class IntrusionResponseGameUtil:
         """
         a2 = np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s])
         return a2
+
+    @staticmethod
+    def sample_defender_action(pi1: np.ndarray, s: int) -> int:
+        """
+        Samples the defender action
+
+        :param pi1: the attacker action
+        :param s: the game state
+        :return: a1 (the defender action
+        """
+        a1 = np.random.choice(np.arange(0, len(pi1[s])), p=pi1[s])
+        return a1
+
+    @staticmethod
+    def next_local_attacker_belief(o: int, a1: int, a_b: np.ndarray, pi1: np.ndarray,
+                                   config: LocalIntrusionResponseGameConfig, a2: int, s_d: int,
+                                   s_a_prime: int, s_a: int) -> np.ndarray:
+        """
+        Computes the next local belief of the attacker using a Bayesian filter
+
+        :param o: the latest observation
+        :param a1: the latest action of player 1 (for debugging, should be consistent with pi1)
+        :param a_b: the current attacker belief
+        :param pi1: the policy of player 1
+        :param config: the game config
+        :param a2: the attacker action
+        :param s_d: the true current defender state (for debugging)
+        :param s_a_prime: the new attacker state
+        :param s_a: the previous attacker state
+        :return: the new belief
+        """
+        b_prime = np.zeros(len(config.S_D))
+        for s_d_prime in list(range(len(config.S_D))):
+            b_prime[s_d_prime] = IntrusionResponseGameUtil.bayes_filter_attacker_belief(
+                s_a_prime=s_a_prime, o=o, a2=a2, a_b=a_b, pi1=pi1, config=config, s_d_prime=s_d_prime, s_a=s_a)
+        if round(sum(b_prime), 2) != 1:
+            print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, d_b:{a_b}, pi1:{pi1}, "
+                  f"a2: {a2}, s_d:{s_d}, s_a: {s_a}, s_a_prime:{s_a_prime}")
+        assert round(sum(b_prime), 2) == 1
+        return b_prime
+
+    @staticmethod
+    def bayes_filter_attacker_belief(s_a_prime: int, o: int, a2: int, a_b: np.ndarray, pi1: np.ndarray,
+                                     config: LocalIntrusionResponseGameConfig, s_d_prime: int, s_a: int) -> float:
+        """
+        A Bayesian filter to compute the belief of player 2 of being in s_prime when observing o after
+        taking action a in belief b given that the opponent follows strategy pi1
+
+        :param s_a_prime: the current attacker state
+        :param s_a_prime: the previous attacker state
+        :param o: the observation
+        :param a2: the action of player 2
+        :param a_b: the current attacker belief point
+        :param pi1: the policy of player 2
+        :param s_d_prime: the defender state  to compute the belief of
+        :return: b_prime(s_prime_d)
+        """
+        norm = 0
+        for s_d in list(range(len(config.S_D))):
+            s_idx = config.states_to_idx[(s_d+1, s_a)]
+            for a1 in config.A1:
+                for s_prime_d_1 in list(range(len(config.S_D))):
+                    s_prime_idx = config.states_to_idx[(s_prime_d_1+1, s_a_prime)]
+                    obs_prob = config.Z[a1][a2][s_prime_idx][o]
+                    norm += a_b[s_d] * obs_prob * config.T[0][a1][a2][s_idx][s_prime_idx] * pi1[s_d][a1]
+        if norm == 0:
+            return 0
+        temp = 0
+        s_prime_idx = config.states_to_idx[(s_d_prime+1, s_a_prime)]
+        for s_d in list(range(len(config.S_D))):
+            s_idx = config.states_to_idx[(s_d+1, s_a)]
+            for a1 in config.A1:
+                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[0][a1][a2][s_idx][s_prime_idx] * \
+                        a_b[s_d] * pi1[s_d][a1]
+        b_prime_s_prime = temp / norm
+        if round(b_prime_s_prime, 2) > 1:
+            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a2:{a2}, s_prime:{s_a_prime}, o:{o}, pi1:{pi1}")
+        assert round(b_prime_s_prime, 2) <= 1
+        return b_prime_s_prime

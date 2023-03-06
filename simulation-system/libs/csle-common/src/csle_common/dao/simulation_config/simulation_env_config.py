@@ -15,6 +15,8 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
     import IntrusionResponseGameLocalPOMDPDefenderConfig
+from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config \
+    import IntrusionResponseGameLocalPOMDPAttackerConfig
 
 
 class SimulationEnvConfig:
@@ -89,7 +91,8 @@ class SimulationEnvConfig:
         input_config = None
         parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
                            StoppingGameDefenderPomdpConfig.from_dict,
-                           IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict]
+                           IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict,
+                           IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict]
         for parse_fun in parse_functions:
             try:
                 input_config = parse_fun(d["simulation_env_input_config"])

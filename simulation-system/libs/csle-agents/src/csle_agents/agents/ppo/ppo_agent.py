@@ -46,6 +46,7 @@ class PPOAgent(BaseAgent):
         # Setup experiment metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
         descr = f"Training of policies with PPO using " \
                 f"simulation:{self.simulation_env_config.name}"
 
@@ -81,7 +82,6 @@ class PPOAgent(BaseAgent):
         # Setup gym environment
         config = self.simulation_env_config.simulation_env_input_config
         orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-        print(orig_env)
         env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
                            n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
                            env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
@@ -91,6 +91,7 @@ class PPOAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
             ExperimentUtil.set_seed(seed)
 
             # Callback for logging training metrics
@@ -131,7 +132,8 @@ class PPOAgent(BaseAgent):
                 max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
                 target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value,
             )
-            if self.experiment_config.player_type == PlayerType.ATTACKER:
+            if self.experiment_config.player_type == PlayerType.ATTACKER \
+                    and "stopping" in self.simulation_env_config.gym_env_name:
                 orig_env.set_model(model)
 
             # Train
@@ -282,7 +284,8 @@ class PPOTrainingCallback(BaseCallback):
 
         :return: (bool) If the callback returns False, training is aborted early.
         """
-        if self.player_type == PlayerType.ATTACKER:
+        if self.experiment_config.player_type == PlayerType.ATTACKER \
+                and "stopping" in self.simulation_name:
             self.env.set_model(self.model)
         return True
 
@@ -309,7 +312,7 @@ class PPOTrainingCallback(BaseCallback):
 
         # Eval model
         if self.iter % self.eval_every == 0:
-            if self.player_type == PlayerType.ATTACKER:
+            if self.player_type == PlayerType.ATTACKER and "stopping" in self.simulation_name:
                 self.env.set_model(self.model)
             policy = PPOPolicy(
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
@@ -332,9 +335,17 @@ class PPOTrainingCallback(BaseCallback):
                 avg_rewards.append(cumulative_reward)
             avg_R = np.mean(avg_rewards)
             policy.avg_R = avg_R
-            Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")
 
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
+            running_avg_J = ExperimentUtil.running_average(
+                self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN],
+                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                round(running_avg_J, 3))
+            Logger.__call__().get_logger().info(
+                f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}, "
+                f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}: "
+                f"{running_avg_J}")
             self.env.reset()
 
             # Update training job
