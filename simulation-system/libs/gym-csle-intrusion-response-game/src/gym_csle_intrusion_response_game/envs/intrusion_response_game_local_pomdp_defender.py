@@ -54,11 +54,68 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Setup traces
         self.traces = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-
         self.latest_attacker_obs = None
+
+        # Reset
+        self.reset()
+
+        # Get upper bound and random return estimate
+        self.upper_bound_return = 0
+        self.random_return = 0
+        self.upper_bound_return = self.get_upper_bound_return(samples=100)
+        self.random_return = self.get_random_baseline_return(samples=100)
+
         # Reset
         self.reset()
         super().__init__()
+
+    def get_random_baseline_return(self, samples: int = 100) -> float:
+        """
+        Utiltiy function for estimating the average return of a random defender strategy
+
+        :param samples: the number of samples to use for estimation
+        :return: the estimated return
+        """
+        max_horizon = 1000
+        returns = []
+        for i in range(samples):
+            o = self.reset()
+            done = False
+            t = 0
+            cumulative_reward = 0
+            while not done  and t <= max_horizon:
+                a1 = np.random.choice(self.config.local_intrusion_response_game_config.A1)
+                o, r, done, info = self.step(a1)
+                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                t += 1
+            returns.append(cumulative_reward)
+        return np.mean(np.array(returns))
+
+    def get_upper_bound_return(self, samples: int = 100) -> float:
+        """
+        Utiltiy method for getting an upper bound on the average return
+
+        :param samples: the number of sample returns to average
+        :return: the estimated upper bound
+        """
+        max_horizon = 1000
+        returns = []
+        initial_zone = self.config.local_intrusion_response_game_config.S[
+            self.config.local_intrusion_response_game_config.s_1_idx][env_constants.STATES.D_STATE_INDEX]
+        for i in range(samples):
+            o = self.reset()
+            done = False
+            t = 0
+            cumulative_reward = 0
+            while not done  and t <= max_horizon:
+                a1 = 0
+                if self.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
+                    a1 = initial_zone
+                o, r, done, info = self.step(a1)
+                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                t += 1
+            returns.append(cumulative_reward)
+        return np.mean(np.array(returns))
 
     def step(self, a1: int) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
         """
@@ -151,8 +208,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             R += self.trace.defender_rewards[i] * math.pow(self.config.local_intrusion_response_game_config.gamma, i)
         info[env_constants.ENV_METRICS.RETURN] = R
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
-        upper_bound_return = 0
-        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
+        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = self.upper_bound_return
+        info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
     def reset(self, soft: bool = False) -> np.ndarray:

@@ -72,3 +72,4 @@ class ENV_METRICS:
     OBSERVATION = "o"
     TIME_STEP = "t"
     AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"
+    AVERAGE_RANDOM_RETURN = "average_random_return"

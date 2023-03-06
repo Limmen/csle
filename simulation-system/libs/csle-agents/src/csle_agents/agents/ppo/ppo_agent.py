@@ -3,6 +3,7 @@ import time
 import gym
 import os
 import numpy as np
+import math
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
@@ -47,6 +48,10 @@ class PPOAgent(BaseAgent):
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RANDOM_RETURN)
         descr = f"Training of policies with PPO using " \
                 f"simulation:{self.simulation_env_config.name}"
 
@@ -92,6 +97,10 @@ class PPOAgent(BaseAgent):
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RANDOM_RETURN] = []
             ExperimentUtil.set_seed(seed)
 
             # Callback for logging training metrics
@@ -321,6 +330,10 @@ class PPOTrainingCallback(BaseCallback):
             o = self.env.reset()
             max_horizon = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
             avg_rewards = []
+            avg_horizons = []
+            avg_upper_bounds = []
+            avg_random_returns = []
+            info = {}
             for i in range(self.eval_batch_size):
                 o = self.env.reset()
                 done = False
@@ -329,23 +342,55 @@ class PPOTrainingCallback(BaseCallback):
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
                     o, r, done, info = self.env.step(a)
-                    cumulative_reward += r
+                    cumulative_reward += r* math.pow(
+                        self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
                     t += 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
                 avg_rewards.append(cumulative_reward)
+                if agents_constants.ENV_METRICS.TIME_HORIZON in info:
+                    avg_horizons.append(info[agents_constants.ENV_METRICS.TIME_HORIZON])
+                else:
+                    avg_horizons.append(-1)
+                if agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in info:
+                    avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
+                else:
+                    avg_upper_bounds.append(-1)
+                if agents_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN in info:
+                    avg_random_returns.append(info[agents_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN])
+                else:
+                    avg_random_returns.append(-1)
+
+                avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
             avg_R = np.mean(avg_rewards)
+            avg_T = np.mean(avg_horizons)
+            avg_random_return = np.mean(avg_random_returns)
+            avg_upper_bound = np.mean(avg_upper_bounds)
             policy.avg_R = avg_R
 
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN].append(
+                round(avg_upper_bound, 3))
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RANDOM_RETURN].append(
+                round(avg_random_return, 3))
             running_avg_J = ExperimentUtil.running_average(
                 self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
                 round(running_avg_J, 3))
+            running_avg_T = ExperimentUtil.running_average(
+                self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
+                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
+                round(running_avg_T, 3))
             Logger.__call__().get_logger().info(
-                f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}, "
-                f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}: "
-                f"{running_avg_J}")
+                f"[EVAL] Training iteration: {self.iter}, Avg R:{round(avg_R, 3)}, "
+                f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_R: "
+                f"{round(running_avg_J, 3)}, Avg T:{round(avg_T, 3)}, "
+                f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
+                f"{round(running_avg_T, 3)}, Avg pi*: {round(avg_upper_bound, 3)}, "
+                f"Avg random R:{round(avg_random_return, 3)}")
+
             self.env.reset()
 
             # Update training job

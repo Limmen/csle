@@ -349,7 +349,7 @@ class IntrusionResponseGameUtil:
 
     @staticmethod
     def local_defender_utility_function(s: np.ndarray, a1: int, eta: float, reachable: bool, initial_zone: int,
-                                        beta: float, D_C: np.ndarray, Z_U: np.ndarray):
+                                        beta: float, C_D: np.ndarray, Z_U: np.ndarray):
         """
         The local utility function of the defender
 
@@ -359,7 +359,7 @@ class IntrusionResponseGameUtil:
         :param reachable: a boolean flag indicating whether the node is reachable from the public gateway or not
         :param initial_zone: the initial zone of the node in the local game
         :param beta: a scaling parameter indicating the importance of the workflow of the local game
-        :param D_C: the vector with the costs of the local defender actions
+        :param C_D: the vector with the costs of the local defender actions
         :param Z_U: the utilities of the zones in the network
         :return: the utility of the defender
         """
@@ -367,7 +367,7 @@ class IntrusionResponseGameUtil:
             return 0
         workflow_utility = IntrusionResponseGameUtil.local_workflow_utility(beta=beta, reachable=reachable, s=s,
                                                                             initial_zone=initial_zone)
-        intrusion_cost = IntrusionResponseGameUtil.local_intrusion_cost(a1=a1, D_C=D_C, reachable=reachable, s=s,
+        intrusion_cost = IntrusionResponseGameUtil.local_intrusion_cost(a1=a1, D_C=C_D, reachable=reachable, s=s,
                                                                         Z_U=Z_U)
         return eta * workflow_utility - (1 - eta) * intrusion_cost
 
@@ -396,7 +396,7 @@ class IntrusionResponseGameUtil:
                 for s in S:
                     a1_a2_rews.append(IntrusionResponseGameUtil.local_defender_utility_function(
                         s=s, a1=a1, eta=eta, reachable=reachable, initial_zone=initial_zone,
-                        beta=beta, D_C=C_D, Z_U=Z_U
+                        beta=beta, C_D=C_D, Z_U=Z_U
                     ))
                 a1_rews.append(a1_a2_rews)
             R.append(a1_rews)

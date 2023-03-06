@@ -41,6 +41,9 @@ class COMMON:
     ]
     RUNNING_AVERAGE_INTRUSION_LENGTH = "running_average_intrusion_length"
     RUNNING_AVERAGE_INTRUSION_START = "running_average_intrusion_start"
+    AVERAGE_TIME_HORIZON = "average_time_horizon"
+    AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"
+    AVERAGE_RANDOM_RETURN = "average_random_return"
     RUNNING_AVERAGE_TIME_HORIZON = "running_average_time_horizon"
     NUM_PARALLEL_ENVS = "num_parallel_envs"
     OPTIMIZER = "optimizer"
@@ -350,3 +353,18 @@ class DYNASEC:
     NO_INTRUSION_ALERTS_MEAN = "no_intrusion_alerts_mean"
     INTRUSION_ALERTS_MEAN_BASELINE = "intrusion_alerts_mean_baseline"
     NO_INTRUSION_ALERTS_MEAN_BASELINE = "no_intrusion_alerts_mean_baseline"
+
+
+class ENV_METRICS:
+    """
+    String constants representing environment metrics
+    """
+    RETURN = "R"
+    TIME_HORIZON = "T"
+    STATE = "s"
+    DEFENDER_ACTION = "a1"
+    ATTACKER_ACTION = "a2"
+    OBSERVATION = "o"
+    TIME_STEP = "t"
+    AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"
+    AVERAGE_RANDOM_RETURN = "average_random_return"

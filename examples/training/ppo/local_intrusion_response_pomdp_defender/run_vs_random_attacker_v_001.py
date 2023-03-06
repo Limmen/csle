@@ -89,11 +89,11 @@ if __name__ == '__main__':
     eta = 0.5
     reachable = True
     beta = 1
-    gamma = 1
+    gamma = 0.99
     initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.8, 0.4, 0.1, 0.05])
+    Z_D_P = np.array([0, 0.8, 0.1, 0.08, 0.05])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
