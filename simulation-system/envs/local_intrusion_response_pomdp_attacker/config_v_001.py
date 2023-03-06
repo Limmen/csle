@@ -341,7 +341,7 @@ def default_input_config(attacker_observation_space_config: ObservationSpaceConf
     game_config = LocalIntrusionResponseGameConfig(
         A1=A1, A2=A2, zones=zones,
         d_b1=IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A),
-        a_b1=IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D),
+        a_b1=IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D, initial_zone=initial_zone),
         T=np.array(transition_tensor_config.transition_tensor),
         O=np.array(list(map(lambda x: x.val, attacker_observation_space_config.observations))),
         Z=np.array(observation_function_config.observation_tensor),

@@ -151,17 +151,19 @@ class IntrusionResponseGameUtil:
         return d_b1
 
     @staticmethod
-    def local_initial_attacker_belief(S_D: np.ndarray) -> np.ndarray:
+    def local_initial_attacker_belief(S_D: np.ndarray, initial_zone) -> np.ndarray:
         """
         Gets the initial attacker belief for a local version of the game
 
         :param S_D: the defender's state space of the local game
+        :param initial_zone: the initial zone of the node
         :return: the initial defender belief
         """
-        d_b1 = np.zeros((len(S_D),))
+        d_a1 = np.zeros((len(S_D),))
+        # d_a1[initial_zone] = 1
         for i in range(len(S_D)):
-            d_b1[i] = 1 / len(S_D)  # The attacker has no clue about the zones initially
-        return d_b1
+            d_a1[i] = 1 / len(S_D)  # The attacker has no clue about the zones initially
+        return d_a1
 
     @staticmethod
     def local_state_space(number_of_zones: int) -> np.ndarray:
@@ -544,7 +546,7 @@ class IntrusionResponseGameUtil:
                         p = IntrusionResponseGameUtil.local_transition_probability(
                             s=s, s_prime=s_prime, a1=a1, a2=a2, Z_D_P=Z_D, A_P=A_P)
                         a1_a2_s_probs.append(p)
-                    assert sum(a1_a2_s_probs) == 1
+                    assert round(sum(a1_a2_s_probs),3) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             T.append(a1_probs)

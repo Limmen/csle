@@ -109,13 +109,9 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
             cumulative_reward = 0
             while not done  and t <= max_horizon:
                 a2 = 0
-                if self.state.attacker_state() == env_constants.ATTACK_STATES.HEALTHY and \
-                        self.state.defender_state() not in [env_constants.ZONES.SHUTDOWN_ZONE,
-                                                            env_constants.ZONES.REDIRECTION_ZONE]:
+                if self.state.attacker_state() == env_constants.ATTACK_STATES.HEALTHY:
                     a2 = env_constants.ATTACKER_ACTIONS.RECON
-                elif self.state.attacker_state() == env_constants.ATTACK_STATES.RECON and \
-                        self.state.defender_state() not in [env_constants.ZONES.SHUTDOWN_ZONE,
-                                                            env_constants.ZONES.REDIRECTION_ZONE]:
+                elif self.state.attacker_state() == env_constants.ATTACK_STATES.RECON:
                     a2 = env_constants.ATTACKER_ACTIONS.EXPLOIT
                 o, r, done, info = self.step(a2)
                 cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
@@ -199,7 +195,6 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
 
         # Populate info
         info = self._info(info)
-
         return attacker_obs, -r, done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:

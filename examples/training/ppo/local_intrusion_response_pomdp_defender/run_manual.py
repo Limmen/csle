@@ -43,7 +43,8 @@ if __name__ == '__main__':
         S_A=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
     )
     a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(
-        S_D=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
+        S_D=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D,
+        initial_zone=initial_zone
     )
     initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
                                        initial_state[env_constants.STATES.A_STATE_INDEX])]

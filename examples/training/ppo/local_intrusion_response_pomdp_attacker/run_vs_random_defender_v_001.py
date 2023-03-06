@@ -83,16 +83,17 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.ATTACKER, player_idx=0
     )
+
     number_of_zones = 5
     X_max = 10
     eta = 0.5
     reachable = True
-    beta = 1
+    beta = 3
     gamma = 0.99
     initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.8, 0.1, 0.08, 0.05])
+    Z_D_P = np.array([0, 0.8, 0.15, 0.12, 0.08])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
@@ -102,11 +103,11 @@ if __name__ == '__main__':
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     C_D = np.array([0, 5, 1, 2, 2, 2])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
-    A_P = np.array([1, 1, 0.4, 0.2])
+    A_P = np.array([1, 1, 0.7, 0.5])
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 1, 2, 2.5, 3])
+    Z_U = np.array([0, 1, 3, 3.5, 4])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
@@ -114,40 +115,21 @@ if __name__ == '__main__':
         S_A=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
     )
     a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(
-        S_D=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
+        S_D=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D,
+        initial_zone=initial_zone
     )
     initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
                                        initial_state[env_constants.STATES.A_STATE_INDEX])]
     env_name = "csle-intrusion-response-game-pomdp-defender-v1"
-    attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()), len(A2)))
-    for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
-        if s_a == env_constants.ATTACK_STATES.HEALTHY:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.2
-        elif s_a == env_constants.ATTACK_STATES.RECON:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.7
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.15
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.15
-        else:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 1
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0
     defender_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_defender_state_space(
         number_of_zones=number_of_zones)), len(A1)))
     for i, s_d in enumerate(IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)):
-        if i+1 == env_constants.ZONES.SHUTDOWN_ZONE:
-            defender_stage_strategy[i][initial_zone] = 1
-        else:
-            if i+1 == initial_zone:
-                defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.9
-                for z in zones:
-                    if z != initial_zone:
-                        defender_stage_strategy[i][z] = 0.1/len(zones)
-            else:
-                defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.8
-                for z in zones:
-                    if z != initial_zone:
-                        defender_stage_strategy[i][z] = 0.2/len(zones)
+        # if i == env_constants.ZONES.SHUTDOWN_ZONE:
+        #     defender_stage_strategy[i][initial_zone] = 1
+        # else:
+        defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.95
+        for z in zones:
+            defender_stage_strategy[i][z] = 0.05/len(zones)
     defender_strategy = TabularPolicy(
         player_type=PlayerType.DEFENDER,
         actions=A1,
@@ -161,6 +143,8 @@ if __name__ == '__main__':
             A1=A1, A2=A2, d_b1=d_b1, a_b1=a_b1, gamma=gamma, beta=beta, C_D=C_D, A_P=A_P, Z_D_P=Z_D_P, Z_U=Z_U,
             eta=eta
         )
+    simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
+
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config)
     experiment_execution = agent.train()
