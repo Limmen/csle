@@ -34,6 +34,7 @@ class COMMON:
     MAX_ENV_STEPS = "max_env_steps"
     RUNNING_AVERAGE = "running_average"
     L = "L"
+    NUM_NODES = "num_nodes"
     STOPPING_ENVS = [
         "csle-stopping-game-v1",
         "csle-stopping-game-mdp-attacker-v1",
@@ -51,6 +52,7 @@ class COMMON:
     SGD = "SGD"
     LEARNING_RATE_EXP_DECAY = "learning_rate_exp_decay"
     LEARNING_RATE_DECAY_RATE = "learning_rate_decay_rate"
+    RUNTIME = "runtime"
 
 
 class PPO:

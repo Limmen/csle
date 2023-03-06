@@ -9,13 +9,15 @@ from csle_agents.agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
-from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
+from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config \
+    import WorkflowIntrusionResponseGameConfig
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-local-pomdp-defender-001")
+        "csle-intrusion-response-game-workflow-pomdp-defender-001")
+    num_nodes = 2
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
@@ -79,13 +81,15 @@ if __name__ == '__main__':
                 value=10, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                              descr="the number of stop actions")
+                                              descr="the number of stop actions"),
+            agents_constants.COMMON.NUM_NODES: HParam(value=num_nodes, name=agents_constants.COMMON.NUM_NODES,
+                                              descr="the number of nodes in the network")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    experiment_config.name = f"workflow_ppo_nodes={1}"
     number_of_zones = 5
-    X_max = 10
+    experiment_config.name = f"workflow_ppo_nodes={num_nodes}"
+    X_max = 100
     eta = 0.5
     reachable = True
     beta = 3
@@ -94,27 +98,10 @@ if __name__ == '__main__':
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
     Z_D_P = np.array([0, 0.8, 0.15, 0.12, 0.08])
-    S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
-    states_to_idx = {}
-    for i, s in enumerate(S):
-        states_to_idx[(s[env_constants.STATES.D_STATE_INDEX], s[env_constants.STATES.A_STATE_INDEX])] = i
-    S_A = IntrusionResponseGameUtil.local_attacker_state_space()
-    S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
-    A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     C_D = np.array([0, 5, 1, 2, 2, 2])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
     A_P = np.array([1, 1, 0.7, 0.5])
-    O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
-    T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
-    Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
     Z_U = np.array([0, 1, 3, 3.5, 4])
-    R = np.array(
-        [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
-                                                       S=S, Z_U=Z_U, initial_zone=initial_zone)])
-    d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
-    a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D,initial_zone=initial_zone)
-    initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
-                                       initial_state[env_constants.STATES.A_STATE_INDEX])]
     env_name = "csle-intrusion-response-game-pomdp-defender-v1"
     attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()), len(A2)))
     for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
@@ -135,14 +122,30 @@ if __name__ == '__main__':
         value_function=None, q_table=None,
         lookup_table=list(attacker_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
-    simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config = \
-        LocalIntrusionResponseGameConfig(
-            env_name=env_name, T=T, O=O, Z=Z, R=R, S=S, S_A=S_A, S_D=S_D, s_1_idx=initial_state_idx, zones=zones,
-            A1=A1, A2=A2, d_b1=d_b1, a_b1=a_b1, gamma=gamma, beta=beta, C_D=C_D, A_P=A_P, Z_D_P=Z_D_P, Z_U=Z_U,
-            eta=eta
-        )
-    simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
-
+    gw_reachable = np.array([0,1,2])
+    adjacency_matrix = [
+        [1,0,0,1,1,0,0],
+        [0,1,0,1,0,1,0],
+        [0,0,1,0,1,1,0],
+        [0,0,0,1,0,0,1],
+        [0,0,0,0,1,0,1],
+        [0,0,0,0,0,1,1]
+    ]
+    adjacency_matrix = np.array(adjacency_matrix)
+    nodes = np.array(list(range(num_nodes)))
+    initial_zones = []
+    attacker_strategies = []
+    for node in nodes:
+        initial_zones.append(np.random.choice(zones))
+        attacker_strategies.append(attacker_strategy)
+    initial_zones=np.array(initial_zones)
+    simulation_env_config.simulation_env_input_config.game_config= WorkflowIntrusionResponseGameConfig(
+        env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
+        nodes=nodes, initial_zones=initial_zones, X_max=X_max, beta=beta, gamma=gamma,
+        zones=zones, Z_D_P=Z_D_P,C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
+        gw_reachable=gw_reachable
+    )
+    simulation_env_config.simulation_env_input_config.attacker_strategies = attacker_strategies
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config)
     experiment_execution = agent.train()

@@ -52,6 +52,7 @@ class PPOAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RANDOM_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
         descr = f"Training of policies with PPO using " \
                 f"simulation:{self.simulation_env_config.name}"
 
@@ -94,6 +95,7 @@ class PPOAgent(BaseAgent):
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
+            self.start = time.time()
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
@@ -101,6 +103,7 @@ class PPOAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RANDOM_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
             ExperimentUtil.set_seed(seed)
 
             # Callback for logging training metrics
@@ -119,7 +122,8 @@ class PPOAgent(BaseAgent):
                 save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
                 env=orig_env, experiment_config=self.experiment_config,
                 L=self.experiment_config.hparams[agents_constants.COMMON.L].value,
-                gym_env_name=self.simulation_env_config.gym_env_name
+                gym_env_name=self.simulation_env_config.gym_env_name,
+                start=self.start
             )
 
             # Create PPO Agent
@@ -221,7 +225,7 @@ class PPOTrainingCallback(BaseCallback):
     """
     def __init__(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
                  training_job: TrainingJobConfig, exp_execution: ExperimentExecution,
-                 max_steps: int, simulation_name: str,
+                 max_steps: int, simulation_name: str, start: float,
                  states: List[State], actions: List[Action], player_type: PlayerType,
                  env: gym.Env, experiment_config: ExperimentConfig, verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = "",
@@ -248,6 +252,7 @@ class PPOTrainingCallback(BaseCallback):
         :param experiment_config: the experiment configuration
         :param L: num stops if a stopping environment
         :param gym_env_name: name of gym env
+        :param start_time: the start time-stamp
         """
         super(PPOTrainingCallback, self).__init__(verbose)
         self.states = states
@@ -269,6 +274,7 @@ class PPOTrainingCallback(BaseCallback):
         self.experiment_config = experiment_config
         self.L = L
         self.gym_env_name = gym_env_name
+        self.start = start
 
     def _on_training_start(self) -> None:
         """
@@ -366,11 +372,12 @@ class PPOTrainingCallback(BaseCallback):
             avg_random_return = np.mean(avg_random_returns)
             avg_upper_bound = np.mean(avg_upper_bounds)
             policy.avg_R = avg_R
-
+            time_elapsed_minutes = (time.time() - self.start)//60
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN].append(
                 round(avg_upper_bound, 3))
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RANDOM_RETURN].append(
                 round(avg_random_return, 3))
             running_avg_J = ExperimentUtil.running_average(
@@ -389,7 +396,7 @@ class PPOTrainingCallback(BaseCallback):
                 f"{round(running_avg_J, 3)}, Avg T:{round(avg_T, 3)}, "
                 f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
                 f"{round(running_avg_T, 3)}, Avg pi*: {round(avg_upper_bound, 3)}, "
-                f"Avg random R:{round(avg_random_return, 3)}")
+                f"Avg random R:{round(avg_random_return, 3)}, time elapsed (min): {time_elapsed_minutes}")
 
             self.env.reset()
 

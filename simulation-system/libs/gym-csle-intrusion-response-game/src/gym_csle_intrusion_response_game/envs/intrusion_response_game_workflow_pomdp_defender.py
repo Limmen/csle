@@ -95,6 +95,9 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         # Get upper bound and random return estimate
         self.upper_bound_return = 0
         self.random_return = 0
+        for env in self.local_envs:
+            self.upper_bound_return += env.upper_bound_return
+            self.random_return += env.random_return
 
         # State metrics
         self.t = 0
