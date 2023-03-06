@@ -372,13 +372,13 @@ class IntrusionResponseGameUtil:
         return eta * workflow_utility - (1 - eta) * intrusion_cost
 
     @staticmethod
-    def local_reward_tensor(eta: float, D_C: np.ndarray, reachable: bool, Z_U: np.ndarray, initial_zone: int,
+    def local_reward_tensor(eta: float, C_D: np.ndarray, reachable: bool, Z_U: np.ndarray, initial_zone: int,
                             beta: float, S: np.ndarray, A1: np.ndarray, A2: np.ndarray) -> np.ndarray:
         """
         Gets the defender's utility tensor of the local version of the game
 
         :param eta: a scaling parameter for the local rewards
-        :param D_C: the vector with the costs of the local defender actions
+        :param C_D: the vector with the costs of the local defender actions
         :param reachable: a boolean flag indicating whether the node of the local game is reachable or not
         :param Z_U: the vector with utilities of the different zones in the network
         :param initial_zone: the initial zone of the node
@@ -396,7 +396,7 @@ class IntrusionResponseGameUtil:
                 for s in S:
                     a1_a2_rews.append(IntrusionResponseGameUtil.local_defender_utility_function(
                         s=s, a1=a1, eta=eta, reachable=reachable, initial_zone=initial_zone,
-                        beta=beta, D_C=D_C, Z_U=Z_U
+                        beta=beta, D_C=C_D, Z_U=Z_U
                     ))
                 a1_rews.append(a1_a2_rews)
             R.append(a1_rews)
@@ -562,23 +562,68 @@ class IntrusionResponseGameUtil:
         :param O: the local observation space
         :return: a |A1|x|A2|x|S|x|O| tensor
         """
-        intrusion_dist = []
-        no_intrusion_dist = []
-        intrusion_rv = betabinom(n=len(O) - 1, a=1, b=0.7)
-        no_intrusion_rv = betabinom(n=len(O) - 1, a=0.7, b=3)
+        brute_force_dist = []
+        exploit_dist = []
+        recon_dist = []
+        wait_dist = []
+        brute_force_hp_dist = []
+        exploit_hp_dist = []
+        recon_hp_dist = []
+        wait_hp_dist = []
+        shutdown_dist = np.zeros(len(O))
+        shutdown_dist[0]=1
+
+        brute_force_hp_rv = betabinom(n=len(O) - 1, a=4, b=0.7)
+        recon_hp_rv = betabinom(n=len(O) - 1, a=3, b=0.7)
+        exploit_hp_rv = betabinom(n=len(O) - 1, a=2, b=0.7)
+        wait_hp_rv = betabinom(n=len(O) - 1, a=1, b=2)
+
+        brute_force_rv = betabinom(n=len(O) - 1, a=3, b=0.7)
+        recon_rv = betabinom(n=len(O) - 1, a=2, b=0.7)
+        exploit_rv = betabinom(n=len(O) - 1, a=1, b=0.7)
+        wait_rv = betabinom(n=len(O) - 1, a=0.7, b=3)
+
         for i in range(len(O)):
-            intrusion_dist.append(intrusion_rv.pmf(i))
-            no_intrusion_dist.append(no_intrusion_rv.pmf(i))
+            recon_dist.append(recon_rv.pmf(i))
+            brute_force_dist.append(brute_force_rv.pmf(i))
+            exploit_dist.append(exploit_rv.pmf(i))
+            wait_dist.append(wait_rv.pmf(i))
+            recon_hp_dist.append(recon_hp_rv.pmf(i))
+            brute_force_hp_dist.append(brute_force_hp_rv.pmf(i))
+            exploit_hp_dist.append(exploit_hp_rv.pmf(i))
+            wait_hp_dist.append(wait_hp_rv.pmf(i))
         Z = []
         for a1 in A1:
             a1_probs = []
             for a2 in A2:
                 a1_a2_probs = []
                 for s in S:
-                    if a2 != 0:
-                        a1_a2_s_probs = intrusion_dist
+                    if IntrusionResponseGameUtil.is_local_state_in_zone(s=s, zone=env_constants.ZONES.SHUTDOWN_ZONE):
+                        a1_a2_s_probs = shutdown_dist
+                    elif a2 == env_constants.ATTACKER_ACTIONS.RECON:
+                        if IntrusionResponseGameUtil.is_local_state_in_zone(
+                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                            a1_a2_s_probs = recon_hp_dist
+                        else:
+                            a1_a2_s_probs = recon_dist
+                    elif a2 == env_constants.ATTACKER_ACTIONS.EXPLOIT:
+                        if IntrusionResponseGameUtil.is_local_state_in_zone(
+                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                            a1_a2_s_probs = exploit_hp_dist
+                        else:
+                            a1_a2_s_probs = exploit_dist
+                    elif a2 == env_constants.ATTACKER_ACTIONS.BRUTE_FORCE:
+                        if IntrusionResponseGameUtil.is_local_state_in_zone(
+                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                            a1_a2_s_probs = brute_force_hp_dist
+                        else:
+                            a1_a2_s_probs = brute_force_dist
                     else:
-                        a1_a2_s_probs = no_intrusion_dist
+                        if IntrusionResponseGameUtil.is_local_state_in_zone(
+                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                            a1_a2_s_probs = wait_hp_dist
+                        else:
+                            a1_a2_s_probs = wait_dist
                     assert round(sum(a1_a2_s_probs), 5) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)

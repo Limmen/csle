@@ -148,7 +148,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         R = 0
         for i in range(len(self.trace.attacker_rewards)):
             R += self.trace.attacker_rewards[i] * math.pow(self.config.local_intrusion_response_game_config.gamma, i)
-        info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.attacker_rewards)
+        info[env_constants.ENV_METRICS.RETURN] = R
         info[env_constants.ENV_METRICS.TIME_HORIZON] = self.state.t
         upper_bound_return = 0
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return

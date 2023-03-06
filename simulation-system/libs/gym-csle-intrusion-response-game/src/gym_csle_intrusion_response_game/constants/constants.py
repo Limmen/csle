@@ -8,7 +8,6 @@ class ZONES:
     """
     Constants related to the zones of the network
     """
-    HONEYPOT_ZONE = 3
     REDIRECTION_ZONE = 2
     SHUTDOWN_ZONE = 1
 

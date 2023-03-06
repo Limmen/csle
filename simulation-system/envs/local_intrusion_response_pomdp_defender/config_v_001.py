@@ -230,7 +230,7 @@ def default_reward_function_config(reachable: bool, initial_zone: int, beta: flo
         reward_tensor=[list(IntrusionResponseGameUtil.local_reward_tensor(
             eta=eta, reachable=reachable, initial_zone=initial_zone, beta=beta,
             S=state_space, A1=A1, A2=A2,
-            D_C=defender_action_costs, Z_U=zone_utilities
+            C_D=defender_action_costs, Z_U=zone_utilities
         ))])
     return reward_function_config
 
