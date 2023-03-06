@@ -45,13 +45,13 @@ class IntrusionResponseGameStateLocal:
         """
         :return: the attacker's observation
         """
-        pass
+        return np.array([self.attacker_state()] + list(self.a_b.tolist()))
 
     def defender_observation(self) -> np.ndarray:
         """
         :return: the defender's observation
         """
-        pass
+        return np.array([self.defender_state()] + list(self.d_b.tolist()))
 
     def state_vector(self) -> np.ndarray:
         """

@@ -61,7 +61,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -77,11 +77,11 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Compute the reward
         if isinstance(a1, List) or isinstance(a1, np.ndarray):
             a1 = a1[0]
-        r = self.config.local_intrusion_response_game_config.R[a1][a2][self.state.s_idx]
+        r = self.config.local_intrusion_response_game_config.R[0][a1][a2][self.state.s_idx]
 
         # Sample the next state
         s_idx_prime = IntrusionResponseGameUtil.sample_next_state(
-            a1=a1, a2=a2, T=self.config.local_intrusion_response_game_config.T,
+            a1=a1, a2=a2, T=self.config.local_intrusion_response_game_config.T[0],
             S=self.config.local_intrusion_response_game_config.S, s_idx=self.state.s_idx)
 
         # Sample the next observation
@@ -89,6 +89,9 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             Z=self.config.local_intrusion_response_game_config.Z,
             O=self.config.local_intrusion_response_game_config.O,
             s_prime_idx=s_idx_prime, a1=a1, a2=a2)
+
+        # Move to the next state
+        self.state.s_idx = s_idx_prime
 
         # Check if game is done
         if IntrusionResponseGameUtil.is_local_state_terminal(self.state.state_vector()):
@@ -99,13 +102,10 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             self.state.d_b = IntrusionResponseGameUtil.next_local_defender_belief(
                 o=o, a1=a1, d_b=self.state.d_b, pi2=pi2, config=self.config.local_intrusion_response_game_config,
                 a2=a2, s_a=self.state.attacker_state(),
-                s_d=self.state.defender_state())
+                s_d_prime=self.state.defender_state())
 
         # Update time-step
         self.state.t += 1
-
-        # Move to the next state
-        self.state.s_idx = s_idx_prime
 
         # Populate info dict
         info[env_constants.ENV_METRICS.STATE] = self.state.state_vector()
@@ -113,6 +113,10 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
         info[env_constants.ENV_METRICS.OBSERVATION] = o
         info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
+
+        # Get observations
+        attacker_obs = self.state.attacker_observation()
+        defender_obs = self.state.defender_observation()
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -124,13 +128,13 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.trace.beliefs.append(self.state.d_b)
         self.trace.infrastructure_metrics.append(o)
         if not done:
-            self.trace.attacker_observations.append(o)
-            self.trace.defender_observations.append(o)
+            self.trace.attacker_observations.append(attacker_obs)
+            self.trace.defender_observations.append(defender_obs)
 
         # Populate info
         info = self._info(info)
 
-        return np.array([o]), r, done, info
+        return defender_obs, r, done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -254,4 +258,4 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             else:
                 a1 = int(raw_input)
                 o, r, done, _ = self.step(a1=a1)
-                print(f"o:{o[0]}, r:{r}, done: {done}")
+                print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")

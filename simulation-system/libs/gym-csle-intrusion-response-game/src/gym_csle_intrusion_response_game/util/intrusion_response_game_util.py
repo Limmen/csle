@@ -601,7 +601,7 @@ class IntrusionResponseGameUtil:
 
     @staticmethod
     def bayes_filter_defender_belief(s_a_prime: int, o: int, a1: int, d_b: np.ndarray, pi2: np.ndarray,
-                                     config: LocalIntrusionResponseGameConfig, s_d: int) -> float:
+                                     config: LocalIntrusionResponseGameConfig, s_d_prime: int) -> float:
         """
         A Bayesian filter to compute the belief of player 1 of being in s_prime when observing o after
         taking action a in belief b given that the opponent follows strategy pi2
@@ -611,25 +611,26 @@ class IntrusionResponseGameUtil:
         :param a1: the action of player 1
         :param d_b: the current defender belief point
         :param pi2: the policy of player 2
-        :param s_d: the defender state
+        :param s_d_prime: the defender state
         :return: b_prime(s_prime)
         """
         norm = 0
-        for s in config.S_A:
-            s_idx = config.states_to_idx[(s_d, s)]
+        for s_a in config.S_A:
+            s_idx = config.states_to_idx[(s_d_prime, s_a)]
             for a2 in config.A2:
-                for s_prime_1 in config.S_A:
-                    s_prime_idx = config.states_to_idx[(s_d, s_prime_1)]
-                    prob_1 = config.Z[a1][a2][s_prime_idx][o]
-                    norm += d_b[s] * prob_1 * config.T[a1][a2][s_idx][s_prime_idx] * pi2[s][a2]
+                for s_prime_a_1 in config.S_A:
+                    s_prime_idx = config.states_to_idx[(s_d_prime, s_prime_a_1)]
+                    obs_prob = config.Z[a1][a2][s_prime_idx][o]
+                    norm += d_b[s_a] * obs_prob * config.T[0][a1][a2][s_idx][s_prime_idx] * pi2[s_a][a2]
         if norm == 0:
             return 0
         temp = 0
-        s_prime_idx = config.states_to_idx[(s_d, s_a_prime)]
-        for s in config.S_A:
-            s_idx = config.states_to_idx[(s_d, s)]
+        s_prime_idx = config.states_to_idx[(s_d_prime, s_a_prime)]
+        for s_a in config.S_A:
+            s_idx = config.states_to_idx[(s_d_prime, s_a)]
             for a2 in config.A2:
-                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[a1][a2][s_idx][s_prime_idx] * d_b[s] * pi2[s][a2]
+                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[0][a1][a2][s_idx][s_prime_idx] * \
+                        d_b[s_a] * pi2[s_a][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_a_prime}, o:{o}, pi2:{pi2}")
@@ -655,14 +656,14 @@ class IntrusionResponseGameUtil:
             s_idx = config.states_to_idx[(s_d, s)]
             for s_prime in config.S_A:
                 s_prime_idx = config.states_to_idx[(s_d, s_prime)]
-                prob += b[s] * config.T[a1][a2][s_idx][s_prime_idx] * config.Z[a1][a2][s_prime_idx][o]
+                prob += b[s] * config.T[0][a1][a2][s_idx][s_prime_idx] * config.Z[a1][a2][s_prime_idx][o]
         assert prob < 1
         return prob
 
     @staticmethod
     def next_local_defender_belief(o: int, a1: int, d_b: np.ndarray, pi2: np.ndarray,
                                    config: LocalIntrusionResponseGameConfig, a2: int, s_a: int,
-                                   s_d: int) -> np.ndarray:
+                                   s_d_prime: int) -> np.ndarray:
         """
         Computes the next belief using a Bayesian filter
 
@@ -673,13 +674,13 @@ class IntrusionResponseGameUtil:
         :param config: the game config
         :param a2: the attacker action (for debugging, should be consistent with pi2)
         :param s_a: the true current attacker state (for debugging)
-        :param s_d: the defender state
+        :param s_d_prime: the new defender state
         :return: the new belief
         """
         b_prime = np.zeros(len(config.S_A))
         for s_a_prime in config.S_A:
             b_prime[s_a_prime] = IntrusionResponseGameUtil.bayes_filter_defender_belief(
-                s_a_prime=s_a_prime, o=o, a1=a1, d_b=d_b, pi2=pi2, config=config, s_d=s_d)
+                s_a_prime=s_a_prime, o=o, a1=a1, d_b=d_b, pi2=pi2, config=config, s_d_prime=s_d_prime)
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, d_b:{d_b}, pi2:{pi2}, "
                   f"a2: {a2}, s:{s_a}")

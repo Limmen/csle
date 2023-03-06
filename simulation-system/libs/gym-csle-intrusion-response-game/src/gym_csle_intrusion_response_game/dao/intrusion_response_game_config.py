@@ -64,17 +64,19 @@ class LocalIntrusionResponseGameConfig:
         for i, s in enumerate(self.S):
             self.states_to_idx[(s[env_constants.STATES.D_STATE_INDEX], s[env_constants.STATES.A_STATE_INDEX])] = i
 
-    def attacker_observation_space(self) -> gym.spaces.Discrete:
+    def attacker_observation_space(self) -> gym.spaces.Box:
         """
         :return: the attacker's observation space
         """
-        return gym.spaces.Discrete(len(self.O))
+        return gym.spaces.Box(low=np.array([0]*(len(self.S_D)+1)), high=np.array([len(self.S_A)] + [1]*len(self.S_D)),
+                              dtype=np.float32, shape=(len(self.S_D) + 1, ))
 
-    def defender_observation_space(self) -> gym.spaces.Discrete:
+    def defender_observation_space(self) -> gym.spaces.Box:
         """
         :return: the defender's observation space
         """
-        return gym.spaces.Discrete(len(self.O))
+        return gym.spaces.Box(low=np.array([1]*(len(self.S_A)+1)), high=np.array([len(self.zones)] + [1]*len(self.S_A)),
+                              dtype=np.float32, shape=(len(self.S_A) + 1, ))
 
     def attacker_action_space(self) -> gym.spaces.Discrete:
         """
