@@ -16,9 +16,10 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-attacker-001")
+    num_nodes=1
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO test", random_seeds=[399, 98912, 999, 121], agent_type=AgentType.PPO,
+        title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -61,7 +62,7 @@ if __name__ == '__main__':
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(300000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(600000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
@@ -79,13 +80,15 @@ if __name__ == '__main__':
                 value=10, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                              descr="the number of stop actions")
+                                              descr="the number of stop actions"),
+            agents_constants.COMMON.NUM_NODES: HParam(value=num_nodes, name=agents_constants.COMMON.NUM_NODES,
+                                                      descr="the number of nodes in the network")
         },
         player_type=PlayerType.ATTACKER, player_idx=0
     )
 
     number_of_zones = 5
-    X_max = 10
+    X_max = 100
     eta = 0.5
     reachable = True
     beta = 3

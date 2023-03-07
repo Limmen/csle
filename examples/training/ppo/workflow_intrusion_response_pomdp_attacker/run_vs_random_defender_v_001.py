@@ -16,8 +16,8 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-workflow-pomdp-defender-001")
-    num_nodes = 64
+        "csle-intrusion-response-game-workflow-pomdp-attacker-001")
+    num_nodes = 2
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
@@ -85,7 +85,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.NUM_NODES: HParam(value=num_nodes, name=agents_constants.COMMON.NUM_NODES,
                                               descr="the number of nodes in the network")
         },
-        player_type=PlayerType.DEFENDER, player_idx=0
+        player_type=PlayerType.ATTACKER, player_idx=1
     )
     number_of_zones = 5
     experiment_config.name = f"workflow_ppo_nodes={num_nodes}"
@@ -102,26 +102,26 @@ if __name__ == '__main__':
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
     A_P = np.array([1, 1, 0.7, 0.5])
     Z_U = np.array([0, 1, 3, 3.5, 4])
-    env_name = "csle-intrusion-response-game-pomdp-defender-v1"
-    attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()), len(A2)))
-    for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
-        if s_a == env_constants.ATTACK_STATES.HEALTHY:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.2
-        elif s_a == env_constants.ATTACK_STATES.RECON:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.7
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.15
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.15
-        else:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 1
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0
-    attacker_strategy = TabularPolicy(
-        player_type=PlayerType.ATTACKER, actions=A2,
-        simulation_name="csle-intrusion-response-game-pomdp-defender-001",
+    env_name = "csle-intrusion-response-game-workflow-pomdp-attacker-v1"
+    A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
+
+    defender_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_defender_state_space(
+        number_of_zones=number_of_zones)), len(A1)))
+    for i, s_d in enumerate(IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)):
+        # if i == env_constants.ZONES.SHUTDOWN_ZONE:
+        #     defender_stage_strategy[i][initial_zone] = 1
+        # else:
+        defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.95
+        for z in zones:
+            defender_stage_strategy[i][z] = 0.05/len(zones)
+    defender_strategy = TabularPolicy(
+        player_type=PlayerType.DEFENDER,
+        actions=A1,
+        simulation_name="csle-intrusion-response-game-pomdp-attacker-001",
         value_function=None, q_table=None,
-        lookup_table=list(attacker_stage_strategy.tolist()),
+        lookup_table=list(defender_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
+
     gw_reachable = np.array([0,1,2])
     adjacency_matrix = [
         [1,0,0,1,1,0,0],
@@ -134,18 +134,18 @@ if __name__ == '__main__':
     adjacency_matrix = np.array(adjacency_matrix)
     nodes = np.array(list(range(num_nodes)))
     initial_zones = []
-    attacker_strategies = []
+    defender_strategies = []
     for node in nodes:
         initial_zones.append(np.random.choice(zones))
-        attacker_strategies.append(attacker_strategy)
+        defender_strategies.append(defender_strategy)
     initial_zones=np.array(initial_zones)
     simulation_env_config.simulation_env_input_config.game_config= WorkflowIntrusionResponseGameConfig(
-        env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
+        env_name="csle-intrusion-response-game-workflow-pomdp-attacker-v1",
         nodes=nodes, initial_zones=initial_zones, X_max=X_max, beta=beta, gamma=gamma,
         zones=zones, Z_D_P=Z_D_P,C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
         gw_reachable=gw_reachable
     )
-    simulation_env_config.simulation_env_input_config.attacker_strategies = attacker_strategies
+    simulation_env_config.simulation_env_input_config.defender_strategies = defender_strategies
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config)
     experiment_execution = agent.train()

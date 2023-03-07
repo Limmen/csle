@@ -1,5 +1,9 @@
 from typing import Dict, Any, List
 from csle_common.dao.training.policy import Policy
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
 from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config \
     import WorkflowIntrusionResponseGameConfig
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
@@ -18,7 +22,7 @@ class WorkflowIntrusionResponsePOMDPAttackerConfig(SimulationEnvInputConfig):
 
         :param env_name: the name of the environment
         :param game_config: the workflow game configuration
-        :param defender_strategies: the lsit of defender strategies for the local nodes in the workflow game
+        :param defender_strategies: the list of defender strategies for the local nodes in the workflow game
         """
         super().__init__()
         self.env_name = env_name
@@ -43,6 +47,21 @@ class WorkflowIntrusionResponsePOMDPAttackerConfig(SimulationEnvInputConfig):
         :param d: the dict to convert
         :return: the created instance
         """
+        defender_strategies = []
+        parse_functions = [MultiThresholdStoppingPolicy.from_dict, RandomPolicy.from_dict, PPOPolicy.from_dict,
+                           TabularPolicy.from_dict]
+        for strategy in d["defender_strategies"]:
+            for parse_fun in parse_functions:
+                try:
+                    defender_strategy = parse_fun(strategy)
+                    defender_strategies.append(defender_strategy)
+                    break
+                except Exception:
+                    pass
+            if defender_strategies is None:
+                raise ValueError("Could not parse the defender strategy")
+
         obj = WorkflowIntrusionResponsePOMDPAttackerConfig(
-            env_name=d["env_name"], game_config=d["game_config"], defender_strategies=d["defender_strategies"])
+            env_name=d["env_name"], game_config=WorkflowIntrusionResponseGameConfig.from_dict(d["game_config"]),
+            defender_strategies=defender_strategies)
         return obj

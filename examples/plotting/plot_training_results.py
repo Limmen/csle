@@ -38,14 +38,14 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
 
 
 if __name__ == '__main__':
-    experiment = MetastoreFacade.get_experiment_execution(id=28)
-    metric = "average_return"
+    experiment = MetastoreFacade.get_experiment_execution(id=132)
+    metric = "running_average_return"
     returns = []
     confidence = 0.95
     running_avg = 30
     # avg_rewards_data = np.array(avg_rewards_data_novice_ppo).reshape(max_len, num_seeds)
     seeds = list(experiment.result.all_metrics.keys())
-    seeds = [seeds[0]]
+    # seeds = [seeds[0]]
     print(seeds)
     for seed in seeds:
         returns.append(PlottingUtil.running_average(experiment.result.all_metrics[seed][metric], running_avg))

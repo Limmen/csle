@@ -54,3 +54,15 @@ class PlottingUtil:
         m, se = np.mean(a), stats.sem(a)
         h = se * stats.t.ppf((1 + confidence) / 2., n - 1)
         return m, h
+
+    @staticmethod
+    def min_max_norm(vec: np.ndarray, max_val: float, min_val: float) -> np.ndarray:
+        """
+        Min-max normalization of a vector
+
+        :param vec: the vector to normalize
+        :param max_val: the maximum value for the normalization
+        :param min_val: the minimuim value for the normalization
+        :return: the normalized vector
+        """
+        return np.array(list(map(lambda x: (x-min_val)/(max_val-min_val), vec.tolist())))
