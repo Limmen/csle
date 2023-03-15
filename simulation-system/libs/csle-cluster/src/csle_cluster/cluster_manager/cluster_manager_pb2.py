@@ -14,10 +14,32 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x63luster_manager.proto\"\x1a\n\x18GetClusterManagerLogsMsg\"S\n\x13GetContainerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"B\n\x17GetClientManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16GetKafkaManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\":\n\x0fGetKafkaLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"R\n\x12GetSnortIdsLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Y\n\x19GetSnortIdsManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Y\n\x19GetOSSECIdsManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"R\n\x12GetOSSECIdsLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"U\n\x15GetHostManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"X\n\x18GetTrafficManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"?\n\x14GetElkManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"8\n\rGetElkLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14GetRyuManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17GetRyuControllerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StopRyuMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StartRyuMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19StopHostMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"X\n\x18StopHostMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"@\n\x15RemoveKibanaTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15\x43reateKibanaTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x16\n\x14ListKibanaTunnelsMsg\"5\n\x10KibanaTunnelsDTO\x12!\n\x07tunnels\x18\x01 \x03(\x0b\x32\x10.KibanaTunnelDTO\"T\n\x0fKibanaTunnelDTO\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x11\n\temulation\x18\x03 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x04 \x01(\x05\"=\n\x12RemoveRyuTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12\x43reateRyuTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x13\n\x11ListRyuTunnelsMsg\"/\n\rRyuTunnelsDTO\x12\x1e\n\x07tunnels\x18\x01 \x03(\x0b\x32\r.RyuTunnelDTO\"Q\n\x0cRyuTunnelDTO\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x11\n\temulation\x18\x03 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x04 \x01(\x05\"P\n SnortIdsMonitorThreadStatusesDTO\x12,\n\x10snortIDSStatuses\x18\x01 \x03(\x0b\x32\x12.SnortIdsStatusDTO\"E\n\x1aGetSnortIdsManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"N\n#GetSnortIdsMonitorThreadStatusesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"H\n\x1dStopSnortIdsMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"V\n\x16StopSnortIdsManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"W\n\x17StartSnortIdsManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"B\n\x17StopSnortIdsManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StartSnortIdsManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"M\n\rStartSnortMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"]\n\x1dStartSnortIdsMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"I\n\x1eStartSnortIdsMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"L\n\x0cStopSnortMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"\\\n\x1cStopSnortIdsMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"<\n\x11StopSnortIdsesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"J\n\x1fStopSnortIdsesMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15GetRyuManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StopRyuMonitorServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19StartRyuMonitorServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopRyuServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartRyuServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16GetRyuServiceStatusMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopRyuManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartRyuManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1aGetOSSECIDSManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"P\n OSSECIdsMonitorThreadStatusesDTO\x12,\n\x10ossecIDSStatuses\x18\x01 \x03(\x0b\x32\x12.OSSECIdsStatusDTO\"N\n#GetOSSECIDSMonitorThreadStatusesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"H\n\x1dStopOSSECIDSMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\\\n\x1cStopOSSECIDSMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"]\n\x1dStartOSSECIDSMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"S\n\x13StopOSSECIDSManager\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"T\n\x14StartOSSECIDSManager\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"?\n\x14StopOSSECIDSManagers\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartOSSECIDSManagers\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"P\n\x10StartOSSECIDSMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"O\n\x0fStopOSSECIDSMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"=\n\x12StartOSSECIDSesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopOSSECIDSesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17GetKafkaManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13StartKafkaServerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StopKafkaServerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18GetKafkaManagerStatusMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14\x43reateKafkaTopicsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13StopKafkaManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StartKafkaManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16GetHostManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"K\n GetHostMonitorThreadsStatusesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"V\n\x16\x41pplyFileBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"X\n\x18\x41pplyPacketBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"X\n\x18\x41pplyMetricBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"W\n\x17\x41pplyHeartBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"O\n\x0fStopFileBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Q\n\x11StopPacketBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Q\n\x11StopMetricBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"P\n\x10StopHeartBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"f\n\x10StartFileBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"h\n\x12StartPacketBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"h\n\x12StartMetricBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"g\n\x11StartHeartBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"Y\n\x19StartHostMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"<\n\x11StopHeartbeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StopPacketbeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\";\n\x10StopFilebeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StopMetricbeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1aStartHostMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"R\n\x12StopHostManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"S\n\x13StartHostManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\">\n\x13StopHostManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xad\x05\n\x10\x45xecutionInfoDTO\x12\x15\n\remulationName\x18\x01 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x02 \x01(\x05\x12\x36\n\x14snortIdsManagersInfo\x18\x03 \x01(\x0b\x32\x18.SnortIdsManagersInfoDTO\x12\x36\n\x14ossecIdsManagersInfo\x18\x04 \x01(\x0b\x32\x18.OSSECIdsManagersInfoDTO\x12\x30\n\x11kafkaManagersInfo\x18\x05 \x01(\x0b\x32\x15.KafkaManagersInfoDTO\x12.\n\x10hostManagersInfo\x18\x06 \x01(\x0b\x32\x14.HostManagersInfoDTO\x12\x32\n\x12\x63lientManagersInfo\x18\x07 \x01(\x0b\x32\x16.ClientManagersInfoDTO\x12<\n\x17\x64ockerStatsManagersInfo\x18\x08 \x01(\x0b\x32\x1b.DockerStatsManagersInfoDTO\x12\x30\n\x11runningContainers\x18\t \x01(\x0b\x32\x15.RunningContainersDTO\x12\x30\n\x11stoppedContainers\x18\n \x01(\x0b\x32\x15.StoppedContainersDTO\x12\x37\n\x16trafficManagersInfoDTO\x18\x0b \x01(\x0b\x32\x17.TrafficManagersInfoDTO\x12*\n\x0e\x61\x63tiveNetworks\x18\x0c \x01(\x0b\x32\x12.DockerNetworksDTO\x12/\n\x12\x65lkManagersInfoDTO\x18\r \x01(\x0b\x32\x13.ElkManagersInfoDTO\x12/\n\x12ryuManagersInfoDTO\x18\x0e \x01(\x0b\x32\x13.RyuManagersInfoDTO\"\xab\x01\n\x12RyuManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1a\n\x12ryuManagersRunning\x18\x05 \x03(\x08\x12\x31\n\x13ryuManagersStatuses\x18\x06 \x03(\x0b\x32\x14.RyuManagerStatusDTO\"\xb4\x01\n\x13RyuManagerStatusDTO\x12\x13\n\x0bryu_running\x18\x01 \x01(\x08\x12\x17\n\x0fmonitor_running\x18\x02 \x01(\x08\x12\x0c\n\x04port\x18\x03 \x01(\x05\x12\x10\n\x08web_port\x18\x04 \x01(\x05\x12\x12\n\ncontroller\x18\x05 \x01(\t\x12\x10\n\x08kafka_ip\x18\x06 \x01(\t\x12\x12\n\nkafka_port\x18\x07 \x01(\x05\x12\x15\n\rtime_step_len\x18\x08 \x01(\x05\"\xaf\x01\n\x13HostManagersInfoDTO\x12\x0b\n\x03ips\x18\x15 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1b\n\x13hostManagersRunning\x18\x05 \x03(\x08\x12\x33\n\x14hostManagersStatuses\x18\x06 \x03(\x0b\x32\x15.HostManagerStatusDTO\"L\n\x16HostManagerStatusesDTO\x12\x32\n\x13hostManagerStatuses\x18\x01 \x03(\x0b\x32\x15.HostManagerStatusDTO\"\xa8\x01\n\x14HostManagerStatusDTO\x12\x17\n\x0fmonitor_running\x18\x01 \x01(\x08\x12\x18\n\x10\x66ilebeat_running\x18\x02 \x01(\x08\x12\x1a\n\x12packetbeat_running\x18\x03 \x01(\x08\x12\x1a\n\x12metricbeat_running\x18\x04 \x01(\x08\x12\x19\n\x11heartbeat_running\x18\x05 \x01(\x08\x12\n\n\x02ip\x18\x06 \x01(\t\"\xac\x01\n\x14KafkaManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1c\n\x14kafkaManagersRunning\x18\x05 \x03(\x08\x12.\n\x15kafkaManagersStatuses\x18\x06 \x03(\x0b\x32\x0f.KafkaStatusDTO\"1\n\x0eKafkaStatusDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\x12\x0e\n\x06topics\x18\x02 \x03(\t\"\xb8\x01\n\x17OSSECIdsManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1f\n\x17ossecIdsManagersRunning\x18\x05 \x03(\x08\x12\x34\n\x18ossecIdsManagersStatuses\x18\x06 \x03(\x0b\x32\x12.OSSECIdsStatusDTO\"G\n\x11OSSECIdsStatusDTO\x12\x17\n\x0fmonitor_running\x18\x01 \x01(\x08\x12\x19\n\x11ossec_ids_running\x18\x02 \x01(\x08\"\xb8\x01\n\x17SnortIdsManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1f\n\x17snortIdsManagersRunning\x18\x05 \x03(\x08\x12\x34\n\x18snortIdsManagersStatuses\x18\x06 \x03(\x0b\x32\x12.SnortIdsStatusDTO\"G\n\x11SnortIdsStatusDTO\x12\x17\n\x0fmonitor_running\x18\x01 \x01(\x08\x12\x19\n\x11snort_ids_running\x18\x02 \x01(\x08\">\n\x13GetExecutionInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"G\n\x1cStopContainersOfExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"y\n\x0fRunContainerMsg\x12\r\n\x05image\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0e\n\x06memory\x18\x03 \x01(\x05\x12\x10\n\x08num_cpus\x18\x04 \x01(\x05\x12\x16\n\x0e\x63reate_network\x18\x05 \x01(\x08\x12\x0f\n\x07version\x18\x06 \x01(\t\"H\n\x1dStartContainersOfExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15GetElkManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xbd\x01\n\x12\x45lkManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1a\n\x12\x65lkManagersRunning\x18\x05 \x03(\x08\x12*\n\x13\x65lkManagersStatuses\x18\x06 \x03(\x0b\x32\r.ElkStatusDTO\x12\x17\n\x0flocalKibanaPort\x18\x07 \x01(\x05\"A\n\x16StopLogstashServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StartLogstashServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StopKibanaServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartKibanaServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StopElasticServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16StartElasticServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\":\n\x0fStopElkStackMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"V\n\x0c\x45lkStatusDTO\x12\x16\n\x0e\x65lasticRunning\x18\x01 \x01(\x08\x12\x15\n\rkibanaRunning\x18\x02 \x01(\x08\x12\x17\n\x0flogstashRunning\x18\x03 \x01(\x08\"?\n\x14GetElkStackStatusMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopElkManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartElkManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"H\n\x1dGetDockerStatsManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xcb\x01\n\x1a\x44ockerStatsManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\"\n\x1a\x64ockerStatsManagersRunning\x18\x05 \x03(\x08\x12\x41\n\x1b\x64ockerStatsManagersStatuses\x18\x06 \x03(\x0b\x32\x1c.DockerStatsMonitorStatusDTO\"\x1c\n\x1aRemoveAllDockerNetworksMsg\"+\n\x17RemoveDockerNetworksMsg\x12\x10\n\x08networks\x18\x01 \x03(\t\"e\n\x1b\x44ockerStatsMonitorStatusDTO\x12\x14\n\x0cnum_monitors\x18\x01 \x01(\x05\x12\x12\n\nemulations\x18\x02 \x03(\t\x12\x1c\n\x14\x65mulation_executions\x18\x03 \x03(\x05\".\n\x1eGetDockerStatsManagerStatusMsg\x12\x0c\n\x04port\x18\x01 \x01(\x05\"J\n\x1fStopDockerStatsManagerThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1a\x43reateEmulationNetworksMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x1d\n\x1bListAllStoppedContainersMsg\"F\n\x14StoppedContainersDTO\x12.\n\x11stoppedContainers\x18\x01 \x03(\x0b\x32\x13.DockerContainerDTO\"\x1d\n\x1bListAllRunningEmulationsMsg\"1\n\x14RunningEmulationsDTO\x12\x19\n\x11runningEmulations\x18\x01 \x03(\t\"\x1d\n\x1bListAllRunningContainersMsg\"F\n\x14RunningContainersDTO\x12.\n\x11runningContainers\x18\x01 \x03(\x0b\x32\x13.DockerContainerDTO\"=\n\x12\x44ockerContainerDTO\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\x12\n\n\x02ip\x18\x03 \x01(\t\"!\n\x11StartContainerMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1e\n\x1cStartAllStoppedContainersMsg\"\x1a\n\x18ListAllDockerNetworksMsg\":\n\x11\x44ockerNetworksDTO\x12\x10\n\x08networks\x18\x01 \x03(\t\x12\x13\n\x0bnetwork_ids\x18\x02 \x03(\x05\"8\n\x12\x43ontainerImagesDTO\x12\"\n\x06images\x18\x01 \x03(\x0b\x32\x12.ContainerImageDTO\"f\n\x11\x43ontainerImageDTO\x12\x10\n\x08repoTags\x18\x01 \x01(\t\x12\x0f\n\x07\x63reated\x18\x02 \x01(\t\x12\n\n\x02os\x18\x03 \x01(\t\x12\x14\n\x0c\x61rchitecture\x18\x04 \x01(\t\x12\x0c\n\x04size\x18\x05 \x01(\x03\"\x1b\n\x19ListAllContainerImagesMsg\"\'\n\x17RemoveContainerImageMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\x1bRemoveAllContainerImagesMsg\"\x1f\n\x1dRemoveAllStoppedContainersMsg\"\"\n\x12RemoveContainerMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\" \n\x10StopContainerMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\x1bStopAllRunningContainersMsg\"D\n\x19GetTrafficManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xb9\x01\n\x16TrafficManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1e\n\x16trafficManagersRunning\x18\x05 \x03(\x08\x12\x37\n\x17trafficManagersStatuses\x18\x06 \x03(\x0b\x32\x16.TrafficManagerInfoDTO\"8\n\x15TrafficManagerInfoDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\x12\x0e\n\x06script\x18\x02 \x01(\t\"\xb1\x01\n\x15\x43lientManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1d\n\x15\x63lientManagersRunning\x18\x05 \x03(\x08\x12\x31\n\x16\x63lientManagersStatuses\x18\x06 \x03(\x0b\x32\x11.GetNumClientsDTO\"C\n\x18GetClientManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"X\n\x18StartTrafficGeneratorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"W\n\x17StopTrafficGeneratorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"C\n\x18StopTrafficGeneratorsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xae\x01\n\x10GetNumClientsDTO\x12\x13\n\x0bnum_clients\x18\x01 \x01(\x05\x12\x1d\n\x15\x63lient_process_active\x18\x02 \x01(\x08\x12\x17\n\x0fproducer_active\x18\x03 \x01(\x08\x12%\n\x1d\x63lients_time_step_len_seconds\x18\x04 \x01(\x05\x12&\n\x1eproducer_time_step_len_seconds\x18\x05 \x01(\x05\"A\n\x16GetNumActiveClientsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StopClientPopulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StopClientManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartClientManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16StopTrafficManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"U\n\x15StopTrafficManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"V\n\x16StartTrafficManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"\x17\n\x15\x43leanAllExecutionsMsg\"\x16\n\x14StopAllExecutionsMsg\";\n\x10StopExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11\x43leanExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"4\n\x1fStopAllExecutionsOfEmulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\"5\n CleanAllExecutionsOfEmulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\"\x14\n\x12GetCsleLogFilesMsg\"\x1d\n\rGetLogFileMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"H\n\x1dStartContainersInExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"S\n(AttachContainersToNetworksInExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13InstallLibrariesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13\x41pplyKafkaConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartSdnControllerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1a\x41pplyResouceConstraintsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14\x43reateOvsSwitchesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\";\n\x10PingExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\":\n\x0f\x43onfigureOvsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"G\n\x1cStartSdnControllerMonitorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"9\n\x0e\x43reateUsersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"9\n\x0e\x43reateVulnsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"9\n\x0e\x43reateFlagsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11\x43reateTopologyMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StartTrafficManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19StartTrafficGeneratorsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StartClientPopulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"F\n\x1bStartKafkaClientProducerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1aStopKafkaClientProducerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartSnortIdsesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"K\n StartSnortIdsesMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartOSSECIdsesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"K\n StartOSSECIdsesMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\";\n\x10StartElkStackMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StartHostManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17\x41pplyFileBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19\x41pplyPacketBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19\x41pplyMetricBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18\x41pplyHeartBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"R\n\x11StartFileBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"T\n\x13StartPacketBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"T\n\x13StartMetricBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"S\n\x12StartHeartBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"\x1e\n\x1cGetDockerStatsManagerLogsMsg\"\x16\n\x14GetPrometheusLogsMsg\"\x18\n\x16GetNodeExporterLogsMsg\"\x14\n\x12GetCAdvisorLogsMsg\"\x13\n\x11GetPgAdminLogsMsg\"\x13\n\x11GetGrafanaLogsMsg\"\x11\n\x0fGetNginxLogsMsg\"\x12\n\x10GetDockerLogsMsg\"\x16\n\x14GetPostgreSQLLogsMsg\"\x11\n\x0fGetFlaskLogsMsg\"\x17\n\x07LogsDTO\x12\x0c\n\x04logs\x18\x01 \x03(\t\"&\n\x13OperationOutcomeDTO\x12\x0f\n\x07outcome\x18\x01 \x01(\x08\"\x12\n\x10GetNodeStatusMsg\"\xb3\x02\n\rNodeStatusDTO\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0e\n\x06leader\x18\x02 \x01(\x08\x12\x17\n\x0f\x63\x41\x64visorRunning\x18\x03 \x01(\x08\x12\x19\n\x11prometheusRunning\x18\x04 \x01(\x08\x12\x16\n\x0egrafanaRunning\x18\x05 \x01(\x08\x12\x16\n\x0epgAdminRunning\x18\x06 \x01(\x08\x12\x14\n\x0cnginxRunning\x18\x07 \x01(\x08\x12\x14\n\x0c\x66laskRunning\x18\x08 \x01(\x08\x12!\n\x19\x64ockerStatsManagerRunning\x18\t \x01(\x08\x12\x1b\n\x13nodeExporterRunning\x18\n \x01(\x08\x12\x19\n\x11postgreSQLRunning\x18\x0b \x01(\x08\x12\x1b\n\x13\x64ockerEngineRunning\x18\x0c \x01(\x08\"#\n\x10ServiceStatusDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\"\x14\n\x12StartPostgreSQLMsg\"\x12\n\x10StartCAdvisorMsg\"\x16\n\x14StartNodeExporterMsg\"\x11\n\x0fStartGrafanaMsg\"\x14\n\x12StartPrometheusMsg\"\x11\n\x0fStartPgAdminMsg\"\x0f\n\rStartNginxMsg\"\x0f\n\rStartFlaskMsg\"\x1c\n\x1aStartDockerStatsManagerMsg\"K\n StartDockerStatsManagerThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x16\n\x14StartDockerEngineMsg\"\x13\n\x11StopPostgreSQLMsg\"\x11\n\x0fStopCAdvisorMsg\"\x15\n\x13StopNodeExporterMsg\"\x10\n\x0eStopGrafanaMsg\"\x13\n\x11StopPrometheusMsg\"\x10\n\x0eStopPgAdminMsg\"\x0e\n\x0cStopNginxMsg\"\x0e\n\x0cStopFlaskMsg\"\x1b\n\x19StopDockerStatsManagerMsg\"\x15\n\x13StopDockerEngineMsg2\xf7n\n\x0e\x43lusterManager\x12\x34\n\rgetNodeStatus\x12\x11.GetNodeStatusMsg\x1a\x0e.NodeStatusDTO\"\x00\x12;\n\x0fstartPostgreSQL\x12\x13.StartPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x37\n\rstartCAdvisor\x12\x11.StartCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startNodeExporter\x12\x15.StartNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartGrafana\x12\x10.StartGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12;\n\x0fstartPrometheus\x12\x13.StartPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartPgAdmin\x12\x10.StartPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartNginx\x12\x0e.StartNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartFlask\x12\x0e.StartFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12K\n\x17startDockerStatsManager\x12\x1b.StartDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12W\n\x1dstartDockerStatsManagerThread\x12!.StartDockerStatsManagerThreadMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startDockerEngine\x12\x15.StartDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPostgreSQL\x12\x12.StopPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstopCAdvisor\x12\x10.StopCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopNodeExporter\x12\x14.StopNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopGrafana\x12\x0f.StopGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPrometheus\x12\x12.StopPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopPgAdmin\x12\x0f.StopPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopNginx\x12\r.StopNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopFlask\x12\r.StopFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12I\n\x16stopDockerStatsManager\x12\x1a.StopDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopDockerEngine\x12\x14.StopDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x32\n\x0fgetCsleLogFiles\x12\x13.GetCsleLogFilesMsg\x1a\x08.LogsDTO\"\x00\x12\x46\n\x19getDockerStatsManagerLogs\x12\x1d.GetDockerStatsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getPrometheusLogs\x12\x15.GetPrometheusLogsMsg\x1a\x08.LogsDTO\"\x00\x12:\n\x13getNodeExporterLogs\x12\x17.GetNodeExporterLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetCadvisorLogs\x12\x13.GetCAdvisorLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetPgAdminLogs\x12\x12.GetPgAdminLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetGrafanaLogs\x12\x12.GetGrafanaLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetNginxLogs\x12\x10.GetNginxLogsMsg\x1a\x08.LogsDTO\"\x00\x12.\n\rgetDockerLogs\x12\x11.GetDockerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x37\n\x12getPostrgreSQLLogs\x12\x15.GetPostgreSQLLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetFlaskLogs\x12\x10.GetFlaskLogsMsg\x1a\x08.LogsDTO\"\x00\x12(\n\ngetLogFile\x12\x0e.GetLogFileMsg\x1a\x08.LogsDTO\"\x00\x12T\n\x1astartContainersInExecution\x12\x1e.StartContainersInExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12j\n%attachContainersInExecutionToNetworks\x12).AttachContainersToNetworksInExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10installLibraries\x12\x14.InstallLibrariesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10\x61pplyKafkaConfig\x12\x14.ApplyKafkaConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12startSdnController\x12\x16.StartSdnControllerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12O\n\x18\x61pplyResourceConstraints\x12\x1b.ApplyResouceConstraintsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11\x63reateOvsSwitches\x12\x15.CreateOvsSwitchesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rpingExecution\x12\x11.PingExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0c\x63onfigureOvs\x12\x10.ConfigureOvsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19startSdnControllerMonitor\x12\x1d.StartSdnControllerMonitorMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0b\x63reateUsers\x12\x0f.CreateUsersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x15\x63reateVulnerabilities\x12\x0f.CreateVulnsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0b\x63reateFlags\x12\x0f.CreateFlagsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0e\x63reateTopology\x12\x12.CreateTopologyMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14startTrafficManagers\x12\x18.StartTrafficManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16startTrafficGenerators\x12\x1a.StartTrafficGeneratorsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15startClientPopulation\x12\x19.StartClientPopulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12P\n\x18startKafkaClientProducer\x12\x1c.StartKafkaClientProducerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12N\n\x17stopKafkaClientProducer\x12\x1b.StopKafkaClientProducerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartSnortIdses\x12\x13.StartSnortIdsesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Z\n\x1dstartSnortIdsesMonitorThreads\x12!.StartSnortIdsesMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartOssecIdses\x12\x13.StartOSSECIdsesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Z\n\x1dstartOssecIdsesMonitorThreads\x12!.StartOSSECIdsesMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstartElkStack\x12\x11.StartElkStackMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11startHostManagers\x12\x15.StartHostManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14\x61pplyFileBeatsConfig\x12\x18.ApplyFileBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16\x61pplyPacketBeatsConfig\x12\x1a.ApplyPacketBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16\x61pplyMetricBeatsConfig\x12\x1a.ApplyMetricBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15\x61pplyHeartBeatsConfig\x12\x19.ApplyHeartBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estartFilebeats\x12\x12.StartFileBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10startPacketbeats\x12\x14.StartPacketBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10startMetricbeats\x12\x14.StartMetricBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartHeartbeats\x12\x13.StartHeartBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12X\n\x1cstopAllExecutionsOfEmulation\x12 .StopAllExecutionsOfEmulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopExecution\x12\x11.StopExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11stopAllExecutions\x12\x15.StopAllExecutionsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12\x63leanAllExecutions\x12\x16.CleanAllExecutionsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Z\n\x1d\x63leanAllExecutionsOfEmulation\x12!.CleanAllExecutionsOfEmulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0e\x63leanExecution\x12\x12.CleanExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x46\n\x13startTrafficManager\x12\x17.StartTrafficManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x45\n\x12stopTrafficManager\x12\x17.StartTrafficManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12G\n\x13stopTrafficManagers\x12\x18.StartTrafficManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12startClientManager\x12\x16.StartClientManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14stopClientPopulation\x12\x18.StopClientPopulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11stopClientManager\x12\x15.StopClientManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x13getNumActiveClients\x12\x17.GetNumActiveClientsMsg\x1a\x11.GetNumClientsDTO\"\x00\x12J\n\x15startTrafficGenerator\x12\x19.StartTrafficGeneratorMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15stopTrafficGenerators\x12\x19.StopTrafficGeneratorsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14stopTrafficGenerator\x12\x18.StopTrafficGeneratorMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x15getClientManagersInfo\x12\x19.GetClientManagersInfoMsg\x1a\x16.ClientManagersInfoDTO\"\x00\x12N\n\x16getTrafficManagersInfo\x12\x1a.GetTrafficManagersInfoMsg\x1a\x16.TrafficManagerInfoDTO\"\x00\x12P\n\x18stopAllRunningContainers\x12\x1c.StopAllRunningContainersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopContainer\x12\x11.StopContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1aremoveAllStoppedContainers\x12\x1e.RemoveAllStoppedContainersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fremoveContainer\x12\x13.RemoveContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12P\n\x18removeAllContainerImages\x12\x1c.RemoveAllContainerImagesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14removeContainerImage\x12\x18.RemoveContainerImageMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12K\n\x16listAllContainerImages\x12\x1a.ListAllContainerImagesMsg\x1a\x13.ContainerImagesDTO\"\x00\x12H\n\x15listAllDockerNetworks\x12\x19.ListAllDockerNetworksMsg\x1a\x12.DockerNetworksDTO\"\x00\x12R\n\x19startAllStoppedContainers\x12\x1d.StartAllStoppedContainersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estartContainer\x12\x12.StartContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Q\n\x18listAllRunningContainers\x12\x1c.ListAllRunningContainersMsg\x1a\x15.RunningContainersDTO\"\x00\x12Q\n\x18listAllRunningEmulations\x12\x1c.ListAllRunningEmulationsMsg\x1a\x15.RunningEmulationsDTO\"\x00\x12Q\n\x18listAllStoppedContainers\x12\x1c.ListAllStoppedContainersMsg\x1a\x15.StoppedContainersDTO\"\x00\x12N\n\x17\x63reateEmulationNetworks\x12\x1b.CreateEmulationNetworksMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12X\n\x1cstopDockerStatsManagerThread\x12 .StopDockerStatsManagerThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12^\n\x1bgetDockerStatsManagerStatus\x12\x1f.GetDockerStatsManagerStatusMsg\x1a\x1c.DockerStatsMonitorStatusDTO\"\x00\x12H\n\x14removeDockerNetworks\x12\x18.RemoveDockerNetworksMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12N\n\x17removeAllDockerNetworks\x12\x1b.RemoveAllDockerNetworksMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12[\n\x1agetDockerStatsManagersInfo\x12\x1e.GetDockerStatsManagersInfoMsg\x1a\x1b.DockerStatsManagersInfoDTO\"\x00\x12>\n\x0fstartElkManager\x12\x13.StartElkManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopElkManager\x12\x12.StopElkManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0cgetElkStatus\x12\x15.GetElkStackStatusMsg\x1a\r.ElkStatusDTO\"\x00\x12\x38\n\x0cstopElkStack\x12\x10.StopElkStackMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0cstartElastic\x12\x17.StartElasticServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12=\n\x0bstopElastic\x12\x16.StopElasticServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12=\n\x0bstartKibana\x12\x16.StartKibanaServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12;\n\nstopKibana\x12\x15.StopKibanaServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x41\n\rstartLogstash\x12\x18.StartLogstashServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0cstopLogstash\x12\x17.StopLogstashServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x12getElkManagersInfo\x12\x16.GetElkManagersInfoMsg\x1a\x13.ElkManagersInfoDTO\"\x00\x12T\n\x1astartContainersOfExecution\x12\x1e.StartContainersOfExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0crunContainer\x12\x10.RunContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19stopContainersOfExecution\x12\x1d.StopContainersOfExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10startHostManager\x12\x14.StartHostManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10stopHostManagers\x12\x14.StopHostManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstopHostManager\x12\x13.StopHostManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopFilebeats\x12\x11.StopFilebeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstopPacketbeats\x12\x13.StopPacketbeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstopMetricbeats\x12\x13.StopMetricbeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopHeartbeats\x12\x12.StopHeartbeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12N\n\x17startHostMonitorThreads\x12\x1b.StartHostMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16startHostMonitorThread\x12\x1a.StartHostMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12;\n\rstartFilebeat\x12\x12.StartFileBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0fstartPacketbeat\x12\x14.StartPacketBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0fstartMetricbeat\x12\x14.StartMetricBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12=\n\x0estartHeartbeat\x12\x13.StartHeartBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0cstopFilebeat\x12\x10.StopFileBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopPacketbeat\x12\x12.StopPacketBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopMetricbeat\x12\x12.StopMetricBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopHeartbeat\x12\x11.StopHeartBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x46\n\x13\x61pplyFileBeatConfig\x12\x17.ApplyFileBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15\x61pplyPacketBeatConfig\x12\x19.ApplyPacketBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15\x61pplyMetricBeatConfig\x12\x19.ApplyMetricBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14\x61pplyHeartBeatConfig\x12\x18.ApplyHeartBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12]\n\x1dgetHostMonitorThreadsStatuses\x12!.GetHostMonitorThreadsStatusesMsg\x1a\x17.HostManagerStatusesDTO\"\x00\x12\x46\n\x13getHostManagersInfo\x12\x17.GetHostManagersInfoMsg\x1a\x14.HostManagersInfoDTO\"\x00\x12@\n\x10stopKafkaManager\x12\x14.StopKafkaManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11startKafkaManager\x12\x15.StartKafkaManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11\x63reateKafkaTopics\x12\x15.CreateKafkaTopicsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0egetKafkaStatus\x12\x19.GetKafkaManagerStatusMsg\x1a\x0f.KafkaStatusDTO\"\x00\x12>\n\x0fstopKafkaServer\x12\x13.StopKafkaServerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x10startKafkaServer\x12\x13.StopKafkaServerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12I\n\x14getKafkaManagersInfo\x12\x18.GetKafkaManagersInfoMsg\x1a\x15.KafkaManagersInfoDTO\"\x00\x12<\n\x0estopOSSECIDSes\x12\x12.StopOSSECIDSesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartOSSECIDSes\x12\x13.StartOSSECIDSesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0cstopOSSECIDS\x12\x10.StopOSSECIDSMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstartOSSECIDS\x12\x11.StartOSSECIDSMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12G\n\x15startOSSECIDSManagers\x12\x16.StartOSSECIDSManagers\x1a\x14.OperationOutcomeDTO\"\x00\x12\x45\n\x14stopOSSECIDSManagers\x12\x15.StopOSSECIDSManagers\x1a\x14.OperationOutcomeDTO\"\x00\x12\x45\n\x14startOSSECIDSManager\x12\x15.StartOSSECIDSManager\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x13stopOSSECIDSManager\x12\x14.StopOSSECIDSManager\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astartOSSECIDSMonitorThread\x12\x1e.StartOSSECIDSMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19stopOSSECIDSMonitorThread\x12\x1d.StopOSSECIDSMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astopOSSECIDSMonitorThreads\x12\x1e.StopOSSECIDSMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12m\n getOSSECIDSMonitorThreadStatuses\x12$.GetOSSECIDSMonitorThreadStatusesMsg\x1a!.OSSECIdsMonitorThreadStatusesDTO\"\x00\x12R\n\x17getOSSECIdsManagersInfo\x12\x1b.GetOSSECIDSManagersInfoMsg\x1a\x18.OSSECIdsManagersInfoDTO\"\x00\x12>\n\x0fstartRyuManager\x12\x13.StartRyuManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopRyuManager\x12\x12.StopRyuManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0cgetRyuStatus\x12\x17.GetRyuServiceStatusMsg\x1a\x14.RyuManagerStatusDTO\"\x00\x12\x37\n\x08startRyu\x12\x13.StartRyuServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x35\n\x07stopRyu\x12\x12.StopRyuServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x12getRyuManagersInfo\x12\x16.GetRyuManagersInfoMsg\x1a\x13.RyuManagersInfoDTO\"\x00\x12<\n\x0estopSnortIdses\x12\x12.StopSnortIdsesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12X\n\x1cstopSnortIdsesMonitorThreads\x12 .StopSnortIdsesMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x35\n\x0cstopSnortIds\x12\r.StopSnortMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19stopSnortIdsMonitorThread\x12\x1d.StopSnortIdsMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x37\n\rstartSnortIds\x12\x0e.StartSnortMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12V\n\x1bstartSnortIdsMonitorThreads\x12\x1f.StartSnortIdsMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astartSnortIdsMonitorThread\x12\x1e.StartSnortIdsMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15startSnortIdsManagers\x12\x19.StartSnortIdsManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14stopSnortIdsManagers\x12\x18.StopSnortIdsManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14startSnortIdsManager\x12\x18.StartSnortIdsManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x46\n\x13stopSnortIdsManager\x12\x17.StopSnortIdsManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astopSnortIdsMonitorThreads\x12\x1e.StopSnortIdsMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12m\n getSnortIdsMonitorThreadStatuses\x12$.GetSnortIdsMonitorThreadStatusesMsg\x1a!.SnortIdsMonitorThreadStatusesDTO\"\x00\x12R\n\x17getSnortIdsManagersInfo\x12\x1b.GetSnortIdsManagersInfoMsg\x1a\x18.SnortIdsManagersInfoDTO\"\x00\x12=\n\x10getExecutionInfo\x12\x14.GetExecutionInfoMsg\x1a\x11.ExecutionInfoDTO\"\x00\x12?\n\x11listKibanaTunnels\x12\x15.ListKibanaTunnelsMsg\x1a\x11.KibanaTunnelsDTO\"\x00\x12\x44\n\x12\x63reateKibanaTunnel\x12\x16.CreateKibanaTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0elistRyuTunnels\x12\x12.ListRyuTunnelsMsg\x1a\x0e.RyuTunnelsDTO\"\x00\x12\x41\n\x0f\x63reateRyuTunnel\x12\x16.CreateKibanaTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12removeKibanaTunnel\x12\x16.RemoveKibanaTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fremoveRyuTunnel\x12\x13.RemoveRyuTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16stopHostMonitorThreads\x12\x1a.StopHostMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15stopHostMonitorThread\x12\x19.StopHostMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x0fstartRyuMonitor\x12\x19.StartRyuMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x0estopRyuMonitor\x12\x18.StopRyuMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x14getRyuControllerLogs\x12\x18.GetRyuControllerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getRyuManagerLogs\x12\x15.GetRyuManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12(\n\ngetElkLogs\x12\x0e.GetElkLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getElkManagerLogs\x12\x15.GetElkManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12>\n\x15getTrafficManagerLogs\x12\x19.GetTrafficManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x38\n\x12getHostManagerLogs\x12\x16.GetHostManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetOSSECIdsLogs\x12\x13.GetOSSECIdsLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x43\n\x19getOSSECIdsManagerLogsMsg\x12\x1a.GetOSSECIdsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetSnortIdsLogs\x12\x13.GetSnortIdsLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x43\n\x19getSnortIdsManagerLogsMsg\x12\x1a.GetSnortIdsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetKafkaLogs\x12\x10.GetKafkaLogsMsg\x1a\x08.LogsDTO\"\x00\x12:\n\x13getKafkaManagerLogs\x12\x17.GetKafkaManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12?\n\x17getClientManagerLogsMsg\x12\x18.GetClientManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x34\n\x10getContainerLogs\x12\x14.GetContainerLogsMsg\x1a\x08.LogsDTO\"\x00\x12>\n\x15getClusterManagerLogs\x12\x19.GetClusterManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x63luster_manager.proto\"Y\n\x1dGetExecutionTimeSeriesDataMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x0f\n\x07minutes\x18\x03 \x01(\x05\"\xb3\t\n\x1d\x45mulationMetricsTimeSeriesDTO\x12\x33\n\x0e\x63lient_metrics\x18\x01 \x03(\x0b\x32\x1b.ClientPopulationMetricsDTO\x12\x30\n\x17\x61ggregated_docker_stats\x18\x02 \x03(\x0b\x32\x0f.DockerStatsDTO\x12+\n\x11\x64ocker_host_stats\x18\x03 \x03(\x0b\x32\x10.DockerStatsDict\x12&\n\x0chost_metrics\x18\x04 \x03(\x0b\x32\x10.HostMetricsDict\x12\x30\n\x17\x61ggregated_host_metrics\x18\x05 \x03(\x0b\x32\x0f.HostMetricsDTO\x12\x35\n\x10\x64\x65\x66\x65nder_actions\x18\x06 \x03(\x0b\x32\x1b.EmulationDefenderActionDTO\x12\x35\n\x10\x61ttacker_actions\x18\x07 \x03(\x0b\x32\x1b.EmulationAttackerActionDTO\x12\x34\n\x11snort_ids_metrics\x18\x08 \x03(\x0b\x32\x19.SnortIdsAlertCountersDTO\x12\x14\n\x0c\x65mulation_id\x18\t \x01(\x05\x12=\n\x19ossec_host_alert_counters\x18\n \x03(\x0b\x32\x1a.OSSECIdsAlertCountersDict\x12G\n$aggregated_ossec_host_alert_counters\x18\x0b \x03(\x0b\x32\x19.OSSECIdsAlertCountersDTO\x12.\n\x13openflow_flow_stats\x18\x0c \x03(\x0b\x32\x11.FlowStatisticDTO\x12.\n\x13openflow_port_stats\x18\r \x03(\x0b\x32\x11.PortStatisticDTO\x12\x35\n\x17\x61vg_openflow_flow_stats\x18\x0e \x03(\x0b\x32\x14.AvgFlowStatisticDTO\x12\x35\n\x17\x61vg_openflow_port_stats\x18\x0f \x03(\x0b\x32\x14.AvgPortStatisticDTO\x12<\n openflow_flow_metrics_per_switch\x18\x10 \x03(\x0b\x32\x12.FlowStatisticDict\x12=\n openflow_port_metrics_per_switch\x18\x11 \x03(\x0b\x32\x13.PortStatisticsDict\x12\x43\n$openflow_flow_avg_metrics_per_switch\x18\x12 \x03(\x0b\x32\x15.AvgFlowStatisticDict\x12\x43\n$openflow_port_avg_metrics_per_switch\x18\x13 \x03(\x0b\x32\x15.AvgPortStatisticDict\x12\x43\n$agg_openflow_flow_metrics_per_switch\x18\x14 \x03(\x0b\x32\x15.AggFlowStatisticDict\x12H\n*openflagg_openflow_flow_statsow_flow_stats\x18\x15 \x03(\x0b\x32\x14.AggFlowStatisticDTO\"F\n\x14\x41vgPortStatisticDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x03\x64to\x18\x02 \x01(\x0b\x32\x14.AvgPortStatisticDTO\"F\n\x14\x41ggFlowStatisticDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x03\x64to\x18\x02 \x01(\x0b\x32\x14.AggFlowStatisticDTO\"F\n\x14\x41vgFlowStatisticDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x03\x64to\x18\x02 \x01(\x0b\x32\x14.AvgFlowStatisticDTO\"A\n\x12PortStatisticsDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1e\n\x03\x64to\x18\x02 \x01(\x0b\x32\x11.PortStatisticDTO\"@\n\x11\x46lowStatisticDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1e\n\x03\x64to\x18\x02 \x01(\x0b\x32\x11.FlowStatisticDTO\"P\n\x19OSSECIdsAlertCountersDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x03\x64to\x18\x02 \x01(\x0b\x32\x19.OSSECIdsAlertCountersDTO\"<\n\x0fHostMetricsDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x03\x64to\x18\x02 \x01(\x0b\x32\x0f.HostMetricsDTO\"<\n\x0f\x44ockerStatsDict\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x03\x64to\x18\x02 \x01(\x0b\x32\x0f.DockerStatsDTO\"\xbc\x04\n\x13\x41vgPortStatisticDTO\x12\x11\n\ttimestamp\x18\x01 \x01(\x02\x12\x13\n\x0b\x64\x61tapath_id\x18\x02 \x01(\x05\x12\"\n\x1atotal_num_received_packets\x18\x03 \x01(\x05\x12 \n\x18total_num_received_bytes\x18\x04 \x01(\x05\x12!\n\x19total_num_received_errors\x18\x05 \x01(\x05\x12%\n\x1dtotal_num_transmitted_packets\x18\x06 \x01(\x05\x12#\n\x1btotal_num_transmitted_bytes\x18\x07 \x01(\x05\x12$\n\x1ctotal_num_transmitted_errors\x18\x08 \x01(\x05\x12\"\n\x1atotal_num_received_dropped\x18\t \x01(\x05\x12%\n\x1dtotal_num_transmitted_dropped\x18\n \x01(\x05\x12\'\n\x1ftotal_num_received_frame_errors\x18\x0b \x01(\x05\x12)\n!total_num_received_overrun_errors\x18\x0c \x01(\x05\x12%\n\x1dtotal_num_received_crc_errors\x18\r \x01(\x05\x12\x1c\n\x14total_num_collisions\x18\x0e \x01(\x05\x12 \n\x18\x61vg_duration_nanoseconds\x18\x0f \x01(\x05\x12\x1c\n\x14\x61vg_duration_seconds\x18\x10 \x01(\x05\"\x8f\x02\n\x13\x41vgFlowStatisticDTO\x12\x11\n\ttimestamp\x18\x01 \x01(\x02\x12\x13\n\x0b\x64\x61tapath_id\x18\x02 \x01(\x05\x12\x19\n\x11total_num_packets\x18\x03 \x01(\x05\x12\x17\n\x0ftotal_num_bytes\x18\x04 \x01(\x05\x12 \n\x18\x61vg_duration_nanoseconds\x18\x05 \x01(\x05\x12\x1c\n\x14\x61vg_duration_seconds\x18\x06 \x01(\x05\x12\x18\n\x10\x61vg_hard_timeout\x18\x07 \x01(\x05\x12\x18\n\x10\x61vg_idle_timeout\x18\x08 \x01(\x05\x12\x14\n\x0c\x61vg_priority\x18\t \x01(\x05\x12\x12\n\navg_cookie\x18\n \x01(\x05\"\x8a\x01\n\x13\x41ggFlowStatisticDTO\x12\x11\n\ttimestamp\x18\x01 \x01(\x02\x12\x13\n\x0b\x64\x61tapath_id\x18\x02 \x01(\x05\x12\x19\n\x11total_num_packets\x18\x03 \x01(\x05\x12\x17\n\x0ftotal_num_bytes\x18\x04 \x01(\x05\x12\x17\n\x0ftotal_num_flows\x18\x05 \x01(\x05\"\xf7\x03\n\x10PortStatisticDTO\x12\x11\n\ttimestamp\x18\x01 \x01(\x02\x12\x13\n\x0b\x64\x61tapath_id\x18\x02 \x01(\x05\x12\x0c\n\x04port\x18\x03 \x01(\x05\x12\x1c\n\x14num_received_packets\x18\x04 \x01(\x05\x12\x1a\n\x12num_received_bytes\x18\x05 \x01(\x05\x12\x1b\n\x13num_received_errors\x18\x06 \x01(\x05\x12\x1f\n\x17num_transmitted_packets\x18\x07 \x01(\x05\x12\x1d\n\x15num_transmitted_bytes\x18\x08 \x01(\x05\x12\x1e\n\x16num_transmitted_errors\x18\t \x01(\x05\x12\x1c\n\x14num_received_dropped\x18\n \x01(\x05\x12\x1f\n\x17num_transmitted_dropped\x18\x0b \x01(\x05\x12!\n\x19num_received_frame_errors\x18\x0c \x01(\x05\x12#\n\x1bnum_received_overrun_errors\x18\r \x01(\x05\x12\x1f\n\x17num_received_crc_errors\x18\x0e \x01(\x05\x12\x16\n\x0enum_collisions\x18\x0f \x01(\x05\x12\x1c\n\x14\x64uration_nanoseconds\x18\x10 \x01(\x05\x12\x18\n\x10\x64uration_seconds\x18\x11 \x01(\x05\"\xa4\x02\n\x10\x46lowStatisticDTO\x12\x11\n\ttimestamp\x18\x01 \x01(\x02\x12\x13\n\x0b\x64\x61tapath_id\x18\x02 \x01(\x05\x12\x0f\n\x07in_port\x18\x03 \x01(\x05\x12\x10\n\x08out_port\x18\x04 \x01(\x05\x12\x17\n\x0f\x64st_mac_address\x18\x05 \x01(\t\x12\x13\n\x0bnum_packets\x18\x06 \x01(\x05\x12\x11\n\tnum_bytes\x18\x07 \x01(\x05\x12\x1c\n\x14\x64uration_nanoseconds\x18\x08 \x01(\x05\x12\x18\n\x10\x64uration_seconds\x18\t \x01(\x05\x12\x14\n\x0chard_timeout\x18\n \x01(\x05\x12\x14\n\x0cidle_timeout\x18\x0b \x01(\x05\x12\x10\n\x08priority\x18\x0c \x01(\x05\x12\x0e\n\x06\x63ookie\x18\r \x01(\x05\"\xc5\x01\n\x18OSSECIdsAlertCountersDTO\x12\x14\n\x0clevel_alerts\x18\x01 \x03(\x05\x12\x14\n\x0cgroup_alerts\x18\x02 \x03(\x05\x12\x15\n\rsevere_alerts\x18\x03 \x01(\x05\x12\x16\n\x0ewarning_alerts\x18\x04 \x01(\x05\x12\x14\n\x0ctotal_alerts\x18\x05 \x01(\x05\x12 \n\x18\x61lerts_weighted_by_level\x18\x06 \x01(\x02\x12\n\n\x02ip\x18\x07 \x01(\t\x12\n\n\x02ts\x18\x08 \x01(\x02\"\xb5\x01\n\x18SnortIdsAlertCountersDTO\x12\x17\n\x0fpriority_alerts\x18\x01 \x03(\x05\x12\x14\n\x0c\x63lass_alerts\x18\x02 \x03(\x05\x12\x15\n\rsevere_alerts\x18\x03 \x01(\x05\x12\x16\n\x0ewarning_alerts\x18\x04 \x01(\x05\x12#\n\x1b\x61lerts_weighted_by_priority\x18\x05 \x01(\x02\x12\n\n\x02ip\x18\x06 \x01(\t\x12\n\n\x02ts\x18\x07 \x01(\x02\"\xf4\x01\n\x1a\x45mulationAttackerActionDTO\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0c\n\x04\x63mds\x18\x03 \x03(\t\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\r\n\x05\x64\x65scr\x18\x05 \x01(\t\x12\x0b\n\x03ips\x18\x06 \x03(\t\x12\r\n\x05index\x18\x07 \x01(\x05\x12\x16\n\x0e\x61\x63tion_outcome\x18\x08 \x01(\x05\x12\x10\n\x08\x61lt_cmds\x18\t \x03(\t\x12\x16\n\x0e\x65xecution_time\x18\n \x01(\x02\x12\n\n\x02ts\x18\x0b \x01(\x02\x12\x15\n\rvulnerability\x18\x0c \x01(\t\x12\x10\n\x08\x62\x61\x63kdoor\x18\r \x01(\x08\"\xcb\x01\n\x1a\x45mulationDefenderActionDTO\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0c\n\x04\x63mds\x18\x03 \x03(\t\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\r\n\x05\x64\x65scr\x18\x05 \x01(\t\x12\x0b\n\x03ips\x18\x06 \x03(\t\x12\r\n\x05index\x18\x07 \x01(\x05\x12\x16\n\x0e\x61\x63tion_outcome\x18\x08 \x01(\x05\x12\x10\n\x08\x61lt_cmds\x18\t \x03(\t\x12\x16\n\x0e\x65xecution_time\x18\n \x01(\x02\x12\n\n\x02ts\x18\x0b \x01(\x02\"\xca\x01\n\x0eHostMetricsDTO\x12\x1b\n\x13num_logged_in_users\x18\x01 \x01(\x05\x12!\n\x19num_failed_login_attempts\x18\x02 \x01(\x05\x12\x1c\n\x14num_open_connections\x18\x03 \x01(\x05\x12\x18\n\x10num_login_events\x18\x04 \x01(\x05\x12\x15\n\rnum_processes\x18\x05 \x01(\x05\x12\x11\n\tnum_users\x18\x06 \x01(\x05\x12\n\n\x02ip\x18\x07 \x01(\t\x12\n\n\x02ts\x18\x08 \x01(\x02\"\xf8\x01\n\x0e\x44ockerStatsDTO\x12\x0c\n\x04pids\x18\x01 \x01(\x02\x12\x11\n\ttimestamp\x18\x02 \x01(\t\x12\x13\n\x0b\x63pu_percent\x18\x03 \x01(\x02\x12\x13\n\x0bmem_current\x18\x04 \x01(\x02\x12\x11\n\tmem_total\x18\x05 \x01(\x02\x12\x13\n\x0bmem_percent\x18\x06 \x01(\x02\x12\x10\n\x08\x62lk_read\x18\x07 \x01(\x02\x12\x11\n\tblk_write\x18\x08 \x01(\x02\x12\x0e\n\x06net_rx\x18\t \x01(\x02\x12\x0e\n\x06net_tx\x18\n \x01(\x02\x12\x16\n\x0e\x63ontainer_name\x18\x0b \x01(\t\x12\n\n\x02ip\x18\x0c \x01(\t\x12\n\n\x02ts\x18\r \x01(\x02\"W\n\x1a\x43lientPopulationMetricsDTO\x12\n\n\x02ip\x18\x01 \x01(\t\x12\n\n\x02ts\x18\x02 \x01(\x02\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x05\x12\x0c\n\x04rate\x18\x04 \x01(\x02\"\x1a\n\x18GetClusterManagerLogsMsg\"S\n\x13GetContainerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"B\n\x17GetClientManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16GetKafkaManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\":\n\x0fGetKafkaLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"R\n\x12GetSnortIdsLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Y\n\x19GetSnortIdsManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Y\n\x19GetOSSECIdsManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"R\n\x12GetOSSECIdsLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"U\n\x15GetHostManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"X\n\x18GetTrafficManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"?\n\x14GetElkManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"8\n\rGetElkLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14GetRyuManagerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17GetRyuControllerLogsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StopRyuMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StartRyuMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19StopHostMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"X\n\x18StopHostMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"@\n\x15RemoveKibanaTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15\x43reateKibanaTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x16\n\x14ListKibanaTunnelsMsg\"5\n\x10KibanaTunnelsDTO\x12!\n\x07tunnels\x18\x01 \x03(\x0b\x32\x10.KibanaTunnelDTO\"T\n\x0fKibanaTunnelDTO\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x11\n\temulation\x18\x03 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x04 \x01(\x05\"=\n\x12RemoveRyuTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12\x43reateRyuTunnelMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x13\n\x11ListRyuTunnelsMsg\"/\n\rRyuTunnelsDTO\x12\x1e\n\x07tunnels\x18\x01 \x03(\x0b\x32\r.RyuTunnelDTO\"Q\n\x0cRyuTunnelDTO\x12\x0c\n\x04port\x18\x01 \x01(\x05\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x11\n\temulation\x18\x03 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x04 \x01(\x05\"P\n SnortIdsMonitorThreadStatusesDTO\x12,\n\x10snortIDSStatuses\x18\x01 \x03(\x0b\x32\x12.SnortIdsStatusDTO\"E\n\x1aGetSnortIdsManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"N\n#GetSnortIdsMonitorThreadStatusesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"H\n\x1dStopSnortIdsMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"V\n\x16StopSnortIdsManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"W\n\x17StartSnortIdsManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"B\n\x17StopSnortIdsManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StartSnortIdsManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"M\n\rStartSnortMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"]\n\x1dStartSnortIdsMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"I\n\x1eStartSnortIdsMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"L\n\x0cStopSnortMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"\\\n\x1cStopSnortIdsMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"<\n\x11StopSnortIdsesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"J\n\x1fStopSnortIdsesMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15GetRyuManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StopRyuMonitorServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19StartRyuMonitorServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopRyuServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartRyuServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16GetRyuServiceStatusMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopRyuManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartRyuManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1aGetOSSECIDSManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"P\n OSSECIdsMonitorThreadStatusesDTO\x12,\n\x10ossecIDSStatuses\x18\x01 \x03(\x0b\x32\x12.OSSECIdsStatusDTO\"N\n#GetOSSECIDSMonitorThreadStatusesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"H\n\x1dStopOSSECIDSMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\\\n\x1cStopOSSECIDSMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"]\n\x1dStartOSSECIDSMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"S\n\x13StopOSSECIDSManager\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"T\n\x14StartOSSECIDSManager\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"?\n\x14StopOSSECIDSManagers\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartOSSECIDSManagers\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"P\n\x10StartOSSECIDSMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"O\n\x0fStopOSSECIDSMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"=\n\x12StartOSSECIDSesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopOSSECIDSesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17GetKafkaManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13StartKafkaServerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StopKafkaServerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18GetKafkaManagerStatusMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14\x43reateKafkaTopicsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13StopKafkaManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StartKafkaManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16GetHostManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"K\n GetHostMonitorThreadsStatusesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"V\n\x16\x41pplyFileBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"X\n\x18\x41pplyPacketBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"X\n\x18\x41pplyMetricBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"W\n\x17\x41pplyHeartBeatConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"O\n\x0fStopFileBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Q\n\x11StopPacketBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"Q\n\x11StopMetricBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"P\n\x10StopHeartBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"f\n\x10StartFileBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"h\n\x12StartPacketBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"h\n\x12StartMetricBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"g\n\x11StartHeartBeatMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\x12\x13\n\x0b\x63ontainerIp\x18\x04 \x01(\t\"Y\n\x19StartHostMonitorThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"<\n\x11StopHeartbeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StopPacketbeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\";\n\x10StopFilebeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StopMetricbeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1aStartHostMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"R\n\x12StopHostManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"S\n\x13StartHostManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\">\n\x13StopHostManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xad\x05\n\x10\x45xecutionInfoDTO\x12\x15\n\remulationName\x18\x01 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x02 \x01(\x05\x12\x36\n\x14snortIdsManagersInfo\x18\x03 \x01(\x0b\x32\x18.SnortIdsManagersInfoDTO\x12\x36\n\x14ossecIdsManagersInfo\x18\x04 \x01(\x0b\x32\x18.OSSECIdsManagersInfoDTO\x12\x30\n\x11kafkaManagersInfo\x18\x05 \x01(\x0b\x32\x15.KafkaManagersInfoDTO\x12.\n\x10hostManagersInfo\x18\x06 \x01(\x0b\x32\x14.HostManagersInfoDTO\x12\x32\n\x12\x63lientManagersInfo\x18\x07 \x01(\x0b\x32\x16.ClientManagersInfoDTO\x12<\n\x17\x64ockerStatsManagersInfo\x18\x08 \x01(\x0b\x32\x1b.DockerStatsManagersInfoDTO\x12\x30\n\x11runningContainers\x18\t \x01(\x0b\x32\x15.RunningContainersDTO\x12\x30\n\x11stoppedContainers\x18\n \x01(\x0b\x32\x15.StoppedContainersDTO\x12\x37\n\x16trafficManagersInfoDTO\x18\x0b \x01(\x0b\x32\x17.TrafficManagersInfoDTO\x12*\n\x0e\x61\x63tiveNetworks\x18\x0c \x01(\x0b\x32\x12.DockerNetworksDTO\x12/\n\x12\x65lkManagersInfoDTO\x18\r \x01(\x0b\x32\x13.ElkManagersInfoDTO\x12/\n\x12ryuManagersInfoDTO\x18\x0e \x01(\x0b\x32\x13.RyuManagersInfoDTO\"\xab\x01\n\x12RyuManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1a\n\x12ryuManagersRunning\x18\x05 \x03(\x08\x12\x31\n\x13ryuManagersStatuses\x18\x06 \x03(\x0b\x32\x14.RyuManagerStatusDTO\"\xb4\x01\n\x13RyuManagerStatusDTO\x12\x13\n\x0bryu_running\x18\x01 \x01(\x08\x12\x17\n\x0fmonitor_running\x18\x02 \x01(\x08\x12\x0c\n\x04port\x18\x03 \x01(\x05\x12\x10\n\x08web_port\x18\x04 \x01(\x05\x12\x12\n\ncontroller\x18\x05 \x01(\t\x12\x10\n\x08kafka_ip\x18\x06 \x01(\t\x12\x12\n\nkafka_port\x18\x07 \x01(\x05\x12\x15\n\rtime_step_len\x18\x08 \x01(\x05\"\xaf\x01\n\x13HostManagersInfoDTO\x12\x0b\n\x03ips\x18\x15 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1b\n\x13hostManagersRunning\x18\x05 \x03(\x08\x12\x33\n\x14hostManagersStatuses\x18\x06 \x03(\x0b\x32\x15.HostManagerStatusDTO\"L\n\x16HostManagerStatusesDTO\x12\x32\n\x13hostManagerStatuses\x18\x01 \x03(\x0b\x32\x15.HostManagerStatusDTO\"\xa8\x01\n\x14HostManagerStatusDTO\x12\x17\n\x0fmonitor_running\x18\x01 \x01(\x08\x12\x18\n\x10\x66ilebeat_running\x18\x02 \x01(\x08\x12\x1a\n\x12packetbeat_running\x18\x03 \x01(\x08\x12\x1a\n\x12metricbeat_running\x18\x04 \x01(\x08\x12\x19\n\x11heartbeat_running\x18\x05 \x01(\x08\x12\n\n\x02ip\x18\x06 \x01(\t\"\xac\x01\n\x14KafkaManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1c\n\x14kafkaManagersRunning\x18\x05 \x03(\x08\x12.\n\x15kafkaManagersStatuses\x18\x06 \x03(\x0b\x32\x0f.KafkaStatusDTO\"1\n\x0eKafkaStatusDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\x12\x0e\n\x06topics\x18\x02 \x03(\t\"\xb8\x01\n\x17OSSECIdsManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1f\n\x17ossecIdsManagersRunning\x18\x05 \x03(\x08\x12\x34\n\x18ossecIdsManagersStatuses\x18\x06 \x03(\x0b\x32\x12.OSSECIdsStatusDTO\"G\n\x11OSSECIdsStatusDTO\x12\x17\n\x0fmonitor_running\x18\x01 \x01(\x08\x12\x19\n\x11ossec_ids_running\x18\x02 \x01(\x08\"\xb8\x01\n\x17SnortIdsManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1f\n\x17snortIdsManagersRunning\x18\x05 \x03(\x08\x12\x34\n\x18snortIdsManagersStatuses\x18\x06 \x03(\x0b\x32\x12.SnortIdsStatusDTO\"G\n\x11SnortIdsStatusDTO\x12\x17\n\x0fmonitor_running\x18\x01 \x01(\x08\x12\x19\n\x11snort_ids_running\x18\x02 \x01(\x08\">\n\x13GetExecutionInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"G\n\x1cStopContainersOfExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"y\n\x0fRunContainerMsg\x12\r\n\x05image\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0e\n\x06memory\x18\x03 \x01(\x05\x12\x10\n\x08num_cpus\x18\x04 \x01(\x05\x12\x16\n\x0e\x63reate_network\x18\x05 \x01(\x08\x12\x0f\n\x07version\x18\x06 \x01(\t\"H\n\x1dStartContainersOfExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15GetElkManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xbd\x01\n\x12\x45lkManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1a\n\x12\x65lkManagersRunning\x18\x05 \x03(\x08\x12*\n\x13\x65lkManagersStatuses\x18\x06 \x03(\x0b\x32\r.ElkStatusDTO\x12\x17\n\x0flocalKibanaPort\x18\x07 \x01(\x05\"A\n\x16StopLogstashServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StartLogstashServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StopKibanaServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartKibanaServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StopElasticServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16StartElasticServiceMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\":\n\x0fStopElkStackMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"V\n\x0c\x45lkStatusDTO\x12\x16\n\x0e\x65lasticRunning\x18\x01 \x01(\x08\x12\x15\n\rkibanaRunning\x18\x02 \x01(\x08\x12\x17\n\x0flogstashRunning\x18\x03 \x01(\x08\"?\n\x14GetElkStackStatusMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11StopElkManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartElkManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"H\n\x1dGetDockerStatsManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xcb\x01\n\x1a\x44ockerStatsManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\"\n\x1a\x64ockerStatsManagersRunning\x18\x05 \x03(\x08\x12\x41\n\x1b\x64ockerStatsManagersStatuses\x18\x06 \x03(\x0b\x32\x1c.DockerStatsMonitorStatusDTO\"\x1c\n\x1aRemoveAllDockerNetworksMsg\"+\n\x17RemoveDockerNetworksMsg\x12\x10\n\x08networks\x18\x01 \x03(\t\"e\n\x1b\x44ockerStatsMonitorStatusDTO\x12\x14\n\x0cnum_monitors\x18\x01 \x01(\x05\x12\x12\n\nemulations\x18\x02 \x03(\t\x12\x1c\n\x14\x65mulation_executions\x18\x03 \x03(\x05\".\n\x1eGetDockerStatsManagerStatusMsg\x12\x0c\n\x04port\x18\x01 \x01(\x05\"J\n\x1fStopDockerStatsManagerThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1a\x43reateEmulationNetworksMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x1d\n\x1bListAllStoppedContainersMsg\"F\n\x14StoppedContainersDTO\x12.\n\x11stoppedContainers\x18\x01 \x03(\x0b\x32\x13.DockerContainerDTO\"\x1d\n\x1bListAllRunningEmulationsMsg\"1\n\x14RunningEmulationsDTO\x12\x19\n\x11runningEmulations\x18\x01 \x03(\t\"\x1d\n\x1bListAllRunningContainersMsg\"F\n\x14RunningContainersDTO\x12.\n\x11runningContainers\x18\x01 \x03(\x0b\x32\x13.DockerContainerDTO\"=\n\x12\x44ockerContainerDTO\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\x12\n\n\x02ip\x18\x03 \x01(\t\"!\n\x11StartContainerMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1e\n\x1cStartAllStoppedContainersMsg\"\x1a\n\x18ListAllDockerNetworksMsg\":\n\x11\x44ockerNetworksDTO\x12\x10\n\x08networks\x18\x01 \x03(\t\x12\x13\n\x0bnetwork_ids\x18\x02 \x03(\x05\"8\n\x12\x43ontainerImagesDTO\x12\"\n\x06images\x18\x01 \x03(\x0b\x32\x12.ContainerImageDTO\"f\n\x11\x43ontainerImageDTO\x12\x10\n\x08repoTags\x18\x01 \x01(\t\x12\x0f\n\x07\x63reated\x18\x02 \x01(\t\x12\n\n\x02os\x18\x03 \x01(\t\x12\x14\n\x0c\x61rchitecture\x18\x04 \x01(\t\x12\x0c\n\x04size\x18\x05 \x01(\x03\"\x1b\n\x19ListAllContainerImagesMsg\"\'\n\x17RemoveContainerImageMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\x1bRemoveAllContainerImagesMsg\"\x1f\n\x1dRemoveAllStoppedContainersMsg\"\"\n\x12RemoveContainerMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\" \n\x10StopContainerMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\x1bStopAllRunningContainersMsg\"D\n\x19GetTrafficManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xb9\x01\n\x16TrafficManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1e\n\x16trafficManagersRunning\x18\x05 \x03(\x08\x12\x37\n\x17trafficManagersStatuses\x18\x06 \x03(\x0b\x32\x16.TrafficManagerInfoDTO\"8\n\x15TrafficManagerInfoDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\x12\x0e\n\x06script\x18\x02 \x01(\t\"\xb1\x01\n\x15\x43lientManagersInfoDTO\x12\x0b\n\x03ips\x18\x01 \x03(\t\x12\r\n\x05ports\x18\x02 \x03(\x05\x12\x15\n\remulationName\x18\x03 \x01(\t\x12\x13\n\x0b\x65xecutionId\x18\x04 \x01(\x05\x12\x1d\n\x15\x63lientManagersRunning\x18\x05 \x03(\x08\x12\x31\n\x16\x63lientManagersStatuses\x18\x06 \x03(\x0b\x32\x11.GetNumClientsDTO\"C\n\x18GetClientManagersInfoMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"X\n\x18StartTrafficGeneratorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"W\n\x17StopTrafficGeneratorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"C\n\x18StopTrafficGeneratorsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\xae\x01\n\x10GetNumClientsDTO\x12\x13\n\x0bnum_clients\x18\x01 \x01(\x05\x12\x1d\n\x15\x63lient_process_active\x18\x02 \x01(\x08\x12\x17\n\x0fproducer_active\x18\x03 \x01(\x08\x12%\n\x1d\x63lients_time_step_len_seconds\x18\x04 \x01(\x05\x12&\n\x1eproducer_time_step_len_seconds\x18\x05 \x01(\x05\"A\n\x16GetNumActiveClientsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StopClientPopulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StopClientManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartClientManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"A\n\x16StopTrafficManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"U\n\x15StopTrafficManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"V\n\x16StartTrafficManagerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x13\n\x0b\x63ontainerIp\x18\x03 \x01(\t\"\x17\n\x15\x43leanAllExecutionsMsg\"\x16\n\x14StopAllExecutionsMsg\";\n\x10StopExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11\x43leanExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"4\n\x1fStopAllExecutionsOfEmulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\"5\n CleanAllExecutionsOfEmulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\"\x14\n\x12GetCsleLogFilesMsg\"\x1d\n\rGetLogFileMsg\x12\x0c\n\x04name\x18\x01 \x01(\t\"H\n\x1dStartContainersInExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"S\n(AttachContainersToNetworksInExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13InstallLibrariesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\">\n\x13\x41pplyKafkaConfigMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"@\n\x15StartSdnControllerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1a\x41pplyResouceConstraintsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14\x43reateOvsSwitchesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\";\n\x10PingExecutionMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\":\n\x0f\x43onfigureOvsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"G\n\x1cStartSdnControllerMonitorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"9\n\x0e\x43reateUsersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"9\n\x0e\x43reateVulnsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"9\n\x0e\x43reateFlagsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"<\n\x11\x43reateTopologyMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17StartTrafficManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19StartTrafficGeneratorsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18StartClientPopulationMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"F\n\x1bStartKafkaClientProducerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"E\n\x1aStopKafkaClientProducerMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartSnortIdsesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"K\n StartSnortIdsesMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"=\n\x12StartOSSECIdsesMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"K\n StartOSSECIdsesMonitorThreadsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\";\n\x10StartElkStackMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"?\n\x14StartHostManagersMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"B\n\x17\x41pplyFileBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19\x41pplyPacketBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"D\n\x19\x41pplyMetricBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"C\n\x18\x41pplyHeartBeatConfigsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"R\n\x11StartFileBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"T\n\x13StartPacketBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"T\n\x13StartMetricBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"S\n\x12StartHeartBeatsMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\x12\x14\n\x0cinitialStart\x18\x03 \x01(\x08\"\x1e\n\x1cGetDockerStatsManagerLogsMsg\"\x16\n\x14GetPrometheusLogsMsg\"\x18\n\x16GetNodeExporterLogsMsg\"\x14\n\x12GetCAdvisorLogsMsg\"\x13\n\x11GetPgAdminLogsMsg\"\x13\n\x11GetGrafanaLogsMsg\"\x11\n\x0fGetNginxLogsMsg\"\x12\n\x10GetDockerLogsMsg\"\x16\n\x14GetPostgreSQLLogsMsg\"\x11\n\x0fGetFlaskLogsMsg\"\x17\n\x07LogsDTO\x12\x0c\n\x04logs\x18\x01 \x03(\t\"&\n\x13OperationOutcomeDTO\x12\x0f\n\x07outcome\x18\x01 \x01(\x08\"\x12\n\x10GetNodeStatusMsg\"\xb3\x02\n\rNodeStatusDTO\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0e\n\x06leader\x18\x02 \x01(\x08\x12\x17\n\x0f\x63\x41\x64visorRunning\x18\x03 \x01(\x08\x12\x19\n\x11prometheusRunning\x18\x04 \x01(\x08\x12\x16\n\x0egrafanaRunning\x18\x05 \x01(\x08\x12\x16\n\x0epgAdminRunning\x18\x06 \x01(\x08\x12\x14\n\x0cnginxRunning\x18\x07 \x01(\x08\x12\x14\n\x0c\x66laskRunning\x18\x08 \x01(\x08\x12!\n\x19\x64ockerStatsManagerRunning\x18\t \x01(\x08\x12\x1b\n\x13nodeExporterRunning\x18\n \x01(\x08\x12\x19\n\x11postgreSQLRunning\x18\x0b \x01(\x08\x12\x1b\n\x13\x64ockerEngineRunning\x18\x0c \x01(\x08\"#\n\x10ServiceStatusDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\"\x14\n\x12StartPostgreSQLMsg\"\x12\n\x10StartCAdvisorMsg\"\x16\n\x14StartNodeExporterMsg\"\x11\n\x0fStartGrafanaMsg\"\x14\n\x12StartPrometheusMsg\"\x11\n\x0fStartPgAdminMsg\"\x0f\n\rStartNginxMsg\"\x0f\n\rStartFlaskMsg\"\x1c\n\x1aStartDockerStatsManagerMsg\"K\n StartDockerStatsManagerThreadMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x14\n\x0cipFirstOctet\x18\x02 \x01(\x05\"\x16\n\x14StartDockerEngineMsg\"\x13\n\x11StopPostgreSQLMsg\"\x11\n\x0fStopCAdvisorMsg\"\x15\n\x13StopNodeExporterMsg\"\x10\n\x0eStopGrafanaMsg\"\x13\n\x11StopPrometheusMsg\"\x10\n\x0eStopPgAdminMsg\"\x0e\n\x0cStopNginxMsg\"\x0e\n\x0cStopFlaskMsg\"\x1b\n\x19StopDockerStatsManagerMsg\"\x15\n\x13StopDockerEngineMsg2\xd7o\n\x0e\x43lusterManager\x12\x34\n\rgetNodeStatus\x12\x11.GetNodeStatusMsg\x1a\x0e.NodeStatusDTO\"\x00\x12;\n\x0fstartPostgreSQL\x12\x13.StartPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x37\n\rstartCAdvisor\x12\x11.StartCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startNodeExporter\x12\x15.StartNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartGrafana\x12\x10.StartGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12;\n\x0fstartPrometheus\x12\x13.StartPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstartPgAdmin\x12\x10.StartPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartNginx\x12\x0e.StartNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x31\n\nstartFlask\x12\x0e.StartFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12K\n\x17startDockerStatsManager\x12\x1b.StartDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12W\n\x1dstartDockerStatsManagerThread\x12!.StartDockerStatsManagerThreadMsg\x1a\x11.ServiceStatusDTO\"\x00\x12?\n\x11startDockerEngine\x12\x15.StartDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPostgreSQL\x12\x12.StopPostgreSQLMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x35\n\x0cstopCAdvisor\x12\x10.StopCAdvisorMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopNodeExporter\x12\x14.StopNodeExporterMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopGrafana\x12\x0f.StopGrafanaMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x39\n\x0estopPrometheus\x12\x12.StopPrometheusMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x33\n\x0bstopPgAdmin\x12\x0f.StopPgAdminMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopNginx\x12\r.StopNginxMsg\x1a\x11.ServiceStatusDTO\"\x00\x12/\n\tstopFlask\x12\r.StopFlaskMsg\x1a\x11.ServiceStatusDTO\"\x00\x12I\n\x16stopDockerStatsManager\x12\x1a.StopDockerStatsManagerMsg\x1a\x11.ServiceStatusDTO\"\x00\x12=\n\x10stopDockerEngine\x12\x14.StopDockerEngineMsg\x1a\x11.ServiceStatusDTO\"\x00\x12\x32\n\x0fgetCsleLogFiles\x12\x13.GetCsleLogFilesMsg\x1a\x08.LogsDTO\"\x00\x12\x46\n\x19getDockerStatsManagerLogs\x12\x1d.GetDockerStatsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getPrometheusLogs\x12\x15.GetPrometheusLogsMsg\x1a\x08.LogsDTO\"\x00\x12:\n\x13getNodeExporterLogs\x12\x17.GetNodeExporterLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetCadvisorLogs\x12\x13.GetCAdvisorLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetPgAdminLogs\x12\x12.GetPgAdminLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x30\n\x0egetGrafanaLogs\x12\x12.GetGrafanaLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetNginxLogs\x12\x10.GetNginxLogsMsg\x1a\x08.LogsDTO\"\x00\x12.\n\rgetDockerLogs\x12\x11.GetDockerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x37\n\x12getPostrgreSQLLogs\x12\x15.GetPostgreSQLLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetFlaskLogs\x12\x10.GetFlaskLogsMsg\x1a\x08.LogsDTO\"\x00\x12(\n\ngetLogFile\x12\x0e.GetLogFileMsg\x1a\x08.LogsDTO\"\x00\x12T\n\x1astartContainersInExecution\x12\x1e.StartContainersInExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12j\n%attachContainersInExecutionToNetworks\x12).AttachContainersToNetworksInExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10installLibraries\x12\x14.InstallLibrariesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10\x61pplyKafkaConfig\x12\x14.ApplyKafkaConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12startSdnController\x12\x16.StartSdnControllerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12O\n\x18\x61pplyResourceConstraints\x12\x1b.ApplyResouceConstraintsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11\x63reateOvsSwitches\x12\x15.CreateOvsSwitchesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rpingExecution\x12\x11.PingExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0c\x63onfigureOvs\x12\x10.ConfigureOvsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19startSdnControllerMonitor\x12\x1d.StartSdnControllerMonitorMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0b\x63reateUsers\x12\x0f.CreateUsersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x15\x63reateVulnerabilities\x12\x0f.CreateVulnsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0b\x63reateFlags\x12\x0f.CreateFlagsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0e\x63reateTopology\x12\x12.CreateTopologyMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14startTrafficManagers\x12\x18.StartTrafficManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16startTrafficGenerators\x12\x1a.StartTrafficGeneratorsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15startClientPopulation\x12\x19.StartClientPopulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12P\n\x18startKafkaClientProducer\x12\x1c.StartKafkaClientProducerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12N\n\x17stopKafkaClientProducer\x12\x1b.StopKafkaClientProducerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartSnortIdses\x12\x13.StartSnortIdsesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Z\n\x1dstartSnortIdsesMonitorThreads\x12!.StartSnortIdsesMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartOssecIdses\x12\x13.StartOSSECIdsesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Z\n\x1dstartOssecIdsesMonitorThreads\x12!.StartOSSECIdsesMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstartElkStack\x12\x11.StartElkStackMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11startHostManagers\x12\x15.StartHostManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14\x61pplyFileBeatsConfig\x12\x18.ApplyFileBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16\x61pplyPacketBeatsConfig\x12\x1a.ApplyPacketBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16\x61pplyMetricBeatsConfig\x12\x1a.ApplyMetricBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15\x61pplyHeartBeatsConfig\x12\x19.ApplyHeartBeatConfigsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estartFilebeats\x12\x12.StartFileBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10startPacketbeats\x12\x14.StartPacketBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10startMetricbeats\x12\x14.StartMetricBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartHeartbeats\x12\x13.StartHeartBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12X\n\x1cstopAllExecutionsOfEmulation\x12 .StopAllExecutionsOfEmulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopExecution\x12\x11.StopExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11stopAllExecutions\x12\x15.StopAllExecutionsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12\x63leanAllExecutions\x12\x16.CleanAllExecutionsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Z\n\x1d\x63leanAllExecutionsOfEmulation\x12!.CleanAllExecutionsOfEmulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0e\x63leanExecution\x12\x12.CleanExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x46\n\x13startTrafficManager\x12\x17.StartTrafficManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x45\n\x12stopTrafficManager\x12\x17.StartTrafficManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12G\n\x13stopTrafficManagers\x12\x18.StartTrafficManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12startClientManager\x12\x16.StartClientManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14stopClientPopulation\x12\x18.StopClientPopulationMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11stopClientManager\x12\x15.StopClientManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x13getNumActiveClients\x12\x17.GetNumActiveClientsMsg\x1a\x11.GetNumClientsDTO\"\x00\x12J\n\x15startTrafficGenerator\x12\x19.StartTrafficGeneratorMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15stopTrafficGenerators\x12\x19.StopTrafficGeneratorsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14stopTrafficGenerator\x12\x18.StopTrafficGeneratorMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x15getClientManagersInfo\x12\x19.GetClientManagersInfoMsg\x1a\x16.ClientManagersInfoDTO\"\x00\x12N\n\x16getTrafficManagersInfo\x12\x1a.GetTrafficManagersInfoMsg\x1a\x16.TrafficManagerInfoDTO\"\x00\x12P\n\x18stopAllRunningContainers\x12\x1c.StopAllRunningContainersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopContainer\x12\x11.StopContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1aremoveAllStoppedContainers\x12\x1e.RemoveAllStoppedContainersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fremoveContainer\x12\x13.RemoveContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12P\n\x18removeAllContainerImages\x12\x1c.RemoveAllContainerImagesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14removeContainerImage\x12\x18.RemoveContainerImageMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12K\n\x16listAllContainerImages\x12\x1a.ListAllContainerImagesMsg\x1a\x13.ContainerImagesDTO\"\x00\x12H\n\x15listAllDockerNetworks\x12\x19.ListAllDockerNetworksMsg\x1a\x12.DockerNetworksDTO\"\x00\x12R\n\x19startAllStoppedContainers\x12\x1d.StartAllStoppedContainersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estartContainer\x12\x12.StartContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12Q\n\x18listAllRunningContainers\x12\x1c.ListAllRunningContainersMsg\x1a\x15.RunningContainersDTO\"\x00\x12Q\n\x18listAllRunningEmulations\x12\x1c.ListAllRunningEmulationsMsg\x1a\x15.RunningEmulationsDTO\"\x00\x12Q\n\x18listAllStoppedContainers\x12\x1c.ListAllStoppedContainersMsg\x1a\x15.StoppedContainersDTO\"\x00\x12N\n\x17\x63reateEmulationNetworks\x12\x1b.CreateEmulationNetworksMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12X\n\x1cstopDockerStatsManagerThread\x12 .StopDockerStatsManagerThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12^\n\x1bgetDockerStatsManagerStatus\x12\x1f.GetDockerStatsManagerStatusMsg\x1a\x1c.DockerStatsMonitorStatusDTO\"\x00\x12H\n\x14removeDockerNetworks\x12\x18.RemoveDockerNetworksMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12N\n\x17removeAllDockerNetworks\x12\x1b.RemoveAllDockerNetworksMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12[\n\x1agetDockerStatsManagersInfo\x12\x1e.GetDockerStatsManagersInfoMsg\x1a\x1b.DockerStatsManagersInfoDTO\"\x00\x12>\n\x0fstartElkManager\x12\x13.StartElkManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopElkManager\x12\x12.StopElkManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0cgetElkStatus\x12\x15.GetElkStackStatusMsg\x1a\r.ElkStatusDTO\"\x00\x12\x38\n\x0cstopElkStack\x12\x10.StopElkStackMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0cstartElastic\x12\x17.StartElasticServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12=\n\x0bstopElastic\x12\x16.StopElasticServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12=\n\x0bstartKibana\x12\x16.StartKibanaServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12;\n\nstopKibana\x12\x15.StopKibanaServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x41\n\rstartLogstash\x12\x18.StartLogstashServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0cstopLogstash\x12\x17.StopLogstashServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x12getElkManagersInfo\x12\x16.GetElkManagersInfoMsg\x1a\x13.ElkManagersInfoDTO\"\x00\x12T\n\x1astartContainersOfExecution\x12\x1e.StartContainersOfExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0crunContainer\x12\x10.RunContainerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19stopContainersOfExecution\x12\x1d.StopContainersOfExecutionMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10startHostManager\x12\x14.StartHostManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12@\n\x10stopHostManagers\x12\x14.StopHostManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstopHostManager\x12\x13.StopHostManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopFilebeats\x12\x11.StopFilebeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstopPacketbeats\x12\x13.StopPacketbeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstopMetricbeats\x12\x13.StopMetricbeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopHeartbeats\x12\x12.StopHeartbeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12N\n\x17startHostMonitorThreads\x12\x1b.StartHostMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16startHostMonitorThread\x12\x1a.StartHostMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12;\n\rstartFilebeat\x12\x12.StartFileBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0fstartPacketbeat\x12\x14.StartPacketBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0fstartMetricbeat\x12\x14.StartMetricBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12=\n\x0estartHeartbeat\x12\x13.StartHeartBeatsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0cstopFilebeat\x12\x10.StopFileBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopPacketbeat\x12\x12.StopPacketBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopMetricbeat\x12\x12.StopMetricBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstopHeartbeat\x12\x11.StopHeartBeatMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x46\n\x13\x61pplyFileBeatConfig\x12\x17.ApplyFileBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15\x61pplyPacketBeatConfig\x12\x19.ApplyPacketBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15\x61pplyMetricBeatConfig\x12\x19.ApplyMetricBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14\x61pplyHeartBeatConfig\x12\x18.ApplyHeartBeatConfigMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12]\n\x1dgetHostMonitorThreadsStatuses\x12!.GetHostMonitorThreadsStatusesMsg\x1a\x17.HostManagerStatusesDTO\"\x00\x12\x46\n\x13getHostManagersInfo\x12\x17.GetHostManagersInfoMsg\x1a\x14.HostManagersInfoDTO\"\x00\x12@\n\x10stopKafkaManager\x12\x14.StopKafkaManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11startKafkaManager\x12\x15.StartKafkaManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x11\x63reateKafkaTopics\x12\x15.CreateKafkaTopicsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0egetKafkaStatus\x12\x19.GetKafkaManagerStatusMsg\x1a\x0f.KafkaStatusDTO\"\x00\x12>\n\x0fstopKafkaServer\x12\x13.StopKafkaServerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x10startKafkaServer\x12\x13.StopKafkaServerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12I\n\x14getKafkaManagersInfo\x12\x18.GetKafkaManagersInfoMsg\x1a\x15.KafkaManagersInfoDTO\"\x00\x12<\n\x0estopOSSECIDSes\x12\x12.StopOSSECIDSesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fstartOSSECIDSes\x12\x13.StartOSSECIDSesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x38\n\x0cstopOSSECIDS\x12\x10.StopOSSECIDSMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12:\n\rstartOSSECIDS\x12\x11.StartOSSECIDSMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12G\n\x15startOSSECIDSManagers\x12\x16.StartOSSECIDSManagers\x1a\x14.OperationOutcomeDTO\"\x00\x12\x45\n\x14stopOSSECIDSManagers\x12\x15.StopOSSECIDSManagers\x1a\x14.OperationOutcomeDTO\"\x00\x12\x45\n\x14startOSSECIDSManager\x12\x15.StartOSSECIDSManager\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x13stopOSSECIDSManager\x12\x14.StopOSSECIDSManager\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astartOSSECIDSMonitorThread\x12\x1e.StartOSSECIDSMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19stopOSSECIDSMonitorThread\x12\x1d.StopOSSECIDSMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astopOSSECIDSMonitorThreads\x12\x1e.StopOSSECIDSMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12m\n getOSSECIDSMonitorThreadStatuses\x12$.GetOSSECIDSMonitorThreadStatusesMsg\x1a!.OSSECIdsMonitorThreadStatusesDTO\"\x00\x12R\n\x17getOSSECIdsManagersInfo\x12\x1b.GetOSSECIDSManagersInfoMsg\x1a\x18.OSSECIdsManagersInfoDTO\"\x00\x12>\n\x0fstartRyuManager\x12\x13.StartRyuManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x0estopRyuManager\x12\x12.StopRyuManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12?\n\x0cgetRyuStatus\x12\x17.GetRyuServiceStatusMsg\x1a\x14.RyuManagerStatusDTO\"\x00\x12\x37\n\x08startRyu\x12\x13.StartRyuServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x35\n\x07stopRyu\x12\x12.StopRyuServiceMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x43\n\x12getRyuManagersInfo\x12\x16.GetRyuManagersInfoMsg\x1a\x13.RyuManagersInfoDTO\"\x00\x12<\n\x0estopSnortIdses\x12\x12.StopSnortIdsesMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12X\n\x1cstopSnortIdsesMonitorThreads\x12 .StopSnortIdsesMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x35\n\x0cstopSnortIds\x12\r.StopSnortMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12R\n\x19stopSnortIdsMonitorThread\x12\x1d.StopSnortIdsMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x37\n\rstartSnortIds\x12\x0e.StartSnortMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12V\n\x1bstartSnortIdsMonitorThreads\x12\x1f.StartSnortIdsMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astartSnortIdsMonitorThread\x12\x1e.StartSnortIdsMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15startSnortIdsManagers\x12\x19.StartSnortIdsManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14stopSnortIdsManagers\x12\x18.StopSnortIdsManagersMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12H\n\x14startSnortIdsManager\x12\x18.StartSnortIdsManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x46\n\x13stopSnortIdsManager\x12\x17.StopSnortIdsManagerMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12T\n\x1astopSnortIdsMonitorThreads\x12\x1e.StopSnortIdsMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12m\n getSnortIdsMonitorThreadStatuses\x12$.GetSnortIdsMonitorThreadStatusesMsg\x1a!.SnortIdsMonitorThreadStatusesDTO\"\x00\x12R\n\x17getSnortIdsManagersInfo\x12\x1b.GetSnortIdsManagersInfoMsg\x1a\x18.SnortIdsManagersInfoDTO\"\x00\x12=\n\x10getExecutionInfo\x12\x14.GetExecutionInfoMsg\x1a\x11.ExecutionInfoDTO\"\x00\x12?\n\x11listKibanaTunnels\x12\x15.ListKibanaTunnelsMsg\x1a\x11.KibanaTunnelsDTO\"\x00\x12\x44\n\x12\x63reateKibanaTunnel\x12\x16.CreateKibanaTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x36\n\x0elistRyuTunnels\x12\x12.ListRyuTunnelsMsg\x1a\x0e.RyuTunnelsDTO\"\x00\x12\x41\n\x0f\x63reateRyuTunnel\x12\x16.CreateKibanaTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x12removeKibanaTunnel\x12\x16.RemoveKibanaTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12>\n\x0fremoveRyuTunnel\x12\x13.RemoveRyuTunnelMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12L\n\x16stopHostMonitorThreads\x12\x1a.StopHostMonitorThreadsMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12J\n\x15stopHostMonitorThread\x12\x19.StopHostMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x44\n\x0fstartRyuMonitor\x12\x19.StartRyuMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12\x42\n\x0estopRyuMonitor\x12\x18.StopRyuMonitorThreadMsg\x1a\x14.OperationOutcomeDTO\"\x00\x12<\n\x14getRyuControllerLogs\x12\x18.GetRyuControllerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getRyuManagerLogs\x12\x15.GetRyuManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12(\n\ngetElkLogs\x12\x0e.GetElkLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x36\n\x11getElkManagerLogs\x12\x15.GetElkManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12>\n\x15getTrafficManagerLogs\x12\x19.GetTrafficManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x38\n\x12getHostManagerLogs\x12\x16.GetHostManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetOSSECIdsLogs\x12\x13.GetOSSECIdsLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x43\n\x19getOSSECIdsManagerLogsMsg\x12\x1a.GetOSSECIdsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x32\n\x0fgetSnortIdsLogs\x12\x13.GetSnortIdsLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x43\n\x19getSnortIdsManagerLogsMsg\x12\x1a.GetSnortIdsManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12,\n\x0cgetKafkaLogs\x12\x10.GetKafkaLogsMsg\x1a\x08.LogsDTO\"\x00\x12:\n\x13getKafkaManagerLogs\x12\x17.GetKafkaManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12?\n\x17getClientManagerLogsMsg\x12\x18.GetClientManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12\x34\n\x10getContainerLogs\x12\x14.GetContainerLogsMsg\x1a\x08.LogsDTO\"\x00\x12>\n\x15getClusterManagerLogs\x12\x19.GetClusterManagerLogsMsg\x1a\x08.LogsDTO\"\x00\x12^\n\x1agetExecutionTimeSeriesData\x12\x1e.GetExecutionTimeSeriesDataMsg\x1a\x1e.EmulationMetricsTimeSeriesDTO\"\x00\x62\x06proto3')
 
 
 
+_GETEXECUTIONTIMESERIESDATAMSG = DESCRIPTOR.message_types_by_name['GetExecutionTimeSeriesDataMsg']
+_EMULATIONMETRICSTIMESERIESDTO = DESCRIPTOR.message_types_by_name['EmulationMetricsTimeSeriesDTO']
+_AVGPORTSTATISTICDICT = DESCRIPTOR.message_types_by_name['AvgPortStatisticDict']
+_AGGFLOWSTATISTICDICT = DESCRIPTOR.message_types_by_name['AggFlowStatisticDict']
+_AVGFLOWSTATISTICDICT = DESCRIPTOR.message_types_by_name['AvgFlowStatisticDict']
+_PORTSTATISTICSDICT = DESCRIPTOR.message_types_by_name['PortStatisticsDict']
+_FLOWSTATISTICDICT = DESCRIPTOR.message_types_by_name['FlowStatisticDict']
+_OSSECIDSALERTCOUNTERSDICT = DESCRIPTOR.message_types_by_name['OSSECIdsAlertCountersDict']
+_HOSTMETRICSDICT = DESCRIPTOR.message_types_by_name['HostMetricsDict']
+_DOCKERSTATSDICT = DESCRIPTOR.message_types_by_name['DockerStatsDict']
+_AVGPORTSTATISTICDTO = DESCRIPTOR.message_types_by_name['AvgPortStatisticDTO']
+_AVGFLOWSTATISTICDTO = DESCRIPTOR.message_types_by_name['AvgFlowStatisticDTO']
+_AGGFLOWSTATISTICDTO = DESCRIPTOR.message_types_by_name['AggFlowStatisticDTO']
+_PORTSTATISTICDTO = DESCRIPTOR.message_types_by_name['PortStatisticDTO']
+_FLOWSTATISTICDTO = DESCRIPTOR.message_types_by_name['FlowStatisticDTO']
+_OSSECIDSALERTCOUNTERSDTO = DESCRIPTOR.message_types_by_name['OSSECIdsAlertCountersDTO']
+_SNORTIDSALERTCOUNTERSDTO = DESCRIPTOR.message_types_by_name['SnortIdsAlertCountersDTO']
+_EMULATIONATTACKERACTIONDTO = DESCRIPTOR.message_types_by_name['EmulationAttackerActionDTO']
+_EMULATIONDEFENDERACTIONDTO = DESCRIPTOR.message_types_by_name['EmulationDefenderActionDTO']
+_HOSTMETRICSDTO = DESCRIPTOR.message_types_by_name['HostMetricsDTO']
+_DOCKERSTATSDTO = DESCRIPTOR.message_types_by_name['DockerStatsDTO']
+_CLIENTPOPULATIONMETRICSDTO = DESCRIPTOR.message_types_by_name['ClientPopulationMetricsDTO']
 _GETCLUSTERMANAGERLOGSMSG = DESCRIPTOR.message_types_by_name['GetClusterManagerLogsMsg']
 _GETCONTAINERLOGSMSG = DESCRIPTOR.message_types_by_name['GetContainerLogsMsg']
 _GETCLIENTMANAGERLOGSMSG = DESCRIPTOR.message_types_by_name['GetClientManagerLogsMsg']
@@ -264,6 +286,160 @@ _STOPNGINXMSG = DESCRIPTOR.message_types_by_name['StopNginxMsg']
 _STOPFLASKMSG = DESCRIPTOR.message_types_by_name['StopFlaskMsg']
 _STOPDOCKERSTATSMANAGERMSG = DESCRIPTOR.message_types_by_name['StopDockerStatsManagerMsg']
 _STOPDOCKERENGINEMSG = DESCRIPTOR.message_types_by_name['StopDockerEngineMsg']
+GetExecutionTimeSeriesDataMsg = _reflection.GeneratedProtocolMessageType('GetExecutionTimeSeriesDataMsg', (_message.Message,), {
+  'DESCRIPTOR' : _GETEXECUTIONTIMESERIESDATAMSG,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:GetExecutionTimeSeriesDataMsg)
+  })
+_sym_db.RegisterMessage(GetExecutionTimeSeriesDataMsg)
+
+EmulationMetricsTimeSeriesDTO = _reflection.GeneratedProtocolMessageType('EmulationMetricsTimeSeriesDTO', (_message.Message,), {
+  'DESCRIPTOR' : _EMULATIONMETRICSTIMESERIESDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:EmulationMetricsTimeSeriesDTO)
+  })
+_sym_db.RegisterMessage(EmulationMetricsTimeSeriesDTO)
+
+AvgPortStatisticDict = _reflection.GeneratedProtocolMessageType('AvgPortStatisticDict', (_message.Message,), {
+  'DESCRIPTOR' : _AVGPORTSTATISTICDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AvgPortStatisticDict)
+  })
+_sym_db.RegisterMessage(AvgPortStatisticDict)
+
+AggFlowStatisticDict = _reflection.GeneratedProtocolMessageType('AggFlowStatisticDict', (_message.Message,), {
+  'DESCRIPTOR' : _AGGFLOWSTATISTICDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AggFlowStatisticDict)
+  })
+_sym_db.RegisterMessage(AggFlowStatisticDict)
+
+AvgFlowStatisticDict = _reflection.GeneratedProtocolMessageType('AvgFlowStatisticDict', (_message.Message,), {
+  'DESCRIPTOR' : _AVGFLOWSTATISTICDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AvgFlowStatisticDict)
+  })
+_sym_db.RegisterMessage(AvgFlowStatisticDict)
+
+PortStatisticsDict = _reflection.GeneratedProtocolMessageType('PortStatisticsDict', (_message.Message,), {
+  'DESCRIPTOR' : _PORTSTATISTICSDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:PortStatisticsDict)
+  })
+_sym_db.RegisterMessage(PortStatisticsDict)
+
+FlowStatisticDict = _reflection.GeneratedProtocolMessageType('FlowStatisticDict', (_message.Message,), {
+  'DESCRIPTOR' : _FLOWSTATISTICDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:FlowStatisticDict)
+  })
+_sym_db.RegisterMessage(FlowStatisticDict)
+
+OSSECIdsAlertCountersDict = _reflection.GeneratedProtocolMessageType('OSSECIdsAlertCountersDict', (_message.Message,), {
+  'DESCRIPTOR' : _OSSECIDSALERTCOUNTERSDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:OSSECIdsAlertCountersDict)
+  })
+_sym_db.RegisterMessage(OSSECIdsAlertCountersDict)
+
+HostMetricsDict = _reflection.GeneratedProtocolMessageType('HostMetricsDict', (_message.Message,), {
+  'DESCRIPTOR' : _HOSTMETRICSDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:HostMetricsDict)
+  })
+_sym_db.RegisterMessage(HostMetricsDict)
+
+DockerStatsDict = _reflection.GeneratedProtocolMessageType('DockerStatsDict', (_message.Message,), {
+  'DESCRIPTOR' : _DOCKERSTATSDICT,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:DockerStatsDict)
+  })
+_sym_db.RegisterMessage(DockerStatsDict)
+
+AvgPortStatisticDTO = _reflection.GeneratedProtocolMessageType('AvgPortStatisticDTO', (_message.Message,), {
+  'DESCRIPTOR' : _AVGPORTSTATISTICDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AvgPortStatisticDTO)
+  })
+_sym_db.RegisterMessage(AvgPortStatisticDTO)
+
+AvgFlowStatisticDTO = _reflection.GeneratedProtocolMessageType('AvgFlowStatisticDTO', (_message.Message,), {
+  'DESCRIPTOR' : _AVGFLOWSTATISTICDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AvgFlowStatisticDTO)
+  })
+_sym_db.RegisterMessage(AvgFlowStatisticDTO)
+
+AggFlowStatisticDTO = _reflection.GeneratedProtocolMessageType('AggFlowStatisticDTO', (_message.Message,), {
+  'DESCRIPTOR' : _AGGFLOWSTATISTICDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:AggFlowStatisticDTO)
+  })
+_sym_db.RegisterMessage(AggFlowStatisticDTO)
+
+PortStatisticDTO = _reflection.GeneratedProtocolMessageType('PortStatisticDTO', (_message.Message,), {
+  'DESCRIPTOR' : _PORTSTATISTICDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:PortStatisticDTO)
+  })
+_sym_db.RegisterMessage(PortStatisticDTO)
+
+FlowStatisticDTO = _reflection.GeneratedProtocolMessageType('FlowStatisticDTO', (_message.Message,), {
+  'DESCRIPTOR' : _FLOWSTATISTICDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:FlowStatisticDTO)
+  })
+_sym_db.RegisterMessage(FlowStatisticDTO)
+
+OSSECIdsAlertCountersDTO = _reflection.GeneratedProtocolMessageType('OSSECIdsAlertCountersDTO', (_message.Message,), {
+  'DESCRIPTOR' : _OSSECIDSALERTCOUNTERSDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:OSSECIdsAlertCountersDTO)
+  })
+_sym_db.RegisterMessage(OSSECIdsAlertCountersDTO)
+
+SnortIdsAlertCountersDTO = _reflection.GeneratedProtocolMessageType('SnortIdsAlertCountersDTO', (_message.Message,), {
+  'DESCRIPTOR' : _SNORTIDSALERTCOUNTERSDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:SnortIdsAlertCountersDTO)
+  })
+_sym_db.RegisterMessage(SnortIdsAlertCountersDTO)
+
+EmulationAttackerActionDTO = _reflection.GeneratedProtocolMessageType('EmulationAttackerActionDTO', (_message.Message,), {
+  'DESCRIPTOR' : _EMULATIONATTACKERACTIONDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:EmulationAttackerActionDTO)
+  })
+_sym_db.RegisterMessage(EmulationAttackerActionDTO)
+
+EmulationDefenderActionDTO = _reflection.GeneratedProtocolMessageType('EmulationDefenderActionDTO', (_message.Message,), {
+  'DESCRIPTOR' : _EMULATIONDEFENDERACTIONDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:EmulationDefenderActionDTO)
+  })
+_sym_db.RegisterMessage(EmulationDefenderActionDTO)
+
+HostMetricsDTO = _reflection.GeneratedProtocolMessageType('HostMetricsDTO', (_message.Message,), {
+  'DESCRIPTOR' : _HOSTMETRICSDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:HostMetricsDTO)
+  })
+_sym_db.RegisterMessage(HostMetricsDTO)
+
+DockerStatsDTO = _reflection.GeneratedProtocolMessageType('DockerStatsDTO', (_message.Message,), {
+  'DESCRIPTOR' : _DOCKERSTATSDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:DockerStatsDTO)
+  })
+_sym_db.RegisterMessage(DockerStatsDTO)
+
+ClientPopulationMetricsDTO = _reflection.GeneratedProtocolMessageType('ClientPopulationMetricsDTO', (_message.Message,), {
+  'DESCRIPTOR' : _CLIENTPOPULATIONMETRICSDTO,
+  '__module__' : 'cluster_manager_pb2'
+  # @@protoc_insertion_point(class_scope:ClientPopulationMetricsDTO)
+  })
+_sym_db.RegisterMessage(ClientPopulationMetricsDTO)
+
 GetClusterManagerLogsMsg = _reflection.GeneratedProtocolMessageType('GetClusterManagerLogsMsg', (_message.Message,), {
   'DESCRIPTOR' : _GETCLUSTERMANAGERLOGSMSG,
   '__module__' : 'cluster_manager_pb2'
@@ -1990,498 +2166,542 @@ _CLUSTERMANAGER = DESCRIPTOR.services_by_name['ClusterManager']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _GETCLUSTERMANAGERLOGSMSG._serialized_start=25
-  _GETCLUSTERMANAGERLOGSMSG._serialized_end=51
-  _GETCONTAINERLOGSMSG._serialized_start=53
-  _GETCONTAINERLOGSMSG._serialized_end=136
-  _GETCLIENTMANAGERLOGSMSG._serialized_start=138
-  _GETCLIENTMANAGERLOGSMSG._serialized_end=204
-  _GETKAFKAMANAGERLOGSMSG._serialized_start=206
-  _GETKAFKAMANAGERLOGSMSG._serialized_end=271
-  _GETKAFKALOGSMSG._serialized_start=273
-  _GETKAFKALOGSMSG._serialized_end=331
-  _GETSNORTIDSLOGSMSG._serialized_start=333
-  _GETSNORTIDSLOGSMSG._serialized_end=415
-  _GETSNORTIDSMANAGERLOGSMSG._serialized_start=417
-  _GETSNORTIDSMANAGERLOGSMSG._serialized_end=506
-  _GETOSSECIDSMANAGERLOGSMSG._serialized_start=508
-  _GETOSSECIDSMANAGERLOGSMSG._serialized_end=597
-  _GETOSSECIDSLOGSMSG._serialized_start=599
-  _GETOSSECIDSLOGSMSG._serialized_end=681
-  _GETHOSTMANAGERLOGSMSG._serialized_start=683
-  _GETHOSTMANAGERLOGSMSG._serialized_end=768
-  _GETTRAFFICMANAGERLOGSMSG._serialized_start=770
-  _GETTRAFFICMANAGERLOGSMSG._serialized_end=858
-  _GETELKMANAGERLOGSMSG._serialized_start=860
-  _GETELKMANAGERLOGSMSG._serialized_end=923
-  _GETELKLOGSMSG._serialized_start=925
-  _GETELKLOGSMSG._serialized_end=981
-  _GETRYUMANAGERLOGSMSG._serialized_start=983
-  _GETRYUMANAGERLOGSMSG._serialized_end=1046
-  _GETRYUCONTROLLERLOGSMSG._serialized_start=1048
-  _GETRYUCONTROLLERLOGSMSG._serialized_end=1114
-  _STOPRYUMONITORTHREADMSG._serialized_start=1116
-  _STOPRYUMONITORTHREADMSG._serialized_end=1182
-  _STARTRYUMONITORTHREADMSG._serialized_start=1184
-  _STARTRYUMONITORTHREADMSG._serialized_end=1251
-  _STOPHOSTMONITORTHREADSMSG._serialized_start=1253
-  _STOPHOSTMONITORTHREADSMSG._serialized_end=1321
-  _STOPHOSTMONITORTHREADMSG._serialized_start=1323
-  _STOPHOSTMONITORTHREADMSG._serialized_end=1411
-  _REMOVEKIBANATUNNELMSG._serialized_start=1413
-  _REMOVEKIBANATUNNELMSG._serialized_end=1477
-  _CREATEKIBANATUNNELMSG._serialized_start=1479
-  _CREATEKIBANATUNNELMSG._serialized_end=1543
-  _LISTKIBANATUNNELSMSG._serialized_start=1545
-  _LISTKIBANATUNNELSMSG._serialized_end=1567
-  _KIBANATUNNELSDTO._serialized_start=1569
-  _KIBANATUNNELSDTO._serialized_end=1622
-  _KIBANATUNNELDTO._serialized_start=1624
-  _KIBANATUNNELDTO._serialized_end=1708
-  _REMOVERYUTUNNELMSG._serialized_start=1710
-  _REMOVERYUTUNNELMSG._serialized_end=1771
-  _CREATERYUTUNNELMSG._serialized_start=1773
-  _CREATERYUTUNNELMSG._serialized_end=1834
-  _LISTRYUTUNNELSMSG._serialized_start=1836
-  _LISTRYUTUNNELSMSG._serialized_end=1855
-  _RYUTUNNELSDTO._serialized_start=1857
-  _RYUTUNNELSDTO._serialized_end=1904
-  _RYUTUNNELDTO._serialized_start=1906
-  _RYUTUNNELDTO._serialized_end=1987
-  _SNORTIDSMONITORTHREADSTATUSESDTO._serialized_start=1989
-  _SNORTIDSMONITORTHREADSTATUSESDTO._serialized_end=2069
-  _GETSNORTIDSMANAGERSINFOMSG._serialized_start=2071
-  _GETSNORTIDSMANAGERSINFOMSG._serialized_end=2140
-  _GETSNORTIDSMONITORTHREADSTATUSESMSG._serialized_start=2142
-  _GETSNORTIDSMONITORTHREADSTATUSESMSG._serialized_end=2220
-  _STOPSNORTIDSMONITORTHREADSMSG._serialized_start=2222
-  _STOPSNORTIDSMONITORTHREADSMSG._serialized_end=2294
-  _STOPSNORTIDSMANAGERMSG._serialized_start=2296
-  _STOPSNORTIDSMANAGERMSG._serialized_end=2382
-  _STARTSNORTIDSMANAGERMSG._serialized_start=2384
-  _STARTSNORTIDSMANAGERMSG._serialized_end=2471
-  _STOPSNORTIDSMANAGERSMSG._serialized_start=2473
-  _STOPSNORTIDSMANAGERSMSG._serialized_end=2539
-  _STARTSNORTIDSMANAGERSMSG._serialized_start=2541
-  _STARTSNORTIDSMANAGERSMSG._serialized_end=2608
-  _STARTSNORTMSG._serialized_start=2610
-  _STARTSNORTMSG._serialized_end=2687
-  _STARTSNORTIDSMONITORTHREADMSG._serialized_start=2689
-  _STARTSNORTIDSMONITORTHREADMSG._serialized_end=2782
-  _STARTSNORTIDSMONITORTHREADSMSG._serialized_start=2784
-  _STARTSNORTIDSMONITORTHREADSMSG._serialized_end=2857
-  _STOPSNORTMSG._serialized_start=2859
-  _STOPSNORTMSG._serialized_end=2935
-  _STOPSNORTIDSMONITORTHREADMSG._serialized_start=2937
-  _STOPSNORTIDSMONITORTHREADMSG._serialized_end=3029
-  _STOPSNORTIDSESMSG._serialized_start=3031
-  _STOPSNORTIDSESMSG._serialized_end=3091
-  _STOPSNORTIDSESMONITORTHREADSMSG._serialized_start=3093
-  _STOPSNORTIDSESMONITORTHREADSMSG._serialized_end=3167
-  _GETRYUMANAGERSINFOMSG._serialized_start=3169
-  _GETRYUMANAGERSINFOMSG._serialized_end=3233
-  _STOPRYUMONITORSERVICEMSG._serialized_start=3235
-  _STOPRYUMONITORSERVICEMSG._serialized_end=3302
-  _STARTRYUMONITORSERVICEMSG._serialized_start=3304
-  _STARTRYUMONITORSERVICEMSG._serialized_end=3372
-  _STOPRYUSERVICEMSG._serialized_start=3374
-  _STOPRYUSERVICEMSG._serialized_end=3434
-  _STARTRYUSERVICEMSG._serialized_start=3436
-  _STARTRYUSERVICEMSG._serialized_end=3497
-  _GETRYUSERVICESTATUSMSG._serialized_start=3499
-  _GETRYUSERVICESTATUSMSG._serialized_end=3564
-  _STOPRYUMANAGERMSG._serialized_start=3566
-  _STOPRYUMANAGERMSG._serialized_end=3626
-  _STARTRYUMANAGERMSG._serialized_start=3628
-  _STARTRYUMANAGERMSG._serialized_end=3689
-  _GETOSSECIDSMANAGERSINFOMSG._serialized_start=3691
-  _GETOSSECIDSMANAGERSINFOMSG._serialized_end=3760
-  _OSSECIDSMONITORTHREADSTATUSESDTO._serialized_start=3762
-  _OSSECIDSMONITORTHREADSTATUSESDTO._serialized_end=3842
-  _GETOSSECIDSMONITORTHREADSTATUSESMSG._serialized_start=3844
-  _GETOSSECIDSMONITORTHREADSTATUSESMSG._serialized_end=3922
-  _STOPOSSECIDSMONITORTHREADSMSG._serialized_start=3924
-  _STOPOSSECIDSMONITORTHREADSMSG._serialized_end=3996
-  _STOPOSSECIDSMONITORTHREADMSG._serialized_start=3998
-  _STOPOSSECIDSMONITORTHREADMSG._serialized_end=4090
-  _STARTOSSECIDSMONITORTHREADMSG._serialized_start=4092
-  _STARTOSSECIDSMONITORTHREADMSG._serialized_end=4185
-  _STOPOSSECIDSMANAGER._serialized_start=4187
-  _STOPOSSECIDSMANAGER._serialized_end=4270
-  _STARTOSSECIDSMANAGER._serialized_start=4272
-  _STARTOSSECIDSMANAGER._serialized_end=4356
-  _STOPOSSECIDSMANAGERS._serialized_start=4358
-  _STOPOSSECIDSMANAGERS._serialized_end=4421
-  _STARTOSSECIDSMANAGERS._serialized_start=4423
-  _STARTOSSECIDSMANAGERS._serialized_end=4487
-  _STARTOSSECIDSMSG._serialized_start=4489
-  _STARTOSSECIDSMSG._serialized_end=4569
-  _STOPOSSECIDSMSG._serialized_start=4571
-  _STOPOSSECIDSMSG._serialized_end=4650
-  _STARTOSSECIDSESMSG._serialized_start=4652
-  _STARTOSSECIDSESMSG._serialized_end=4713
-  _STOPOSSECIDSESMSG._serialized_start=4715
-  _STOPOSSECIDSESMSG._serialized_end=4775
-  _GETKAFKAMANAGERSINFOMSG._serialized_start=4777
-  _GETKAFKAMANAGERSINFOMSG._serialized_end=4843
-  _STARTKAFKASERVERMSG._serialized_start=4845
-  _STARTKAFKASERVERMSG._serialized_end=4907
-  _STOPKAFKASERVERMSG._serialized_start=4909
-  _STOPKAFKASERVERMSG._serialized_end=4970
-  _GETKAFKAMANAGERSTATUSMSG._serialized_start=4972
-  _GETKAFKAMANAGERSTATUSMSG._serialized_end=5039
-  _CREATEKAFKATOPICSMSG._serialized_start=5041
-  _CREATEKAFKATOPICSMSG._serialized_end=5104
-  _STOPKAFKAMANAGERMSG._serialized_start=5106
-  _STOPKAFKAMANAGERMSG._serialized_end=5168
-  _STARTKAFKAMANAGERMSG._serialized_start=5170
-  _STARTKAFKAMANAGERMSG._serialized_end=5233
-  _GETHOSTMANAGERSINFOMSG._serialized_start=5235
-  _GETHOSTMANAGERSINFOMSG._serialized_end=5300
-  _GETHOSTMONITORTHREADSSTATUSESMSG._serialized_start=5302
-  _GETHOSTMONITORTHREADSSTATUSESMSG._serialized_end=5377
-  _APPLYFILEBEATCONFIGMSG._serialized_start=5379
-  _APPLYFILEBEATCONFIGMSG._serialized_end=5465
-  _APPLYPACKETBEATCONFIGMSG._serialized_start=5467
-  _APPLYPACKETBEATCONFIGMSG._serialized_end=5555
-  _APPLYMETRICBEATCONFIGMSG._serialized_start=5557
-  _APPLYMETRICBEATCONFIGMSG._serialized_end=5645
-  _APPLYHEARTBEATCONFIGMSG._serialized_start=5647
-  _APPLYHEARTBEATCONFIGMSG._serialized_end=5734
-  _STOPFILEBEATMSG._serialized_start=5736
-  _STOPFILEBEATMSG._serialized_end=5815
-  _STOPPACKETBEATMSG._serialized_start=5817
-  _STOPPACKETBEATMSG._serialized_end=5898
-  _STOPMETRICBEATMSG._serialized_start=5900
-  _STOPMETRICBEATMSG._serialized_end=5981
-  _STOPHEARTBEATMSG._serialized_start=5983
-  _STOPHEARTBEATMSG._serialized_end=6063
-  _STARTFILEBEATMSG._serialized_start=6065
-  _STARTFILEBEATMSG._serialized_end=6167
-  _STARTPACKETBEATMSG._serialized_start=6169
-  _STARTPACKETBEATMSG._serialized_end=6273
-  _STARTMETRICBEATMSG._serialized_start=6275
-  _STARTMETRICBEATMSG._serialized_end=6379
-  _STARTHEARTBEATMSG._serialized_start=6381
-  _STARTHEARTBEATMSG._serialized_end=6484
-  _STARTHOSTMONITORTHREADMSG._serialized_start=6486
-  _STARTHOSTMONITORTHREADMSG._serialized_end=6575
-  _STOPHEARTBEATSMSG._serialized_start=6577
-  _STOPHEARTBEATSMSG._serialized_end=6637
-  _STOPPACKETBEATSMSG._serialized_start=6639
-  _STOPPACKETBEATSMSG._serialized_end=6700
-  _STOPFILEBEATSMSG._serialized_start=6702
-  _STOPFILEBEATSMSG._serialized_end=6761
-  _STOPMETRICBEATSMSG._serialized_start=6763
-  _STOPMETRICBEATSMSG._serialized_end=6824
-  _STARTHOSTMONITORTHREADSMSG._serialized_start=6826
-  _STARTHOSTMONITORTHREADSMSG._serialized_end=6895
-  _STOPHOSTMANAGERMSG._serialized_start=6897
-  _STOPHOSTMANAGERMSG._serialized_end=6979
-  _STARTHOSTMANAGERMSG._serialized_start=6981
-  _STARTHOSTMANAGERMSG._serialized_end=7064
-  _STOPHOSTMANAGERSMSG._serialized_start=7066
-  _STOPHOSTMANAGERSMSG._serialized_end=7128
-  _EXECUTIONINFODTO._serialized_start=7131
-  _EXECUTIONINFODTO._serialized_end=7816
-  _RYUMANAGERSINFODTO._serialized_start=7819
-  _RYUMANAGERSINFODTO._serialized_end=7990
-  _RYUMANAGERSTATUSDTO._serialized_start=7993
-  _RYUMANAGERSTATUSDTO._serialized_end=8173
-  _HOSTMANAGERSINFODTO._serialized_start=8176
-  _HOSTMANAGERSINFODTO._serialized_end=8351
-  _HOSTMANAGERSTATUSESDTO._serialized_start=8353
-  _HOSTMANAGERSTATUSESDTO._serialized_end=8429
-  _HOSTMANAGERSTATUSDTO._serialized_start=8432
-  _HOSTMANAGERSTATUSDTO._serialized_end=8600
-  _KAFKAMANAGERSINFODTO._serialized_start=8603
-  _KAFKAMANAGERSINFODTO._serialized_end=8775
-  _KAFKASTATUSDTO._serialized_start=8777
-  _KAFKASTATUSDTO._serialized_end=8826
-  _OSSECIDSMANAGERSINFODTO._serialized_start=8829
-  _OSSECIDSMANAGERSINFODTO._serialized_end=9013
-  _OSSECIDSSTATUSDTO._serialized_start=9015
-  _OSSECIDSSTATUSDTO._serialized_end=9086
-  _SNORTIDSMANAGERSINFODTO._serialized_start=9089
-  _SNORTIDSMANAGERSINFODTO._serialized_end=9273
-  _SNORTIDSSTATUSDTO._serialized_start=9275
-  _SNORTIDSSTATUSDTO._serialized_end=9346
-  _GETEXECUTIONINFOMSG._serialized_start=9348
-  _GETEXECUTIONINFOMSG._serialized_end=9410
-  _STOPCONTAINERSOFEXECUTIONMSG._serialized_start=9412
-  _STOPCONTAINERSOFEXECUTIONMSG._serialized_end=9483
-  _RUNCONTAINERMSG._serialized_start=9485
-  _RUNCONTAINERMSG._serialized_end=9606
-  _STARTCONTAINERSOFEXECUTIONMSG._serialized_start=9608
-  _STARTCONTAINERSOFEXECUTIONMSG._serialized_end=9680
-  _GETELKMANAGERSINFOMSG._serialized_start=9682
-  _GETELKMANAGERSINFOMSG._serialized_end=9746
-  _ELKMANAGERSINFODTO._serialized_start=9749
-  _ELKMANAGERSINFODTO._serialized_end=9938
-  _STOPLOGSTASHSERVICEMSG._serialized_start=9940
-  _STOPLOGSTASHSERVICEMSG._serialized_end=10005
-  _STARTLOGSTASHSERVICEMSG._serialized_start=10007
-  _STARTLOGSTASHSERVICEMSG._serialized_end=10073
-  _STOPKIBANASERVICEMSG._serialized_start=10075
-  _STOPKIBANASERVICEMSG._serialized_end=10138
-  _STARTKIBANASERVICEMSG._serialized_start=10140
-  _STARTKIBANASERVICEMSG._serialized_end=10204
-  _STOPELASTICSERVICEMSG._serialized_start=10206
-  _STOPELASTICSERVICEMSG._serialized_end=10270
-  _STARTELASTICSERVICEMSG._serialized_start=10272
-  _STARTELASTICSERVICEMSG._serialized_end=10337
-  _STOPELKSTACKMSG._serialized_start=10339
-  _STOPELKSTACKMSG._serialized_end=10397
-  _ELKSTATUSDTO._serialized_start=10399
-  _ELKSTATUSDTO._serialized_end=10485
-  _GETELKSTACKSTATUSMSG._serialized_start=10487
-  _GETELKSTACKSTATUSMSG._serialized_end=10550
-  _STOPELKMANAGERMSG._serialized_start=10552
-  _STOPELKMANAGERMSG._serialized_end=10612
-  _STARTELKMANAGERMSG._serialized_start=10614
-  _STARTELKMANAGERMSG._serialized_end=10675
-  _GETDOCKERSTATSMANAGERSINFOMSG._serialized_start=10677
-  _GETDOCKERSTATSMANAGERSINFOMSG._serialized_end=10749
-  _DOCKERSTATSMANAGERSINFODTO._serialized_start=10752
-  _DOCKERSTATSMANAGERSINFODTO._serialized_end=10955
-  _REMOVEALLDOCKERNETWORKSMSG._serialized_start=10957
-  _REMOVEALLDOCKERNETWORKSMSG._serialized_end=10985
-  _REMOVEDOCKERNETWORKSMSG._serialized_start=10987
-  _REMOVEDOCKERNETWORKSMSG._serialized_end=11030
-  _DOCKERSTATSMONITORSTATUSDTO._serialized_start=11032
-  _DOCKERSTATSMONITORSTATUSDTO._serialized_end=11133
-  _GETDOCKERSTATSMANAGERSTATUSMSG._serialized_start=11135
-  _GETDOCKERSTATSMANAGERSTATUSMSG._serialized_end=11181
-  _STOPDOCKERSTATSMANAGERTHREADMSG._serialized_start=11183
-  _STOPDOCKERSTATSMANAGERTHREADMSG._serialized_end=11257
-  _CREATEEMULATIONNETWORKSMSG._serialized_start=11259
-  _CREATEEMULATIONNETWORKSMSG._serialized_end=11328
-  _LISTALLSTOPPEDCONTAINERSMSG._serialized_start=11330
-  _LISTALLSTOPPEDCONTAINERSMSG._serialized_end=11359
-  _STOPPEDCONTAINERSDTO._serialized_start=11361
-  _STOPPEDCONTAINERSDTO._serialized_end=11431
-  _LISTALLRUNNINGEMULATIONSMSG._serialized_start=11433
-  _LISTALLRUNNINGEMULATIONSMSG._serialized_end=11462
-  _RUNNINGEMULATIONSDTO._serialized_start=11464
-  _RUNNINGEMULATIONSDTO._serialized_end=11513
-  _LISTALLRUNNINGCONTAINERSMSG._serialized_start=11515
-  _LISTALLRUNNINGCONTAINERSMSG._serialized_end=11544
-  _RUNNINGCONTAINERSDTO._serialized_start=11546
-  _RUNNINGCONTAINERSDTO._serialized_end=11616
-  _DOCKERCONTAINERDTO._serialized_start=11618
-  _DOCKERCONTAINERDTO._serialized_end=11679
-  _STARTCONTAINERMSG._serialized_start=11681
-  _STARTCONTAINERMSG._serialized_end=11714
-  _STARTALLSTOPPEDCONTAINERSMSG._serialized_start=11716
-  _STARTALLSTOPPEDCONTAINERSMSG._serialized_end=11746
-  _LISTALLDOCKERNETWORKSMSG._serialized_start=11748
-  _LISTALLDOCKERNETWORKSMSG._serialized_end=11774
-  _DOCKERNETWORKSDTO._serialized_start=11776
-  _DOCKERNETWORKSDTO._serialized_end=11834
-  _CONTAINERIMAGESDTO._serialized_start=11836
-  _CONTAINERIMAGESDTO._serialized_end=11892
-  _CONTAINERIMAGEDTO._serialized_start=11894
-  _CONTAINERIMAGEDTO._serialized_end=11996
-  _LISTALLCONTAINERIMAGESMSG._serialized_start=11998
-  _LISTALLCONTAINERIMAGESMSG._serialized_end=12025
-  _REMOVECONTAINERIMAGEMSG._serialized_start=12027
-  _REMOVECONTAINERIMAGEMSG._serialized_end=12066
-  _REMOVEALLCONTAINERIMAGESMSG._serialized_start=12068
-  _REMOVEALLCONTAINERIMAGESMSG._serialized_end=12097
-  _REMOVEALLSTOPPEDCONTAINERSMSG._serialized_start=12099
-  _REMOVEALLSTOPPEDCONTAINERSMSG._serialized_end=12130
-  _REMOVECONTAINERMSG._serialized_start=12132
-  _REMOVECONTAINERMSG._serialized_end=12166
-  _STOPCONTAINERMSG._serialized_start=12168
-  _STOPCONTAINERMSG._serialized_end=12200
-  _STOPALLRUNNINGCONTAINERSMSG._serialized_start=12202
-  _STOPALLRUNNINGCONTAINERSMSG._serialized_end=12231
-  _GETTRAFFICMANAGERSINFOMSG._serialized_start=12233
-  _GETTRAFFICMANAGERSINFOMSG._serialized_end=12301
-  _TRAFFICMANAGERSINFODTO._serialized_start=12304
-  _TRAFFICMANAGERSINFODTO._serialized_end=12489
-  _TRAFFICMANAGERINFODTO._serialized_start=12491
-  _TRAFFICMANAGERINFODTO._serialized_end=12547
-  _CLIENTMANAGERSINFODTO._serialized_start=12550
-  _CLIENTMANAGERSINFODTO._serialized_end=12727
-  _GETCLIENTMANAGERSINFOMSG._serialized_start=12729
-  _GETCLIENTMANAGERSINFOMSG._serialized_end=12796
-  _STARTTRAFFICGENERATORMSG._serialized_start=12798
-  _STARTTRAFFICGENERATORMSG._serialized_end=12886
-  _STOPTRAFFICGENERATORMSG._serialized_start=12888
-  _STOPTRAFFICGENERATORMSG._serialized_end=12975
-  _STOPTRAFFICGENERATORSMSG._serialized_start=12977
-  _STOPTRAFFICGENERATORSMSG._serialized_end=13044
-  _GETNUMCLIENTSDTO._serialized_start=13047
-  _GETNUMCLIENTSDTO._serialized_end=13221
-  _GETNUMACTIVECLIENTSMSG._serialized_start=13223
-  _GETNUMACTIVECLIENTSMSG._serialized_end=13288
-  _STOPCLIENTPOPULATIONMSG._serialized_start=13290
-  _STOPCLIENTPOPULATIONMSG._serialized_end=13356
-  _STOPCLIENTMANAGERMSG._serialized_start=13358
-  _STOPCLIENTMANAGERMSG._serialized_end=13421
-  _STARTCLIENTMANAGERMSG._serialized_start=13423
-  _STARTCLIENTMANAGERMSG._serialized_end=13487
-  _STOPTRAFFICMANAGERSMSG._serialized_start=13489
-  _STOPTRAFFICMANAGERSMSG._serialized_end=13554
-  _STOPTRAFFICMANAGERMSG._serialized_start=13556
-  _STOPTRAFFICMANAGERMSG._serialized_end=13641
-  _STARTTRAFFICMANAGERMSG._serialized_start=13643
-  _STARTTRAFFICMANAGERMSG._serialized_end=13729
-  _CLEANALLEXECUTIONSMSG._serialized_start=13731
-  _CLEANALLEXECUTIONSMSG._serialized_end=13754
-  _STOPALLEXECUTIONSMSG._serialized_start=13756
-  _STOPALLEXECUTIONSMSG._serialized_end=13778
-  _STOPEXECUTIONMSG._serialized_start=13780
-  _STOPEXECUTIONMSG._serialized_end=13839
-  _CLEANEXECUTIONMSG._serialized_start=13841
-  _CLEANEXECUTIONMSG._serialized_end=13901
-  _STOPALLEXECUTIONSOFEMULATIONMSG._serialized_start=13903
-  _STOPALLEXECUTIONSOFEMULATIONMSG._serialized_end=13955
-  _CLEANALLEXECUTIONSOFEMULATIONMSG._serialized_start=13957
-  _CLEANALLEXECUTIONSOFEMULATIONMSG._serialized_end=14010
-  _GETCSLELOGFILESMSG._serialized_start=14012
-  _GETCSLELOGFILESMSG._serialized_end=14032
-  _GETLOGFILEMSG._serialized_start=14034
-  _GETLOGFILEMSG._serialized_end=14063
-  _STARTCONTAINERSINEXECUTIONMSG._serialized_start=14065
-  _STARTCONTAINERSINEXECUTIONMSG._serialized_end=14137
-  _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG._serialized_start=14139
-  _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG._serialized_end=14222
-  _INSTALLLIBRARIESMSG._serialized_start=14224
-  _INSTALLLIBRARIESMSG._serialized_end=14286
-  _APPLYKAFKACONFIGMSG._serialized_start=14288
-  _APPLYKAFKACONFIGMSG._serialized_end=14350
-  _STARTSDNCONTROLLERMSG._serialized_start=14352
-  _STARTSDNCONTROLLERMSG._serialized_end=14416
-  _APPLYRESOUCECONSTRAINTSMSG._serialized_start=14418
-  _APPLYRESOUCECONSTRAINTSMSG._serialized_end=14487
-  _CREATEOVSSWITCHESMSG._serialized_start=14489
-  _CREATEOVSSWITCHESMSG._serialized_end=14552
-  _PINGEXECUTIONMSG._serialized_start=14554
-  _PINGEXECUTIONMSG._serialized_end=14613
-  _CONFIGUREOVSMSG._serialized_start=14615
-  _CONFIGUREOVSMSG._serialized_end=14673
-  _STARTSDNCONTROLLERMONITORMSG._serialized_start=14675
-  _STARTSDNCONTROLLERMONITORMSG._serialized_end=14746
-  _CREATEUSERSMSG._serialized_start=14748
-  _CREATEUSERSMSG._serialized_end=14805
-  _CREATEVULNSMSG._serialized_start=14807
-  _CREATEVULNSMSG._serialized_end=14864
-  _CREATEFLAGSMSG._serialized_start=14866
-  _CREATEFLAGSMSG._serialized_end=14923
-  _CREATETOPOLOGYMSG._serialized_start=14925
-  _CREATETOPOLOGYMSG._serialized_end=14985
-  _STARTTRAFFICMANAGERSMSG._serialized_start=14987
-  _STARTTRAFFICMANAGERSMSG._serialized_end=15053
-  _STARTTRAFFICGENERATORSMSG._serialized_start=15055
-  _STARTTRAFFICGENERATORSMSG._serialized_end=15123
-  _STARTCLIENTPOPULATIONMSG._serialized_start=15125
-  _STARTCLIENTPOPULATIONMSG._serialized_end=15192
-  _STARTKAFKACLIENTPRODUCERMSG._serialized_start=15194
-  _STARTKAFKACLIENTPRODUCERMSG._serialized_end=15264
-  _STOPKAFKACLIENTPRODUCERMSG._serialized_start=15266
-  _STOPKAFKACLIENTPRODUCERMSG._serialized_end=15335
-  _STARTSNORTIDSESMSG._serialized_start=15337
-  _STARTSNORTIDSESMSG._serialized_end=15398
-  _STARTSNORTIDSESMONITORTHREADSMSG._serialized_start=15400
-  _STARTSNORTIDSESMONITORTHREADSMSG._serialized_end=15475
-  _STARTOSSECIDSESMSG._serialized_start=15477
-  _STARTOSSECIDSESMSG._serialized_end=15538
-  _STARTOSSECIDSESMONITORTHREADSMSG._serialized_start=15540
-  _STARTOSSECIDSESMONITORTHREADSMSG._serialized_end=15615
-  _STARTELKSTACKMSG._serialized_start=15617
-  _STARTELKSTACKMSG._serialized_end=15676
-  _STARTHOSTMANAGERSMSG._serialized_start=15678
-  _STARTHOSTMANAGERSMSG._serialized_end=15741
-  _APPLYFILEBEATCONFIGSMSG._serialized_start=15743
-  _APPLYFILEBEATCONFIGSMSG._serialized_end=15809
-  _APPLYPACKETBEATCONFIGSMSG._serialized_start=15811
-  _APPLYPACKETBEATCONFIGSMSG._serialized_end=15879
-  _APPLYMETRICBEATCONFIGSMSG._serialized_start=15881
-  _APPLYMETRICBEATCONFIGSMSG._serialized_end=15949
-  _APPLYHEARTBEATCONFIGSMSG._serialized_start=15951
-  _APPLYHEARTBEATCONFIGSMSG._serialized_end=16018
-  _STARTFILEBEATSMSG._serialized_start=16020
-  _STARTFILEBEATSMSG._serialized_end=16102
-  _STARTPACKETBEATSMSG._serialized_start=16104
-  _STARTPACKETBEATSMSG._serialized_end=16188
-  _STARTMETRICBEATSMSG._serialized_start=16190
-  _STARTMETRICBEATSMSG._serialized_end=16274
-  _STARTHEARTBEATSMSG._serialized_start=16276
-  _STARTHEARTBEATSMSG._serialized_end=16359
-  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_start=16361
-  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_end=16391
-  _GETPROMETHEUSLOGSMSG._serialized_start=16393
-  _GETPROMETHEUSLOGSMSG._serialized_end=16415
-  _GETNODEEXPORTERLOGSMSG._serialized_start=16417
-  _GETNODEEXPORTERLOGSMSG._serialized_end=16441
-  _GETCADVISORLOGSMSG._serialized_start=16443
-  _GETCADVISORLOGSMSG._serialized_end=16463
-  _GETPGADMINLOGSMSG._serialized_start=16465
-  _GETPGADMINLOGSMSG._serialized_end=16484
-  _GETGRAFANALOGSMSG._serialized_start=16486
-  _GETGRAFANALOGSMSG._serialized_end=16505
-  _GETNGINXLOGSMSG._serialized_start=16507
-  _GETNGINXLOGSMSG._serialized_end=16524
-  _GETDOCKERLOGSMSG._serialized_start=16526
-  _GETDOCKERLOGSMSG._serialized_end=16544
-  _GETPOSTGRESQLLOGSMSG._serialized_start=16546
-  _GETPOSTGRESQLLOGSMSG._serialized_end=16568
-  _GETFLASKLOGSMSG._serialized_start=16570
-  _GETFLASKLOGSMSG._serialized_end=16587
-  _LOGSDTO._serialized_start=16589
-  _LOGSDTO._serialized_end=16612
-  _OPERATIONOUTCOMEDTO._serialized_start=16614
-  _OPERATIONOUTCOMEDTO._serialized_end=16652
-  _GETNODESTATUSMSG._serialized_start=16654
-  _GETNODESTATUSMSG._serialized_end=16672
-  _NODESTATUSDTO._serialized_start=16675
-  _NODESTATUSDTO._serialized_end=16982
-  _SERVICESTATUSDTO._serialized_start=16984
-  _SERVICESTATUSDTO._serialized_end=17019
-  _STARTPOSTGRESQLMSG._serialized_start=17021
-  _STARTPOSTGRESQLMSG._serialized_end=17041
-  _STARTCADVISORMSG._serialized_start=17043
-  _STARTCADVISORMSG._serialized_end=17061
-  _STARTNODEEXPORTERMSG._serialized_start=17063
-  _STARTNODEEXPORTERMSG._serialized_end=17085
-  _STARTGRAFANAMSG._serialized_start=17087
-  _STARTGRAFANAMSG._serialized_end=17104
-  _STARTPROMETHEUSMSG._serialized_start=17106
-  _STARTPROMETHEUSMSG._serialized_end=17126
-  _STARTPGADMINMSG._serialized_start=17128
-  _STARTPGADMINMSG._serialized_end=17145
-  _STARTNGINXMSG._serialized_start=17147
-  _STARTNGINXMSG._serialized_end=17162
-  _STARTFLASKMSG._serialized_start=17164
-  _STARTFLASKMSG._serialized_end=17179
-  _STARTDOCKERSTATSMANAGERMSG._serialized_start=17181
-  _STARTDOCKERSTATSMANAGERMSG._serialized_end=17209
-  _STARTDOCKERSTATSMANAGERTHREADMSG._serialized_start=17211
-  _STARTDOCKERSTATSMANAGERTHREADMSG._serialized_end=17286
-  _STARTDOCKERENGINEMSG._serialized_start=17288
-  _STARTDOCKERENGINEMSG._serialized_end=17310
-  _STOPPOSTGRESQLMSG._serialized_start=17312
-  _STOPPOSTGRESQLMSG._serialized_end=17331
-  _STOPCADVISORMSG._serialized_start=17333
-  _STOPCADVISORMSG._serialized_end=17350
-  _STOPNODEEXPORTERMSG._serialized_start=17352
-  _STOPNODEEXPORTERMSG._serialized_end=17373
-  _STOPGRAFANAMSG._serialized_start=17375
-  _STOPGRAFANAMSG._serialized_end=17391
-  _STOPPROMETHEUSMSG._serialized_start=17393
-  _STOPPROMETHEUSMSG._serialized_end=17412
-  _STOPPGADMINMSG._serialized_start=17414
-  _STOPPGADMINMSG._serialized_end=17430
-  _STOPNGINXMSG._serialized_start=17432
-  _STOPNGINXMSG._serialized_end=17446
-  _STOPFLASKMSG._serialized_start=17448
-  _STOPFLASKMSG._serialized_end=17462
-  _STOPDOCKERSTATSMANAGERMSG._serialized_start=17464
-  _STOPDOCKERSTATSMANAGERMSG._serialized_end=17491
-  _STOPDOCKERENGINEMSG._serialized_start=17493
-  _STOPDOCKERENGINEMSG._serialized_end=17514
-  _CLUSTERMANAGER._serialized_start=17517
-  _CLUSTERMANAGER._serialized_end=31716
+  _GETEXECUTIONTIMESERIESDATAMSG._serialized_start=25
+  _GETEXECUTIONTIMESERIESDATAMSG._serialized_end=114
+  _EMULATIONMETRICSTIMESERIESDTO._serialized_start=117
+  _EMULATIONMETRICSTIMESERIESDTO._serialized_end=1320
+  _AVGPORTSTATISTICDICT._serialized_start=1322
+  _AVGPORTSTATISTICDICT._serialized_end=1392
+  _AGGFLOWSTATISTICDICT._serialized_start=1394
+  _AGGFLOWSTATISTICDICT._serialized_end=1464
+  _AVGFLOWSTATISTICDICT._serialized_start=1466
+  _AVGFLOWSTATISTICDICT._serialized_end=1536
+  _PORTSTATISTICSDICT._serialized_start=1538
+  _PORTSTATISTICSDICT._serialized_end=1603
+  _FLOWSTATISTICDICT._serialized_start=1605
+  _FLOWSTATISTICDICT._serialized_end=1669
+  _OSSECIDSALERTCOUNTERSDICT._serialized_start=1671
+  _OSSECIDSALERTCOUNTERSDICT._serialized_end=1751
+  _HOSTMETRICSDICT._serialized_start=1753
+  _HOSTMETRICSDICT._serialized_end=1813
+  _DOCKERSTATSDICT._serialized_start=1815
+  _DOCKERSTATSDICT._serialized_end=1875
+  _AVGPORTSTATISTICDTO._serialized_start=1878
+  _AVGPORTSTATISTICDTO._serialized_end=2450
+  _AVGFLOWSTATISTICDTO._serialized_start=2453
+  _AVGFLOWSTATISTICDTO._serialized_end=2724
+  _AGGFLOWSTATISTICDTO._serialized_start=2727
+  _AGGFLOWSTATISTICDTO._serialized_end=2865
+  _PORTSTATISTICDTO._serialized_start=2868
+  _PORTSTATISTICDTO._serialized_end=3371
+  _FLOWSTATISTICDTO._serialized_start=3374
+  _FLOWSTATISTICDTO._serialized_end=3666
+  _OSSECIDSALERTCOUNTERSDTO._serialized_start=3669
+  _OSSECIDSALERTCOUNTERSDTO._serialized_end=3866
+  _SNORTIDSALERTCOUNTERSDTO._serialized_start=3869
+  _SNORTIDSALERTCOUNTERSDTO._serialized_end=4050
+  _EMULATIONATTACKERACTIONDTO._serialized_start=4053
+  _EMULATIONATTACKERACTIONDTO._serialized_end=4297
+  _EMULATIONDEFENDERACTIONDTO._serialized_start=4300
+  _EMULATIONDEFENDERACTIONDTO._serialized_end=4503
+  _HOSTMETRICSDTO._serialized_start=4506
+  _HOSTMETRICSDTO._serialized_end=4708
+  _DOCKERSTATSDTO._serialized_start=4711
+  _DOCKERSTATSDTO._serialized_end=4959
+  _CLIENTPOPULATIONMETRICSDTO._serialized_start=4961
+  _CLIENTPOPULATIONMETRICSDTO._serialized_end=5048
+  _GETCLUSTERMANAGERLOGSMSG._serialized_start=5050
+  _GETCLUSTERMANAGERLOGSMSG._serialized_end=5076
+  _GETCONTAINERLOGSMSG._serialized_start=5078
+  _GETCONTAINERLOGSMSG._serialized_end=5161
+  _GETCLIENTMANAGERLOGSMSG._serialized_start=5163
+  _GETCLIENTMANAGERLOGSMSG._serialized_end=5229
+  _GETKAFKAMANAGERLOGSMSG._serialized_start=5231
+  _GETKAFKAMANAGERLOGSMSG._serialized_end=5296
+  _GETKAFKALOGSMSG._serialized_start=5298
+  _GETKAFKALOGSMSG._serialized_end=5356
+  _GETSNORTIDSLOGSMSG._serialized_start=5358
+  _GETSNORTIDSLOGSMSG._serialized_end=5440
+  _GETSNORTIDSMANAGERLOGSMSG._serialized_start=5442
+  _GETSNORTIDSMANAGERLOGSMSG._serialized_end=5531
+  _GETOSSECIDSMANAGERLOGSMSG._serialized_start=5533
+  _GETOSSECIDSMANAGERLOGSMSG._serialized_end=5622
+  _GETOSSECIDSLOGSMSG._serialized_start=5624
+  _GETOSSECIDSLOGSMSG._serialized_end=5706
+  _GETHOSTMANAGERLOGSMSG._serialized_start=5708
+  _GETHOSTMANAGERLOGSMSG._serialized_end=5793
+  _GETTRAFFICMANAGERLOGSMSG._serialized_start=5795
+  _GETTRAFFICMANAGERLOGSMSG._serialized_end=5883
+  _GETELKMANAGERLOGSMSG._serialized_start=5885
+  _GETELKMANAGERLOGSMSG._serialized_end=5948
+  _GETELKLOGSMSG._serialized_start=5950
+  _GETELKLOGSMSG._serialized_end=6006
+  _GETRYUMANAGERLOGSMSG._serialized_start=6008
+  _GETRYUMANAGERLOGSMSG._serialized_end=6071
+  _GETRYUCONTROLLERLOGSMSG._serialized_start=6073
+  _GETRYUCONTROLLERLOGSMSG._serialized_end=6139
+  _STOPRYUMONITORTHREADMSG._serialized_start=6141
+  _STOPRYUMONITORTHREADMSG._serialized_end=6207
+  _STARTRYUMONITORTHREADMSG._serialized_start=6209
+  _STARTRYUMONITORTHREADMSG._serialized_end=6276
+  _STOPHOSTMONITORTHREADSMSG._serialized_start=6278
+  _STOPHOSTMONITORTHREADSMSG._serialized_end=6346
+  _STOPHOSTMONITORTHREADMSG._serialized_start=6348
+  _STOPHOSTMONITORTHREADMSG._serialized_end=6436
+  _REMOVEKIBANATUNNELMSG._serialized_start=6438
+  _REMOVEKIBANATUNNELMSG._serialized_end=6502
+  _CREATEKIBANATUNNELMSG._serialized_start=6504
+  _CREATEKIBANATUNNELMSG._serialized_end=6568
+  _LISTKIBANATUNNELSMSG._serialized_start=6570
+  _LISTKIBANATUNNELSMSG._serialized_end=6592
+  _KIBANATUNNELSDTO._serialized_start=6594
+  _KIBANATUNNELSDTO._serialized_end=6647
+  _KIBANATUNNELDTO._serialized_start=6649
+  _KIBANATUNNELDTO._serialized_end=6733
+  _REMOVERYUTUNNELMSG._serialized_start=6735
+  _REMOVERYUTUNNELMSG._serialized_end=6796
+  _CREATERYUTUNNELMSG._serialized_start=6798
+  _CREATERYUTUNNELMSG._serialized_end=6859
+  _LISTRYUTUNNELSMSG._serialized_start=6861
+  _LISTRYUTUNNELSMSG._serialized_end=6880
+  _RYUTUNNELSDTO._serialized_start=6882
+  _RYUTUNNELSDTO._serialized_end=6929
+  _RYUTUNNELDTO._serialized_start=6931
+  _RYUTUNNELDTO._serialized_end=7012
+  _SNORTIDSMONITORTHREADSTATUSESDTO._serialized_start=7014
+  _SNORTIDSMONITORTHREADSTATUSESDTO._serialized_end=7094
+  _GETSNORTIDSMANAGERSINFOMSG._serialized_start=7096
+  _GETSNORTIDSMANAGERSINFOMSG._serialized_end=7165
+  _GETSNORTIDSMONITORTHREADSTATUSESMSG._serialized_start=7167
+  _GETSNORTIDSMONITORTHREADSTATUSESMSG._serialized_end=7245
+  _STOPSNORTIDSMONITORTHREADSMSG._serialized_start=7247
+  _STOPSNORTIDSMONITORTHREADSMSG._serialized_end=7319
+  _STOPSNORTIDSMANAGERMSG._serialized_start=7321
+  _STOPSNORTIDSMANAGERMSG._serialized_end=7407
+  _STARTSNORTIDSMANAGERMSG._serialized_start=7409
+  _STARTSNORTIDSMANAGERMSG._serialized_end=7496
+  _STOPSNORTIDSMANAGERSMSG._serialized_start=7498
+  _STOPSNORTIDSMANAGERSMSG._serialized_end=7564
+  _STARTSNORTIDSMANAGERSMSG._serialized_start=7566
+  _STARTSNORTIDSMANAGERSMSG._serialized_end=7633
+  _STARTSNORTMSG._serialized_start=7635
+  _STARTSNORTMSG._serialized_end=7712
+  _STARTSNORTIDSMONITORTHREADMSG._serialized_start=7714
+  _STARTSNORTIDSMONITORTHREADMSG._serialized_end=7807
+  _STARTSNORTIDSMONITORTHREADSMSG._serialized_start=7809
+  _STARTSNORTIDSMONITORTHREADSMSG._serialized_end=7882
+  _STOPSNORTMSG._serialized_start=7884
+  _STOPSNORTMSG._serialized_end=7960
+  _STOPSNORTIDSMONITORTHREADMSG._serialized_start=7962
+  _STOPSNORTIDSMONITORTHREADMSG._serialized_end=8054
+  _STOPSNORTIDSESMSG._serialized_start=8056
+  _STOPSNORTIDSESMSG._serialized_end=8116
+  _STOPSNORTIDSESMONITORTHREADSMSG._serialized_start=8118
+  _STOPSNORTIDSESMONITORTHREADSMSG._serialized_end=8192
+  _GETRYUMANAGERSINFOMSG._serialized_start=8194
+  _GETRYUMANAGERSINFOMSG._serialized_end=8258
+  _STOPRYUMONITORSERVICEMSG._serialized_start=8260
+  _STOPRYUMONITORSERVICEMSG._serialized_end=8327
+  _STARTRYUMONITORSERVICEMSG._serialized_start=8329
+  _STARTRYUMONITORSERVICEMSG._serialized_end=8397
+  _STOPRYUSERVICEMSG._serialized_start=8399
+  _STOPRYUSERVICEMSG._serialized_end=8459
+  _STARTRYUSERVICEMSG._serialized_start=8461
+  _STARTRYUSERVICEMSG._serialized_end=8522
+  _GETRYUSERVICESTATUSMSG._serialized_start=8524
+  _GETRYUSERVICESTATUSMSG._serialized_end=8589
+  _STOPRYUMANAGERMSG._serialized_start=8591
+  _STOPRYUMANAGERMSG._serialized_end=8651
+  _STARTRYUMANAGERMSG._serialized_start=8653
+  _STARTRYUMANAGERMSG._serialized_end=8714
+  _GETOSSECIDSMANAGERSINFOMSG._serialized_start=8716
+  _GETOSSECIDSMANAGERSINFOMSG._serialized_end=8785
+  _OSSECIDSMONITORTHREADSTATUSESDTO._serialized_start=8787
+  _OSSECIDSMONITORTHREADSTATUSESDTO._serialized_end=8867
+  _GETOSSECIDSMONITORTHREADSTATUSESMSG._serialized_start=8869
+  _GETOSSECIDSMONITORTHREADSTATUSESMSG._serialized_end=8947
+  _STOPOSSECIDSMONITORTHREADSMSG._serialized_start=8949
+  _STOPOSSECIDSMONITORTHREADSMSG._serialized_end=9021
+  _STOPOSSECIDSMONITORTHREADMSG._serialized_start=9023
+  _STOPOSSECIDSMONITORTHREADMSG._serialized_end=9115
+  _STARTOSSECIDSMONITORTHREADMSG._serialized_start=9117
+  _STARTOSSECIDSMONITORTHREADMSG._serialized_end=9210
+  _STOPOSSECIDSMANAGER._serialized_start=9212
+  _STOPOSSECIDSMANAGER._serialized_end=9295
+  _STARTOSSECIDSMANAGER._serialized_start=9297
+  _STARTOSSECIDSMANAGER._serialized_end=9381
+  _STOPOSSECIDSMANAGERS._serialized_start=9383
+  _STOPOSSECIDSMANAGERS._serialized_end=9446
+  _STARTOSSECIDSMANAGERS._serialized_start=9448
+  _STARTOSSECIDSMANAGERS._serialized_end=9512
+  _STARTOSSECIDSMSG._serialized_start=9514
+  _STARTOSSECIDSMSG._serialized_end=9594
+  _STOPOSSECIDSMSG._serialized_start=9596
+  _STOPOSSECIDSMSG._serialized_end=9675
+  _STARTOSSECIDSESMSG._serialized_start=9677
+  _STARTOSSECIDSESMSG._serialized_end=9738
+  _STOPOSSECIDSESMSG._serialized_start=9740
+  _STOPOSSECIDSESMSG._serialized_end=9800
+  _GETKAFKAMANAGERSINFOMSG._serialized_start=9802
+  _GETKAFKAMANAGERSINFOMSG._serialized_end=9868
+  _STARTKAFKASERVERMSG._serialized_start=9870
+  _STARTKAFKASERVERMSG._serialized_end=9932
+  _STOPKAFKASERVERMSG._serialized_start=9934
+  _STOPKAFKASERVERMSG._serialized_end=9995
+  _GETKAFKAMANAGERSTATUSMSG._serialized_start=9997
+  _GETKAFKAMANAGERSTATUSMSG._serialized_end=10064
+  _CREATEKAFKATOPICSMSG._serialized_start=10066
+  _CREATEKAFKATOPICSMSG._serialized_end=10129
+  _STOPKAFKAMANAGERMSG._serialized_start=10131
+  _STOPKAFKAMANAGERMSG._serialized_end=10193
+  _STARTKAFKAMANAGERMSG._serialized_start=10195
+  _STARTKAFKAMANAGERMSG._serialized_end=10258
+  _GETHOSTMANAGERSINFOMSG._serialized_start=10260
+  _GETHOSTMANAGERSINFOMSG._serialized_end=10325
+  _GETHOSTMONITORTHREADSSTATUSESMSG._serialized_start=10327
+  _GETHOSTMONITORTHREADSSTATUSESMSG._serialized_end=10402
+  _APPLYFILEBEATCONFIGMSG._serialized_start=10404
+  _APPLYFILEBEATCONFIGMSG._serialized_end=10490
+  _APPLYPACKETBEATCONFIGMSG._serialized_start=10492
+  _APPLYPACKETBEATCONFIGMSG._serialized_end=10580
+  _APPLYMETRICBEATCONFIGMSG._serialized_start=10582
+  _APPLYMETRICBEATCONFIGMSG._serialized_end=10670
+  _APPLYHEARTBEATCONFIGMSG._serialized_start=10672
+  _APPLYHEARTBEATCONFIGMSG._serialized_end=10759
+  _STOPFILEBEATMSG._serialized_start=10761
+  _STOPFILEBEATMSG._serialized_end=10840
+  _STOPPACKETBEATMSG._serialized_start=10842
+  _STOPPACKETBEATMSG._serialized_end=10923
+  _STOPMETRICBEATMSG._serialized_start=10925
+  _STOPMETRICBEATMSG._serialized_end=11006
+  _STOPHEARTBEATMSG._serialized_start=11008
+  _STOPHEARTBEATMSG._serialized_end=11088
+  _STARTFILEBEATMSG._serialized_start=11090
+  _STARTFILEBEATMSG._serialized_end=11192
+  _STARTPACKETBEATMSG._serialized_start=11194
+  _STARTPACKETBEATMSG._serialized_end=11298
+  _STARTMETRICBEATMSG._serialized_start=11300
+  _STARTMETRICBEATMSG._serialized_end=11404
+  _STARTHEARTBEATMSG._serialized_start=11406
+  _STARTHEARTBEATMSG._serialized_end=11509
+  _STARTHOSTMONITORTHREADMSG._serialized_start=11511
+  _STARTHOSTMONITORTHREADMSG._serialized_end=11600
+  _STOPHEARTBEATSMSG._serialized_start=11602
+  _STOPHEARTBEATSMSG._serialized_end=11662
+  _STOPPACKETBEATSMSG._serialized_start=11664
+  _STOPPACKETBEATSMSG._serialized_end=11725
+  _STOPFILEBEATSMSG._serialized_start=11727
+  _STOPFILEBEATSMSG._serialized_end=11786
+  _STOPMETRICBEATSMSG._serialized_start=11788
+  _STOPMETRICBEATSMSG._serialized_end=11849
+  _STARTHOSTMONITORTHREADSMSG._serialized_start=11851
+  _STARTHOSTMONITORTHREADSMSG._serialized_end=11920
+  _STOPHOSTMANAGERMSG._serialized_start=11922
+  _STOPHOSTMANAGERMSG._serialized_end=12004
+  _STARTHOSTMANAGERMSG._serialized_start=12006
+  _STARTHOSTMANAGERMSG._serialized_end=12089
+  _STOPHOSTMANAGERSMSG._serialized_start=12091
+  _STOPHOSTMANAGERSMSG._serialized_end=12153
+  _EXECUTIONINFODTO._serialized_start=12156
+  _EXECUTIONINFODTO._serialized_end=12841
+  _RYUMANAGERSINFODTO._serialized_start=12844
+  _RYUMANAGERSINFODTO._serialized_end=13015
+  _RYUMANAGERSTATUSDTO._serialized_start=13018
+  _RYUMANAGERSTATUSDTO._serialized_end=13198
+  _HOSTMANAGERSINFODTO._serialized_start=13201
+  _HOSTMANAGERSINFODTO._serialized_end=13376
+  _HOSTMANAGERSTATUSESDTO._serialized_start=13378
+  _HOSTMANAGERSTATUSESDTO._serialized_end=13454
+  _HOSTMANAGERSTATUSDTO._serialized_start=13457
+  _HOSTMANAGERSTATUSDTO._serialized_end=13625
+  _KAFKAMANAGERSINFODTO._serialized_start=13628
+  _KAFKAMANAGERSINFODTO._serialized_end=13800
+  _KAFKASTATUSDTO._serialized_start=13802
+  _KAFKASTATUSDTO._serialized_end=13851
+  _OSSECIDSMANAGERSINFODTO._serialized_start=13854
+  _OSSECIDSMANAGERSINFODTO._serialized_end=14038
+  _OSSECIDSSTATUSDTO._serialized_start=14040
+  _OSSECIDSSTATUSDTO._serialized_end=14111
+  _SNORTIDSMANAGERSINFODTO._serialized_start=14114
+  _SNORTIDSMANAGERSINFODTO._serialized_end=14298
+  _SNORTIDSSTATUSDTO._serialized_start=14300
+  _SNORTIDSSTATUSDTO._serialized_end=14371
+  _GETEXECUTIONINFOMSG._serialized_start=14373
+  _GETEXECUTIONINFOMSG._serialized_end=14435
+  _STOPCONTAINERSOFEXECUTIONMSG._serialized_start=14437
+  _STOPCONTAINERSOFEXECUTIONMSG._serialized_end=14508
+  _RUNCONTAINERMSG._serialized_start=14510
+  _RUNCONTAINERMSG._serialized_end=14631
+  _STARTCONTAINERSOFEXECUTIONMSG._serialized_start=14633
+  _STARTCONTAINERSOFEXECUTIONMSG._serialized_end=14705
+  _GETELKMANAGERSINFOMSG._serialized_start=14707
+  _GETELKMANAGERSINFOMSG._serialized_end=14771
+  _ELKMANAGERSINFODTO._serialized_start=14774
+  _ELKMANAGERSINFODTO._serialized_end=14963
+  _STOPLOGSTASHSERVICEMSG._serialized_start=14965
+  _STOPLOGSTASHSERVICEMSG._serialized_end=15030
+  _STARTLOGSTASHSERVICEMSG._serialized_start=15032
+  _STARTLOGSTASHSERVICEMSG._serialized_end=15098
+  _STOPKIBANASERVICEMSG._serialized_start=15100
+  _STOPKIBANASERVICEMSG._serialized_end=15163
+  _STARTKIBANASERVICEMSG._serialized_start=15165
+  _STARTKIBANASERVICEMSG._serialized_end=15229
+  _STOPELASTICSERVICEMSG._serialized_start=15231
+  _STOPELASTICSERVICEMSG._serialized_end=15295
+  _STARTELASTICSERVICEMSG._serialized_start=15297
+  _STARTELASTICSERVICEMSG._serialized_end=15362
+  _STOPELKSTACKMSG._serialized_start=15364
+  _STOPELKSTACKMSG._serialized_end=15422
+  _ELKSTATUSDTO._serialized_start=15424
+  _ELKSTATUSDTO._serialized_end=15510
+  _GETELKSTACKSTATUSMSG._serialized_start=15512
+  _GETELKSTACKSTATUSMSG._serialized_end=15575
+  _STOPELKMANAGERMSG._serialized_start=15577
+  _STOPELKMANAGERMSG._serialized_end=15637
+  _STARTELKMANAGERMSG._serialized_start=15639
+  _STARTELKMANAGERMSG._serialized_end=15700
+  _GETDOCKERSTATSMANAGERSINFOMSG._serialized_start=15702
+  _GETDOCKERSTATSMANAGERSINFOMSG._serialized_end=15774
+  _DOCKERSTATSMANAGERSINFODTO._serialized_start=15777
+  _DOCKERSTATSMANAGERSINFODTO._serialized_end=15980
+  _REMOVEALLDOCKERNETWORKSMSG._serialized_start=15982
+  _REMOVEALLDOCKERNETWORKSMSG._serialized_end=16010
+  _REMOVEDOCKERNETWORKSMSG._serialized_start=16012
+  _REMOVEDOCKERNETWORKSMSG._serialized_end=16055
+  _DOCKERSTATSMONITORSTATUSDTO._serialized_start=16057
+  _DOCKERSTATSMONITORSTATUSDTO._serialized_end=16158
+  _GETDOCKERSTATSMANAGERSTATUSMSG._serialized_start=16160
+  _GETDOCKERSTATSMANAGERSTATUSMSG._serialized_end=16206
+  _STOPDOCKERSTATSMANAGERTHREADMSG._serialized_start=16208
+  _STOPDOCKERSTATSMANAGERTHREADMSG._serialized_end=16282
+  _CREATEEMULATIONNETWORKSMSG._serialized_start=16284
+  _CREATEEMULATIONNETWORKSMSG._serialized_end=16353
+  _LISTALLSTOPPEDCONTAINERSMSG._serialized_start=16355
+  _LISTALLSTOPPEDCONTAINERSMSG._serialized_end=16384
+  _STOPPEDCONTAINERSDTO._serialized_start=16386
+  _STOPPEDCONTAINERSDTO._serialized_end=16456
+  _LISTALLRUNNINGEMULATIONSMSG._serialized_start=16458
+  _LISTALLRUNNINGEMULATIONSMSG._serialized_end=16487
+  _RUNNINGEMULATIONSDTO._serialized_start=16489
+  _RUNNINGEMULATIONSDTO._serialized_end=16538
+  _LISTALLRUNNINGCONTAINERSMSG._serialized_start=16540
+  _LISTALLRUNNINGCONTAINERSMSG._serialized_end=16569
+  _RUNNINGCONTAINERSDTO._serialized_start=16571
+  _RUNNINGCONTAINERSDTO._serialized_end=16641
+  _DOCKERCONTAINERDTO._serialized_start=16643
+  _DOCKERCONTAINERDTO._serialized_end=16704
+  _STARTCONTAINERMSG._serialized_start=16706
+  _STARTCONTAINERMSG._serialized_end=16739
+  _STARTALLSTOPPEDCONTAINERSMSG._serialized_start=16741
+  _STARTALLSTOPPEDCONTAINERSMSG._serialized_end=16771
+  _LISTALLDOCKERNETWORKSMSG._serialized_start=16773
+  _LISTALLDOCKERNETWORKSMSG._serialized_end=16799
+  _DOCKERNETWORKSDTO._serialized_start=16801
+  _DOCKERNETWORKSDTO._serialized_end=16859
+  _CONTAINERIMAGESDTO._serialized_start=16861
+  _CONTAINERIMAGESDTO._serialized_end=16917
+  _CONTAINERIMAGEDTO._serialized_start=16919
+  _CONTAINERIMAGEDTO._serialized_end=17021
+  _LISTALLCONTAINERIMAGESMSG._serialized_start=17023
+  _LISTALLCONTAINERIMAGESMSG._serialized_end=17050
+  _REMOVECONTAINERIMAGEMSG._serialized_start=17052
+  _REMOVECONTAINERIMAGEMSG._serialized_end=17091
+  _REMOVEALLCONTAINERIMAGESMSG._serialized_start=17093
+  _REMOVEALLCONTAINERIMAGESMSG._serialized_end=17122
+  _REMOVEALLSTOPPEDCONTAINERSMSG._serialized_start=17124
+  _REMOVEALLSTOPPEDCONTAINERSMSG._serialized_end=17155
+  _REMOVECONTAINERMSG._serialized_start=17157
+  _REMOVECONTAINERMSG._serialized_end=17191
+  _STOPCONTAINERMSG._serialized_start=17193
+  _STOPCONTAINERMSG._serialized_end=17225
+  _STOPALLRUNNINGCONTAINERSMSG._serialized_start=17227
+  _STOPALLRUNNINGCONTAINERSMSG._serialized_end=17256
+  _GETTRAFFICMANAGERSINFOMSG._serialized_start=17258
+  _GETTRAFFICMANAGERSINFOMSG._serialized_end=17326
+  _TRAFFICMANAGERSINFODTO._serialized_start=17329
+  _TRAFFICMANAGERSINFODTO._serialized_end=17514
+  _TRAFFICMANAGERINFODTO._serialized_start=17516
+  _TRAFFICMANAGERINFODTO._serialized_end=17572
+  _CLIENTMANAGERSINFODTO._serialized_start=17575
+  _CLIENTMANAGERSINFODTO._serialized_end=17752
+  _GETCLIENTMANAGERSINFOMSG._serialized_start=17754
+  _GETCLIENTMANAGERSINFOMSG._serialized_end=17821
+  _STARTTRAFFICGENERATORMSG._serialized_start=17823
+  _STARTTRAFFICGENERATORMSG._serialized_end=17911
+  _STOPTRAFFICGENERATORMSG._serialized_start=17913
+  _STOPTRAFFICGENERATORMSG._serialized_end=18000
+  _STOPTRAFFICGENERATORSMSG._serialized_start=18002
+  _STOPTRAFFICGENERATORSMSG._serialized_end=18069
+  _GETNUMCLIENTSDTO._serialized_start=18072
+  _GETNUMCLIENTSDTO._serialized_end=18246
+  _GETNUMACTIVECLIENTSMSG._serialized_start=18248
+  _GETNUMACTIVECLIENTSMSG._serialized_end=18313
+  _STOPCLIENTPOPULATIONMSG._serialized_start=18315
+  _STOPCLIENTPOPULATIONMSG._serialized_end=18381
+  _STOPCLIENTMANAGERMSG._serialized_start=18383
+  _STOPCLIENTMANAGERMSG._serialized_end=18446
+  _STARTCLIENTMANAGERMSG._serialized_start=18448
+  _STARTCLIENTMANAGERMSG._serialized_end=18512
+  _STOPTRAFFICMANAGERSMSG._serialized_start=18514
+  _STOPTRAFFICMANAGERSMSG._serialized_end=18579
+  _STOPTRAFFICMANAGERMSG._serialized_start=18581
+  _STOPTRAFFICMANAGERMSG._serialized_end=18666
+  _STARTTRAFFICMANAGERMSG._serialized_start=18668
+  _STARTTRAFFICMANAGERMSG._serialized_end=18754
+  _CLEANALLEXECUTIONSMSG._serialized_start=18756
+  _CLEANALLEXECUTIONSMSG._serialized_end=18779
+  _STOPALLEXECUTIONSMSG._serialized_start=18781
+  _STOPALLEXECUTIONSMSG._serialized_end=18803
+  _STOPEXECUTIONMSG._serialized_start=18805
+  _STOPEXECUTIONMSG._serialized_end=18864
+  _CLEANEXECUTIONMSG._serialized_start=18866
+  _CLEANEXECUTIONMSG._serialized_end=18926
+  _STOPALLEXECUTIONSOFEMULATIONMSG._serialized_start=18928
+  _STOPALLEXECUTIONSOFEMULATIONMSG._serialized_end=18980
+  _CLEANALLEXECUTIONSOFEMULATIONMSG._serialized_start=18982
+  _CLEANALLEXECUTIONSOFEMULATIONMSG._serialized_end=19035
+  _GETCSLELOGFILESMSG._serialized_start=19037
+  _GETCSLELOGFILESMSG._serialized_end=19057
+  _GETLOGFILEMSG._serialized_start=19059
+  _GETLOGFILEMSG._serialized_end=19088
+  _STARTCONTAINERSINEXECUTIONMSG._serialized_start=19090
+  _STARTCONTAINERSINEXECUTIONMSG._serialized_end=19162
+  _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG._serialized_start=19164
+  _ATTACHCONTAINERSTONETWORKSINEXECUTIONMSG._serialized_end=19247
+  _INSTALLLIBRARIESMSG._serialized_start=19249
+  _INSTALLLIBRARIESMSG._serialized_end=19311
+  _APPLYKAFKACONFIGMSG._serialized_start=19313
+  _APPLYKAFKACONFIGMSG._serialized_end=19375
+  _STARTSDNCONTROLLERMSG._serialized_start=19377
+  _STARTSDNCONTROLLERMSG._serialized_end=19441
+  _APPLYRESOUCECONSTRAINTSMSG._serialized_start=19443
+  _APPLYRESOUCECONSTRAINTSMSG._serialized_end=19512
+  _CREATEOVSSWITCHESMSG._serialized_start=19514
+  _CREATEOVSSWITCHESMSG._serialized_end=19577
+  _PINGEXECUTIONMSG._serialized_start=19579
+  _PINGEXECUTIONMSG._serialized_end=19638
+  _CONFIGUREOVSMSG._serialized_start=19640
+  _CONFIGUREOVSMSG._serialized_end=19698
+  _STARTSDNCONTROLLERMONITORMSG._serialized_start=19700
+  _STARTSDNCONTROLLERMONITORMSG._serialized_end=19771
+  _CREATEUSERSMSG._serialized_start=19773
+  _CREATEUSERSMSG._serialized_end=19830
+  _CREATEVULNSMSG._serialized_start=19832
+  _CREATEVULNSMSG._serialized_end=19889
+  _CREATEFLAGSMSG._serialized_start=19891
+  _CREATEFLAGSMSG._serialized_end=19948
+  _CREATETOPOLOGYMSG._serialized_start=19950
+  _CREATETOPOLOGYMSG._serialized_end=20010
+  _STARTTRAFFICMANAGERSMSG._serialized_start=20012
+  _STARTTRAFFICMANAGERSMSG._serialized_end=20078
+  _STARTTRAFFICGENERATORSMSG._serialized_start=20080
+  _STARTTRAFFICGENERATORSMSG._serialized_end=20148
+  _STARTCLIENTPOPULATIONMSG._serialized_start=20150
+  _STARTCLIENTPOPULATIONMSG._serialized_end=20217
+  _STARTKAFKACLIENTPRODUCERMSG._serialized_start=20219
+  _STARTKAFKACLIENTPRODUCERMSG._serialized_end=20289
+  _STOPKAFKACLIENTPRODUCERMSG._serialized_start=20291
+  _STOPKAFKACLIENTPRODUCERMSG._serialized_end=20360
+  _STARTSNORTIDSESMSG._serialized_start=20362
+  _STARTSNORTIDSESMSG._serialized_end=20423
+  _STARTSNORTIDSESMONITORTHREADSMSG._serialized_start=20425
+  _STARTSNORTIDSESMONITORTHREADSMSG._serialized_end=20500
+  _STARTOSSECIDSESMSG._serialized_start=20502
+  _STARTOSSECIDSESMSG._serialized_end=20563
+  _STARTOSSECIDSESMONITORTHREADSMSG._serialized_start=20565
+  _STARTOSSECIDSESMONITORTHREADSMSG._serialized_end=20640
+  _STARTELKSTACKMSG._serialized_start=20642
+  _STARTELKSTACKMSG._serialized_end=20701
+  _STARTHOSTMANAGERSMSG._serialized_start=20703
+  _STARTHOSTMANAGERSMSG._serialized_end=20766
+  _APPLYFILEBEATCONFIGSMSG._serialized_start=20768
+  _APPLYFILEBEATCONFIGSMSG._serialized_end=20834
+  _APPLYPACKETBEATCONFIGSMSG._serialized_start=20836
+  _APPLYPACKETBEATCONFIGSMSG._serialized_end=20904
+  _APPLYMETRICBEATCONFIGSMSG._serialized_start=20906
+  _APPLYMETRICBEATCONFIGSMSG._serialized_end=20974
+  _APPLYHEARTBEATCONFIGSMSG._serialized_start=20976
+  _APPLYHEARTBEATCONFIGSMSG._serialized_end=21043
+  _STARTFILEBEATSMSG._serialized_start=21045
+  _STARTFILEBEATSMSG._serialized_end=21127
+  _STARTPACKETBEATSMSG._serialized_start=21129
+  _STARTPACKETBEATSMSG._serialized_end=21213
+  _STARTMETRICBEATSMSG._serialized_start=21215
+  _STARTMETRICBEATSMSG._serialized_end=21299
+  _STARTHEARTBEATSMSG._serialized_start=21301
+  _STARTHEARTBEATSMSG._serialized_end=21384
+  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_start=21386
+  _GETDOCKERSTATSMANAGERLOGSMSG._serialized_end=21416
+  _GETPROMETHEUSLOGSMSG._serialized_start=21418
+  _GETPROMETHEUSLOGSMSG._serialized_end=21440
+  _GETNODEEXPORTERLOGSMSG._serialized_start=21442
+  _GETNODEEXPORTERLOGSMSG._serialized_end=21466
+  _GETCADVISORLOGSMSG._serialized_start=21468
+  _GETCADVISORLOGSMSG._serialized_end=21488
+  _GETPGADMINLOGSMSG._serialized_start=21490
+  _GETPGADMINLOGSMSG._serialized_end=21509
+  _GETGRAFANALOGSMSG._serialized_start=21511
+  _GETGRAFANALOGSMSG._serialized_end=21530
+  _GETNGINXLOGSMSG._serialized_start=21532
+  _GETNGINXLOGSMSG._serialized_end=21549
+  _GETDOCKERLOGSMSG._serialized_start=21551
+  _GETDOCKERLOGSMSG._serialized_end=21569
+  _GETPOSTGRESQLLOGSMSG._serialized_start=21571
+  _GETPOSTGRESQLLOGSMSG._serialized_end=21593
+  _GETFLASKLOGSMSG._serialized_start=21595
+  _GETFLASKLOGSMSG._serialized_end=21612
+  _LOGSDTO._serialized_start=21614
+  _LOGSDTO._serialized_end=21637
+  _OPERATIONOUTCOMEDTO._serialized_start=21639
+  _OPERATIONOUTCOMEDTO._serialized_end=21677
+  _GETNODESTATUSMSG._serialized_start=21679
+  _GETNODESTATUSMSG._serialized_end=21697
+  _NODESTATUSDTO._serialized_start=21700
+  _NODESTATUSDTO._serialized_end=22007
+  _SERVICESTATUSDTO._serialized_start=22009
+  _SERVICESTATUSDTO._serialized_end=22044
+  _STARTPOSTGRESQLMSG._serialized_start=22046
+  _STARTPOSTGRESQLMSG._serialized_end=22066
+  _STARTCADVISORMSG._serialized_start=22068
+  _STARTCADVISORMSG._serialized_end=22086
+  _STARTNODEEXPORTERMSG._serialized_start=22088
+  _STARTNODEEXPORTERMSG._serialized_end=22110
+  _STARTGRAFANAMSG._serialized_start=22112
+  _STARTGRAFANAMSG._serialized_end=22129
+  _STARTPROMETHEUSMSG._serialized_start=22131
+  _STARTPROMETHEUSMSG._serialized_end=22151
+  _STARTPGADMINMSG._serialized_start=22153
+  _STARTPGADMINMSG._serialized_end=22170
+  _STARTNGINXMSG._serialized_start=22172
+  _STARTNGINXMSG._serialized_end=22187
+  _STARTFLASKMSG._serialized_start=22189
+  _STARTFLASKMSG._serialized_end=22204
+  _STARTDOCKERSTATSMANAGERMSG._serialized_start=22206
+  _STARTDOCKERSTATSMANAGERMSG._serialized_end=22234
+  _STARTDOCKERSTATSMANAGERTHREADMSG._serialized_start=22236
+  _STARTDOCKERSTATSMANAGERTHREADMSG._serialized_end=22311
+  _STARTDOCKERENGINEMSG._serialized_start=22313
+  _STARTDOCKERENGINEMSG._serialized_end=22335
+  _STOPPOSTGRESQLMSG._serialized_start=22337
+  _STOPPOSTGRESQLMSG._serialized_end=22356
+  _STOPCADVISORMSG._serialized_start=22358
+  _STOPCADVISORMSG._serialized_end=22375
+  _STOPNODEEXPORTERMSG._serialized_start=22377
+  _STOPNODEEXPORTERMSG._serialized_end=22398
+  _STOPGRAFANAMSG._serialized_start=22400
+  _STOPGRAFANAMSG._serialized_end=22416
+  _STOPPROMETHEUSMSG._serialized_start=22418
+  _STOPPROMETHEUSMSG._serialized_end=22437
+  _STOPPGADMINMSG._serialized_start=22439
+  _STOPPGADMINMSG._serialized_end=22455
+  _STOPNGINXMSG._serialized_start=22457
+  _STOPNGINXMSG._serialized_end=22471
+  _STOPFLASKMSG._serialized_start=22473
+  _STOPFLASKMSG._serialized_end=22487
+  _STOPDOCKERSTATSMANAGERMSG._serialized_start=22489
+  _STOPDOCKERSTATSMANAGERMSG._serialized_end=22516
+  _STOPDOCKERENGINEMSG._serialized_start=22518
+  _STOPDOCKERENGINEMSG._serialized_end=22539
+  _CLUSTERMANAGER._serialized_start=22542
+  _CLUSTERMANAGER._serialized_end=36837
 # @@protoc_insertion_point(module_scope)

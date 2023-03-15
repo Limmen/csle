@@ -9,8 +9,8 @@ class PortStatistic:
     def __init__(self, timestamp: float, datapath_id: int, port: int, num_received_packets: int,
                  num_received_bytes: int, num_received_errors: int, num_transmitted_packets: int,
                  num_transmitted_bytes: int, num_transmitted_errors: int, num_received_dropped: int,
-                 num_transmitted_dropped, num_received_frame_errors, num_received_overrun_errors,
-                 num_received_crc_errors, num_collisions, duration_nanoseconds, duration_seconds):
+                 num_transmitted_dropped: int, num_received_frame_errors: int, num_received_overrun_errors: int,
+                 num_received_crc_errors: int, num_collisions: int, duration_nanoseconds: int, duration_seconds: int):
         """
         Initializes the DTO
 

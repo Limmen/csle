@@ -211,6 +211,260 @@ service ClusterManager {
   rpc getClientManagerLogsMsg(GetClientManagerLogsMsg) returns (LogsDTO) {}
   rpc getContainerLogs(GetContainerLogsMsg) returns (LogsDTO) {}
   rpc getClusterManagerLogs(GetClusterManagerLogsMsg) returns (LogsDTO) {}
+  rpc getExecutionTimeSeriesData(GetExecutionTimeSeriesDataMsg) returns (EmulationMetricsTimeSeriesDTO) {}
+}
+
+// Message that the client sends to get the flask logs
+message GetExecutionTimeSeriesDataMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  int32 minutes = 3;
+}
+
+// DTO with data of an emulation, extracted from the Kafka container
+message EmulationMetricsTimeSeriesDTO {
+  repeated ClientPopulationMetricsDTO client_metrics = 1;
+  repeated DockerStatsDTO aggregated_docker_stats = 2;
+  repeated DockerStatsDict docker_host_stats = 3;
+  repeated HostMetricsDict host_metrics = 4;
+  repeated HostMetricsDTO aggregated_host_metrics = 5;
+  repeated EmulationDefenderActionDTO defender_actions = 6;
+  repeated EmulationAttackerActionDTO attacker_actions = 7;
+  repeated SnortIdsAlertCountersDTO snort_ids_metrics = 8;
+  int32 emulation_id = 9;
+  repeated OSSECIdsAlertCountersDict ossec_host_alert_counters = 10;
+  repeated OSSECIdsAlertCountersDTO aggregated_ossec_host_alert_counters = 11;
+  repeated FlowStatisticDTO openflow_flow_stats = 12;
+  repeated PortStatisticDTO openflow_port_stats = 13;
+  repeated AvgFlowStatisticDTO avg_openflow_flow_stats = 14;
+  repeated AvgPortStatisticDTO avg_openflow_port_stats = 15;
+  repeated FlowStatisticDict openflow_flow_metrics_per_switch = 16;
+  repeated PortStatisticsDict openflow_port_metrics_per_switch = 17;
+  repeated AvgFlowStatisticDict openflow_flow_avg_metrics_per_switch = 18;
+  repeated AvgPortStatisticDict openflow_port_avg_metrics_per_switch = 19;
+  repeated AggFlowStatisticDict agg_openflow_flow_metrics_per_switch = 20;
+  repeated AggFlowStatisticDTO openflagg_openflow_flow_statsow_flow_stats = 21;
+}
+
+// Dict which maps a string key to a AvgPortStatisticDTO
+message AvgPortStatisticDict {
+  string key = 1;
+  AvgPortStatisticDTO dto = 2;
+}
+
+// Dict which maps a string key to an AggFlowStatisticDTO
+message AggFlowStatisticDict {
+  string key = 1;
+  AggFlowStatisticDTO dto = 2;
+}
+
+// Dict which maps a string key to an AvgFlowStatisticDTO
+message AvgFlowStatisticDict {
+  string key = 1;
+  AvgFlowStatisticDTO dto = 2;
+}
+
+// Dict which maps a string key to a PortStatistic
+message PortStatisticsDict {
+  string key = 1;
+  PortStatisticDTO dto = 2;
+}
+
+// Dict which maps a string key to a FlowStatisticDTO
+message FlowStatisticDict {
+  string key = 1;
+  FlowStatisticDTO dto = 2;
+}
+
+// Dict which maps a string key to a OSSECIdsAlertCountersDTO
+message OSSECIdsAlertCountersDict {
+  string key = 1;
+  OSSECIdsAlertCountersDTO dto = 2;
+}
+
+// Dict which maps a string key to a HostMetricsDTO
+message HostMetricsDict {
+  string key = 1;
+  HostMetricsDTO dto = 2;
+}
+
+// Dict which maps a string key to a DockerStatsDTO
+message DockerStatsDict {
+  string key = 1;
+  DockerStatsDTO dto = 2;
+}
+
+// DTO with data about avg flow statistics
+message AvgPortStatisticDTO {
+  float timestamp = 1;
+  int32 datapath_id = 2;
+  int32 total_num_received_packets = 3;
+  int32 total_num_received_bytes = 4;
+  int32 total_num_received_errors = 5;
+  int32 total_num_transmitted_packets = 6;
+  int32 total_num_transmitted_bytes = 7;
+  int32 total_num_transmitted_errors = 8;
+  int32 total_num_received_dropped = 9;
+  int32 total_num_transmitted_dropped = 10;
+  int32 total_num_received_frame_errors = 11;
+  int32 total_num_received_overrun_errors = 12;
+  int32 total_num_received_crc_errors = 13;
+  int32 total_num_collisions = 14;
+  int32 avg_duration_nanoseconds = 15;
+  int32 avg_duration_seconds = 16;
+}
+
+// DTO with data about avg flow statistics
+message AvgFlowStatisticDTO {
+  float timestamp = 1;
+  int32 datapath_id = 2;
+  int32 total_num_packets = 3;
+  int32 total_num_bytes = 4;
+  int32 avg_duration_nanoseconds = 5;
+  int32 avg_duration_seconds = 6;
+  int32 avg_hard_timeout = 7;
+  int32 avg_idle_timeout = 8;
+  int32 avg_priority = 9;
+  int32 avg_cookie = 10;
+}
+
+// DTO with data about agg flow statistics
+message AggFlowStatisticDTO {
+  float timestamp = 1;
+  int32 datapath_id = 2;
+  int32 total_num_packets = 3;
+  int32 total_num_bytes = 4;
+  int32 total_num_flows = 5;
+}
+
+// DTO with data about port statistics
+message PortStatisticDTO {
+  float timestamp = 1;
+  int32 datapath_id = 2;
+  int32 port = 3;
+  int32 num_received_packets = 4;
+  int32 num_received_bytes = 5;
+  int32 num_received_errors = 6;
+  int32 num_transmitted_packets = 7;
+  int32 num_transmitted_bytes = 8;
+  int32 num_transmitted_errors = 9;
+  int32 num_received_dropped = 10;
+  int32 num_transmitted_dropped = 11;
+  int32 num_received_frame_errors = 12;
+  int32 num_received_overrun_errors = 13;
+  int32 num_received_crc_errors = 14;
+  int32 num_collisions = 15;
+  int32 duration_nanoseconds = 16;
+  int32 duration_seconds = 17;
+}
+
+// DTO with data about flow statistics
+message FlowStatisticDTO {
+  float timestamp = 1;
+  int32 datapath_id = 2;
+  int32 in_port = 3;
+  int32 out_port = 4;
+  string dst_mac_address = 5;
+  int32 num_packets = 6;
+  int32 num_bytes = 7;
+  int32 duration_nanoseconds = 8;
+  int32 duration_seconds = 9;
+  int32 hard_timeout = 10;
+  int32 idle_timeout = 11;
+  int32 priority = 12;
+  int32 cookie = 13;
+}
+
+// DTO with data about OSSEC IDS alerts
+message OSSECIdsAlertCountersDTO {
+  repeated int32 level_alerts = 1;
+  repeated int32 group_alerts = 2;
+  int32 severe_alerts = 3;
+  int32 warning_alerts = 4;
+  int32 total_alerts = 5;
+  float alerts_weighted_by_level = 6;
+  string ip = 7;
+  float ts = 8;
+}
+
+// DTO with data about Snort alerts
+message SnortIdsAlertCountersDTO {
+  repeated int32 priority_alerts = 1;
+  repeated int32 class_alerts = 2;
+  int32 severe_alerts = 3;
+  int32 warning_alerts = 4;
+  float alerts_weighted_by_priority = 5;
+  string ip = 6;
+  float ts = 7;
+}
+
+// DTO with data about an attacker action
+message EmulationAttackerActionDTO {
+  int32 id = 1;
+  string name = 2;
+  repeated string cmds = 3;
+  int32 type = 4;
+  string descr = 5;
+  repeated string ips = 6;
+  int32 index = 7;
+  int32 action_outcome = 8;
+  repeated string alt_cmds = 9;
+  float execution_time = 10;
+  float ts = 11;
+  string vulnerability = 12;
+  bool backdoor = 13;
+}
+
+// DTO with data about a defender action
+message EmulationDefenderActionDTO {
+  int32 id = 1;
+  string name = 2;
+  repeated string cmds = 3;
+  int32 type = 4;
+  string descr = 5;
+  repeated string ips = 6;
+  int32 index = 7;
+  int32 action_outcome = 8;
+  repeated string alt_cmds = 9;
+  float execution_time = 10;
+  float ts = 11;
+}
+
+// DTO with host metrics
+message HostMetricsDTO {
+  int32 num_logged_in_users = 1;
+  int32 num_failed_login_attempts = 2;
+  int32 num_open_connections = 3;
+  int32 num_login_events = 4;
+  int32 num_processes = 5;
+  int32 num_users = 6;
+  string ip = 7;
+  float ts = 8;
+}
+
+// DTO with docker statistics
+message DockerStatsDTO {
+  float pids = 1;
+  string timestamp = 2;
+  float cpu_percent = 3;
+  float mem_current = 4;
+  float mem_total = 5;
+  float mem_percent = 6;
+  float blk_read = 7;
+  float blk_write = 8;
+  float net_rx = 9;
+  float net_tx = 10;
+  string container_name = 11;
+  string ip = 12;
+  float ts = 13;
+}
+
+// DTO with client population metrics
+message ClientPopulationMetricsDTO {
+  string ip = 1;
+  float ts = 2;
+  int32 num_clients = 3;
+  float rate = 4;
 }
 
 // Message that the client sends to get the flask logs

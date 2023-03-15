@@ -21,6 +21,14 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.util.general_util import GeneralUtil
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.dao.emulation_config.emulation_metrics_time_series import EmulationMetricsTimeSeries
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.host_manager.host_metrics import HostMetrics
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
@@ -30,6 +38,11 @@ import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.ryu_manager.ryu_manager_pb2
 import csle_collector.host_manager.host_manager_pb2
+from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
+from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
+from csle_ryu.dao.flow_statistic import FlowStatistic
+from csle_ryu.dao.port_statistic import PortStatistic
+from csle_ryu.dao.agg_flow_statistic import AggFlowStatistic
 import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster_manager_pb2
 import csle_cluster.constants.constants as cluster_constants
 
@@ -1683,7 +1696,8 @@ class ClusterManagerUtil:
                             EmulationEnvController.create_ssh_tunnel(
                                 tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
                                 local_port=local_ryu_port,
-                                remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
+                                remote_port=execution.emulation_env_config.sdn_controller_config
+                                    .controller_web_api_port,
                                 remote_ip=
                                 execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                                 emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
@@ -1732,10 +1746,10 @@ class ClusterManagerUtil:
         :return: the DTO
         """
         kibana_tunnels = []
-        for k,v in dict.items():
+        for k, v in dict.items():
             kibana_tunnels.append(cluster_manager_pb2.KibanaTunnelDTO(
-                ip=k, port = v[constants.GENERAL.PORT_PROPERTY], emulation = v[constants.GENERAL.EMULATION_PROPERTY],
-                ipFirstOctet = v[constants.GENERAL.EXECUTION_ID_PROPERTY]
+                ip=k, port=v[constants.GENERAL.PORT_PROPERTY], emulation=v[constants.GENERAL.EMULATION_PROPERTY],
+                ipFirstOctet=v[constants.GENERAL.EXECUTION_ID_PROPERTY]
             ))
         return cluster_manager_pb2.KibanaTunnelsDTO(tunnels=kibana_tunnels)
 
@@ -1748,10 +1762,10 @@ class ClusterManagerUtil:
         :return: the DTO
         """
         ryu_tunnels = []
-        for k,v in dict.items():
+        for k, v in dict.items():
             ryu_tunnels.append(cluster_manager_pb2.RyuTunnelDTO(
-                ip=k, port = v[constants.GENERAL.PORT_PROPERTY], emulation = v[constants.GENERAL.EMULATION_PROPERTY],
-                ipFirstOctet = v[constants.GENERAL.EXECUTION_ID_PROPERTY]
+                ip=k, port=v[constants.GENERAL.PORT_PROPERTY], emulation=v[constants.GENERAL.EMULATION_PROPERTY],
+                ipFirstOctet=v[constants.GENERAL.EXECUTION_ID_PROPERTY]
             ))
         return cluster_manager_pb2.RyuTunnelsDTO(tunnels=ryu_tunnels)
 
@@ -1764,8 +1778,8 @@ class ClusterManagerUtil:
         :return: the merged info
         """
         assert len(execution_infos) > 0
-        emulation_name=execution_infos[0].emulationName
-        execution_id=execution_infos[0].executionId
+        emulation_name = execution_infos[0].emulationName
+        execution_id = execution_infos[0].executionId
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation_name)
         snort_ids_managers_info = []
         ossec_ids_managers_info = []
@@ -1912,7 +1926,7 @@ class ClusterManagerUtil:
                                                       list(docker_stats_manager_info.ports)
             merged_docker_stats_managers_info.docker_stats_managers_running = \
                 list(merged_docker_stats_managers_info.docker_stats_managers_running) + \
-                     list(docker_stats_manager_info.docker_stats_managers_running)
+                list(docker_stats_manager_info.docker_stats_managers_running)
             merged_docker_stats_managers_info.docker_stats_managers_statuses = \
                 list(merged_docker_stats_managers_info.docker_stats_managers_statuses) + \
                 list(docker_stats_manager_info.docker_stats_managers_statuses)
@@ -2043,3 +2057,61 @@ class ClusterManagerUtil:
             nlines -= chunk.count("\n")
             end -= nread
         return '\n'.join(''.join(reversed(data)).splitlines()[-window:])
+
+    @staticmethod
+    def convert_client_population_metrics_dto(client_population_metrics: ClientPopulationMetrics) -> \
+            cluster_manager_pb2.ClientPopulationMetricsDTO:
+        """
+        Converts a ClientPopulationMetrics object to a ClientPopulationMetricsDTO
+
+        :param client_population_metrics: the object to convert
+        :return: the converted objected
+        """
+        if client_population_metrics is None:
+            return ClusterManagerUtil.get_empty_client_population_metrics_dto()
+        else:
+            return cluster_manager_pb2.ClientPopulationMetricsDTO(
+                ip=client_population_metrics.ip, ts=client_population_metrics.ts,
+                num_clients=client_population_metrics.num_clients, rate=client_population_metrics.rate
+            )
+
+    @staticmethod
+    def convert_client_population_metrics_dto_reverse(
+            client_population_metrics_dto: cluster_manager_pb2.ClientPopulationMetricsDTO) -> ClientPopulationMetrics:
+        """
+        Converts a ClientPopulationMetricsDTO to a ClientPopulationMetrics
+
+        :param client_population_metrics_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if client_population_metrics_dto is None:
+            return ClusterManagerUtil.convert_client_population_metrics_dto_reverse(
+                ClusterManagerUtil.get_empty_client_population_metrics_dto())
+        else:
+            return ClientPopulationMetrics(
+                ip=client_population_metrics_dto.ip, ts=client_population_metrics_dto.ts,
+                num_clients=client_population_metrics_dto.num_clients, rate=client_population_metrics_dto.rate
+            )
+
+    @staticmethod
+    def get_empty_client_population_metrics_dto() -> cluster_manager_pb2.ClientPopulationMetricsDTO:
+        """
+        :return: an empty ClientPopulationMetricsDTO
+        """
+        return cluster_manager_pb2.ClientPopulationMetricsDTO(ip="", ts=-1., num_clients=0, rate=0.)
+
+    @staticmethod
+    def client_population_metrics_dto_to_dict(
+            client_population_metrics_dto: cluster_manager_pb2.ClientPopulationMetricsDTO) -> Dict[str, Any]:
+        """
+        Converts a ClientPopulationMetricsDTO to a dict
+
+        :param client_population_metrics_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = client_population_metrics_dto.ip
+        d["ts"] = client_population_metrics_dto.ts
+        d["num_clients"] = client_population_metrics_dto.num_clients
+        d["rate"] = client_population_metrics_dto.rate
+        return d
