@@ -2115,3 +2115,896 @@ class ClusterManagerUtil:
         d["num_clients"] = client_population_metrics_dto.num_clients
         d["rate"] = client_population_metrics_dto.rate
         return d
+
+    @staticmethod
+    def convert_docker_stats_dto(docker_stats: DockerStats) -> cluster_manager_pb2.DockerStatsDTO:
+        """
+        Converts a DockerStats object to a DockerStatsDTO
+
+        :param docker_stats: the object to convert
+        :return: the converted objected
+        """
+        if docker_stats is None:
+            return ClusterManagerUtil.get_empty_docker_stats_dto()
+        else:
+            return cluster_manager_pb2.DockerStatsDTO(
+                pids=docker_stats.pids, timestamp=docker_stats.timestamp, cpu_percent=docker_stats.cpu_percent,
+                mem_current=docker_stats.mem_current, mem_total=docker_stats.mem_total,
+                mem_percent=docker_stats.mem_percent, blk_read=docker_stats.blk_read, blk_write=docker_stats.blk_write,
+                net_rx=docker_stats.net_rx, net_tx=docker_stats.net_tx, container_name=docker_stats.container_name,
+                ip=docker_stats.ip, ts=docker_stats.ts)
+
+    @staticmethod
+    def convert_docker_stats_dto_reverse(docker_stats_dto: cluster_manager_pb2.DockerStatsDTO) -> DockerStats:
+        """
+        Converts a DockerStatsDTO to a DockerStats
+
+        :param docker_stats_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if docker_stats_dto is None:
+            return ClusterManagerUtil.convert_docker_stats_dto_reverse(ClusterManagerUtil.get_empty_docker_stats_dto())
+        else:
+            return DockerStats(
+                pids=docker_stats_dto.pids, timestamp=docker_stats_dto.timestamp,
+                cpu_percent=docker_stats_dto.cpu_percent,
+                mem_current=docker_stats_dto.mem_current, mem_total=docker_stats_dto.mem_total,
+                mem_percent=docker_stats_dto.mem_percent, blk_read=docker_stats_dto.blk_read,
+                blk_write=docker_stats_dto.blk_write,
+                net_rx=docker_stats_dto.net_rx, net_tx=docker_stats_dto.net_tx,
+                container_name=docker_stats_dto.container_name,
+                ip=docker_stats_dto.ip, ts=docker_stats_dto.ts)
+
+    @staticmethod
+    def get_empty_docker_stats_dto() -> cluster_manager_pb2.DockerStatsDTO:
+        """
+        :return: an empty ClientPopulationMetricsDTO
+        """
+        return cluster_manager_pb2.DockerStatsDTO(
+            pids=0.0, timestamp="", cpu_percent=0.0, mem_current=0.0, mem_total=0.0, mem_percent=0.0,
+            blk_read=0.0, blk_write=0.0, net_rx=0.0, net_tx=0.0, container_name="", ip="", ts=0.0)
+
+    @staticmethod
+    def docker_stats_dto_to_dict(docker_stats_dto: cluster_manager_pb2.DockerStatsDTO) -> Dict[str, Any]:
+        """
+        Converts a DockerStatsDTO to a dict
+
+        :param docker_stats_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["pids"] = docker_stats_dto.pids
+        d["timestamp"] = docker_stats_dto.timestamp
+        d["cpu_percent"] = docker_stats_dto.cpu_percent
+        d["mem_current"] = docker_stats_dto.mem_current
+        d["mem_total"] = docker_stats_dto.mem_total
+        d["mem_percent"] = docker_stats_dto.mem_percent
+        d["blk_read"] = docker_stats_dto.blk_read
+        d["blk_write"] = docker_stats_dto.blk_write
+        d["net_rx"] = docker_stats_dto.net_rx
+        d["net_tx"] = docker_stats_dto.net_tx
+        d["container_name"] = docker_stats_dto.container_name
+        d["ip"] = docker_stats_dto.ip
+        d["ts"] = docker_stats_dto.ts
+        return d
+
+    @staticmethod
+    def convert_host_metrics_dto(host_metrics: HostMetrics) -> cluster_manager_pb2.HostMetricsDTO:
+        """
+        Converts a HostMetrics object to a HostMetricsDTO
+
+        :param host_metrics: the object to convert
+        :return: the converted objected
+        """
+        if host_metrics is None:
+            return ClusterManagerUtil.get_empty_host_metrics_dto()
+        else:
+            return cluster_manager_pb2.HostMetricsDTO(
+                num_logged_in_users=host_metrics.num_logged_in_users,
+                num_failed_login_attempts=host_metrics.num_failed_login_attempts,
+                num_open_connections=host_metrics.num_open_connections,
+                num_login_events=host_metrics.num_login_events, num_processes=host_metrics.num_processes,
+                num_users=host_metrics.num_users, ip=host_metrics.ip, ts=host_metrics.ts)
+
+    @staticmethod
+    def convert_host_metrics_dto_reverse(host_metrics_dto: cluster_manager_pb2.HostMetricsDTO) -> HostMetrics:
+        """
+        Converts a HostMetricsDTO to a HostMetrics
+
+        :param host_metrics_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if host_metrics_dto is None:
+            return ClusterManagerUtil.convert_host_metrics_dto_reverse(ClusterManagerUtil.get_empty_host_metrics_dto())
+        else:
+            return HostMetrics(
+                num_logged_in_users=host_metrics_dto.num_logged_in_users,
+                num_failed_login_attempts=host_metrics_dto.num_failed_login_attempts,
+                num_open_connections=host_metrics_dto.num_open_connections,
+                num_login_events=host_metrics_dto.num_login_events, num_processes=host_metrics_dto.num_processes,
+                num_users=host_metrics_dto.num_users, ip=host_metrics_dto.ip, ts=host_metrics_dto.ts)
+
+    @staticmethod
+    def get_empty_host_metrics_dto() -> cluster_manager_pb2.HostMetricsDTO:
+        """
+        :return: an empty HostMetricsDTO
+        """
+        return cluster_manager_pb2.HostMetricsDTO(num_logged_in_users=0, num_failed_login_attempts=0,
+                                                  num_open_connections=0, num_login_events=0, num_processes=0,
+                                                  num_users=0, ip="", ts=0.0)
+
+    @staticmethod
+    def host_metrics_dto_to_dict(host_metrics_dto: cluster_manager_pb2.HostMetricsDTO) -> Dict[str, Any]:
+        """
+        Converts a HostMetricsDTO to a dict
+
+        :param host_metrics_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["num_logged_in_users"] = host_metrics_dto.num_logged_in_users
+        d["num_failed_login_attempts"] = host_metrics_dto.num_failed_login_attempts
+        d["num_open_connections"] = host_metrics_dto.num_open_connections
+        d["num_login_events"] = host_metrics_dto.num_login_events
+        d["num_processes"] = host_metrics_dto.num_processes
+        d["num_users"] = host_metrics_dto.num_users
+        d["ts"] = host_metrics_dto.ts
+        d["ip"] = host_metrics_dto.ip
+        return d
+
+    @staticmethod
+    def convert_emulation_defender_action_dto(emulation_defender_action: EmulationDefenderAction) \
+            -> cluster_manager_pb2.EmulationDefenderActionDTO:
+        """
+        Converts a EmulationDefenderAction object to a EmulationDefenderActionDTO
+
+        :param emulation_defender_action: the object to convert
+        :return: the converted objected
+        """
+        if emulation_defender_action is None:
+            return ClusterManagerUtil.get_empty_emulation_defender_action_dto()
+        else:
+            return cluster_manager_pb2.EmulationDefenderActionDTO(
+                id=emulation_defender_action.id, name=emulation_defender_action.name,
+                cmds=emulation_defender_action.cmds, type=emulation_defender_action.type,
+                descr=emulation_defender_action.descr, index=emulation_defender_action.index,
+                ips=emulation_defender_action.ips, action_outcome=emulation_defender_action.action_outcome,
+                alt_cmds=emulation_defender_action.alt_cmds, execution_time=emulation_defender_action.execution_time,
+                ts=emulation_defender_action.ts)
+
+    @staticmethod
+    def convert_emulation_defender_action_dto_reverse(
+            emulation_defender_action_dto: cluster_manager_pb2.EmulationDefenderActionDTO) -> EmulationDefenderAction:
+        """
+        Converts a EmulationDefenderActionDTO to an EmulationDefenderAction
+
+        :param emulation_defender_action_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if emulation_defender_action_dto is None:
+            return ClusterManagerUtil.convert_emulation_defender_action_dto_reverse(
+                ClusterManagerUtil.get_empty_emulation_defender_action_dto())
+        else:
+            return EmulationDefenderAction(
+                id=emulation_defender_action_dto.id, name=emulation_defender_action_dto.name,
+                cmds=emulation_defender_action_dto.cmds, type=emulation_defender_action_dto.type,
+                descr=emulation_defender_action_dto.descr, index=emulation_defender_action_dto.index,
+                ips=emulation_defender_action_dto.ips, action_outcome=emulation_defender_action_dto.action_outcome,
+                alt_cmds=emulation_defender_action_dto.alt_cmds,
+                execution_time=emulation_defender_action_dto.execution_time,
+                ts=emulation_defender_action_dto.ts)
+
+    @staticmethod
+    def get_empty_emulation_defender_action_dto() -> cluster_manager_pb2.EmulationDefenderActionDTO:
+        """
+        :return: an empty EmulationDefenderActionDTO
+        """
+        return cluster_manager_pb2.EmulationDefenderActionDTO(id=-1, name="", cmds=[], type=-1, descr="", ips=[],
+                                                              index=-1, action_outcome=-1, alt_cmds=[],
+                                                              execution_time=-1, ts=-1)
+
+    @staticmethod
+    def emulation_defender_action_dto_to_dict(
+            emulation_defender_action_dto: cluster_manager_pb2.EmulationDefenderActionDTO) -> Dict[str, Any]:
+        """
+        Converts a EmulationDefenderActionDTO to a dict
+
+        :param emulation_defender_action_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["id"] = emulation_defender_action_dto.id
+        d["name"] = emulation_defender_action_dto.name
+        d["cmds"] = emulation_defender_action_dto.cmds
+        d["type"] = emulation_defender_action_dto.type
+        d["descr"] = emulation_defender_action_dto.descr
+        d["ips"] = emulation_defender_action_dto.ips
+        d["index"] = emulation_defender_action_dto.index
+        d["action_outcome"] = emulation_defender_action_dto.action_outcome
+        d["alt_cmds"] = emulation_defender_action_dto.alt_cmds
+        d["execution_time"] = emulation_defender_action_dto.execution_time
+        d["ts"] = emulation_defender_action_dto.ts
+        return d
+
+    @staticmethod
+    def convert_emulation_attacker_action_dto(emulation_attacker_action: EmulationAttackerAction) \
+            -> cluster_manager_pb2.EmulationAttackerActionDTO:
+        """
+        Converts a EmulationAttackerAction object to a EmulationAttackerActionDTO
+
+        :param emulation_attacker_action: the object to convert
+        :return: the converted objected
+        """
+        if emulation_attacker_action is None:
+            return ClusterManagerUtil.get_empty_emulation_attacker_action_dto()
+        else:
+            return cluster_manager_pb2.EmulationAttackerActionDTO(
+                id=emulation_attacker_action.id, name=emulation_attacker_action.name,
+                cmds=emulation_attacker_action.cmds, type=emulation_attacker_action.type,
+                descr=emulation_attacker_action.descr, index=emulation_attacker_action.index,
+                ips=emulation_attacker_action.ips, action_outcome=emulation_attacker_action.action_outcome,
+                alt_cmds=emulation_attacker_action.alt_cmds, execution_time=emulation_attacker_action.execution_time,
+                ts=emulation_attacker_action.ts, backdoor=emulation_attacker_action.backdoor,
+                vulnerability=emulation_attacker_action.vulnerability
+            )
+
+    @staticmethod
+    def convert_emulation_attacker_action_dto_reverse(
+            emulation_attacker_action_dto: cluster_manager_pb2.EmulationAttackerActionDTO) -> EmulationAttackerAction:
+        """
+        Converts a EmulationAttackerActionDTO to an EmulationAttackerAction
+
+        :param emulation_attacker_action_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if emulation_attacker_action_dto is None:
+            return ClusterManagerUtil.convert_emulation_attacker_action_dto_reverse(
+                ClusterManagerUtil.get_empty_emulation_attacker_action_dto())
+        else:
+            return EmulationAttackerAction(
+                id=emulation_attacker_action_dto.id, name=emulation_attacker_action_dto.name,
+                cmds=emulation_attacker_action_dto.cmds, type=emulation_attacker_action_dto.type,
+                descr=emulation_attacker_action_dto.descr, index=emulation_attacker_action_dto.index,
+                ips=emulation_attacker_action_dto.ips, action_outcome=emulation_attacker_action_dto.action_outcome,
+                alt_cmds=emulation_attacker_action_dto.alt_cmds,
+                execution_time=emulation_attacker_action_dto.execution_time,
+                ts=emulation_attacker_action_dto.ts, backdoor=emulation_attacker_action_dto.backdoor,
+                vulnerability=emulation_attacker_action_dto.vulnerability)
+
+    @staticmethod
+    def get_empty_emulation_attacker_action_dto() -> cluster_manager_pb2.EmulationAttackerActionDTO:
+        """
+        :return: an empty EmulationAttackerActionDTO
+        """
+        return cluster_manager_pb2.EmulationAttackerActionDTO(id=-1, name="", cmds=[], type=-1, descr="", ips=[],
+                                                              index=-1, action_outcome=-1, alt_cmds=[],
+                                                              execution_time=-1, ts=-1, backdoor=False,
+                                                              vulnerability="")
+
+    @staticmethod
+    def emulation_attacker_action_dto_to_dict(
+            emulation_attacker_action_dto: cluster_manager_pb2.EmulationAttackerActionDTO) -> Dict[str, Any]:
+        """
+        Converts a EmulationAttackerActionDTO to a dict
+
+        :param emulation_attacker_action_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["id"] = emulation_attacker_action_dto.id
+        d["name"] = emulation_attacker_action_dto.name
+        d["cmds"] = emulation_attacker_action_dto.cmds
+        d["type"] = emulation_attacker_action_dto.type
+        d["descr"] = emulation_attacker_action_dto.descr
+        d["ips"] = emulation_attacker_action_dto.ips
+        d["index"] = emulation_attacker_action_dto.index
+        d["action_outcome"] = emulation_attacker_action_dto.action_outcome
+        d["alt_cmds"] = emulation_attacker_action_dto.alt_cmds
+        d["execution_time"] = emulation_attacker_action_dto.execution_time
+        d["ts"] = emulation_attacker_action_dto.ts
+        return d
+
+    @staticmethod
+    def convert_snort_ids_alert_counters_dto(snort_ids_alert_counters: SnortIdsAlertCounters) \
+            -> cluster_manager_pb2.SnortIdsAlertCountersDTO:
+        """
+        Converts a SnortIdsAlertCounters object to a SnortIdsAlertCountersDTO
+
+        :param snort_ids_alert_counters: the object to convert
+        :return: the converted objected
+        """
+        if snort_ids_alert_counters is None:
+            return ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto()
+        else:
+            return cluster_manager_pb2.SnortIdsAlertCountersDTO(
+                priority_alerts=snort_ids_alert_counters.priority_alerts,
+                class_alerts=snort_ids_alert_counters.class_alerts,
+                severe_alerts=snort_ids_alert_counters.severe_alerts,
+                warning_alerts=snort_ids_alert_counters.warning_alerts,
+                alerts_weighted_by_priority=snort_ids_alert_counters.alerts_weighted_by_priority,
+                ip=snort_ids_alert_counters.ip, ts=snort_ids_alert_counters.ts
+            )
+
+    @staticmethod
+    def convert_snort_ids_alert_counters_dto_reverse(
+            snort_ids_alert_counters_dto: cluster_manager_pb2.SnortIdsAlertCountersDTO) -> SnortIdsAlertCounters:
+        """
+        Converts a SnortIdsAlertCountersDTO to a SnortIdsAlertCounters
+
+        :param snort_ids_alert_counters_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if snort_ids_alert_counters_dto is None:
+            return ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto())
+        else:
+            dto = SnortIdsAlertCounters()
+            dto.priority_alerts=snort_ids_alert_counters_dto.priority_alerts
+            dto.class_alerts=snort_ids_alert_counters_dto.class_alerts
+            dto.severe_alerts=snort_ids_alert_counters_dto.severe_alerts
+            dto.warning_alerts=snort_ids_alert_counters_dto.warning_alerts
+            dto.alerts_weighted_by_priority=snort_ids_alert_counters_dto.alerts_weighted_by_priority
+            dto.ip=snort_ids_alert_counters_dto.ip
+            dto.ts=snort_ids_alert_counters_dto.ts
+            return dto
+
+    @staticmethod
+    def get_empty_snort_ids_alert_counters_dto() -> cluster_manager_pb2.SnortIdsAlertCountersDTO:
+        """
+        :return: an empty HostMetricsDTO
+        """
+        return cluster_manager_pb2.SnortIdsAlertCountersDTO(
+            priority_alerts=[], class_alerts=[], severe_alerts=0, warning_alerts=0, alerts_weighted_by_priority=0.0,
+            ip="", ts=0.0)
+
+    @staticmethod
+    def snort_ids_alert_counters_dto_to_dict(
+            snort_ids_alert_counters_dto: cluster_manager_pb2.SnortIdsAlertCountersDTO) -> Dict[str, Any]:
+        """
+        Converts a SnortIdsAlertCountersDTO to a dict
+
+        :param snort_ids_alert_counters_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = snort_ids_alert_counters_dto.ip
+        d["ts"] = snort_ids_alert_counters_dto.ts
+        d["class_alerts"] = snort_ids_alert_counters_dto.class_alerts
+        d["priority_alerts"] = snort_ids_alert_counters_dto.priority_alerts
+        d["total_alerts"] = snort_ids_alert_counters_dto.total_alerts
+        d["warning_alerts"] = snort_ids_alert_counters_dto.warning_alerts
+        d["severe_alerts"] = snort_ids_alert_counters_dto.severe_alerts
+        d["alerts_weighted_by_priority"] = snort_ids_alert_counters_dto.alerts_weighted_by_priority
+        return d
+
+    @staticmethod
+    def convert_ossec_ids_alert_counters_dto(ossec_ids_alert_counters: OSSECIdsAlertCounters) \
+            -> cluster_manager_pb2.OSSECIdsAlertCountersDTO:
+        """
+        Converts a OSSECIdsAlertCounters object to a OSSECIdsAlertCountersDTO
+
+        :param ossec_ids_alert_counters: the object to convert
+        :return: the converted objected
+        """
+        if ossec_ids_alert_counters is None:
+            return ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dto()
+        else:
+            return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
+                level_alerts = ossec_ids_alert_counters.level_alerts,
+                group_alerts = ossec_ids_alert_counters.group_alerts,
+                severe_alerts = ossec_ids_alert_counters.severe_alerts,
+                warning_alerts = ossec_ids_alert_counters.warning_alerts,
+                total_alerts = ossec_ids_alert_counters.total_alerts,
+                alerts_weighted_by_level = ossec_ids_alert_counters.alerts_weighted_by_level,
+                ip = ossec_ids_alert_counters.ip,
+                alerts_weighted_btsy_level = ossec_ids_alert_counters.ts)
+
+    @staticmethod
+    def convert_ossec_ids_alert_counters_dto_reverse(
+            ossec_ids_alert_counters_dto: cluster_manager_pb2.OSSECIdsAlertCountersDTO) -> OSSECIdsAlertCounters:
+        """
+        Converts a OSSECIdsAlertCountersDTO to a OSSECIdsAlertCounters
+
+        :param ossec_ids_alert_counters_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if ossec_ids_alert_counters_dto is None:
+            return ClusterManagerUtil.convert_ossec_ids_alert_counters_dto_reverse(
+                ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dto())
+        else:
+            dto = OSSECIdsAlertCounters()
+            dto.level_alerts=ossec_ids_alert_counters_dto.level_alerts
+            dto.group_alerts=ossec_ids_alert_counters_dto.group_alerts
+            dto.severe_alerts=ossec_ids_alert_counters_dto.severe_alerts
+            dto.warning_alerts=ossec_ids_alert_counters_dto.warning_alerts
+            dto.total_alerts=ossec_ids_alert_counters_dto.total_alerts
+            dto.alerts_weighted_by_level=ossec_ids_alert_counters_dto.alerts_weighted_by_level
+            dto.ip=ossec_ids_alert_counters_dto.ip
+            dto.ts=ossec_ids_alert_counters_dto.ts
+            return dto
+
+    @staticmethod
+    def get_empty_ossec_ids_alert_counters_dto() -> cluster_manager_pb2.OSSECIdsAlertCountersDTO:
+        """
+        :return: an empty HostMetricsDTO
+        """
+        return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
+            level_alerts = [], group_alerts = [], severe_alerts=0, warning_alerts = 0, total_alerts = 0,
+            alerts_weighted_by_level = 0, ip = "", ts = 0.0)
+
+    @staticmethod
+    def ossec_ids_alert_counters_dto_to_dict(
+            ossec_ids_alert_counters_dto: cluster_manager_pb2.OSSECIdsAlertCountersDTO) -> Dict[str, Any]:
+        """
+        Converts a OSSECIdsAlertCountersDTO to a dict
+
+        :param ossec_ids_alert_counters_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = ossec_ids_alert_counters_dto.ip
+        d["ts"] = ossec_ids_alert_counters_dto.ts
+        d["class_alerts"] = ossec_ids_alert_counters_dto.class_alerts
+        d["priority_alerts"] = ossec_ids_alert_counters_dto.priority_alerts
+        d["total_alerts"] = ossec_ids_alert_counters_dto.total_alerts
+        d["warning_alerts"] = ossec_ids_alert_counters_dto.warning_alerts
+        d["severe_alerts"] = ossec_ids_alert_counters_dto.severe_alerts
+        d["alerts_weighted_by_priority"] = ossec_ids_alert_counters_dto.alerts_weighted_by_priority
+        return d
+
+    @staticmethod
+    def convert_flow_statistics_dto(flow_statistic: FlowStatistic) -> cluster_manager_pb2.FlowStatisticDTO:
+        """
+        Converts a FlowStatistic object to a FlowStatisticDTO
+
+        :param flow_statistic: the object to convert
+        :return: the converted objected
+        """
+        if flow_statistic is None:
+            return ClusterManagerUtil.get_empty_flow_statistic_dto()
+        else:
+            return cluster_manager_pb2.FlowStatisticDTO(
+                timestamp = flow_statistic.timestamp, datapath_id = flow_statistic.datapath_id,
+                in_port = flow_statistic.in_port, out_port = flow_statistic.out_port,
+                dst_mac_address = flow_statistic.dst_mac_address, num_packets = flow_statistic.num_packets,
+                num_bytes = flow_statistic.num_bytes, duration_nanoseconds = flow_statistic.duration_nanoseconds,
+                duration_seconds = flow_statistic.duration_seconds, hard_timeout = flow_statistic.hard_timeout,
+                idle_timeout = flow_statistic.idle_timeout, priority = flow_statistic.priority,
+                cookie = flow_statistic.cookie)
+
+    @staticmethod
+    def convert_flow_statistic_dto_reverse(flow_statistic_dto: cluster_manager_pb2.FlowStatisticDTO) -> FlowStatistic:
+        """
+        Converts a FlowStatisticDTO to a FlowStatistic
+
+        :param flow_statistic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if flow_statistic_dto is None:
+            return ClusterManagerUtil.convert_flow_statistic_dto_reverse(
+                ClusterManagerUtil.get_empty_flow_statistic_dto())
+        else:
+            return FlowStatistic(
+                timestamp = flow_statistic_dto.timestamp, datapath_id = flow_statistic_dto.datapath_id,
+                in_port = flow_statistic_dto.in_port, out_port = flow_statistic_dto.out_port,
+                dst_mac_address = flow_statistic_dto.dst_mac_address, num_packets = flow_statistic_dto.num_packets,
+                num_bytes = flow_statistic_dto.num_bytes, duration_nanoseconds = flow_statistic_dto.duration_nanoseconds,
+                duration_seconds = flow_statistic_dto.duration_seconds, hard_timeout = flow_statistic_dto.hard_timeout,
+                idle_timeout = flow_statistic_dto.idle_timeout, priority = flow_statistic_dto.priority,
+                cookie = flow_statistic_dto.cookie
+            )
+
+    @staticmethod
+    def get_empty_flow_statistic_dto() -> cluster_manager_pb2.FlowStatisticDTO:
+        """
+        :return: an empty FlowStatisticDTO
+        """
+        return cluster_manager_pb2.FlowStatisticDTO(
+            timestamp=0.0, datapath_id=-1, in_port=-1, out_port=-1, dst_mac_address="", num_packets=-1,
+            num_bytes=-1, duration_nanoseconds = -1, duration_seconds = -1, hard_timeout = -1, idle_timeout=-1,
+            priority = -1, cookie = -1)
+
+    @staticmethod
+    def flow_statistic_dto_to_dict(flow_statistic_dto: cluster_manager_pb2.FlowStatisticDTO) -> Dict[str, Any]:
+        """
+        Converts a FlowStatisticDTO to a dict
+
+        :param flow_statistic_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["timestamp"] = flow_statistic_dto.timestamp
+        d["datapath_id"] = flow_statistic_dto.datapath_id
+        d["in_port"] = flow_statistic_dto.in_port
+        d["out_port"] = flow_statistic_dto.out_port
+        d["dst_mac_address"] = flow_statistic_dto.dst_mac_address
+        d["num_packets"] = flow_statistic_dto.num_packets
+        d["num_bytes"] = flow_statistic_dto.num_bytes
+        d["duration_nanoseconds"] = flow_statistic_dto.duration_nanoseconds
+        d["duration_seconds"] = flow_statistic_dto.duration_seconds
+        d["hard_timeout"] = flow_statistic_dto.hard_timeout
+        d["idle_timeout"] = flow_statistic_dto.idle_timeout
+        d["priority"] = flow_statistic_dto.priority
+        d["cookie"] = flow_statistic_dto.cookie
+        return d
+
+    @staticmethod
+    def convert_port_statistics_dto(port_statistic: PortStatistic) -> cluster_manager_pb2.PortStatisticDTO:
+        """
+        Converts a PortStatistic object to a PortStatisticDTO
+
+        :param port_statistic: the object to convert
+        :return: the converted objected
+        """
+        if port_statistic is None:
+            return ClusterManagerUtil.get_empty_port_statistic_dto()
+        else:
+            return cluster_manager_pb2.PortStatisticDTO(
+                timestamp = port_statistic.timestamp, datapath_id = port_statistic.datapath_id,
+                port = port_statistic.port, num_received_packets = port_statistic.num_received_packets,
+                num_received_bytes = port_statistic.num_received_bytes,
+                num_received_errors = port_statistic.num_received_errors,
+                num_transmitted_packets = port_statistic.num_transmitted_packets,
+                num_transmitted_bytes = port_statistic.num_transmitted_bytes,
+                num_transmitted_errors = port_statistic.num_transmitted_errors,
+                num_received_dropped = port_statistic.num_received_dropped,
+                num_transmitted_dropped = port_statistic.num_transmitted_dropped,
+                num_received_frame_errors = port_statistic.num_received_frame_errors,
+                num_received_overrun_errors = port_statistic.num_received_overrun_errors,
+                num_received_crc_errors = port_statistic.num_received_crc_errors,
+                num_collisions = port_statistic.num_collisions,
+                duration_nanoseconds = port_statistic.duration_nanoseconds,
+                duration_seconds = port_statistic.duration_seconds)
+
+    @staticmethod
+    def convert_port_statistic_dto_reverse(port_statistic_dto: cluster_manager_pb2.PortStatisticDTO) -> PortStatistic:
+        """
+        Converts a PortStatisticDTO to a PortStatistic
+
+        :param port_statistic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if port_statistic_dto is None:
+            return ClusterManagerUtil.convert_port_statistic_dto_reverse(
+                ClusterManagerUtil.get_empty_port_statistic_dto())
+        else:
+            return PortStatistic(
+                timestamp = port_statistic_dto.timestamp, datapath_id = port_statistic_dto.datapath_id,
+                port = port_statistic_dto.port, num_received_packets = port_statistic_dto.num_received_packets,
+                num_received_bytes = port_statistic_dto.num_received_bytes,
+                num_received_errors = port_statistic_dto.num_received_errors,
+                num_transmitted_packets = port_statistic_dto.num_transmitted_packets,
+                num_transmitted_bytes = port_statistic_dto.num_transmitted_bytes,
+                num_transmitted_errors = port_statistic_dto.num_transmitted_errors,
+                num_received_dropped = port_statistic_dto.num_received_dropped,
+                num_transmitted_dropped = port_statistic_dto.num_transmitted_dropped,
+                num_received_frame_errors = port_statistic_dto.num_received_frame_errors,
+                num_received_overrun_errors = port_statistic_dto.num_received_overrun_errors,
+                num_received_crc_errors = port_statistic_dto.num_received_crc_errors,
+                num_collisions = port_statistic_dto.num_collisions,
+                duration_nanoseconds = port_statistic_dto.duration_nanoseconds,
+                duration_seconds = port_statistic_dto.duration_seconds
+            )
+
+    @staticmethod
+    def get_empty_port_statistic_dto() -> cluster_manager_pb2.PortStatisticDTO:
+        """
+        :return: an empty PortStatisticDTO
+        """
+        return cluster_manager_pb2.PortStatisticDTO(
+            timestamp=0.0, datapath_id=-1, port=-1, num_received_packets=-1, num_received_bytes=-1,
+            num_received_errors=-1, num_transmitted_packets=-1, num_transmitted_bytes = -1, num_transmitted_errors = -1,
+            num_received_dropped = -1, num_transmitted_dropped = -1, num_received_frame_errors = -1,
+            num_received_overrun_errors=-1, num_received_crc_errors=-1, num_collisions=-1, duration_nanoseconds=-1,
+            duration_seconds=-1)
+
+    @staticmethod
+    def port_statistic_dto_to_dict(port_statistic_dto: cluster_manager_pb2.PortStatisticDTO) -> Dict[str, Any]:
+        """
+        Converts a PortStatisticDTO to a dict
+
+        :param port_statistic_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["timestamp"] = port_statistic_dto.timestamp
+        d["datapath_id"] = port_statistic_dto.datapath_id
+        d["port"] = port_statistic_dto.port
+        d["num_received_packets"] = port_statistic_dto.num_received_packets
+        d["num_received_bytes"] = port_statistic_dto.num_received_bytes
+        d["num_received_errors"] = port_statistic_dto.num_received_errors
+        d["num_transmitted_packets"] = port_statistic_dto.num_transmitted_packets
+        d["num_transmitted_bytes"] = port_statistic_dto.num_transmitted_bytes
+        d["num_transmitted_errors"] = port_statistic_dto.num_transmitted_errors
+        d["num_received_dropped"] = port_statistic_dto.num_received_dropped
+        d["num_transmitted_dropped"] = port_statistic_dto.num_transmitted_dropped
+        d["num_received_frame_errors"] = port_statistic_dto.num_received_frame_errors
+        d["num_received_overrun_errors"] = port_statistic_dto.num_received_overrun_errors
+        d["num_received_crc_errors"] = port_statistic_dto.num_received_crc_errors
+        d["num_collisions"] = port_statistic_dto.num_collisions
+        d["duration_nanoseconds"] = port_statistic_dto.duration_nanoseconds
+        d["duration_seconds"] = port_statistic_dto.duration_seconds
+        return d
+
+    @staticmethod
+    def convert_agg_flow_statistic_dto(agg_flow_statistic: AggFlowStatistic) \
+            -> cluster_manager_pb2.AggFlowStatisticDTO:
+        """
+        Converts a AggFlowStatistic object to a AggFlowStatisticDTO
+
+        :param agg_flow_statistic: the object to convert
+        :return: the converted objected
+        """
+        if agg_flow_statistic is None:
+            return ClusterManagerUtil.get_empty_agg_flow_statistic_dto()
+        else:
+            return cluster_manager_pb2.AggFlowStatisticDTO(
+                timestamp = agg_flow_statistic.timestamp, datapath_id = agg_flow_statistic.datapath_id,
+                total_num_packets = agg_flow_statistic.total_num_packets,
+                total_num_bytes = agg_flow_statistic.total_num_bytes,
+                total_num_flows = agg_flow_statistic.total_num_flows)
+
+    @staticmethod
+    def convert_agg_flow_statistic_dto_reverse(agg_flow_statistic_dto: cluster_manager_pb2.AggFlowStatisticDTO) \
+            -> AggFlowStatistic:
+        """
+        Converts a AggFlowStatisticDTO to a AggFlowStatistic
+
+        :param agg_flow_statistic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if agg_flow_statistic_dto is None:
+            return ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(
+                ClusterManagerUtil.get_empty_agg_flow_statistic_dto())
+        else:
+            return AggFlowStatistic(
+                timestamp = agg_flow_statistic_dto.timestamp, datapath_id = agg_flow_statistic_dto.datapath_id,
+                total_num_packets = agg_flow_statistic_dto.total_num_packets,
+                total_num_bytes = agg_flow_statistic_dto.total_num_bytes,
+                total_num_flows = agg_flow_statistic_dto.total_num_flows)
+
+    @staticmethod
+    def get_empty_agg_flow_statistic_dto() -> cluster_manager_pb2.AggFlowStatisticDTO:
+        """
+        :return: an empty AggFlowStatisticDTO
+        """
+        return cluster_manager_pb2.AggFlowStatisticDTO(
+            timestamp=0.0, datapath_id=-1, total_num_packets=-1, total_num_bytes = -1, total_num_flows = -1)
+
+    @staticmethod
+    def agg_flow_statistic_dto_to_dict(agg_flow_statistic_dto: cluster_manager_pb2.AggFlowStatisticDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a AggFlowStatisticDTO to a dict
+
+        :param agg_flow_statistic_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["timestamp"] = agg_flow_statistic_dto.timestamp
+        d["datapath_id"] = agg_flow_statistic_dto.datapath_id
+        d["total_num_packets"] = agg_flow_statistic_dto.total_num_packets
+        d["total_num_bytes"] = agg_flow_statistic_dto.total_num_bytes
+        d["total_num_flows"] = agg_flow_statistic_dto.total_num_flows
+        return d
+
+    @staticmethod
+    def convert_avg_flow_statistic_dto(avg_flow_statistic: AvgFlowStatistic) \
+            -> cluster_manager_pb2.AvgFlowStatisticDTO:
+        """
+        Converts a AvgFlowStatistic object to a AvgFlowStatisticDTO
+
+        :param avg_flow_statistic: the object to convert
+        :return: the converted objected
+        """
+        if avg_flow_statistic is None:
+            return ClusterManagerUtil.get_empty_avg_flow_statistic_dto()
+        else:
+            return cluster_manager_pb2.AvgFlowStatisticDTO(
+                timestamp = avg_flow_statistic.timestamp, datapath_id = avg_flow_statistic.datapath_id,
+                total_num_packets = avg_flow_statistic.total_num_packets,
+                total_num_bytes = avg_flow_statistic.total_num_bytes,
+                avg_duration_nanoseconds = avg_flow_statistic.avg_duration_nanoseconds,
+                avg_duration_seconds = avg_flow_statistic.avg_duration_seconds,
+                avg_hard_timeout = avg_flow_statistic.avg_hard_timeout,
+                avg_idle_timeout = avg_flow_statistic.avg_idle_timeout,
+                avg_priority = avg_flow_statistic.avg_priority,
+                avg_cookie = avg_flow_statistic.avg_cookie)
+
+    @staticmethod
+    def convert_avg_flow_statistic_dto_reverse(avg_flow_statistic_dto: cluster_manager_pb2.AvgFlowStatisticDTO) \
+            -> AvgFlowStatistic:
+        """
+        Converts a AvgFlowStatisticDTO to a AvgFlowStatistic
+
+        :param avg_flow_statistic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if avg_flow_statistic_dto is None:
+            return ClusterManagerUtil.convert_avg_flow_statistic_dto_reverse(
+                ClusterManagerUtil.get_empty_avg_flow_statistic_dto())
+        else:
+            return AvgFlowStatistic(
+                timestamp = avg_flow_statistic_dto.timestamp, datapath_id = avg_flow_statistic_dto.datapath_id,
+                total_num_packets = avg_flow_statistic_dto.total_num_packets,
+                total_num_bytes = avg_flow_statistic_dto.total_num_bytes,
+                avg_duration_nanoseconds = avg_flow_statistic_dto.avg_duration_nanoseconds,
+                avg_duration_seconds = avg_flow_statistic_dto.avg_duration_seconds,
+                avg_hard_timeout = avg_flow_statistic_dto.avg_hard_timeout,
+                avg_idle_timeout = avg_flow_statistic_dto.avg_idle_timeout,
+                avg_priority = avg_flow_statistic_dto.avg_priority,
+                avg_cookie = avg_flow_statistic_dto.avg_cookie)
+
+    @staticmethod
+    def get_empty_avg_flow_statistic_dto() -> cluster_manager_pb2.AvgFlowStatisticDTO:
+        """
+        :return: an empty AvgFlowStatisticDTO
+        """
+        return cluster_manager_pb2.AvgFlowStatisticDTO(
+            timestamp=0.0, datapath_id=-1, total_num_packets = -1, total_num_bytes = -1,
+            avg_duration_nanoseconds = -1, avg_duration_seconds = -1, avg_hard_timeout = -1, avg_idle_timeout = -1,
+            avg_priority = -1, avg_cookie = -1)
+
+    @staticmethod
+    def avg_flow_statistic_dto_to_dict(avg_flow_statistic_dto: cluster_manager_pb2.AvgFlowStatisticDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a AvgFlowStatisticDTO to a dict
+
+        :param avg_flow_statistic_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["timestamp"] = avg_flow_statistic_dto.timestamp
+        d["datapath_id"] = avg_flow_statistic_dto.datapath_id
+        d["total_num_packets"] = avg_flow_statistic_dto.total_num_packets
+        d["total_num_bytes"] = avg_flow_statistic_dto.total_num_bytes
+        d["avg_duration_nanoseconds"] = avg_flow_statistic_dto.avg_duration_nanoseconds
+        d["avg_duration_seconds"] = avg_flow_statistic_dto.avg_duration_seconds
+        d["avg_hard_timeout"] = avg_flow_statistic_dto.avg_hard_timeout
+        d["avg_idle_timeout"] = avg_flow_statistic_dto.avg_idle_timeout
+        d["avg_priority"] = avg_flow_statistic_dto.avg_priority
+        d["avg_cookie"] = avg_flow_statistic_dto.avg_cookie
+        return d
+
+    @staticmethod
+    def convert_avg_port_statistic_dto(avg_port_statistic: AvgPortStatistic) -> cluster_manager_pb2.AvgPortStatisticDTO:
+        """
+        Converts a AvgPortStatistic object to a AvgPortStatisticDTO
+
+        :param avg_port_statistic: the object to convert
+        :return: the converted objected
+        """
+        if avg_port_statistic is None:
+            return ClusterManagerUtil.get_empty_avg_port_statistic_dto()
+        else:
+            return cluster_manager_pb2.AvgPortStatisticDTO(
+                timestamp = avg_port_statistic.timestamp, datapath_id = avg_port_statistic.datapath_id,
+                total_num_received_packets = avg_port_statistic.total_num_received_packets,
+                total_num_received_bytes = avg_port_statistic.total_num_received_bytes,
+                total_num_received_errors = avg_port_statistic.total_num_received_errors,
+                total_num_transmitted_packets = avg_port_statistic.total_num_transmitted_packets,
+                total_num_transmitted_bytes = avg_port_statistic.total_num_transmitted_bytes,
+                total_num_transmitted_errors = avg_port_statistic.total_num_transmitted_errors,
+                total_num_received_dropped = avg_port_statistic.total_num_received_dropped,
+                total_num_transmitted_dropped = avg_port_statistic.total_num_transmitted_dropped,
+                total_num_received_frame_errors = avg_port_statistic.total_num_received_frame_errors,
+                total_num_received_overrun_errors = avg_port_statistic.total_num_received_overrun_errors,
+                total_num_received_crc_errors = avg_port_statistic.total_num_received_crc_errors,
+                total_num_collisions = avg_port_statistic.total_num_collisions,
+                avg_duration_nanoseconds = avg_port_statistic.avg_duration_nanoseconds,
+                avg_duration_seconds = avg_port_statistic.avg_duration_seconds)
+
+    @staticmethod
+    def convert_avg_port_statistic_dto_reverse(avg_port_statistic_dto: cluster_manager_pb2.AvgPortStatisticDTO) \
+            -> AvgPortStatistic:
+        """
+        Converts a AvgPortStatisticDTO to a AvgPortStatistic
+
+        :param avg_port_statistic_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if avg_port_statistic_dto is None:
+            return ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(
+                ClusterManagerUtil.get_empty_avg_port_statistic_dto())
+        else:
+            return AvgPortStatistic(
+                timestamp = avg_port_statistic_dto.timestamp, datapath_id = avg_port_statistic_dto.datapath_id,
+                total_num_received_packets = avg_port_statistic_dto.total_num_received_packets,
+                total_num_received_bytes = avg_port_statistic_dto.total_num_received_bytes,
+                total_num_received_errors = avg_port_statistic_dto.total_num_received_errors,
+                total_num_transmitted_packets = avg_port_statistic_dto.total_num_transmitted_packets,
+                total_num_transmitted_bytes = avg_port_statistic_dto.total_num_transmitted_bytes,
+                total_num_transmitted_errors = avg_port_statistic_dto.total_num_transmitted_errors,
+                total_num_received_dropped = avg_port_statistic_dto.total_num_received_dropped,
+                total_num_transmitted_dropped = avg_port_statistic_dto.total_num_transmitted_dropped,
+                total_num_received_frame_errors = avg_port_statistic_dto.total_num_received_frame_errors,
+                total_num_received_overrun_errors = avg_port_statistic_dto.total_num_received_overrun_errors,
+                total_num_received_crc_errors = avg_port_statistic_dto.total_num_received_crc_errors,
+                total_num_collisions = avg_port_statistic_dto.total_num_collisions,
+                avg_duration_nanoseconds = avg_port_statistic_dto.avg_duration_nanoseconds,
+                avg_duration_seconds = avg_port_statistic_dto.avg_duration_seconds)
+
+    @staticmethod
+    def get_empty_avg_port_statistic_dto() -> cluster_manager_pb2.AvgPortStatisticDTO:
+        """
+        :return: an empty AvgPortStatisticDTO
+        """
+        return cluster_manager_pb2.AvgPortStatisticDTO(
+            timestamp=0.0, datapath_id=-1, total_num_received_packets = 0, total_num_received_bytes = 0,
+            total_num_received_errors = 0, total_num_transmitted_packets = 0, total_num_transmitted_bytes = 0,
+            total_num_transmitted_errors = 0, total_num_received_dropped = 0, total_num_transmitted_dropped = 0,
+            total_num_received_frame_errors = 0, total_num_received_overrun_errors = 0,
+            total_num_received_crc_errors = 0,
+            total_num_collisions = 0, avg_duration_nanoseconds = 0, avg_duration_seconds = 0)
+
+    @staticmethod
+    def avg_port_statistic_dto_to_dict(avg_port_statistic_dto: cluster_manager_pb2.AvgPortStatisticDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a AvgPortStatisticDTO to a dict
+
+        :param avg_port_statistic_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["timestamp"] = avg_port_statistic_dto.timestamp
+        d["datapath_id"] = avg_port_statistic_dto.datapath_id
+        d["total_num_received_packets"] = avg_port_statistic_dto.total_num_received_packets
+        d["total_num_received_bytes"] = avg_port_statistic_dto.total_num_received_bytes
+        d["total_num_received_errors"] = avg_port_statistic_dto.total_num_received_errors
+        d["total_num_transmitted_packets"] = avg_port_statistic_dto.total_num_transmitted_packets
+        d["total_num_transmitted_bytes"] = avg_port_statistic_dto.total_num_transmitted_bytes
+        d["total_num_transmitted_errors"] = avg_port_statistic_dto.total_num_transmitted_errors
+        d["total_num_received_dropped"] = avg_port_statistic_dto.total_num_received_dropped
+        d["total_num_transmitted_dropped"] = avg_port_statistic_dto.total_num_transmitted_dropped
+        d["total_num_received_frame_errors"] = avg_port_statistic_dto.total_num_received_frame_errors
+        d["total_num_received_overrun_errors"] = avg_port_statistic_dto.total_num_received_overrun_errors
+        d["total_num_received_crc_errors"] = avg_port_statistic_dto.total_num_received_crc_errors
+        d["total_num_collisions"] = avg_port_statistic_dto.total_num_collisions
+        d["avg_duration_nanoseconds"] = avg_port_statistic_dto.avg_duration_nanoseconds
+        d["avg_duration_seconds"] = avg_port_statistic_dto.avg_duration_seconds
+        return d
+
+    @staticmethod
+    def convert_docker_stats_dict(docker_stats_d: Dict[str, DockerStats]) -> List[cluster_manager_pb2.DockerStatsDict]:
+        """
+        Converts a dict to list of DockerStatsDict
+
+        :param docker_stats_d: the dict to convert
+        :return: the converted objected
+        """
+        if docker_stats_d is None:
+            return ClusterManagerUtil.get_empty_docker_stats_dict()
+        else:
+            docker_stats_dict_list = []
+            for k,v in docker_stats_d.items():
+                docker_stats_dict_list.append(cluster_manager_pb2.DockerStatsDict(
+                    key=k, dto=ClusterManagerUtil.convert_docker_stats_dto(v)))
+            return docker_stats_dict_list
+
+    @staticmethod
+    def convert_docker_stats_dict_reverse(docker_stats_dict: List[cluster_manager_pb2.DockerStatsDict]) \
+            -> Dict[str, DockerStats]:
+        """
+        Converts a list of DockerStatsDict to a dict
+
+        :param docker_stats_dict: the list to convert
+        :return: the converted DTO
+        """
+        if docker_stats_dict is None:
+            return ClusterManagerUtil.convert_docker_stats_dict_reverse(
+                ClusterManagerUtil.get_empty_docker_stats_dict())
+        else:
+            d = {}
+            for ds in docker_stats_dict:
+                d[ds.key]= ClusterManagerUtil.convert_docker_stats_dto_reverse(ds.dto)
+            return d
+
+    @staticmethod
+    def get_empty_docker_stats_dict() -> List[cluster_manager_pb2.DockerStatsDict]:
+        """
+        :return: an empty AvgPortStatisticDTO
+        """
+        return [cluster_manager_pb2.AvgPortStatisticDTO()]
+    

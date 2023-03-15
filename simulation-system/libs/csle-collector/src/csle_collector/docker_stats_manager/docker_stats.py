@@ -10,9 +10,8 @@ class DockerStats:
     """
 
     def __init__(self, pids: float = 0.0, timestamp: str = "", cpu_percent: float = 0.0, mem_current: float = 0.0,
-                 mem_total: float = 0.0,
-                 mem_percent: float = 0.0, blk_read: float = 0.0, blk_write: float = 0.0, net_rx: float = 0.0,
-                 net_tx: float = 0.0, container_name: str = "", ip: str = None, ts: float = None):
+                 mem_total: float = 0.0, mem_percent: float = 0.0, blk_read: float = 0.0, blk_write: float = 0.0,
+                 net_rx: float = 0.0, net_tx: float = 0.0, container_name: str = "", ip: str = None, ts: float = None):
         """
         Class constructor, creates a DockerStats object
 
