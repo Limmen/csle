@@ -4111,3 +4111,25 @@ def get_cluster_manager_logs(
     get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetClusterManagerLogsMsg()
     logs_dto = stub.getClusterManagerLogs(get_msg, timeout=timeout)
     return logs_dto
+
+
+def get_execution_time_series_data(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        emulation: str, ip_first_octet: int, minutes: int,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
+    """
+    Fetches the logs of the cluster manager on a given physical node
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param emulation: the name of the emulation
+    :param ip_first_octet: the first octet of the subnet of the execution
+    :param minutes: the number of minutes to get the data for
+    :return: a DTO with the time series data
+    """
+    get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetExecutionTimeSeriesDataMsg(
+        emulation=emulation, ipFirstOctet=ip_first_octet, minutes=minutes
+    )
+    logs_dto = stub.getExecutionTimeSeriesData(get_msg, timeout=timeout)
+    return logs_dto

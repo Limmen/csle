@@ -2439,13 +2439,13 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto())
         else:
             dto = SnortIdsAlertCounters()
-            dto.priority_alerts=snort_ids_alert_counters_dto.priority_alerts
-            dto.class_alerts=snort_ids_alert_counters_dto.class_alerts
-            dto.severe_alerts=snort_ids_alert_counters_dto.severe_alerts
-            dto.warning_alerts=snort_ids_alert_counters_dto.warning_alerts
-            dto.alerts_weighted_by_priority=snort_ids_alert_counters_dto.alerts_weighted_by_priority
-            dto.ip=snort_ids_alert_counters_dto.ip
-            dto.ts=snort_ids_alert_counters_dto.ts
+            dto.priority_alerts = snort_ids_alert_counters_dto.priority_alerts
+            dto.class_alerts = snort_ids_alert_counters_dto.class_alerts
+            dto.severe_alerts = snort_ids_alert_counters_dto.severe_alerts
+            dto.warning_alerts = snort_ids_alert_counters_dto.warning_alerts
+            dto.alerts_weighted_by_priority = snort_ids_alert_counters_dto.alerts_weighted_by_priority
+            dto.ip = snort_ids_alert_counters_dto.ip
+            dto.ts = snort_ids_alert_counters_dto.ts
             return dto
 
     @staticmethod
@@ -2490,14 +2490,14 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dto()
         else:
             return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
-                level_alerts = ossec_ids_alert_counters.level_alerts,
-                group_alerts = ossec_ids_alert_counters.group_alerts,
-                severe_alerts = ossec_ids_alert_counters.severe_alerts,
-                warning_alerts = ossec_ids_alert_counters.warning_alerts,
-                total_alerts = ossec_ids_alert_counters.total_alerts,
-                alerts_weighted_by_level = ossec_ids_alert_counters.alerts_weighted_by_level,
-                ip = ossec_ids_alert_counters.ip,
-                alerts_weighted_btsy_level = ossec_ids_alert_counters.ts)
+                level_alerts=ossec_ids_alert_counters.level_alerts,
+                group_alerts=ossec_ids_alert_counters.group_alerts,
+                severe_alerts=ossec_ids_alert_counters.severe_alerts,
+                warning_alerts=ossec_ids_alert_counters.warning_alerts,
+                total_alerts=ossec_ids_alert_counters.total_alerts,
+                alerts_weighted_by_level=ossec_ids_alert_counters.alerts_weighted_by_level,
+                ip=ossec_ids_alert_counters.ip,
+                alerts_weighted_btsy_level=ossec_ids_alert_counters.ts)
 
     @staticmethod
     def convert_ossec_ids_alert_counters_dto_reverse(
@@ -2513,14 +2513,14 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dto())
         else:
             dto = OSSECIdsAlertCounters()
-            dto.level_alerts=ossec_ids_alert_counters_dto.level_alerts
-            dto.group_alerts=ossec_ids_alert_counters_dto.group_alerts
-            dto.severe_alerts=ossec_ids_alert_counters_dto.severe_alerts
-            dto.warning_alerts=ossec_ids_alert_counters_dto.warning_alerts
-            dto.total_alerts=ossec_ids_alert_counters_dto.total_alerts
-            dto.alerts_weighted_by_level=ossec_ids_alert_counters_dto.alerts_weighted_by_level
-            dto.ip=ossec_ids_alert_counters_dto.ip
-            dto.ts=ossec_ids_alert_counters_dto.ts
+            dto.level_alerts = ossec_ids_alert_counters_dto.level_alerts
+            dto.group_alerts = ossec_ids_alert_counters_dto.group_alerts
+            dto.severe_alerts = ossec_ids_alert_counters_dto.severe_alerts
+            dto.warning_alerts = ossec_ids_alert_counters_dto.warning_alerts
+            dto.total_alerts = ossec_ids_alert_counters_dto.total_alerts
+            dto.alerts_weighted_by_level = ossec_ids_alert_counters_dto.alerts_weighted_by_level
+            dto.ip = ossec_ids_alert_counters_dto.ip
+            dto.ts = ossec_ids_alert_counters_dto.ts
             return dto
 
     @staticmethod
@@ -2529,8 +2529,8 @@ class ClusterManagerUtil:
         :return: an empty HostMetricsDTO
         """
         return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
-            level_alerts = [], group_alerts = [], severe_alerts=0, warning_alerts = 0, total_alerts = 0,
-            alerts_weighted_by_level = 0, ip = "", ts = 0.0)
+            level_alerts=[], group_alerts=[], severe_alerts=0, warning_alerts=0, total_alerts=0,
+            alerts_weighted_by_level=0, ip="", ts=0.0)
 
     @staticmethod
     def ossec_ids_alert_counters_dto_to_dict(
@@ -2564,13 +2564,13 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_flow_statistic_dto()
         else:
             return cluster_manager_pb2.FlowStatisticDTO(
-                timestamp = flow_statistic.timestamp, datapath_id = flow_statistic.datapath_id,
-                in_port = flow_statistic.in_port, out_port = flow_statistic.out_port,
-                dst_mac_address = flow_statistic.dst_mac_address, num_packets = flow_statistic.num_packets,
-                num_bytes = flow_statistic.num_bytes, duration_nanoseconds = flow_statistic.duration_nanoseconds,
-                duration_seconds = flow_statistic.duration_seconds, hard_timeout = flow_statistic.hard_timeout,
-                idle_timeout = flow_statistic.idle_timeout, priority = flow_statistic.priority,
-                cookie = flow_statistic.cookie)
+                timestamp=flow_statistic.timestamp, datapath_id=flow_statistic.datapath_id,
+                in_port=flow_statistic.in_port, out_port=flow_statistic.out_port,
+                dst_mac_address=flow_statistic.dst_mac_address, num_packets=flow_statistic.num_packets,
+                num_bytes=flow_statistic.num_bytes, duration_nanoseconds=flow_statistic.duration_nanoseconds,
+                duration_seconds=flow_statistic.duration_seconds, hard_timeout=flow_statistic.hard_timeout,
+                idle_timeout=flow_statistic.idle_timeout, priority=flow_statistic.priority,
+                cookie=flow_statistic.cookie)
 
     @staticmethod
     def convert_flow_statistic_dto_reverse(flow_statistic_dto: cluster_manager_pb2.FlowStatisticDTO) -> FlowStatistic:
@@ -2585,13 +2585,13 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_flow_statistic_dto())
         else:
             return FlowStatistic(
-                timestamp = flow_statistic_dto.timestamp, datapath_id = flow_statistic_dto.datapath_id,
-                in_port = flow_statistic_dto.in_port, out_port = flow_statistic_dto.out_port,
-                dst_mac_address = flow_statistic_dto.dst_mac_address, num_packets = flow_statistic_dto.num_packets,
-                num_bytes = flow_statistic_dto.num_bytes, duration_nanoseconds = flow_statistic_dto.duration_nanoseconds,
-                duration_seconds = flow_statistic_dto.duration_seconds, hard_timeout = flow_statistic_dto.hard_timeout,
-                idle_timeout = flow_statistic_dto.idle_timeout, priority = flow_statistic_dto.priority,
-                cookie = flow_statistic_dto.cookie
+                timestamp=flow_statistic_dto.timestamp, datapath_id=flow_statistic_dto.datapath_id,
+                in_port=flow_statistic_dto.in_port, out_port=flow_statistic_dto.out_port,
+                dst_mac_address=flow_statistic_dto.dst_mac_address, num_packets=flow_statistic_dto.num_packets,
+                num_bytes=flow_statistic_dto.num_bytes, duration_nanoseconds=flow_statistic_dto.duration_nanoseconds,
+                duration_seconds=flow_statistic_dto.duration_seconds, hard_timeout=flow_statistic_dto.hard_timeout,
+                idle_timeout=flow_statistic_dto.idle_timeout, priority=flow_statistic_dto.priority,
+                cookie=flow_statistic_dto.cookie
             )
 
     @staticmethod
@@ -2601,8 +2601,8 @@ class ClusterManagerUtil:
         """
         return cluster_manager_pb2.FlowStatisticDTO(
             timestamp=0.0, datapath_id=-1, in_port=-1, out_port=-1, dst_mac_address="", num_packets=-1,
-            num_bytes=-1, duration_nanoseconds = -1, duration_seconds = -1, hard_timeout = -1, idle_timeout=-1,
-            priority = -1, cookie = -1)
+            num_bytes=-1, duration_nanoseconds=-1, duration_seconds=-1, hard_timeout=-1, idle_timeout=-1,
+            priority=-1, cookie=-1)
 
     @staticmethod
     def flow_statistic_dto_to_dict(flow_statistic_dto: cluster_manager_pb2.FlowStatisticDTO) -> Dict[str, Any]:
@@ -2640,21 +2640,21 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_port_statistic_dto()
         else:
             return cluster_manager_pb2.PortStatisticDTO(
-                timestamp = port_statistic.timestamp, datapath_id = port_statistic.datapath_id,
-                port = port_statistic.port, num_received_packets = port_statistic.num_received_packets,
-                num_received_bytes = port_statistic.num_received_bytes,
-                num_received_errors = port_statistic.num_received_errors,
-                num_transmitted_packets = port_statistic.num_transmitted_packets,
-                num_transmitted_bytes = port_statistic.num_transmitted_bytes,
-                num_transmitted_errors = port_statistic.num_transmitted_errors,
-                num_received_dropped = port_statistic.num_received_dropped,
-                num_transmitted_dropped = port_statistic.num_transmitted_dropped,
-                num_received_frame_errors = port_statistic.num_received_frame_errors,
-                num_received_overrun_errors = port_statistic.num_received_overrun_errors,
-                num_received_crc_errors = port_statistic.num_received_crc_errors,
-                num_collisions = port_statistic.num_collisions,
-                duration_nanoseconds = port_statistic.duration_nanoseconds,
-                duration_seconds = port_statistic.duration_seconds)
+                timestamp=port_statistic.timestamp, datapath_id=port_statistic.datapath_id,
+                port=port_statistic.port, num_received_packets=port_statistic.num_received_packets,
+                num_received_bytes=port_statistic.num_received_bytes,
+                num_received_errors=port_statistic.num_received_errors,
+                num_transmitted_packets=port_statistic.num_transmitted_packets,
+                num_transmitted_bytes=port_statistic.num_transmitted_bytes,
+                num_transmitted_errors=port_statistic.num_transmitted_errors,
+                num_received_dropped=port_statistic.num_received_dropped,
+                num_transmitted_dropped=port_statistic.num_transmitted_dropped,
+                num_received_frame_errors=port_statistic.num_received_frame_errors,
+                num_received_overrun_errors=port_statistic.num_received_overrun_errors,
+                num_received_crc_errors=port_statistic.num_received_crc_errors,
+                num_collisions=port_statistic.num_collisions,
+                duration_nanoseconds=port_statistic.duration_nanoseconds,
+                duration_seconds=port_statistic.duration_seconds)
 
     @staticmethod
     def convert_port_statistic_dto_reverse(port_statistic_dto: cluster_manager_pb2.PortStatisticDTO) -> PortStatistic:
@@ -2669,21 +2669,21 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_port_statistic_dto())
         else:
             return PortStatistic(
-                timestamp = port_statistic_dto.timestamp, datapath_id = port_statistic_dto.datapath_id,
-                port = port_statistic_dto.port, num_received_packets = port_statistic_dto.num_received_packets,
-                num_received_bytes = port_statistic_dto.num_received_bytes,
-                num_received_errors = port_statistic_dto.num_received_errors,
-                num_transmitted_packets = port_statistic_dto.num_transmitted_packets,
-                num_transmitted_bytes = port_statistic_dto.num_transmitted_bytes,
-                num_transmitted_errors = port_statistic_dto.num_transmitted_errors,
-                num_received_dropped = port_statistic_dto.num_received_dropped,
-                num_transmitted_dropped = port_statistic_dto.num_transmitted_dropped,
-                num_received_frame_errors = port_statistic_dto.num_received_frame_errors,
-                num_received_overrun_errors = port_statistic_dto.num_received_overrun_errors,
-                num_received_crc_errors = port_statistic_dto.num_received_crc_errors,
-                num_collisions = port_statistic_dto.num_collisions,
-                duration_nanoseconds = port_statistic_dto.duration_nanoseconds,
-                duration_seconds = port_statistic_dto.duration_seconds
+                timestamp=port_statistic_dto.timestamp, datapath_id=port_statistic_dto.datapath_id,
+                port=port_statistic_dto.port, num_received_packets=port_statistic_dto.num_received_packets,
+                num_received_bytes=port_statistic_dto.num_received_bytes,
+                num_received_errors=port_statistic_dto.num_received_errors,
+                num_transmitted_packets=port_statistic_dto.num_transmitted_packets,
+                num_transmitted_bytes=port_statistic_dto.num_transmitted_bytes,
+                num_transmitted_errors=port_statistic_dto.num_transmitted_errors,
+                num_received_dropped=port_statistic_dto.num_received_dropped,
+                num_transmitted_dropped=port_statistic_dto.num_transmitted_dropped,
+                num_received_frame_errors=port_statistic_dto.num_received_frame_errors,
+                num_received_overrun_errors=port_statistic_dto.num_received_overrun_errors,
+                num_received_crc_errors=port_statistic_dto.num_received_crc_errors,
+                num_collisions=port_statistic_dto.num_collisions,
+                duration_nanoseconds=port_statistic_dto.duration_nanoseconds,
+                duration_seconds=port_statistic_dto.duration_seconds
             )
 
     @staticmethod
@@ -2693,8 +2693,8 @@ class ClusterManagerUtil:
         """
         return cluster_manager_pb2.PortStatisticDTO(
             timestamp=0.0, datapath_id=-1, port=-1, num_received_packets=-1, num_received_bytes=-1,
-            num_received_errors=-1, num_transmitted_packets=-1, num_transmitted_bytes = -1, num_transmitted_errors = -1,
-            num_received_dropped = -1, num_transmitted_dropped = -1, num_received_frame_errors = -1,
+            num_received_errors=-1, num_transmitted_packets=-1, num_transmitted_bytes=-1, num_transmitted_errors=-1,
+            num_received_dropped=-1, num_transmitted_dropped=-1, num_received_frame_errors=-1,
             num_received_overrun_errors=-1, num_received_crc_errors=-1, num_collisions=-1, duration_nanoseconds=-1,
             duration_seconds=-1)
 
@@ -2739,10 +2739,10 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_agg_flow_statistic_dto()
         else:
             return cluster_manager_pb2.AggFlowStatisticDTO(
-                timestamp = agg_flow_statistic.timestamp, datapath_id = agg_flow_statistic.datapath_id,
-                total_num_packets = agg_flow_statistic.total_num_packets,
-                total_num_bytes = agg_flow_statistic.total_num_bytes,
-                total_num_flows = agg_flow_statistic.total_num_flows)
+                timestamp=agg_flow_statistic.timestamp, datapath_id=agg_flow_statistic.datapath_id,
+                total_num_packets=agg_flow_statistic.total_num_packets,
+                total_num_bytes=agg_flow_statistic.total_num_bytes,
+                total_num_flows=agg_flow_statistic.total_num_flows)
 
     @staticmethod
     def convert_agg_flow_statistic_dto_reverse(agg_flow_statistic_dto: cluster_manager_pb2.AggFlowStatisticDTO) \
@@ -2758,10 +2758,10 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_agg_flow_statistic_dto())
         else:
             return AggFlowStatistic(
-                timestamp = agg_flow_statistic_dto.timestamp, datapath_id = agg_flow_statistic_dto.datapath_id,
-                total_num_packets = agg_flow_statistic_dto.total_num_packets,
-                total_num_bytes = agg_flow_statistic_dto.total_num_bytes,
-                total_num_flows = agg_flow_statistic_dto.total_num_flows)
+                timestamp=agg_flow_statistic_dto.timestamp, datapath_id=agg_flow_statistic_dto.datapath_id,
+                total_num_packets=agg_flow_statistic_dto.total_num_packets,
+                total_num_bytes=agg_flow_statistic_dto.total_num_bytes,
+                total_num_flows=agg_flow_statistic_dto.total_num_flows)
 
     @staticmethod
     def get_empty_agg_flow_statistic_dto() -> cluster_manager_pb2.AggFlowStatisticDTO:
@@ -2769,7 +2769,7 @@ class ClusterManagerUtil:
         :return: an empty AggFlowStatisticDTO
         """
         return cluster_manager_pb2.AggFlowStatisticDTO(
-            timestamp=0.0, datapath_id=-1, total_num_packets=-1, total_num_bytes = -1, total_num_flows = -1)
+            timestamp=0.0, datapath_id=-1, total_num_packets=-1, total_num_bytes=-1, total_num_flows=-1)
 
     @staticmethod
     def agg_flow_statistic_dto_to_dict(agg_flow_statistic_dto: cluster_manager_pb2.AggFlowStatisticDTO) \
@@ -2801,15 +2801,15 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_avg_flow_statistic_dto()
         else:
             return cluster_manager_pb2.AvgFlowStatisticDTO(
-                timestamp = avg_flow_statistic.timestamp, datapath_id = avg_flow_statistic.datapath_id,
-                total_num_packets = avg_flow_statistic.total_num_packets,
-                total_num_bytes = avg_flow_statistic.total_num_bytes,
-                avg_duration_nanoseconds = avg_flow_statistic.avg_duration_nanoseconds,
-                avg_duration_seconds = avg_flow_statistic.avg_duration_seconds,
-                avg_hard_timeout = avg_flow_statistic.avg_hard_timeout,
-                avg_idle_timeout = avg_flow_statistic.avg_idle_timeout,
-                avg_priority = avg_flow_statistic.avg_priority,
-                avg_cookie = avg_flow_statistic.avg_cookie)
+                timestamp=avg_flow_statistic.timestamp, datapath_id=avg_flow_statistic.datapath_id,
+                total_num_packets=avg_flow_statistic.total_num_packets,
+                total_num_bytes=avg_flow_statistic.total_num_bytes,
+                avg_duration_nanoseconds=avg_flow_statistic.avg_duration_nanoseconds,
+                avg_duration_seconds=avg_flow_statistic.avg_duration_seconds,
+                avg_hard_timeout=avg_flow_statistic.avg_hard_timeout,
+                avg_idle_timeout=avg_flow_statistic.avg_idle_timeout,
+                avg_priority=avg_flow_statistic.avg_priority,
+                avg_cookie=avg_flow_statistic.avg_cookie)
 
     @staticmethod
     def convert_avg_flow_statistic_dto_reverse(avg_flow_statistic_dto: cluster_manager_pb2.AvgFlowStatisticDTO) \
@@ -2825,15 +2825,15 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_avg_flow_statistic_dto())
         else:
             return AvgFlowStatistic(
-                timestamp = avg_flow_statistic_dto.timestamp, datapath_id = avg_flow_statistic_dto.datapath_id,
-                total_num_packets = avg_flow_statistic_dto.total_num_packets,
-                total_num_bytes = avg_flow_statistic_dto.total_num_bytes,
-                avg_duration_nanoseconds = avg_flow_statistic_dto.avg_duration_nanoseconds,
-                avg_duration_seconds = avg_flow_statistic_dto.avg_duration_seconds,
-                avg_hard_timeout = avg_flow_statistic_dto.avg_hard_timeout,
-                avg_idle_timeout = avg_flow_statistic_dto.avg_idle_timeout,
-                avg_priority = avg_flow_statistic_dto.avg_priority,
-                avg_cookie = avg_flow_statistic_dto.avg_cookie)
+                timestamp=avg_flow_statistic_dto.timestamp, datapath_id=avg_flow_statistic_dto.datapath_id,
+                total_num_packets=avg_flow_statistic_dto.total_num_packets,
+                total_num_bytes=avg_flow_statistic_dto.total_num_bytes,
+                avg_duration_nanoseconds=avg_flow_statistic_dto.avg_duration_nanoseconds,
+                avg_duration_seconds=avg_flow_statistic_dto.avg_duration_seconds,
+                avg_hard_timeout=avg_flow_statistic_dto.avg_hard_timeout,
+                avg_idle_timeout=avg_flow_statistic_dto.avg_idle_timeout,
+                avg_priority=avg_flow_statistic_dto.avg_priority,
+                avg_cookie=avg_flow_statistic_dto.avg_cookie)
 
     @staticmethod
     def get_empty_avg_flow_statistic_dto() -> cluster_manager_pb2.AvgFlowStatisticDTO:
@@ -2841,9 +2841,9 @@ class ClusterManagerUtil:
         :return: an empty AvgFlowStatisticDTO
         """
         return cluster_manager_pb2.AvgFlowStatisticDTO(
-            timestamp=0.0, datapath_id=-1, total_num_packets = -1, total_num_bytes = -1,
-            avg_duration_nanoseconds = -1, avg_duration_seconds = -1, avg_hard_timeout = -1, avg_idle_timeout = -1,
-            avg_priority = -1, avg_cookie = -1)
+            timestamp=0.0, datapath_id=-1, total_num_packets=-1, total_num_bytes=-1,
+            avg_duration_nanoseconds=-1, avg_duration_seconds=-1, avg_hard_timeout=-1, avg_idle_timeout=-1,
+            avg_priority=-1, avg_cookie=-1)
 
     @staticmethod
     def avg_flow_statistic_dto_to_dict(avg_flow_statistic_dto: cluster_manager_pb2.AvgFlowStatisticDTO) \
@@ -2879,21 +2879,21 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_avg_port_statistic_dto()
         else:
             return cluster_manager_pb2.AvgPortStatisticDTO(
-                timestamp = avg_port_statistic.timestamp, datapath_id = avg_port_statistic.datapath_id,
-                total_num_received_packets = avg_port_statistic.total_num_received_packets,
-                total_num_received_bytes = avg_port_statistic.total_num_received_bytes,
-                total_num_received_errors = avg_port_statistic.total_num_received_errors,
-                total_num_transmitted_packets = avg_port_statistic.total_num_transmitted_packets,
-                total_num_transmitted_bytes = avg_port_statistic.total_num_transmitted_bytes,
-                total_num_transmitted_errors = avg_port_statistic.total_num_transmitted_errors,
-                total_num_received_dropped = avg_port_statistic.total_num_received_dropped,
-                total_num_transmitted_dropped = avg_port_statistic.total_num_transmitted_dropped,
-                total_num_received_frame_errors = avg_port_statistic.total_num_received_frame_errors,
-                total_num_received_overrun_errors = avg_port_statistic.total_num_received_overrun_errors,
-                total_num_received_crc_errors = avg_port_statistic.total_num_received_crc_errors,
-                total_num_collisions = avg_port_statistic.total_num_collisions,
-                avg_duration_nanoseconds = avg_port_statistic.avg_duration_nanoseconds,
-                avg_duration_seconds = avg_port_statistic.avg_duration_seconds)
+                timestamp=avg_port_statistic.timestamp, datapath_id=avg_port_statistic.datapath_id,
+                total_num_received_packets=avg_port_statistic.total_num_received_packets,
+                total_num_received_bytes=avg_port_statistic.total_num_received_bytes,
+                total_num_received_errors=avg_port_statistic.total_num_received_errors,
+                total_num_transmitted_packets=avg_port_statistic.total_num_transmitted_packets,
+                total_num_transmitted_bytes=avg_port_statistic.total_num_transmitted_bytes,
+                total_num_transmitted_errors=avg_port_statistic.total_num_transmitted_errors,
+                total_num_received_dropped=avg_port_statistic.total_num_received_dropped,
+                total_num_transmitted_dropped=avg_port_statistic.total_num_transmitted_dropped,
+                total_num_received_frame_errors=avg_port_statistic.total_num_received_frame_errors,
+                total_num_received_overrun_errors=avg_port_statistic.total_num_received_overrun_errors,
+                total_num_received_crc_errors=avg_port_statistic.total_num_received_crc_errors,
+                total_num_collisions=avg_port_statistic.total_num_collisions,
+                avg_duration_nanoseconds=avg_port_statistic.avg_duration_nanoseconds,
+                avg_duration_seconds=avg_port_statistic.avg_duration_seconds)
 
     @staticmethod
     def convert_avg_port_statistic_dto_reverse(avg_port_statistic_dto: cluster_manager_pb2.AvgPortStatisticDTO) \
@@ -2909,21 +2909,21 @@ class ClusterManagerUtil:
                 ClusterManagerUtil.get_empty_avg_port_statistic_dto())
         else:
             return AvgPortStatistic(
-                timestamp = avg_port_statistic_dto.timestamp, datapath_id = avg_port_statistic_dto.datapath_id,
-                total_num_received_packets = avg_port_statistic_dto.total_num_received_packets,
-                total_num_received_bytes = avg_port_statistic_dto.total_num_received_bytes,
-                total_num_received_errors = avg_port_statistic_dto.total_num_received_errors,
-                total_num_transmitted_packets = avg_port_statistic_dto.total_num_transmitted_packets,
-                total_num_transmitted_bytes = avg_port_statistic_dto.total_num_transmitted_bytes,
-                total_num_transmitted_errors = avg_port_statistic_dto.total_num_transmitted_errors,
-                total_num_received_dropped = avg_port_statistic_dto.total_num_received_dropped,
-                total_num_transmitted_dropped = avg_port_statistic_dto.total_num_transmitted_dropped,
-                total_num_received_frame_errors = avg_port_statistic_dto.total_num_received_frame_errors,
-                total_num_received_overrun_errors = avg_port_statistic_dto.total_num_received_overrun_errors,
-                total_num_received_crc_errors = avg_port_statistic_dto.total_num_received_crc_errors,
-                total_num_collisions = avg_port_statistic_dto.total_num_collisions,
-                avg_duration_nanoseconds = avg_port_statistic_dto.avg_duration_nanoseconds,
-                avg_duration_seconds = avg_port_statistic_dto.avg_duration_seconds)
+                timestamp=avg_port_statistic_dto.timestamp, datapath_id=avg_port_statistic_dto.datapath_id,
+                total_num_received_packets=avg_port_statistic_dto.total_num_received_packets,
+                total_num_received_bytes=avg_port_statistic_dto.total_num_received_bytes,
+                total_num_received_errors=avg_port_statistic_dto.total_num_received_errors,
+                total_num_transmitted_packets=avg_port_statistic_dto.total_num_transmitted_packets,
+                total_num_transmitted_bytes=avg_port_statistic_dto.total_num_transmitted_bytes,
+                total_num_transmitted_errors=avg_port_statistic_dto.total_num_transmitted_errors,
+                total_num_received_dropped=avg_port_statistic_dto.total_num_received_dropped,
+                total_num_transmitted_dropped=avg_port_statistic_dto.total_num_transmitted_dropped,
+                total_num_received_frame_errors=avg_port_statistic_dto.total_num_received_frame_errors,
+                total_num_received_overrun_errors=avg_port_statistic_dto.total_num_received_overrun_errors,
+                total_num_received_crc_errors=avg_port_statistic_dto.total_num_received_crc_errors,
+                total_num_collisions=avg_port_statistic_dto.total_num_collisions,
+                avg_duration_nanoseconds=avg_port_statistic_dto.avg_duration_nanoseconds,
+                avg_duration_seconds=avg_port_statistic_dto.avg_duration_seconds)
 
     @staticmethod
     def get_empty_avg_port_statistic_dto() -> cluster_manager_pb2.AvgPortStatisticDTO:
@@ -2931,12 +2931,12 @@ class ClusterManagerUtil:
         :return: an empty AvgPortStatisticDTO
         """
         return cluster_manager_pb2.AvgPortStatisticDTO(
-            timestamp=0.0, datapath_id=-1, total_num_received_packets = 0, total_num_received_bytes = 0,
-            total_num_received_errors = 0, total_num_transmitted_packets = 0, total_num_transmitted_bytes = 0,
-            total_num_transmitted_errors = 0, total_num_received_dropped = 0, total_num_transmitted_dropped = 0,
-            total_num_received_frame_errors = 0, total_num_received_overrun_errors = 0,
-            total_num_received_crc_errors = 0,
-            total_num_collisions = 0, avg_duration_nanoseconds = 0, avg_duration_seconds = 0)
+            timestamp=0.0, datapath_id=-1, total_num_received_packets=0, total_num_received_bytes=0,
+            total_num_received_errors=0, total_num_transmitted_packets=0, total_num_transmitted_bytes=0,
+            total_num_transmitted_errors=0, total_num_received_dropped=0, total_num_transmitted_dropped=0,
+            total_num_received_frame_errors=0, total_num_received_overrun_errors=0,
+            total_num_received_crc_errors=0,
+            total_num_collisions=0, avg_duration_nanoseconds=0, avg_duration_seconds=0)
 
     @staticmethod
     def avg_port_statistic_dto_to_dict(avg_port_statistic_dto: cluster_manager_pb2.AvgPortStatisticDTO) \
@@ -2967,7 +2967,8 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_docker_stats_dict(docker_stats_d: Dict[str, DockerStats]) -> List[cluster_manager_pb2.DockerStatsDict]:
+    def convert_docker_stats_dict(docker_stats_d: Dict[str, List[DockerStats]]) \
+            -> List[cluster_manager_pb2.DockerStatsDict]:
         """
         Converts a dict to list of DockerStatsDict
 
@@ -2978,14 +2979,14 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_docker_stats_dict()
         else:
             docker_stats_dict_list = []
-            for k,v in docker_stats_d.items():
+            for k, v in docker_stats_d.items():
                 docker_stats_dict_list.append(cluster_manager_pb2.DockerStatsDict(
-                    key=k, dto=ClusterManagerUtil.convert_docker_stats_dto(v)))
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_docker_stats_dto(x), v))))
             return docker_stats_dict_list
 
     @staticmethod
     def convert_docker_stats_dict_reverse(docker_stats_dict: List[cluster_manager_pb2.DockerStatsDict]) \
-            -> Dict[str, DockerStats]:
+            -> Dict[str, List[DockerStats]]:
         """
         Converts a list of DockerStatsDict to a dict
 
@@ -2998,13 +2999,653 @@ class ClusterManagerUtil:
         else:
             d = {}
             for ds in docker_stats_dict:
-                d[ds.key]= ClusterManagerUtil.convert_docker_stats_dto_reverse(ds.dto)
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_docker_stats_dto_reverse(x), ds.dtos))
             return d
 
     @staticmethod
     def get_empty_docker_stats_dict() -> List[cluster_manager_pb2.DockerStatsDict]:
         """
-        :return: an empty AvgPortStatisticDTO
+        :return: an empty DockerStatsDict
         """
-        return [cluster_manager_pb2.AvgPortStatisticDTO()]
-    
+        return []
+
+    @staticmethod
+    def docker_stats_dict_to_dict(docker_stats_dict: cluster_manager_pb2.DockerStatsDict) \
+            -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param docker_stats_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = docker_stats_dict.key
+        dtos = []
+        for dto in docker_stats_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.docker_stats_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_host_metrics_dict(host_metrics_dict: Dict[str, List[HostMetrics]]) \
+            -> List[cluster_manager_pb2.HostMetricsDict]:
+        """
+        Converts a dict to list of HostMetricsDict
+
+        :param host_metrics_dict: the dict to convert
+        :return: the converted objected
+        """
+        if host_metrics_dict is None:
+            return ClusterManagerUtil.get_empty_host_metrics_dict()
+        else:
+            host_metrics_dict_list = []
+            for k, v in host_metrics_dict.items():
+                host_metrics_dict_list.append(cluster_manager_pb2.HostMetricsDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dto(x), v))))
+            return host_metrics_dict_list
+
+    @staticmethod
+    def convert_host_metrics_dict_reverse(host_metrics_dict: List[cluster_manager_pb2.HostMetricsDict]) \
+            -> Dict[str, List[HostMetrics]]:
+        """
+        Converts a list of HostMetricsDict to a dict
+
+        :param host_metrics_dict: the list to convert
+        :return: the converted DTO
+        """
+        if host_metrics_dict is None:
+            return ClusterManagerUtil.convert_host_metrics_dict_reverse(
+                ClusterManagerUtil.get_empty_host_metrics_dict())
+        else:
+            d = {}
+            for ds in host_metrics_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dict_reverse(x), ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_host_metrics_dict() -> List[cluster_manager_pb2.HostMetricsDict]:
+        """
+        :return: an empty HostMetricsDict
+        """
+        return []
+
+    @staticmethod
+    def host_metrics_dict_to_dict(host_metrics_dict: cluster_manager_pb2.HostMetricsDict) \
+            -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param host_metrics_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = host_metrics_dict.key
+        dtos = []
+        for dto in host_metrics_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.host_metrics_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_ossec_ids_alert_counters_dict(ossec_ids_alert_counters_dict: Dict[str, List[OSSECIdsAlertCounters]]) \
+            -> List[cluster_manager_pb2.OSSECIdsAlertCountersDict]:
+        """
+        Converts a dict to list of OSSECIdsAlertCountersDict
+
+        :param ossec_ids_alert_counters_dict: the dict to convert
+        :return: the converted objected
+        """
+        if ossec_ids_alert_counters_dict is None:
+            return ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dict()
+        else:
+            host_metrics_dict_list = []
+            for k, v in ossec_ids_alert_counters_dict.items():
+                host_metrics_dict_list.append(cluster_manager_pb2.HostMetricsDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto(x), v))))
+            return host_metrics_dict_list
+
+    @staticmethod
+    def convert_ossec_ids_alert_counters_dict_reverse(
+            ossec_ids_alert_counters_dict: List[cluster_manager_pb2.OSSECIdsAlertCountersDict]) \
+            -> Dict[str, List[OSSECIdsAlertCounters]]:
+        """
+        Converts a list of OSSECIdsAlertCountersDict to a dict
+
+        :param ossec_ids_alert_counters_dict: the list to convert
+        :return: the converted DTO
+        """
+        if ossec_ids_alert_counters_dict is None:
+            return ClusterManagerUtil.convert_ossec_ids_alert_counters_dict_reverse(
+                ClusterManagerUtil.get_empty_host_metrics_dict())
+        else:
+            d = {}
+            for ds in ossec_ids_alert_counters_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto_reverse(x),
+                                     ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_ossec_ids_alert_counters_dict() -> List[cluster_manager_pb2.OSSECIdsAlertCountersDict]:
+        """
+        :return: an empty OSSECIdsAlertCountersDict
+        """
+        return []
+
+    @staticmethod
+    def ossec_ids_alert_counters_dict_to_dict(
+            ossec_ids_alert_counters_dict: cluster_manager_pb2.OSSECIdsAlertCountersDict) \
+            -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param ossec_ids_alert_counters_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = ossec_ids_alert_counters_dict.key
+        dtos = []
+        for dto in ossec_ids_alert_counters_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.ossec_ids_alert_counters_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_flow_statistic_dict(flow_statistic_dict: Dict[str, List[FlowStatistic]]) \
+            -> List[cluster_manager_pb2.FlowStatisticDict]:
+        """
+        Converts a dict to list of FlowStatisticDict
+
+        :param flow_statistic_dict: the dict to convert
+        :return: the converted objected
+        """
+        if flow_statistic_dict is None:
+            return ClusterManagerUtil.get_empty_flow_statistic_dict()
+        else:
+            flow_statistic_dict_list = []
+            for k, v in flow_statistic_dict.items():
+                flow_statistic_dict_list.append(cluster_manager_pb2.FlowStatisticDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_flow_statistics_dto(x), v))))
+            return flow_statistic_dict_list
+
+    @staticmethod
+    def convert_flow_statistic_dict_reverse(flow_statistics_dict: List[cluster_manager_pb2.FlowStatisticDict]) \
+            -> Dict[str, List[FlowStatistic]]:
+        """
+        Converts a list of FlowStatisticDict to a dict
+
+        :param flow_statistics_dict: the list to convert
+        :return: the converted DTO
+        """
+        if flow_statistics_dict is None:
+            return ClusterManagerUtil.convert_flow_statistic_dict_reverse(
+                ClusterManagerUtil.get_empty_flow_statistic_dict())
+        else:
+            d = {}
+            for ds in flow_statistics_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_flow_statistic_dto_reverse(x), ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_flow_statistic_dict() -> List[cluster_manager_pb2.FlowStatisticDict]:
+        """
+        :return: an empty FlowStatisticDict
+        """
+        return []
+
+    @staticmethod
+    def flow_statistics_dict_to_dict(flow_statistics_dict: cluster_manager_pb2.FlowStatisticDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param flow_statistics_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = flow_statistics_dict.key
+        dtos = []
+        for dto in flow_statistics_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.flow_statistic_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_port_statistic_dict(port_statistic_dict: Dict[str, List[PortStatistic]]) \
+            -> List[cluster_manager_pb2.PortStatisticDict]:
+        """
+        Converts a dict to list of PortStatisticDict
+
+        :param port_statistic_dict: the dict to convert
+        :return: the converted object
+        """
+        if port_statistic_dict is None:
+            return ClusterManagerUtil.get_empty_port_statistic_dict()
+        else:
+            port_statistic_dict_list = []
+            for k, v in port_statistic_dict.items():
+                port_statistic_dict_list.append(cluster_manager_pb2.PortStatisticDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_port_statistics_dto(x), v))))
+            return port_statistic_dict_list
+
+    @staticmethod
+    def convert_port_statistic_dict_reverse(port_statistics_dict: List[cluster_manager_pb2.PortStatisticDict]) \
+            -> Dict[str, List[PortStatistic]]:
+        """
+        Converts a list of PortStatisticDict to a dict
+
+        :param port_statistics_dict: the list to convert
+        :return: the converted DTO
+        """
+        if port_statistics_dict is None:
+            return ClusterManagerUtil.convert_port_statistic_dict_reverse(
+                ClusterManagerUtil.get_empty_port_statistic_dict())
+        else:
+            d = {}
+            for ds in port_statistics_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_port_statistic_dto_reverse(x), ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_port_statistic_dict() -> List[cluster_manager_pb2.PortStatisticDict]:
+        """
+        :return: an empty PortStatisticDict
+        """
+        return []
+
+    @staticmethod
+    def port_statistics_dict_to_dict(
+            port_statistics_dict: cluster_manager_pb2.PortStatisticDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param port_statistics_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = port_statistics_dict.key
+        dtos = []
+        for dto in port_statistics_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.port_statistic_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_avg_flow_statistic_dict(avg_flow_statistic_dict: Dict[str, List[AvgFlowStatistic]]) \
+            -> List[cluster_manager_pb2.AvgFlowStatisticDict]:
+        """
+        Converts a dict to list of AvgFlowStatisticDict
+
+        :param avg_flow_statistic_dict: the dict to convert
+        :return: the converted objected
+        """
+        if avg_flow_statistic_dict is None:
+            return ClusterManagerUtil.get_empty_avg_flow_statistic_dict()
+        else:
+            avg_flow_statistic_dict_list = []
+            for k, v in avg_flow_statistic_dict.items():
+                avg_flow_statistic_dict_list.append(cluster_manager_pb2.AvgFlowStatisticDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_avg_flow_statistic_dto(x), v))))
+            return avg_flow_statistic_dict_list
+
+    @staticmethod
+    def convert_avg_flow_statistic_dict_reverse(
+            avg_flow_statistics_dict: List[cluster_manager_pb2.AvgFlowStatisticDict]) \
+            -> Dict[str, List[AvgFlowStatistic]]:
+        """
+        Converts a list of AvgFlowStatisticDict to a dict
+
+        :param avg_flow_statistics_dict: the list to convert
+        :return: the converted DTO
+        """
+        if avg_flow_statistics_dict is None:
+            return ClusterManagerUtil.convert_avg_flow_statistic_dict_reverse(
+                ClusterManagerUtil.get_empty_avg_flow_statistic_dict())
+        else:
+            d = {}
+            for ds in avg_flow_statistics_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_avg_flow_statistic_dto_reverse(x), ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_avg_flow_statistic_dict() -> List[cluster_manager_pb2.AvgFlowStatisticDict]:
+        """
+        :return: an empty AvgFlowStatisticDict
+        """
+        return []
+
+    @staticmethod
+    def avg_flow_statistics_dict_to_dict(
+            avg_flow_statistics_dict: cluster_manager_pb2.AvgFlowStatisticDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param avg_flow_statistics_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = avg_flow_statistics_dict.key
+        dtos = []
+        for dto in avg_flow_statistics_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.avg_flow_statistic_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_agg_flow_statistic_dict(agg_flow_statistic_dict: Dict[str, List[AggFlowStatistic]]) \
+            -> List[cluster_manager_pb2.AggFlowStatisticDict]:
+        """
+        Converts a dict to list of AggFlowStatisticDict
+
+        :param agg_flow_statistic_dict: the dict to convert
+        :return: the converted objected
+        """
+        if agg_flow_statistic_dict is None:
+            return ClusterManagerUtil.get_empty_agg_flow_statistic_dict()
+        else:
+            agg_flow_statistic_dict_list = []
+            for k, v in agg_flow_statistic_dict.items():
+                agg_flow_statistic_dict_list.append(cluster_manager_pb2.AggFlowStatisticDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto(x), v))))
+            return agg_flow_statistic_dict_list
+
+    @staticmethod
+    def convert_agg_flow_statistic_dict_reverse(
+            agg_flow_statistics_dict: List[cluster_manager_pb2.AggFlowStatisticDict]) \
+            -> Dict[str, List[AggFlowStatistic]]:
+        """
+        Converts a list of AggFlowStatisticDict to a dict
+
+        :param agg_flow_statistics_dict: the list to convert
+        :return: the converted DTO
+        """
+        if agg_flow_statistics_dict is None:
+            return ClusterManagerUtil.convert_agg_flow_statistic_dict_reverse(
+                ClusterManagerUtil.get_empty_agg_flow_statistic_dict())
+        else:
+            d = {}
+            for ds in agg_flow_statistics_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(x), ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_agg_flow_statistic_dict() -> List[cluster_manager_pb2.AggFlowStatisticDict]:
+        """
+        :return: an empty AggFlowStatisticDict
+        """
+        return []
+
+    @staticmethod
+    def agg_flow_statistics_dict_to_dict(
+            agg_flow_statistics_dict: cluster_manager_pb2.AggFlowStatisticDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param agg_flow_statistics_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = agg_flow_statistics_dict.key
+        dtos = []
+        for dto in agg_flow_statistics_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.agg_flow_statistic_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_avg_port_statistic_dict(avg_port_statistic_dict: Dict[str, List[AvgPortStatistic]]) \
+            -> List[cluster_manager_pb2.AvgPortStatisticDict]:
+        """
+        Converts a dict to list of AvgPortStatisticDict
+
+        :param avg_port_statistic_dict: the dict to convert
+        :return: the converted objected
+        """
+        if avg_port_statistic_dict is None:
+            return ClusterManagerUtil.get_empty_avg_port_statistic_dict()
+        else:
+            avg_port_statistic_dict_list = []
+            for k, v in avg_port_statistic_dict.items():
+                avg_port_statistic_dict_list.append(cluster_manager_pb2.AvgPortStatisticDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto(x), v))))
+            return avg_port_statistic_dict_list
+
+    @staticmethod
+    def convert_avg_port_statistic_dict_reverse(
+            avg_port_statistics_dict: List[cluster_manager_pb2.AvgPortStatisticDict]) \
+            -> Dict[str, List[AvgPortStatistic]]:
+        """
+        Converts a list of AvgPortStatisticDict to a dict
+
+        :param avg_port_statistics_dict: the list to convert
+        :return: the converted DTO
+        """
+        if avg_port_statistics_dict is None:
+            return ClusterManagerUtil.convert_avg_port_statistic_dict_reverse(
+                ClusterManagerUtil.get_empty_avg_port_statistic_dict())
+        else:
+            d = {}
+            for ds in avg_port_statistics_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(x), ds.dto))
+            return d
+
+    @staticmethod
+    def get_empty_avg_port_statistic_dict() -> List[cluster_manager_pb2.AvgPortStatisticDict]:
+        """
+        :return: an empty AvgPortStatisticDict
+        """
+        return []
+
+    @staticmethod
+    def avg_port_statistics_dict_to_dict(
+            avg_port_statistics_dict: cluster_manager_pb2.AvgPortStatisticDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param avg_port_statistics_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = avg_port_statistics_dict.key
+        dtos = []
+        for dto in avg_port_statistics_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.avg_port_statistic_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def get_empty_emulation_metrics_time_series_dto() -> cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
+        """
+        :return: an empty EmulationMetricsTimeSeriesDTO
+        """
+        return cluster_manager_pb2.EmulationMetricsTimeSeriesDTO(
+            client_metrics=[ClusterManagerUtil.get_empty_client_population_metrics_dto()],
+            aggregated_docker_stats=[ClusterManagerUtil.get_empty_docker_stats_dto()],
+            docker_host_stats=ClusterManagerUtil.get_empty_docker_stats_dict(),
+            host_metrics=ClusterManagerUtil.get_empty_host_metrics_dict(),
+            aggregated_host_metrics=[ClusterManagerUtil.get_empty_host_metrics_dto()],
+            defender_actions=[ClusterManagerUtil.get_empty_emulation_defender_action_dto()],
+            attacker_actions=[ClusterManagerUtil.get_empty_emulation_attacker_action_dto()],
+            snort_ids_metrics=[ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto()],
+            emulation_id=-1,
+            ossec_host_alert_counters=ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dict(),
+            aggregated_ossec_host_alert_counters=[ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dto()],
+            openflow_flow_stats=[ClusterManagerUtil.get_empty_flow_statistic_dto()],
+            openflow_port_stats=[ClusterManagerUtil.get_empty_port_statistic_dto()],
+            avg_openflow_flow_stats=[ClusterManagerUtil.get_empty_avg_flow_statistic_dto()],
+            avg_openflow_port_stats=[ClusterManagerUtil.get_empty_avg_port_statistic_dto()],
+            openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_flow_statistic_dict(),
+            openflow_port_metrics_per_switch=ClusterManagerUtil.get_empty_port_statistic_dict(),
+            openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.get_empty_flow_statistic_dict(),
+            openflow_port_avg_metrics_per_switch=ClusterManagerUtil.get_empty_avg_port_statistic_dict(),
+            agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_avg_flow_statistic_dict(),
+            agg_openflow_flow_stats=[ClusterManagerUtil.get_empty_agg_flow_statistic_dto()]
+        )
+
+    @staticmethod
+    def convert_emulation_metrics_time_series_dto(time_series_dto: EmulationMetricsTimeSeries) \
+            -> cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
+        """
+        Converts a EmulationMetricsTimeSeries to a EmulationMetricsTimeSeriesDTO
+
+        :param time_series_dto: the dict to convert
+        :return: the converted objected
+        """
+        if time_series_dto is None:
+            return ClusterManagerUtil.get_empty_emulation_metrics_time_series_dto()
+        else:
+            return cluster_manager_pb2.EmulationMetricsTimeSeriesDTO(
+                client_metrics=list(map(lambda x: ClusterManagerUtil.convert_client_population_metrics_dto(x),
+                                        time_series_dto.client_metrics)),
+                aggregated_docker_stats=list(map(lambda x: ClusterManagerUtil.convert_docker_stats_dto(x),
+                                                 time_series_dto.aggregated_docker_stats)),
+                docker_host_stats=ClusterManagerUtil.convert_docker_stats_dict(time_series_dto.docker_host_stats),
+                host_metrics=ClusterManagerUtil.convert_host_metrics_dict(time_series_dto.host_metrics),
+                aggregated_host_metrics=list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dto(x),
+                                                 time_series_dto.aggregated_host_metrics)),
+                defender_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_defender_action_dto(x),
+                                          time_series_dto.defender_actions)),
+                attacker_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_attacker_action_dto(x),
+                                          time_series_dto.attacker_actions)),
+                snort_ids_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto(x),
+                                           time_series_dto.snort_ids_metrics)),
+                emulation_id=time_series_dto.emulation_env_config.id,
+                ossec_host_alert_counters=ClusterManagerUtil.convert_ossec_ids_alert_counters_dict(
+                    time_series_dto.ossec_host_alert_counters),
+                aggregated_ossec_host_alert_counters=list(
+                    map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto(x),
+                        time_series_dto.aggregated_ossec_host_alert_counters)),
+                openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_flow_statistics_dto(x),
+                                             time_series_dto.openflow_flow_stats)),
+                openflow_port_stats=list(map(lambda x: ClusterManagerUtil.convert_port_statistics_dto(x),
+                                             time_series_dto.openflow_port_stats)),
+                avg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_avg_flow_statistic_dto(x),
+                                                 time_series_dto.avg_openflow_flow_stats)),
+                avg_openflow_port_stats=list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto(x),
+                                                 time_series_dto.avg_openflow_port_stats)),
+                openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_flow_statistic_dict(
+                    time_series_dto.openflow_flow_metrics_per_switch),
+                openflow_port_metrics_per_switch=ClusterManagerUtil.convert_port_statistic_dict(
+                    time_series_dto.openflow_port_metrics_per_switch),
+                openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.convert_avg_flow_statistic_dict(
+                    time_series_dto.openflow_flow_avg_metrics_per_switch),
+                openflow_port_avg_metrics_per_switch=ClusterManagerUtil.convert_avg_port_statistic_dict(
+                    time_series_dto.openflow_port_avg_metrics_per_switch),
+                agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_agg_flow_statistic_dict(
+                    time_series_dto.agg_openflow_flow_metrics_per_switch),
+                agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto(x),
+                                                 time_series_dto.agg_openflow_flow_stats))
+            )
+
+    @staticmethod
+    def convert_emulation_metrics_time_series_dto_reverse(
+            time_series_dto: cluster_manager_pb2.EmulationMetricsTimeSeriesDTO) -> EmulationMetricsTimeSeries:
+        """
+        Converts a EmulationMetricsTimeSeriesDTO to a EmulationMetricsTimeSeries
+
+        :param time_series_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if time_series_dto is None:
+            return ClusterManagerUtil.convert_emulation_metrics_time_series_dto_reverse(
+                ClusterManagerUtil.get_empty_emulation_metrics_time_series_dto())
+        else:
+            emulation_config = MetastoreFacade.get_emulation(id=time_series_dto.emulation_id)
+            return EmulationMetricsTimeSeries(
+                client_metrics=list(map(lambda x: ClusterManagerUtil.convert_client_population_metrics_dto_reverse(x),
+                                        time_series_dto.client_metrics)),
+                aggregated_docker_stats=list(map(lambda x: ClusterManagerUtil.convert_docker_stats_dto_reverse(x),
+                                                 time_series_dto.aggregated_docker_stats)),
+                docker_host_stats=ClusterManagerUtil.convert_docker_stats_dict_reverse(
+                    time_series_dto.docker_host_stats),
+                host_metrics=ClusterManagerUtil.convert_host_metrics_dict_reverse(time_series_dto.host_metrics),
+                aggregated_host_metrics=list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dto_reverse(x),
+                                                 time_series_dto.aggregated_host_metrics)),
+                defender_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_defender_action_dto_reverse(x),
+                                          time_series_dto.defender_actions)),
+                attacker_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_attacker_action_dto_reverse(x),
+                                          time_series_dto.attacker_actions)),
+                snort_ids_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(x),
+                                           time_series_dto.snort_ids_metrics)),
+                emulation_env_config=emulation_config,
+                ossec_host_alert_counters=ClusterManagerUtil.convert_ossec_ids_alert_counters_dict_reverse(
+                    time_series_dto.ossec_host_alert_counters),
+                aggregated_ossec_host_alert_counters=list(
+                    map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto_reverse(x),
+                        time_series_dto.aggregated_ossec_host_alert_counters)),
+                openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_flow_statistic_dto_reverse(x),
+                                             time_series_dto.openflow_flow_stats)),
+                openflow_port_stats=list(map(lambda x: ClusterManagerUtil.convert_port_statistic_dto_reverse(x),
+                                             time_series_dto.openflow_port_stats)),
+                avg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_avg_flow_statistic_dto_reverse(x),
+                                                 time_series_dto.avg_openflow_flow_stats)),
+                avg_openflow_port_stats=list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(x),
+                                                 time_series_dto.avg_openflow_port_stats)),
+                openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_flow_statistic_dict_reverse(
+                    time_series_dto.openflow_flow_metrics_per_switch),
+                openflow_port_metrics_per_switch=ClusterManagerUtil.convert_port_statistic_dict_reverse(
+                    time_series_dto.openflow_port_metrics_per_switch),
+                openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.convert_avg_flow_statistic_dict_reverse(
+                    time_series_dto.openflow_flow_avg_metrics_per_switch),
+                openflow_port_avg_metrics_per_switch=ClusterManagerUtil.convert_avg_port_statistic_dict_reverse(
+                    time_series_dto.openflow_port_avg_metrics_per_switch),
+                agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_agg_flow_statistic_dict_reverse(
+                    time_series_dto.agg_openflow_flow_metrics_per_switch),
+                agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(x),
+                                                 time_series_dto.agg_openflow_flow_stats))
+            )
+
+    @staticmethod
+    def emulation_metrics_time_series_dto_to_dict(time_series_dto: cluster_manager_pb2.EmulationMetricsTimeSeriesDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a EmulationMetricsTimeSeriesDTO to a dict
+
+        :param time_series_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["client_metrics"] = list(map(lambda x: ClusterManagerUtil.client_population_metrics_dto_to_dict(x),
+                                       time_series_dto.client_metrics))
+        d["aggregated_docker_stats"] = list(map(lambda x: ClusterManagerUtil.docker_stats_dto_to_dict(x),
+                                                time_series_dto.aggregated_docker_stats))
+        d["docker_host_stats"] = list(map(lambda x: ClusterManagerUtil.docker_stats_dict_to_dict(x),
+                                          time_series_dto.docker_host_stats))
+        d["host_metrics"] = list(map(lambda x: ClusterManagerUtil.host_metrics_dict_to_dict(x),
+                                     time_series_dto.host_metrics))
+        d["aggregated_host_metrics"] = list(map(lambda x: ClusterManagerUtil.host_metrics_dto_to_dict(x),
+                                                time_series_dto.aggregated_host_metrics))
+        d["defender_actions"] = list(map(lambda x: ClusterManagerUtil.emulation_defender_action_dto_to_dict(x),
+                                         time_series_dto.defender_actions))
+        d["attacker_actions"] = list(map(lambda x: ClusterManagerUtil.emulation_attacker_action_dto_to_dict(x),
+                                         time_series_dto.attacker_actions))
+        d["snort_ids_metrics"] = list(map(lambda x: ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict(x),
+                                          time_series_dto.snort_ids_metrics))
+        d["emulation_id"] = time_series_dto.emulation_id
+        d["ossec_host_alert_counters"] = list(map(lambda x: ClusterManagerUtil.ossec_ids_alert_counters_dict_to_dict(x),
+                                                  time_series_dto.ossec_host_alert_counters))
+        d["aggregated_ossec_host_alert_counters"] = list(
+            map(lambda x: ClusterManagerUtil.ossec_ids_alert_counters_dto_to_dict(x),
+                time_series_dto.aggregated_ossec_host_alert_counters))
+        d["openflow_flow_stats"] = list(map(lambda x: ClusterManagerUtil.flow_statistic_dto_to_dict(x),
+                                            time_series_dto.openflow_flow_stats))
+        d["openflow_port_stats"] = list(map(lambda x: ClusterManagerUtil.port_statistic_dto_to_dict(x),
+                                            time_series_dto.openflow_port_stats))
+        d["avg_openflow_flow_stats"] = list(map(lambda x: ClusterManagerUtil.avg_flow_statistic_dto_to_dict(x),
+                                                time_series_dto.avg_openflow_flow_stats))
+        d["avg_openflow_port_stats"] = list(map(lambda x: ClusterManagerUtil.avg_port_statistic_dto_to_dict(x),
+                                                time_series_dto.avg_openflow_port_stats))
+        d["openflow_flow_metrics_per_switch"] = list(map(lambda x: ClusterManagerUtil.flow_statistics_dict_to_dict(x),
+                                                         time_series_dto.openflow_flow_metrics_per_switch))
+        d["openflow_port_metrics_per_switch"] = list(map(lambda x: ClusterManagerUtil.port_statistics_dict_to_dict(x),
+                                                         time_series_dto.openflow_port_metrics_per_switch))
+        d["openflow_flow_avg_metrics_per_switch"] = list(
+            map(lambda x: ClusterManagerUtil.avg_flow_statistics_dict_to_dict(x),
+                time_series_dto.openflow_flow_avg_metrics_per_switch))
+        d["openflow_port_avg_metrics_per_switch"] = list(
+            map(lambda x: ClusterManagerUtil.avg_port_statistics_dict_to_dict(x),
+                time_series_dto.openflow_port_avg_metrics_per_switch))
+        d["agg_openflow_flow_metrics_per_switch"] = list(
+            map(lambda x: ClusterManagerUtil.agg_flow_statistics_dict_to_dict(x),
+                time_series_dto.agg_openflow_flow_metrics_per_switch))
+        d["agg_openflow_flow_stats"] = list(map(lambda x: ClusterManagerUtil.agg_flow_statistic_dto_to_dict(x),
+                                                time_series_dto.agg_openflow_flow_stats))
+        return d

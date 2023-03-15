@@ -239,59 +239,59 @@ message EmulationMetricsTimeSeriesDTO {
   repeated AvgFlowStatisticDTO avg_openflow_flow_stats = 14;
   repeated AvgPortStatisticDTO avg_openflow_port_stats = 15;
   repeated FlowStatisticDict openflow_flow_metrics_per_switch = 16;
-  repeated PortStatisticsDict openflow_port_metrics_per_switch = 17;
+  repeated PortStatisticDict openflow_port_metrics_per_switch = 17;
   repeated AvgFlowStatisticDict openflow_flow_avg_metrics_per_switch = 18;
   repeated AvgPortStatisticDict openflow_port_avg_metrics_per_switch = 19;
   repeated AggFlowStatisticDict agg_openflow_flow_metrics_per_switch = 20;
-  repeated AggFlowStatisticDTO openflagg_openflow_flow_statsow_flow_stats = 21;
+  repeated AggFlowStatisticDTO agg_openflow_flow_stats = 21;
 }
 
 // Dict which maps a string key to a AvgPortStatisticDTO
 message AvgPortStatisticDict {
   string key = 1;
-  AvgPortStatisticDTO dto = 2;
+  repeated AvgPortStatisticDTO dtos = 2;
 }
 
 // Dict which maps a string key to an AggFlowStatisticDTO
 message AggFlowStatisticDict {
   string key = 1;
-  AggFlowStatisticDTO dto = 2;
+  repeated AggFlowStatisticDTO dtos = 2;
 }
 
 // Dict which maps a string key to an AvgFlowStatisticDTO
 message AvgFlowStatisticDict {
   string key = 1;
-  AvgFlowStatisticDTO dto = 2;
+  repeated AvgFlowStatisticDTO dtos = 2;
 }
 
 // Dict which maps a string key to a PortStatistic
-message PortStatisticsDict {
+message PortStatisticDict {
   string key = 1;
-  PortStatisticDTO dto = 2;
+  repeated PortStatisticDTO dtos = 2;
 }
 
 // Dict which maps a string key to a FlowStatisticDTO
 message FlowStatisticDict {
   string key = 1;
-  FlowStatisticDTO dto = 2;
+  repeated FlowStatisticDTO dtos = 2;
 }
 
 // Dict which maps a string key to a OSSECIdsAlertCountersDTO
 message OSSECIdsAlertCountersDict {
   string key = 1;
-  OSSECIdsAlertCountersDTO dto = 2;
+  repeated OSSECIdsAlertCountersDTO dtos = 2;
 }
 
 // Dict which maps a string key to a HostMetricsDTO
 message HostMetricsDict {
   string key = 1;
-  HostMetricsDTO dto = 2;
+  repeated HostMetricsDTO dtos = 2;
 }
 
 // Dict which maps a string key to a DockerStatsDTO
 message DockerStatsDict {
   string key = 1;
-  DockerStatsDTO dto = 2;
+  repeated DockerStatsDTO dtos = 2;
 }
 
 // DTO with data about avg flow statistics

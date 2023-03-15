@@ -4284,3 +4284,24 @@ class ClusterController:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_cluster_manager_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
+
+    @staticmethod
+    def get_execution_time_series_data(ip: str, port: int, emulation: str, ip_first_octet: int, minutes: int) \
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
+        """
+        Sends a request to get time series data of a number of minutes of a given execution
+
+        :param ip: the ip of the node where to start the containers
+        :param port: the port of the cluster manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+        :param minutes: the number of minutes of data to get in the time series
+        :return: The time series data dto
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            time_series_data_dto = csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data(
+                stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, minutes=minutes
+            )
+            return time_series_data_dto
