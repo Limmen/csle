@@ -4437,7 +4437,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return ClusterManagerUtil.get_empty_emulation_metrics_time_series_dto()
         else:
             time_series = ReadEmulationStatisticsUtil.read_all(emulation_env_config=execution.emulation_env_config,
-                                                               time_window_minutes=request.minutes).to_dict()
+                                                               time_window_minutes=request.minutes,
+                                                               logger=logging.getLogger())
             return ClusterManagerUtil.convert_emulation_metrics_time_series_dto(time_series_dto=time_series)
 
 

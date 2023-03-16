@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import time
 import datetime
@@ -24,7 +25,7 @@ from csle_common.logging.log import Logger
 class ReadEmulationStatisticsUtil:
 
     @staticmethod
-    def read_all(emulation_env_config: EmulationEnvConfig, time_window_minutes: int = 100) \
+    def read_all(emulation_env_config: EmulationEnvConfig, logger: logging.Logger, time_window_minutes: int = 100) \
             -> EmulationMetricsTimeSeries:
         """
         Reads all time series data from the kafka log
@@ -89,7 +90,7 @@ class ReadEmulationStatisticsUtil:
                        collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME
                        ]
-
+        logger.info(f"Reading time-series data for the last {time_window_minutes} from topics: {topic_names}")
         start_consume_ts = time.time()
         kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
@@ -122,8 +123,7 @@ class ReadEmulationStatisticsUtil:
                 num_msg += 1
                 if msg.error():
                     if msg.error().code() == KafkaError._PARTITION_EOF:
-                        Logger.__call__().get_logger.warning(
-                            f"reached end of partition: {msg.topic(), msg.partition(), msg.offset()}")
+                        logger.warning(f"reached end of partition: {msg.topic(), msg.partition(), msg.offset()}")
                     elif msg.error():
                         raise KafkaException(msg.error())
                 else:

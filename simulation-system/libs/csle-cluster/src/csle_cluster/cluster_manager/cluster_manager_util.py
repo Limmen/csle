@@ -1,6 +1,5 @@
 from typing import Dict, Any, List, Tuple, Union
 import logging
-import subprocess
 from requests import get
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -2491,14 +2490,14 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dto()
         else:
             return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
-                level_alerts=ossec_ids_alert_counters.level_alerts,
-                group_alerts=ossec_ids_alert_counters.group_alerts,
-                severe_alerts=ossec_ids_alert_counters.severe_alerts,
-                warning_alerts=ossec_ids_alert_counters.warning_alerts,
-                total_alerts=ossec_ids_alert_counters.total_alerts,
-                alerts_weighted_by_level=ossec_ids_alert_counters.alerts_weighted_by_level,
+                level_alerts=list(map(lambda x: int(x), ossec_ids_alert_counters.level_alerts)),
+                group_alerts=list(map(lambda x: int(x), ossec_ids_alert_counters.group_alerts)),
+                severe_alerts=int(ossec_ids_alert_counters.severe_alerts),
+                warning_alerts=int(ossec_ids_alert_counters.warning_alerts),
+                total_alerts=int(ossec_ids_alert_counters.total_alerts),
+                alerts_weighted_by_level=float(ossec_ids_alert_counters.alerts_weighted_by_level),
                 ip=ossec_ids_alert_counters.ip,
-                alerts_weighted_btsy_level=ossec_ids_alert_counters.ts)
+                ts=float(ossec_ids_alert_counters.ts))
 
     @staticmethod
     def convert_ossec_ids_alert_counters_dto_reverse(
@@ -3099,11 +3098,11 @@ class ClusterManagerUtil:
         if ossec_ids_alert_counters_dict is None:
             return ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dict()
         else:
-            host_metrics_dict_list = []
+            ossec_ids_alert_counters_dict_list = []
             for k, v in ossec_ids_alert_counters_dict.items():
-                host_metrics_dict_list.append(cluster_manager_pb2.HostMetricsDict(
+                ossec_ids_alert_counters_dict_list.append(cluster_manager_pb2.OSSECIdsAlertCountersDict(
                     key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto(x), v))))
-            return host_metrics_dict_list
+            return ossec_ids_alert_counters_dict_list
 
     @staticmethod
     def convert_ossec_ids_alert_counters_dict_reverse(

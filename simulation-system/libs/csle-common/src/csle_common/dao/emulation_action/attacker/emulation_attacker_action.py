@@ -136,14 +136,14 @@ class EmulationAttackerAction:
         d = {}
         d["id"] = self.id
         d["name"] = self.name
-        d["cmds"] = self.cmds
+        d["cmds"] = list(self.cmds)
         d["type"] = self.type
         d["descr"] = self.descr
-        d["ips"] = self.ips
+        d["ips"] = list(self.ips)
         d["index"] = self.index
         d["action_outcome"] = self.action_outcome
         d["vulnerability"] = self.vulnerability
-        d["alt_cmds"] = self.alt_cmds
+        d["alt_cmds"] = list(self.alt_cmds)
         d["backdoor"] = self.backdoor
         d["execution_time"] = self.execution_time
         d["ts"] = self.ts

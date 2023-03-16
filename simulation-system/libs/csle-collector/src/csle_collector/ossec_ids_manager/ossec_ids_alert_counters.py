@@ -20,8 +20,8 @@ class OSSECIdsAlertCounters:
         self.warning_alerts = 0
         self.total_alerts = 0
         self.alerts_weighted_by_level = 0
-        self.ip = None
-        self.ts = None
+        self.ip = ""
+        self.ts = 0.0
 
     def add(self, alert_counters: "OSSECIdsAlertCounters") -> None:
         """
@@ -204,8 +204,8 @@ class OSSECIdsAlertCounters:
         d = {}
         d["ip"] = self.ip
         d["ts"] = self.ts
-        d["group_alerts"] = self.group_alerts
-        d["level_alerts"] = self.level_alerts
+        d["group_alerts"] = list(self.group_alerts)
+        d["level_alerts"] = list(self.level_alerts)
         d["total_alerts"] = self.total_alerts
         d["warning_alerts"] = self.warning_alerts
         d["severe_alerts"] = self.severe_alerts

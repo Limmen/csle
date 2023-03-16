@@ -6,7 +6,6 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
-from csle_common.util.read_emulation_statistics_util import ReadEmulationStatisticsUtil
 from csle_common.util.general_util import GeneralUtil
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 import csle_rest_api.constants.constants as api_constants
@@ -220,7 +219,7 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
             for node in config.cluster_config.cluster_nodes:
                 ClusterController.clean_execution(
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                    ip_first_octet=execution.ip_first_octet)
+                    ip_first_octet=execution.ip_first_octet, emulation=emulation.name)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 
@@ -251,8 +250,13 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
     if execution is None:
         time_series = None
     else:
-        time_series = ReadEmulationStatisticsUtil.read_all(emulation_env_config=execution.emulation_env_config,
-                                                           time_window_minutes=minutes).to_dict()
+        time_series = ClusterController.get_execution_time_series_data(
+            ip=execution.emulation_env_config.kafka_config.container.physical_host_ip,
+            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=minutes,
+            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name
+        )
+        print(time_series.host_metrics)
+        time_series = time_series.to_dict()
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

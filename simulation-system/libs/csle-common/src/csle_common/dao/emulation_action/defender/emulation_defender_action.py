@@ -70,13 +70,13 @@ class EmulationDefenderAction:
         d = {}
         d["id"] = self.id
         d["name"] = self.name
-        d["cmds"] = self.cmds
+        d["cmds"] = list(self.cmds)
         d["type"] = self.type
         d["descr"] = self.descr
-        d["ips"] = self.ips
+        d["ips"] = list(self.ips)
         d["index"] = self.index
         d["action_outcome"] = self.action_outcome
-        d["alt_cmds"] = self.alt_cmds
+        d["alt_cmds"] = list(self.alt_cmds)
         d["execution_time"] = self.execution_time
         d["ts"] = self.ts
         return d

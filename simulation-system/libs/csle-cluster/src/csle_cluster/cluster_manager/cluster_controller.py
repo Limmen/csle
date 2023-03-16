@@ -6,6 +6,7 @@ from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
+from csle_common.dao.emulation_config.emulation_metrics_time_series import EmulationMetricsTimeSeries
 import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
@@ -4287,7 +4288,7 @@ class ClusterController:
 
     @staticmethod
     def get_execution_time_series_data(ip: str, port: int, emulation: str, ip_first_octet: int, minutes: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
+            -> EmulationMetricsTimeSeries:
         """
         Sends a request to get time series data of a number of minutes of a given execution
 
@@ -4304,4 +4305,5 @@ class ClusterController:
             time_series_data_dto = csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, minutes=minutes
             )
-            return time_series_data_dto
+            return ClusterManagerUtil.convert_emulation_metrics_time_series_dto_reverse(
+                time_series_dto=time_series_data_dto)
