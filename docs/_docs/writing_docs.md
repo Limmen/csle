@@ -13,12 +13,12 @@ There are three kinds of documentation in CSLE:
    bundle exec Jekyll serve
    ```
   <p class="captionFig">
-  Listing 96: Command to generate the web documentation at <a href="https://limmen.dev/csle/">https://limmen.dev/csle/</a>.
+  Listing 118: Command to generate the web documentation at <a href="https://limmen.dev/csle/">https://limmen.dev/csle/</a>.
   </p>
 - Python API documentation. This documentation is generated automatically from code comments using `sphinx`. To generate the API documentation, run the command:
    ```bash
    simulation-system/libs/generate_docs.sh
    ```
   <p class="captionFig">
-   Listing 97: Command to generate the Python API documentation.
+   Listing 119: Command to generate the Python API documentation.
   </p>

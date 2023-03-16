@@ -24,5 +24,5 @@ cd metastore; make clean
 ```
 
 <p class="captionFig">
-Listing 65: Commands to uninstall CSLE.
+Listing 87: Commands to uninstall CSLE.
 </p>

@@ -17,7 +17,7 @@ To run the Python linter on the CSLE code base, execute the command:
 ```
 
 <p class="captionFig">
-Listing 102: Command to run the Python linter.
+Listing 124: Command to run the Python linter.
 </p>
 
 Alternatively, the following commands can be executed for the same effect as the command above:
@@ -30,7 +30,7 @@ flake8 examples/
 ```
 
 <p class="captionFig">
-Listing 103: Commands to run the Python linter.
+Listing 125: Commands to run the Python linter.
 </p>
 
 To run the Python static type checker, execute the command:
@@ -40,7 +40,7 @@ simulation-system/libs/type_checker.sh
 ```
 
 <p class="captionFig">
-Listing 104: Command to run the Python static type checker.
+Listing 126: Command to run the Python static type checker.
 </p>
 
 To run the JavaScript linter, run the commands:
@@ -51,5 +51,5 @@ cd management-system/csle-mgmt-webapp/; npm run lint:fix
 ```
 
 <p class="captionFig">
-Listing 105: Commands to run the JavaScript linter.
+Listing 127: Commands to run the JavaScript linter.
 </p>

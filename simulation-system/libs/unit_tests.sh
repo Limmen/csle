@@ -18,3 +18,7 @@ echo "Running unit tests for csle-system-identification"
 cd csle-system-identification; pytest; cd ../
 echo "Running unit tests for gym-csle-stopping-game"
 cd gym-csle-stopping-game; pytest; cd ../
+echo "Running unit tests for csle-cluster"
+cd csle-cluster; pytest; cd ../
+echo "Running unit tests for gym-csle-intrusion-response-game"
+cd gym-csle-intrusion-response-game; pytest; cd ../

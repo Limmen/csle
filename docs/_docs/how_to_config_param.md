@@ -12,12 +12,12 @@ To add a new configuration parameter, perform the following steps:
      csle/simulation-system/libs/csle-common/src/csle_common/dao/emulation_config/config.py
     ```
    <p class="captionFig">
-   Listing 143: Python file that manages the CSLE configuration.
+   Listing 166: Python file that manages the CSLE configuration.
    </p>
 3. Add the new parameter to an appropriate class in the following file (add a new class if needed):
     ```bash
       csle/simulation-system/libs/csle-common/src/csle_common/constants/constants.py
     ```
    <p class="captionFig">
-   Listing 144: Python file with constants in `csle-common`.
+   Listing 167: Python file with constants in `csle-common`.
    </p>

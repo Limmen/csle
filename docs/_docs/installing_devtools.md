@@ -15,7 +15,7 @@ pip install -q build
 ```
 
 <p class="captionFig">
-Listing 88: Command to install the Python build tool.
+Listing 110: Command to install the Python build tool.
 </p>
 
 The `twine` tool (a tool for publishing Python packages to PyPi) 
@@ -26,7 +26,7 @@ python3 -m pip install --upgrade twine
 ```
 
 <p class="captionFig">
-Listing 89: Command to install `twine`.
+Listing 111: Command to install `twine`.
 </p>
 
 The `flake8` Python linter can be installed by running the command:
@@ -36,7 +36,7 @@ python -m pip install flake8
 ```
 
 <p class="captionFig">
-Listing 90: Command to install `flake8`.
+Listing 112: Command to install `flake8`.
 </p>
 
 The `mypy` static type checker for Python can be installed by running the command:
@@ -46,7 +46,7 @@ The `mypy` static type checker for Python can be installed by running the comman
 ```
 
 <p class="captionFig">
-Listing 91: Command to install `mypy`.
+Listing 113: Command to install `mypy`.
 </p>
 
 The `pytest` and `mock` test libraries for Python can be installed by running the command:
@@ -56,7 +56,7 @@ pip install -U pytest mock pytest-mock pytest-cov
 ```
 
 <p class="captionFig">
-Listing 92: Command to install `pytest` and `mock`.
+Listing 114: Command to install `pytest` and `mock`.
 </p>
 
 Ruby and its bundler, which are used to generate the CSLE 
@@ -68,7 +68,7 @@ sudo gem install bundler
 ```
 
 <p class="captionFig">
-Listing 93: Commands to install Ruby and its bundler.
+Listing 115: Commands to install Ruby and its bundler.
 </p>
 
 The `sphinx` Python library for automatic generation of API documentation 
@@ -79,7 +79,7 @@ The `sphinx` Python library for automatic generation of API documentation can be
 ```
 
 <p class="captionFig">
-Listing 94: Commands to install `sphinx`.
+Listing 116: Commands to install `sphinx`.
 </p>
 
 Lastly, the `tox` Python library for automatic testing can be installed by running the command:
@@ -89,6 +89,6 @@ pip install tox
 ```
 
 <p class="captionFig">
-Listing 95: Command to install `tox`.
+Listing 117: Command to install `tox`.
 </p>
 

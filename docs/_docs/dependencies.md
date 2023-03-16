@@ -18,6 +18,9 @@ The Python dependencies are defined in the following files:
 - `csle/simulation-system/libs/csle-cli/requirements.txt`
 - `csle/simulation-system/libs/csle-cli/requirements_dev.txt`
 - `csle/simulation-system/libs/csle-cli/setup.cfg`
+- `csle/simulation-system/libs/csle-cluster/requirements.txt`
+- `csle/simulation-system/libs/csle-cluster/requirements_dev.txt`
+- `csle/simulation-system/libs/csle-cluster/setup.cfg`
 - `csle/simulation-system/libs/csle-collector/requirements.txt`
 - `csle/simulation-system/libs/csle-collector/requirements_dev.txt`
 - `csle/simulation-system/libs/csle-collector/setup.cfg`
@@ -39,6 +42,9 @@ The Python dependencies are defined in the following files:
 - `csle/simulation-system/libs/gym-csle-stopping-game/requirements.txt`
 - `csle/simulation-system/libs/gym-csle-stopping-game/requirements_dev.txt`
 - `csle/simulation-system/libs/gym-csle-stopping-game/setup.cfg`
+- `csle/simulation-system/libs/gym-csle-intrusion-response-game/requirements.txt`
+- `csle/simulation-system/libs/gym-csle-intrusion-response-game/requirements_dev.txt`
+- `csle/simulation-system/libs/gym-csle-intrusion-response-game/setup.cfg`
 
 These files need to be updated whenever a Python dependency is added or removed. 
 The dependency structure among the CSLE Python libraries is shown in Fig. 30.
