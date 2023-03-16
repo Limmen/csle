@@ -198,42 +198,54 @@ rather than the full configurations; the request is performed with `curl`.
 Table 20: REST API resources (1/4).
 </p>
 
-| *Resource*                                                           | *Method*        |
-|----------------------------------------------------------------------|-----------------|
-| `/emulation-traces?token=<token>`                                    | `GET`, `DELETE` |
-| `/emulation-traces?ids=true&token=<token>`                           | `GET`, `DELETE` |
-| `/emulation-traces/<trace_id>?token=<token>`                         | `GET`, `DELETE` |
-| `/simulation-traces?token=<token>`                                   | `GET`, `DELETE` |
-| `/simulation-traces?ids=true&token=<token>`                          | `GET`, `DELETE` |
-| `/simulation-traces/<trace_id>?token=<token>`                        | `GET`, `DELETE` |
-| `/emulation-simulation-traces?token=<token>`                         | `GET`, `DELETE` |
-| `/emulation-simulation-traces?ids=true&token=<token>`                | `GET`, `DELETE` |
-| `/emulation-simulation-traces/<trace_id>?token=<token>`              | `GET`, `DELETE` |
-| `/images?token=<token>`                                              | `GET`           |
-| `/file?token=<token>`                                                | `POST`          |
-| `/experiments?token=<token>`                                         | `GET`, `DELETE` |
-| `/experiments?ids=true&token=<token>`                                | `GET`, `DELETE` |
-| `/experiments/<trace_id>?token=<token>`                              | `GET`, `DELETE` |
-| `/sdn-controllers?token=<token>`                                     | `GET`, `DELETE` |
-| `/sdn-controllers?ids=true&token=<token>`                            | `GET`, `DELETE` |
-| `/emulation-statistics?token=<token>`                                | `GET`, `DELETE` |
-| `/emulation-statistics?ids=true&token=<token>`                       | `GET`, `DELETE` |
-| `/emulation-statistics/<trace_id>?token=<token>`                     | `GET`, `DELETE` |
-| `/gaussian-mixture-system-models?token=<token>`                      | `GET`, `DELETE` |
-| `/gaussian-mixture-system-models?ids=true&token=<token>`             | `GET`, `DELETE` |
-| `/gaussian-mixture-system-models/<trace_id>?token=<token>`           | `GET`, `DELETE` |
-| `/empirical-system-models?token=<token>`                             | `GET`, `DELETE` |
-| `/empirical-system-models?ids=true&token=<token>`                    | `GET`, `DELETE` |
-| `/empirical-system-models/<trace_id>?token=<token>`                  | `GET`, `DELETE` |
-| `/gp-system-models?token=<token>`                                    | `GET`, `DELETE` |
-| `/gp-system-models?ids=true&token=<token>`                           | `GET`, `DELETE` |
-| `/gp-system-models/<model_id>?token=<token>`                         | `GET`, `DELETE` |
-| `/system-models?ids=true&token=<token>`                              | `GET`           |
-| `/login`                                                             | `POST`          |
-| `/traces-datasets?token=<token>`                                     | `GET`, `DELETE` |
-| `/traces-datasets?ids=true&token=<token>`                            | `GET`, `DELETE` |
-| `/traces-datasets/<traces_datasets_id>?token=<token>`                | `GET`, `DELETE` |
-| `/traces-datasets/<traces_datasets_id>?token=<token>&download=true`  | `GET`           |
+| *Resource*                                                          | *Method*        |
+|---------------------------------------------------------------------|-----------------|
+| `/emulation-traces?token=<token>`                                   | `GET`, `DELETE` |
+| `/emulation-traces?ids=true&token=<token>`                          | `GET`, `DELETE` |
+| `/emulation-traces/<trace_id>?token=<token>`                        | `GET`, `DELETE` |
+| `/simulation-traces?token=<token>`                                  | `GET`, `DELETE` |
+| `/simulation-traces?ids=true&token=<token>`                         | `GET`, `DELETE` |
+| `/simulation-traces/<trace_id>?token=<token>`                       | `GET`, `DELETE` |
+| `/emulation-simulation-traces?token=<token>`                        | `GET`, `DELETE` |
+| `/emulation-simulation-traces?ids=true&token=<token>`               | `GET`, `DELETE` |
+| `/emulation-simulation-traces/<trace_id>?token=<token>`             | `GET`, `DELETE` |
+| `/images?token=<token>`                                             | `GET`           |
+| `/file?token=<token>`                                               | `POST`          |
+| `/experiments?token=<token>`                                        | `GET`, `DELETE` |
+| `/experiments?ids=true&token=<token>`                               | `GET`, `DELETE` |
+| `/experiments/<trace_id>?token=<token>`                             | `GET`, `DELETE` |
+| `/sdn-controllers?token=<token>`                                    | `GET`, `DELETE` |
+| `/sdn-controllers?ids=true&token=<token>`                           | `GET`, `DELETE` |
+| `/emulation-statistics?token=<token>`                               | `GET`, `DELETE` |
+| `/emulation-statistics?ids=true&token=<token>`                      | `GET`, `DELETE` |
+| `/emulation-statistics/<trace_id>?token=<token>`                    | `GET`, `DELETE` |
+| `/gaussian-mixture-system-models?token=<token>`                     | `GET`, `DELETE` |
+| `/gaussian-mixture-system-models?ids=true&token=<token>`            | `GET`, `DELETE` |
+| `/gaussian-mixture-system-models/<trace_id>?token=<token>`          | `GET`, `DELETE` |
+| `/empirical-system-models?token=<token>`                            | `GET`, `DELETE` |
+| `/empirical-system-models?ids=true&token=<token>`                   | `GET`, `DELETE` |
+| `/empirical-system-models/<trace_id>?token=<token>`                 | `GET`, `DELETE` |
+| `/gp-system-models?token=<token>`                                   | `GET`, `DELETE` |
+| `/gp-system-models?ids=true&token=<token>`                          | `GET`, `DELETE` |
+| `/gp-system-models/<model_id>?token=<token>`                        | `GET`, `DELETE` |
+| `/system-models?ids=true&token=<token>`                             | `GET`           |
+| `/login`                                                            | `POST`          |
+| `/traces-datasets?token=<token>`                                    | `GET`, `DELETE` |
+| `/traces-datasets?ids=true&token=<token>`                           | `GET`, `DELETE` |
+| `/traces-datasets/<traces_datasets_id>?token=<token>`               | `GET`, `DELETE` |
+| `/traces-datasets/<traces_datasets_id>?token=<token>&download=true` | `GET`           |
+| `/server-cluster?token=<token>`                                     | `GET`           |
+| `/pgadmin?token=<token>`                                            | `GET`, `POST`   |
+| `/postgresql?token=<token>`                                         | `GET`, `POST`   |
+| `/docker?token=<token>`                                             | `GET`, `POST`   |
+| `/nginx?token=<token>`                                              | `GET`, `POST`   |
+| `/flask?token=<token>`                                              | `GET`, `POST`   |
+| `/clusterstatuses?token=<token>`                                    | `GET`           |
+| `/logs/nginx?token=<token>`                                         | `POST`          |
+| `/logs/postgresql?token=<token>`                                    | `POST`          |
+| `/logs/docker?token=<token>`                                        | `POST`          |
+| `/logs/flask?token=<token>`                                         | `POST`          |
+| `/logs/clustermanager?token=<token>`                                | `POST`          |
 
 <p class="captionFig">
 Table 21: REST API resources (2/4).
@@ -311,7 +323,6 @@ Table 22: REST API resources (3/4).
 | `/logs/elk-stack?token=<token>&emulation=<em>&executionid=<exec_id>`         | `POST`       |
 | `/logs/ryu-controller?token=<token>&emulation=<em>&executionid=<exec_id>`    | `POST`       |
 | `/config?token=<token>`                                                      | `GET`, `PUT` |
-| `/config/host-terminal-allowed`                                              | `GET`        |
 | `/config/registration-allowed`                                               | `GET`        |
 | `/version`                                                                   | `GET`        |
 | `/about-page`                                                                | `GET`        |
@@ -334,9 +345,7 @@ Table 22: REST API resources (3/4).
 | `/system-models-page`                                                        | `GET`        |
 | `/traces-page`                                                               | `GET`        |
 | `/training-page`                                                             | `GET`        |
-| `/host-terminal-page`                                                        | `GET`        |
 | `/container-terminal-page`                                                   | `GET`        |
-| `/host-terminal?token=<token>`                                               | `Websockets` |
 | `/container-terminal?token=<token>`                                          | `Websockets` |
 
 

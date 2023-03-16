@@ -26,11 +26,17 @@ configuration, a simulation is defined by a *simulation configuration*, which in
 Table 18. Each simulation environment is implemented in Python and the configuration files are stored in the metastore.
 Simulations are typically based either on Markov decision processes or game-theoretic models.
 
-| Name                   | Description                                              |
-|------------------------|----------------------------------------------------------|
-| Optimal stopping game  | Zero-sum one-sided partially observed stochastic game.   |
-| Optimal stopping MDP   | MDP based on an optimal stopping formulation.            |
-| Optimal stopping POMDP | POMDP based on an optimal stopping formulation.          |
+| Name                                        | Description                                                           |
+|---------------------------------------------|-----------------------------------------------------------------------|
+| Optimal stopping game                       | Zero-sum one-sided partially observed stochastic game.                |
+| Optimal stopping MDP                        | MDP based on an optimal stopping formulation.                         |
+| Optimal stopping POMDP                      | POMDP based on an optimal stopping formulation.                       |
+| Local intrusion response game               | Zero-sum partially observed stochastic game with public observations. |
+| Local intrusion response POMDP attacker     | POMDP for the attacker in the local intrusion response game.          |
+| Local intrusion response POMDP defender     | POMDP for the defender in the local intrusion response game.          |
+| Workflow intrusion response game            | Zero-sum partially observed stochastic game with public observations. |
+| Workflow intrusion response POMDP attacker  | POMDP for the attacker in the workflow intrusion response game.       |
+| Workflow intrusion response POMDP defender  | POMDP for the defender in the workflow intrusion response game.       |
 
 <p class="captionFig">
 Table 17: Simulation environments.

@@ -815,7 +815,8 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            logger.info(f"Configuring filebeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring filebeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
+                        f"ips: {container.get_ips()}")
             csle_collector.host_manager.query_host_manager.config_filebeat(
                 stub=stub, log_files_paths=node_beats_config.log_files_paths,
                 kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
@@ -848,7 +849,8 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            logger.info(f"Configuring packetbeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring packetbeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
+                        f"ips: {container.get_ips()}")
             csle_collector.host_manager.query_host_manager.config_packetbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -876,7 +878,8 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            logger.info(f"Configuring metricbeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring metricbeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
+                        f"ips: {container.get_ips()}")
             csle_collector.host_manager.query_host_manager.config_metricbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
@@ -908,7 +911,8 @@ class HostController:
                 f'{container.docker_gw_bridge_ip}:'
                 f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-            logger.info(f"Configuring heartbeat on {container.docker_gw_bridge_ip}.")
+            logger.info(f"Configuring heartbeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
+                        f"ips: {container.get_ips()}")
             csle_collector.host_manager.query_host_manager.config_heartbeat(
                 stub=stub, kibana_ip=emulation_env_config.elk_config.container.get_ips()[0],
                 kibana_port=emulation_env_config.elk_config.kibana_port,
