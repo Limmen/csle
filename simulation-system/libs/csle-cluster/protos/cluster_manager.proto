@@ -227,7 +227,7 @@ message EmulationMetricsTimeSeriesDTO {
   repeated DockerStatsDTO aggregated_docker_stats = 2;
   repeated DockerStatsDict docker_host_stats = 3;
   repeated HostMetricsDict host_metrics = 4;
-  repeated HostMetricsDTO aggregated_host_metrics = 5;
+  repeated HostMetricsDataDTO aggregated_host_metrics = 5;
   repeated EmulationDefenderActionDTO defender_actions = 6;
   repeated EmulationAttackerActionDTO attacker_actions = 7;
   repeated SnortIdsAlertCountersDTO snort_ids_metrics = 8;
@@ -282,10 +282,10 @@ message OSSECIdsAlertCountersDict {
   repeated OSSECIdsAlertCountersDTO dtos = 2;
 }
 
-// Dict which maps a string key to a HostMetricsDTO
+// Dict which maps a string key to a HostMetricsDataDTO
 message HostMetricsDict {
   string key = 1;
-  repeated HostMetricsDTO dtos = 2;
+  repeated HostMetricsDataDTO dtos = 2;
 }
 
 // Dict which maps a string key to a DockerStatsDTO
@@ -431,7 +431,7 @@ message EmulationDefenderActionDTO {
 }
 
 // DTO with host metrics
-message HostMetricsDTO {
+message HostMetricsDataDTO {
   int32 num_logged_in_users = 1;
   int32 num_failed_login_attempts = 2;
   int32 num_open_connections = 3;

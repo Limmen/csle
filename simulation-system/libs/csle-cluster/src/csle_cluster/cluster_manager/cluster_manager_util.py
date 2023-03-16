@@ -922,7 +922,8 @@ class ClusterManagerUtil:
         :return: the converted DTO
         """
         if snort_ids_managers_info_dto is None:
-            return ClusterManagerUtil.convert_snort_info_dto_reverse(SnortIdsManagersInfo.get_empty_dto())
+            return ClusterManagerUtil.convert_snort_info_dto_reverse(
+                ClusterManagerUtil.get_empty_snort_managers_info_dto())
         return SnortIdsManagersInfo(
             ips=snort_ids_managers_info_dto.ips,
             ports=snort_ids_managers_info_dto.ports,
@@ -2189,9 +2190,9 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_host_metrics_dto(host_metrics: HostMetrics) -> cluster_manager_pb2.HostMetricsDTO:
+    def convert_host_metrics_dto(host_metrics: HostMetrics) -> cluster_manager_pb2.HostMetricsDataDTO:
         """
-        Converts a HostMetrics object to a HostMetricsDTO
+        Converts a HostMetrics object to a HostMetricsDataDTO
 
         :param host_metrics: the object to convert
         :return: the converted objected
@@ -2199,7 +2200,7 @@ class ClusterManagerUtil:
         if host_metrics is None:
             return ClusterManagerUtil.get_empty_host_metrics_dto()
         else:
-            return cluster_manager_pb2.HostMetricsDTO(
+            return cluster_manager_pb2.HostMetricsDataDTO(
                 num_logged_in_users=host_metrics.num_logged_in_users,
                 num_failed_login_attempts=host_metrics.num_failed_login_attempts,
                 num_open_connections=host_metrics.num_open_connections,
@@ -2207,9 +2208,9 @@ class ClusterManagerUtil:
                 num_users=host_metrics.num_users, ip=host_metrics.ip, ts=host_metrics.ts)
 
     @staticmethod
-    def convert_host_metrics_dto_reverse(host_metrics_dto: cluster_manager_pb2.HostMetricsDTO) -> HostMetrics:
+    def convert_host_metrics_dto_reverse(host_metrics_dto: cluster_manager_pb2.HostMetricsDataDTO) -> HostMetrics:
         """
-        Converts a HostMetricsDTO to a HostMetrics
+        Converts a HostMetricsDataDTO to a HostMetrics
 
         :param host_metrics_dto: the DTO to convert
         :return: the converted DTO
@@ -2225,18 +2226,18 @@ class ClusterManagerUtil:
                 num_users=host_metrics_dto.num_users, ip=host_metrics_dto.ip, ts=host_metrics_dto.ts)
 
     @staticmethod
-    def get_empty_host_metrics_dto() -> cluster_manager_pb2.HostMetricsDTO:
+    def get_empty_host_metrics_dto() -> cluster_manager_pb2.HostMetricsDataDTO:
         """
-        :return: an empty HostMetricsDTO
+        :return: an empty HostMetricsDataDTO
         """
-        return cluster_manager_pb2.HostMetricsDTO(num_logged_in_users=0, num_failed_login_attempts=0,
+        return cluster_manager_pb2.HostMetricsDataDTO(num_logged_in_users=0, num_failed_login_attempts=0,
                                                   num_open_connections=0, num_login_events=0, num_processes=0,
                                                   num_users=0, ip="", ts=0.0)
 
     @staticmethod
-    def host_metrics_dto_to_dict(host_metrics_dto: cluster_manager_pb2.HostMetricsDTO) -> Dict[str, Any]:
+    def host_metrics_dto_to_dict(host_metrics_dto: cluster_manager_pb2.HostMetricsDataDTO) -> Dict[str, Any]:
         """
-        Converts a HostMetricsDTO to a dict
+        Converts a HostMetricsDataDTO to a dict
 
         :param host_metrics_dto: the dto to convert
         :return: a dict representation of the DTO
@@ -2451,7 +2452,7 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_alert_counters_dto() -> cluster_manager_pb2.SnortIdsAlertCountersDTO:
         """
-        :return: an empty HostMetricsDTO
+        :return: an empty SnortIdsAlertCountersDTO
         """
         return cluster_manager_pb2.SnortIdsAlertCountersDTO(
             priority_alerts=[], class_alerts=[], severe_alerts=0, warning_alerts=0, alerts_weighted_by_priority=0.0,
@@ -2526,7 +2527,7 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ossec_ids_alert_counters_dto() -> cluster_manager_pb2.OSSECIdsAlertCountersDTO:
         """
-        :return: an empty HostMetricsDTO
+        :return: an empty OSSECIdsAlertCountersDTO
         """
         return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
             level_alerts=[], group_alerts=[], severe_alerts=0, warning_alerts=0, total_alerts=0,
