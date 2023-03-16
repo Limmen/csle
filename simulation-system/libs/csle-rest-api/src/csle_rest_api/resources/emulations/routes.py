@@ -255,7 +255,6 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=minutes,
             ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name
         )
-        print(time_series.host_metrics)
         time_series = time_series.to_dict()
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

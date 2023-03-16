@@ -278,7 +278,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
                             os=constants.CONTAINER_OS.SSH_1_OS,
                             ips_and_networks=[
-                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
@@ -287,7 +287,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      interface=constants.NETWORKING.ETH0,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
-                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2",
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.78",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_3",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
@@ -297,7 +297,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.2",
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.78",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
@@ -1187,7 +1187,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
         router_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
         ids_enabled=False, vulnerable_nodes=[
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
@@ -1201,7 +1201,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
         agent_reachable_nodes=[
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4"
@@ -1305,7 +1305,7 @@ def default_flags_config(network_id: int) -> FlagsConfig:
                             dir=f"/{constants.COMMANDS.TMP_DIR}/",
                             id=3, requires_root=True, score=1
                         )]),
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                         flags=[Flag(
                             name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}2",
                             path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}2"
@@ -1401,7 +1401,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                            f"{constants.CONTAINER_IMAGES.SSH_1}_1-{constants.CSLE.LEVEL}{level}",
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
-                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                  NodeNetworkConfig(
                      interface=constants.NETWORKING.ETH0,
                      limit_packets_queue=30000, packet_delay_ms=0.1,
@@ -1416,7 +1416,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
                  )),
-                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2",
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.78",
                  NodeNetworkConfig(
                      interface=constants.NETWORKING.ETH1,
                      limit_packets_queue=30000, packet_delay_ms=0.1,
@@ -2233,7 +2233,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         hostname=f"{constants.CONTAINER_IMAGES.SSH_1}_1",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
-                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
@@ -2247,7 +2247,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                 )
             ),
             DefaultNetworkFirewallConfig(
-                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2",
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.78",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
@@ -2276,7 +2276,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.2",
+                   f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.78",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
@@ -3757,7 +3757,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
                           traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
                           traffic_manager_log_dir="/", traffic_manager_max_workers=10),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
@@ -4151,7 +4151,7 @@ def default_users_config(network_id: int) -> UsersConfig:
             User(username="admin", pw="admin1235912", root=True),
             User(username="jessica", pw="water", root=False)
         ]),
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78", users=[
             User(username="admin", pw="test32121", root=False),
             User(username="user1", pw="123123", root=True)
         ]),
@@ -4264,7 +4264,7 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
             protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME),
         NodeVulnerabilityConfig(
             name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
             vuln_type=VulnType.WEAK_PW,
             credentials=[Credential(username="puppet", pw="puppet", root=True,
                                     service=constants.SSH.SERVICE_NAME,
@@ -4481,7 +4481,7 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ]
         ),
         NodeServicesConfig(
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
@@ -5157,7 +5157,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
-        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                         log_files_paths=["/*.log",
                                          "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
@@ -5735,7 +5735,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.191",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.2",
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.78",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.178",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -5821,7 +5821,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.191",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.2",
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.78",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.178",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
