@@ -3059,7 +3059,7 @@ class ClusterManagerUtil:
         else:
             d = {}
             for ds in host_metrics_dict:
-                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dict_reverse(x), ds.dtos))
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dto_reverse(x), ds.dtos))
             return d
 
     @staticmethod
