@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   csle_rest_api.web_sockets.host_terminal
+   csle_rest_api.web_sockets.container_terminal
 
 Module contents
 ---------------

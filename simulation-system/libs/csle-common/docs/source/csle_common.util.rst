@@ -4,6 +4,14 @@ csle\_common.util package
 Submodules
 ----------
 
+csle\_common.util.cluster\_util module
+--------------------------------------
+
+.. automodule:: csle_common.util.cluster_util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.util.connection\_util module
 -----------------------------------------
 
@@ -68,10 +76,26 @@ csle\_common.util.grpc\_util module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.util.import\_util module
+-------------------------------------
+
+.. automodule:: csle_common.util.import_util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.util.management\_util module
 -----------------------------------------
 
 .. automodule:: csle_common.util.management_util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.util.plotting\_util module
+---------------------------------------
+
+.. automodule:: csle_common.util.plotting_util
    :members:
    :undoc-members:
    :show-inheritance:

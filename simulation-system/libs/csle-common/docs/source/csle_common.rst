@@ -13,6 +13,7 @@ Subpackages
    csle_common.dao
    csle_common.logging
    csle_common.metastore
+   csle_common.models
    csle_common.tunneling
    csle_common.util
 

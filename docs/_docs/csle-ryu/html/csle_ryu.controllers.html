@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_ryu.controllers package &mdash; csle-ryu 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -41,9 +40,9 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_ryu.constants.html">csle_ryu.constants package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_ryu.controllers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#csle-ryu-controllers-learning-switch-controller-module">csle_ryu.controllers.learning_switch_controller module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#csle-ryu-controllers-learning-switch-stp-controller-module">csle_ryu.controllers.learning_switch_stp_controller module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers.learning_switch_controller">csle_ryu.controllers.learning_switch_controller module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers.learning_switch_stp_controller">csle_ryu.controllers.learning_switch_stp_controller module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_ryu.dao.html">csle_ryu.dao package</a></li>
@@ -74,21 +73,130 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="csle-ryu-controllers-package">
+  <div class="section" id="csle-ryu-controllers-package">
 <h1>csle_ryu.controllers package<a class="headerlink" href="#csle-ryu-controllers-package" title="Permalink to this headline"></a></h1>
-<section id="submodules">
+<div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
-</section>
-<section id="csle-ryu-controllers-learning-switch-controller-module">
-<h2>csle_ryu.controllers.learning_switch_controller module<a class="headerlink" href="#csle-ryu-controllers-learning-switch-controller-module" title="Permalink to this headline"></a></h2>
-</section>
-<section id="csle-ryu-controllers-learning-switch-stp-controller-module">
-<h2>csle_ryu.controllers.learning_switch_stp_controller module<a class="headerlink" href="#csle-ryu-controllers-learning-switch-stp-controller-module" title="Permalink to this headline"></a></h2>
-</section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
-</section>
-</section>
+</div>
+<div class="section" id="module-csle_ryu.controllers.learning_switch_controller">
+<span id="csle-ryu-controllers-learning-switch-controller-module"></span><h2>csle_ryu.controllers.learning_switch_controller module<a class="headerlink" href="#module-csle_ryu.controllers.learning_switch_controller" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_controller.LearningSwitchController">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">csle_ryu.controllers.learning_switch_controller.</span></span><span class="sig-name descname"><span class="pre">LearningSwitchController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_controller.html#LearningSwitchController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor</span></code></a></p>
+<p>RYU Controller implementing a learning L2 switch for OpenFlow 1.3</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_controller.LearningSwitchController.add_flow">
+<span class="sig-name descname"><span class="pre">add_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datapath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_controller.html#LearningSwitchController.add_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController.add_flow" title="Permalink to this definition"></a></dt>
+<dd><p>Utility method for adding a flow to a switch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datapath</strong> – the datapath, i.e. abstraction of the link to the switch</p></li>
+<li><p><strong>priority</strong> – the priority of the flow (higher priority are prioritized)</p></li>
+<li><p><strong>match</strong> – the pattern for matching packets to the flow based on the header</p></li>
+<li><p><strong>actions</strong> – the actions to take when the flow is matched, e.g. where to send the packet</p></li>
+<li><p><strong>buffer_id</strong> – the id of the buffer where packets for this flow are queued if they cannot be sent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_controller.LearningSwitchController.switch_features_handler">
+<span class="sig-name descname"><span class="pre">switch_features_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ev</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_controller.html#LearningSwitchController.switch_features_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController.switch_features_handler" title="Permalink to this definition"></a></dt>
+<dd><p>Handler called after OpenFlow handshake with switch completed. It adds teh Table-miss flow entry to
+the flow tables of the switch so that next packet which yield a flow-table-miss will be sent to the
+controller</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ev</strong> – the handshake complete event</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-csle_ryu.controllers.learning_switch_stp_controller">
+<span id="csle-ryu-controllers-learning-switch-stp-controller-module"></span><h2>csle_ryu.controllers.learning_switch_stp_controller module<a class="headerlink" href="#module-csle_ryu.controllers.learning_switch_stp_controller" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">csle_ryu.controllers.learning_switch_stp_controller.</span></span><span class="sig-name descname"><span class="pre">LearningSwitchSTPController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_stp_controller.html#LearningSwitchSTPController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor</span></code></a></p>
+<p>RYU Controller implementing a learning L2 switch for OpenFlow 1.3 with the STP spanning tree protocol</p>
+<p>To avoid the problems associated with redundant links in a switched LAN,
+STP is implemented on switches to monitor the network topology. Every link between switches,
+and in particular redundant links, are catalogued.
+The spanning-tree algorithm then blocks forwarding on redundant links by setting up one preferred link
+between switches in the LAN. This preferred link is used for all Ethernet frames unless it fails,
+in which case a non-preferred redundant link is enabled. When implemented in a network,
+STP designates one layer-2 switch as root bridge. All switches then select their best connection
+towards the root bridge for forwarding and block other redundant links.
+All switches constantly communicate with their neighbors in the LAN using bridge protocol data units (BPDUs)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.add_flow">
+<span class="sig-name descname"><span class="pre">add_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datapath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_stp_controller.html#LearningSwitchSTPController.add_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.add_flow" title="Permalink to this definition"></a></dt>
+<dd><p>Utility method for adding a flow to a switch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datapath</strong> – the datapath, i.e. abstraction of the link to the switch</p></li>
+<li><p><strong>priority</strong> – the priority of the flow (higher priority are prioritized)</p></li>
+<li><p><strong>match</strong> – the pattern for matching packets to the flow based on the header</p></li>
+<li><p><strong>actions</strong> – the actions to take when the flow is matched, e.g. where to send the packet</p></li>
+<li><p><strong>buffer_id</strong> – the id of the buffer where packets for this flow are queued if they cannot be sent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.delete_flow">
+<span class="sig-name descname"><span class="pre">delete_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datapath</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_stp_controller.html#LearningSwitchSTPController.delete_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.delete_flow" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for instructing a switch to delete all flows that have been installed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>datapath</strong> – the datapath, i.e. abstraction of the link to the switch</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.switch_features_handler">
+<span class="sig-name descname"><span class="pre">switch_features_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ev</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_stp_controller.html#LearningSwitchSTPController.switch_features_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.switch_features_handler" title="Permalink to this definition"></a></dt>
+<dd><p>Handler called after OpenFlow handshake with switch completed. It adds teh Table-miss flow entry to
+the flow tables of the switch so that next packet which yield a flow-table-miss will be sent to the
+controller</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ev</strong> – the handshake complete event</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-csle_ryu.controllers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.controllers" title="Permalink to this headline"></a></h2>
+</div>
+</div>
 
 
            </div>

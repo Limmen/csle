@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_ryu.dao.port_statistic &mdash; csle-ryu 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-ryu
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.constants.html">csle_ryu.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.controllers.html">csle_ryu.controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.dao.html">csle_ryu.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.monitor.html">csle_ryu.monitor package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-ryu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_ryu.dao.port_statistic</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_ryu.dao.port_statistic</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+
+<div class="viewcode-block" id="PortStatistic"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic">[docs]</a><span class="k">class</span> <span class="nc">PortStatistic</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO containing data with port statistics from an OpenFlow switch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">datapath_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_received_packets</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">num_received_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_received_errors</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_transmitted_packets</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">num_transmitted_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_transmitted_errors</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_received_dropped</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">num_transmitted_dropped</span><span class="p">,</span> <span class="n">num_received_frame_errors</span><span class="p">,</span> <span class="n">num_received_overrun_errors</span><span class="p">,</span>
+                 <span class="n">num_received_crc_errors</span><span class="p">,</span> <span class="n">num_collisions</span><span class="p">,</span> <span class="n">duration_nanoseconds</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param timestamp: the timestamp the statistic was received</span>
+<span class="sd">        :param datapath_id: the datapath id</span>
+<span class="sd">        :param port: the port</span>
+<span class="sd">        :param num_received_packets: the number of received packets on the port</span>
+<span class="sd">        :param num_received_bytes: the number of received bytes on the port</span>
+<span class="sd">        :param num_received_errors: the number of received errors on the port</span>
+<span class="sd">        :param num_transmitted_packets: the number of transmitted packets on the port</span>
+<span class="sd">        :param num_transmitted_bytes: the nubmer of transmitted bytes on the port</span>
+<span class="sd">        :param num_transmitted_errors: the number of transmitted errors on the port</span>
+<span class="sd">        :param num_received_dropped: the number of received packets dropped on the port</span>
+<span class="sd">        :param num_transmitted_dropped: the number of transmitted packets dropped on the port</span>
+<span class="sd">        :param num_received_frame_errors: the number of received frame errors on the port</span>
+<span class="sd">        :param num_received_overrun_errors: the number of overrun errors on the port</span>
+<span class="sd">        :param num_received_crc_errors: the number of received crc errors on the port</span>
+<span class="sd">        :param num_collisions: the number of collisions on the port</span>
+<span class="sd">        :param duration_nanoseconds: the duration the port has been up in nanoseconds</span>
+<span class="sd">        :param duration_seconds: the duration the port has been up in seconds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datapath_id</span> <span class="o">=</span> <span class="n">datapath_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_packets</span> <span class="o">=</span> <span class="n">num_received_packets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_bytes</span> <span class="o">=</span> <span class="n">num_received_bytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_errors</span> <span class="o">=</span> <span class="n">num_received_errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_packets</span> <span class="o">=</span> <span class="n">num_transmitted_packets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_bytes</span> <span class="o">=</span> <span class="n">num_transmitted_bytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_errors</span> <span class="o">=</span> <span class="n">num_transmitted_errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_dropped</span> <span class="o">=</span> <span class="n">num_received_dropped</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_dropped</span> <span class="o">=</span> <span class="n">num_transmitted_dropped</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_frame_errors</span> <span class="o">=</span> <span class="n">num_received_frame_errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_overrun_errors</span> <span class="o">=</span> <span class="n">num_received_overrun_errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_crc_errors</span> <span class="o">=</span> <span class="n">num_received_crc_errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_collisions</span> <span class="o">=</span> <span class="n">num_collisions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration_nanoseconds</span> <span class="o">=</span> <span class="n">duration_nanoseconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span> <span class="o">=</span> <span class="n">duration_seconds</span>
+
+<div class="viewcode-block" id="PortStatistic.from_dict"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;PortStatistic&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">PortStatistic</span><span class="p">(</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span> <span class="n">datapath_id</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;datapath_id&quot;</span><span class="p">],</span>
+            <span class="n">port</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">],</span> <span class="n">num_received_packets</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_packets&quot;</span><span class="p">],</span> <span class="n">num_received_bytes</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_bytes&quot;</span><span class="p">],</span>
+            <span class="n">num_received_errors</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_errors&quot;</span><span class="p">],</span> <span class="n">num_transmitted_packets</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_packets&quot;</span><span class="p">],</span>
+            <span class="n">num_transmitted_bytes</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_bytes&quot;</span><span class="p">],</span> <span class="n">num_transmitted_errors</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_errors&quot;</span><span class="p">],</span>
+            <span class="n">num_received_dropped</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_dropped&quot;</span><span class="p">],</span> <span class="n">num_transmitted_dropped</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_dropped&quot;</span><span class="p">],</span>
+            <span class="n">num_received_frame_errors</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_frame_errors&quot;</span><span class="p">],</span>
+            <span class="n">num_received_overrun_errors</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_overrun_errors&quot;</span><span class="p">],</span>
+            <span class="n">num_received_crc_errors</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_crc_errors&quot;</span><span class="p">],</span>
+            <span class="n">num_collisions</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_collisions&quot;</span><span class="p">],</span> <span class="n">duration_nanoseconds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;duration_nanoseconds&quot;</span><span class="p">],</span>
+            <span class="n">duration_seconds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;duration_seconds&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="PortStatistic.to_dict"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;datapath_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datapath_id</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_packets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_packets</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_bytes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_bytes</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_errors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_errors</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_packets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_packets</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_bytes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_bytes</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_errors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_errors</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_dropped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_dropped</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_transmitted_dropped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_dropped</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_frame_errors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_frame_errors</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_overrun_errors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_overrun_errors</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_received_crc_errors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_received_crc_errors</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_collisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_collisions</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;duration_nanoseconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration_nanoseconds</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;duration_seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;timestamp: </span><span class="si">{self.timestamp}</span><span class="s2">, datapath_id: </span><span class="si">{self.datapath_id}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;port: </span><span class="si">{self.port}</span><span class="s2">, num_received_packets: </span><span class="si">{self.num_received_packets}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_received_bytes: </span><span class="si">{self.num_received_bytes}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot; num_received_errors: </span><span class="si">{self.num_received_errors}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_transmitted_packets: </span><span class="si">{self.num_transmitted_packets}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_transmitted_bytes: </span><span class="si">{self.num_transmitted_bytes}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot; num_transmitted_errors: </span><span class="si">{self.num_transmitted_errors}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_received_dropped: </span><span class="si">{self.num_received_dropped}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_transmitted_dropped: </span><span class="si">{self.num_transmitted_dropped}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_received_frame_errors: </span><span class="si">{self.num_received_frame_errors}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_received_overrun_errors: </span><span class="si">{self.num_received_overrun_errors}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_received_crc_errors: </span><span class="si">{self.num_received_crc_errors}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;num_collisions: </span><span class="si">{self.num_collisions}</span><span class="s2">, duration_nanoseconds: </span><span class="si">{self.duration_nanoseconds}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;duration_seconds: </span><span class="si">{self.duration_seconds}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="PortStatistic.to_json_str"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the DTO into a json string</span>
+
+<span class="sd">        :return: the json string representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json_str</span></div>
+
+<div class="viewcode-block" id="PortStatistic.to_json_file"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the DTO to a json file</span>
+
+<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PortStatistic.copy"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PortStatistic&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PortStatistic</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="PortStatistic.from_kafka_record"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PortStatistic&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a kafka record to a DTO</span>
+
+<span class="sd">        :param record: the kafka record</span>
+<span class="sd">        :return: the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">PortStatistic</span><span class="p">(</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">datapath_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                            <span class="n">num_received_packets</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                            <span class="n">num_received_bytes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span> <span class="n">num_received_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+                            <span class="n">num_transmitted_packets</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span> <span class="n">num_transmitted_bytes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span>
+                            <span class="n">num_transmitted_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">8</span><span class="p">]),</span> <span class="n">num_received_dropped</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">9</span><span class="p">]),</span>
+                            <span class="n">num_transmitted_dropped</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">10</span><span class="p">]),</span> <span class="n">num_received_frame_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">11</span><span class="p">]),</span>
+                            <span class="n">num_received_overrun_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">12</span><span class="p">]),</span> <span class="n">num_received_crc_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">13</span><span class="p">]),</span>
+                            <span class="n">num_collisions</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">14</span><span class="p">]),</span> <span class="n">duration_nanoseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">15</span><span class="p">]),</span>
+                            <span class="n">duration_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">16</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="PortStatistic.to_kafka_record"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the DTO into a kafka record</span>
+
+<span class="sd">        :return: the kafka record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.timestamp}</span><span class="s2">,</span><span class="si">{self.datapath_id}</span><span class="s2">,</span><span class="si">{self.port}</span><span class="s2">,</span><span class="si">{self.num_received_packets}</span><span class="s2">,</span><span class="si">{self.num_received_bytes}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.num_received_errors}</span><span class="s2">,</span><span class="si">{self.num_transmitted_packets}</span><span class="s2">,</span><span class="si">{self.num_transmitted_bytes}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.num_transmitted_errors}</span><span class="s2">,</span><span class="si">{self.num_received_dropped}</span><span class="s2">,</span><span class="si">{self.num_transmitted_dropped}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.num_received_frame_errors}</span><span class="s2">,</span><span class="si">{self.num_received_overrun_errors}</span><span class="s2">,</span><span class="si">{self.num_received_crc_errors}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.num_collisions}</span><span class="s2">,</span><span class="si">{self.duration_nanoseconds}</span><span class="s2">,</span><span class="si">{self.duration_seconds}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="PortStatistic.update_with_kafka_record"><a class="viewcode-back" href="../../../csle_ryu.dao.html#csle_ryu.dao.port_statistic.PortStatistic.update_with_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the DTO with a new kafka record</span>
+
+<span class="sd">        :param record: the kafka record</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datapath_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_packets</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_bytes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_packets</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_bytes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_dropped</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_transmitted_dropped</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_frame_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">11</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_overrun_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">12</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_received_crc_errors</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">13</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_collisions</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">14</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration_nanoseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">15</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">16</span><span class="p">])</span></div></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

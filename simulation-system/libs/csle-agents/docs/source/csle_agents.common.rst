@@ -28,14 +28,6 @@ csle\_agents.common.fnn\_w\_linear module
    :undoc-members:
    :show-inheritance:
 
-csle\_agents.common.fnn\_w\_softmax module
-------------------------------------------
-
-.. automodule:: csle_agents.common.fnn_w_softmax
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 csle\_agents.common.pruning module
 ----------------------------------
 

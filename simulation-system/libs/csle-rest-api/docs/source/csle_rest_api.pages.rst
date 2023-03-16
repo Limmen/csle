@@ -13,7 +13,6 @@ Subpackages
    csle_rest_api.pages.downloads
    csle_rest_api.pages.emulation_statistics
    csle_rest_api.pages.emulations
-   csle_rest_api.pages.host_terminal
    csle_rest_api.pages.images
    csle_rest_api.pages.jobs
    csle_rest_api.pages.login
@@ -23,6 +22,7 @@ Subpackages
    csle_rest_api.pages.policy_examination
    csle_rest_api.pages.register
    csle_rest_api.pages.sdn_controllers
+   csle_rest_api.pages.server_cluster
    csle_rest_api.pages.simulations
    csle_rest_api.pages.system_admin
    csle_rest_api.pages.system_models

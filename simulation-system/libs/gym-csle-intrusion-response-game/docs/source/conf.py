@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'gym-csle-stopping-game'
+project = 'gym-csle-intrusion-response-game'
 copyright = '2020-2023, Kim Hammar'
 author = 'Kim Hammar'
 

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_ryu.constants.constants &mdash; csle-ryu 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-ryu
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.constants.html">csle_ryu.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.controllers.html">csle_ryu.controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.dao.html">csle_ryu.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_ryu.monitor.html">csle_ryu.monitor package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-ryu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_ryu.constants.constants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_ryu.constants.constants</h1><div class="highlight"><pre>
+<span></span>
+
+<div class="viewcode-block" id="RYU"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.RYU">[docs]</a><span class="k">class</span> <span class="nc">RYU</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to RYU</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CONTROLLERS_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;csle_ryu.controllers.&quot;</span>
+    <span class="n">OFCTL_REST_APP</span> <span class="o">=</span> <span class="s2">&quot;ryu.app.ofctl_rest&quot;</span>
+    <span class="n">OFCTL_REST_QOS_APP</span> <span class="o">=</span> <span class="s2">&quot;ryu.app.rest_qos&quot;</span>
+    <span class="n">OFCTL_REST_TOPOLOGY</span> <span class="o">=</span> <span class="s2">&quot;ryu.app.rest_topology&quot;</span>
+    <span class="n">OFCTL_WS_TOPOLOGY</span> <span class="o">=</span> <span class="s2">&quot;ryu.app.ws_topology&quot;</span>
+    <span class="n">OFCTL_GUI_TOPOLOGY</span> <span class="o">=</span> <span class="s2">&quot;ryu.app.gui_topology.gui_topology&quot;</span>
+    <span class="n">OBSERVE_LINKS</span> <span class="o">=</span> <span class="s2">&quot;--observe-links&quot;</span>
+    <span class="n">APP_LISTS_ARG</span> <span class="o">=</span> <span class="s2">&quot;--app-lists&quot;</span>
+    <span class="n">LOG_FILE_ARG</span> <span class="o">=</span> <span class="s2">&quot;--log-file&quot;</span>
+    <span class="n">CONTROLLER_PORT_ARG</span> <span class="o">=</span> <span class="s2">&quot;--ofp-tcp-listen-port&quot;</span>
+    <span class="n">WEB_APP_PORT_ARG</span> <span class="o">=</span> <span class="s2">&quot;--wsapi-port&quot;</span>
+    <span class="n">RYU_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/ryu-manager&quot;</span>
+    <span class="n">PACKET_BUFFER_MAX_LEN</span> <span class="o">=</span> <span class="mi">512</span>
+    <span class="n">NORTHBOUND_API_APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;csle_api_app&quot;</span>
+    <span class="n">START_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/start&quot;</span>
+    <span class="n">STOP_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/stop&quot;</span>
+    <span class="n">STATUS_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/status&quot;</span>
+    <span class="n">STATS_SWITCHES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/switches&quot;</span>
+    <span class="n">STATS_DESC_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/desc&quot;</span>
+    <span class="n">STATS_FLOW_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/flow&quot;</span>
+    <span class="n">STATS_AGGREGATE_FLOW_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/aggregateflow&quot;</span>
+    <span class="n">STATS_TABLE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/table&quot;</span>
+    <span class="n">STATS_TABLE_FEATURES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/tablefeatures&quot;</span>
+    <span class="n">STATS_PORT_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/port&quot;</span>
+    <span class="n">STATS_PORT_DESC_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/portdesc&quot;</span>
+    <span class="n">STATS_QUEUE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/queue&quot;</span>
+    <span class="n">STATS_QUEUE_CONFIG_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/queueconfig&quot;</span>
+    <span class="n">STATS_QUEUE_DESC_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/queuedesc&quot;</span>
+    <span class="n">STATS_GROUP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/group&quot;</span>
+    <span class="n">STATS_GROUP_DESC_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/groupdesc&quot;</span>
+    <span class="n">STATS_GROUP_FEATURES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/groupfeatures&quot;</span>
+    <span class="n">STATS_METER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/meter&quot;</span>
+    <span class="n">STATS_METER_CONFIG_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/meterconfig&quot;</span>
+    <span class="n">STATS_METER_FEATURES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/meterfeatures&quot;</span>
+    <span class="n">STATS_ROLE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/role&quot;</span></div>
+
+
+<div class="viewcode-block" id="CONTROLLERS"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.CONTROLLERS">[docs]</a><span class="k">class</span> <span class="nc">CONTROLLERS</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RYU Controllers in CSLE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LEARNING_SWITCH_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;learning_switch_controller&quot;</span>
+    <span class="n">LEARNING_SWITCH_STP_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;learning_switch_stp_controller&quot;</span></div>
+
+
+<div class="viewcode-block" id="TOPIC_NAMES"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.TOPIC_NAMES">[docs]</a><span class="k">class</span> <span class="nc">TOPIC_NAMES</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Topic names for SDN statistics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_agg_stats_topic&quot;</span>
+    <span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_stats_topic&quot;</span>
+    <span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_port_stats_topic&quot;</span>
+    <span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_flow_stats_per_switch_topic&quot;</span>
+    <span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_port_stats_per_switch_topic&quot;</span></div>
+
+<div class="viewcode-block" id="KAFKA"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.KAFKA">[docs]</a><span class="k">class</span> <span class="nc">KAFKA</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants for managing Kafka</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">KAFKA_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service kafka status&quot;</span>
+    <span class="n">KAFKA_STOP</span> <span class="o">=</span> <span class="s2">&quot;service kafka stop&quot;</span>
+    <span class="n">KAFKA_START</span> <span class="o">=</span> <span class="s2">&quot;service kafka start&quot;</span>
+    <span class="n">RETENTION_MS_CONFIG_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;retention.ms&quot;</span>
+    <span class="n">BOOTSTRAP_SERVERS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;bootstrap.servers&quot;</span>
+    <span class="n">CLIENT_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;client.id&quot;</span>
+    <span class="n">GROUP_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;group.id&quot;</span>
+    <span class="n">AUTO_OFFSET_RESET_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;auto.offset.reset&quot;</span>
+    <span class="n">EARLIEST_OFFSET</span> <span class="o">=</span> <span class="s2">&quot;earliest&quot;</span>
+    <span class="n">PORT</span> <span class="o">=</span> <span class="mi">9092</span>
+    <span class="n">TIME_STEP_LEN_SECONDS</span> <span class="o">=</span> <span class="s2">&quot;time_step_len_seconds&quot;</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

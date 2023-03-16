@@ -4,6 +4,14 @@ csle\_common.dao.emulation\_config package
 Submodules
 ----------
 
+csle\_common.dao.emulation\_config.beats\_config module
+-------------------------------------------------------
+
+.. automodule:: csle_common.dao.emulation_config.beats_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.emulation\_config.client\_managers\_info module
 ----------------------------------------------------------------
 
@@ -260,6 +268,14 @@ csle\_common.dao.emulation\_config.network\_service module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.dao.emulation\_config.node\_beats\_config module
+-------------------------------------------------------------
+
+.. automodule:: csle_common.dao.emulation_config.node_beats_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.emulation\_config.node\_container\_config module
 -----------------------------------------------------------------
 
@@ -384,6 +400,14 @@ csle\_common.dao.emulation\_config.resources\_config module
 -----------------------------------------------------------
 
 .. automodule:: csle_common.dao.emulation_config.resources_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.dao.emulation\_config.ryu\_managers\_info module
+-------------------------------------------------------------
+
+.. automodule:: csle_common.dao.emulation_config.ryu_managers_info
    :members:
    :undoc-members:
    :show-inheritance:
