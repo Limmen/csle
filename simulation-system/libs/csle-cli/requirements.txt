@@ -1,9 +1,9 @@
 click==8.1.3
-csle-common==0.1.6
-csle-cluster==0.1.6
-csle-collector==0.1.6
-csle-attacker==0.1.6
-csle-defender==0.1.6
-csle-system-identification==0.1.6
-gym-csle-stopping-game==0.1.6
-csle-agents==0.1.6
+csle-common==0.1.7
+csle-cluster==0.1.7
+csle-collector==0.1.7
+csle-attacker==0.1.7
+csle-defender==0.1.7
+csle-system-identification==0.1.7
+gym-csle-stopping-game==0.1.7
+csle-agents==0.1.7

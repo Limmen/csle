@@ -52,6 +52,7 @@ class HostMonitorThread(threading.Thread):
 
         :return: None
         """
+        logging.info("HostMonitor [Running]")
         while self.running:
             time.sleep(self.time_step_len_seconds)
             host_metrics = HostManagerUtil.read_host_metrics(failed_auth_last_ts=self.failed_auth_last_ts,

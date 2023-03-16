@@ -673,7 +673,7 @@ class HostController:
                     f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_host_monitor(
-                    stub=stub, kafka_ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                    stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
                     kafka_port=emulation_env_config.kafka_config.kafka_port,
                     time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
