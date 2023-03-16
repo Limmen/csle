@@ -13,9 +13,10 @@ The live documentation page is available [here](https://limmen.dev/csle).
 You need Ruby and gem before starting, then:
 
 ```bash
-# install bundler
+# Install the ruby bundler
 gem install bundler
 
+# Configure the bundler
 bundle config set --local path 'vendor/bundle'
 
 # Install dependencies
@@ -24,6 +25,7 @@ bunde install
 # Run jekyll with dependencies
 bundle exec jekyll serve
 ```
+You can the nfind the page at [http://127.0.0.1:4000/csle/](http://127.0.0.1:4000/csle/)
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
