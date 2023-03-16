@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_csle_intrusion_response_game.dao package &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            gym-csle-intrusion-response-game
+            <a href="index.html" class="icon icon-home"> gym-csle-intrusion-response-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -44,6 +43,15 @@
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_intrusion_response_game.constants.html">gym_csle_intrusion_response_game.constants package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">gym_csle_intrusion_response_game.dao package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig">gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig"><code class="docutils literal notranslate"><span class="pre">StoppingGameDefenderPomdpConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameDefenderPomdpConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameDefenderPomdpConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gym-csle-intrusion-response-game-dao-intrusion-response-game-defender-pomdp-config-module">gym_csle_intrusion_response_game.dao.intrusion_response_game_defender_pomdp_config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config">gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig"><code class="docutils literal notranslate"><span class="pre">IntrusionResponseGameLocalPOMDPAttackerConfig</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict()</span></code></a></li>
@@ -132,7 +140,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">gym_csle_intrusion_response_game.dao package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/gym_csle_intrusion_response_game.dao.rst.txt" rel="nofollow"> View page source</a>
@@ -148,6 +156,44 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
+<section id="module-gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig">
+<span id="gym-csle-intrusion-response-game-dao-intrusionresponsegamedefenderpomdpconfig-module"></span><h2>gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig module<a class="headerlink" href="#module-gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.</span></span><span class="sig-name descname"><span class="pre">StoppingGameDefenderPomdpConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_game_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StoppingGameConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Policy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'csle-intrusion-response-game-v1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/IntrusionResponseGameDefenderPOMDPConfig.html#StoppingGameDefenderPomdpConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationEnvInputConfig</span></code></p>
+<p>DTO class representing the configuration of the POMDP environnment of the defender
+when facing a static attacker policy</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig" title="gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig"><span class="pre">StoppingGameDefenderPomdpConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/IntrusionResponseGameDefenderPOMDPConfig.html#StoppingGameDefenderPomdpConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/IntrusionResponseGameDefenderPOMDPConfig.html#StoppingGameDefenderPomdpConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.IntrusionResponseGameDefenderPOMDPConfig.StoppingGameDefenderPomdpConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="gym-csle-intrusion-response-game-dao-intrusion-response-game-defender-pomdp-config-module">
+<h2>gym_csle_intrusion_response_game.dao.intrusion_response_game_defender_pomdp_config module<a class="headerlink" href="#gym-csle-intrusion-response-game-dao-intrusion-response-game-defender-pomdp-config-module" title="Permalink to this heading"></a></h2>
+</section>
 <section id="module-gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config">
 <span id="gym-csle-intrusion-response-game-dao-intrusion-response-game-local-pomdp-attacker-config-module"></span><h2>gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config module<a class="headerlink" href="#module-gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -161,10 +207,10 @@ when facing a static defender strategy</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig" title="gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig"><span class="pre">IntrusionResponseGameLocalPOMDPAttackerConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_local_pomdp_attacker_config.html#IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -174,7 +220,7 @@ when facing a static defender strategy</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_local_pomdp_attacker_config.html#IntrusionResponseGameLocalPOMDPAttackerConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -196,10 +242,10 @@ when facing a static attacker strategy</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config.IntrusionResponseGameLocalPOMDPDefenderConfig" title="gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config.IntrusionResponseGameLocalPOMDPDefenderConfig"><span class="pre">IntrusionResponseGameLocalPOMDPDefenderConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_local_pomdp_defender_config.html#IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config.IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -209,7 +255,7 @@ when facing a static attacker strategy</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config.IntrusionResponseGameLocalPOMDPDefenderConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_local_pomdp_defender_config.html#IntrusionResponseGameLocalPOMDPDefenderConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config.IntrusionResponseGameLocalPOMDPDefenderConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -230,7 +276,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.attacker_observation">
 <span class="sig-name descname"><span class="pre">attacker_observation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_state_local.html#IntrusionResponseGameStateLocal.attacker_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.attacker_observation" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the attacker’s observation</p>
 </dd>
 </dl>
@@ -240,7 +286,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.attacker_state">
 <span class="sig-name descname"><span class="pre">attacker_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_state_local.html#IntrusionResponseGameStateLocal.attacker_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.attacker_state" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the attacker state</p>
 </dd>
 </dl>
@@ -250,7 +296,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.defender_observation">
 <span class="sig-name descname"><span class="pre">defender_observation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_state_local.html#IntrusionResponseGameStateLocal.defender_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.defender_observation" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the defender’s observation</p>
 </dd>
 </dl>
@@ -260,7 +306,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.defender_state">
 <span class="sig-name descname"><span class="pre">defender_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_state_local.html#IntrusionResponseGameStateLocal.defender_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.defender_state" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the defender state</p>
 </dd>
 </dl>
@@ -271,7 +317,7 @@ with public observations)</p>
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_state_local.html#IntrusionResponseGameStateLocal.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -281,7 +327,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.state_vector">
 <span class="sig-name descname"><span class="pre">state_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/intrusion_response_game_state_local.html#IntrusionResponseGameStateLocal.state_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.state_vector" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the state vector</p>
 </dd>
 </dl>
@@ -301,7 +347,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.attacker_action_space">
 <span class="sig-name descname"><span class="pre">attacker_action_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Discrete</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/local_intrusion_response_game_config.html#LocalIntrusionResponseGameConfig.attacker_action_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.attacker_action_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the attacker’s action space</p>
 </dd>
 </dl>
@@ -311,7 +357,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.attacker_observation_space">
 <span class="sig-name descname"><span class="pre">attacker_observation_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/local_intrusion_response_game_config.html#LocalIntrusionResponseGameConfig.attacker_observation_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.attacker_observation_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the attacker’s observation space</p>
 </dd>
 </dl>
@@ -321,7 +367,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.defender_action_space">
 <span class="sig-name descname"><span class="pre">defender_action_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Discrete</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/local_intrusion_response_game_config.html#LocalIntrusionResponseGameConfig.defender_action_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.defender_action_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the defender’s action space</p>
 </dd>
 </dl>
@@ -331,7 +377,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.defender_observation_space">
 <span class="sig-name descname"><span class="pre">defender_observation_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/local_intrusion_response_game_config.html#LocalIntrusionResponseGameConfig.defender_observation_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.defender_observation_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the defender’s observation space</p>
 </dd>
 </dl>
@@ -342,10 +388,10 @@ with public observations)</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig" title="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig"><span class="pre">LocalIntrusionResponseGameConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/local_intrusion_response_game_config.html#LocalIntrusionResponseGameConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -355,7 +401,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/local_intrusion_response_game_config.html#LocalIntrusionResponseGameConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -375,7 +421,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.attacker_action_space">
 <span class="sig-name descname"><span class="pre">attacker_action_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MultiDiscrete</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_game_config.html#WorkflowIntrusionResponseGameConfig.attacker_action_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.attacker_action_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the attacker’s action space</p>
 </dd>
 </dl>
@@ -385,7 +431,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.attacker_observation_space">
 <span class="sig-name descname"><span class="pre">attacker_observation_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_game_config.html#WorkflowIntrusionResponseGameConfig.attacker_observation_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.attacker_observation_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the attacker’s observation space</p>
 </dd>
 </dl>
@@ -395,7 +441,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.defender_action_space">
 <span class="sig-name descname"><span class="pre">defender_action_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MultiDiscrete</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_game_config.html#WorkflowIntrusionResponseGameConfig.defender_action_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.defender_action_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the defender’s action space</p>
 </dd>
 </dl>
@@ -405,7 +451,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.defender_observation_space">
 <span class="sig-name descname"><span class="pre">defender_observation_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_game_config.html#WorkflowIntrusionResponseGameConfig.defender_observation_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.defender_observation_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the defender’s observation space</p>
 </dd>
 </dl>
@@ -416,10 +462,10 @@ with public observations)</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig" title="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig"><span class="pre">WorkflowIntrusionResponseGameConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_game_config.html#WorkflowIntrusionResponseGameConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -429,7 +475,7 @@ with public observations)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_game_config.html#WorkflowIntrusionResponseGameConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_game_config.WorkflowIntrusionResponseGameConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -451,10 +497,10 @@ defender opponent</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config.WorkflowIntrusionResponsePOMDPAttackerConfig" title="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config.WorkflowIntrusionResponsePOMDPAttackerConfig"><span class="pre">WorkflowIntrusionResponsePOMDPAttackerConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_pomdp_attacker_config.html#WorkflowIntrusionResponsePOMDPAttackerConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config.WorkflowIntrusionResponsePOMDPAttackerConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -464,7 +510,7 @@ defender opponent</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config.WorkflowIntrusionResponsePOMDPAttackerConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_pomdp_attacker_config.html#WorkflowIntrusionResponsePOMDPAttackerConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config.WorkflowIntrusionResponsePOMDPAttackerConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -486,10 +532,10 @@ defender opponent</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig" title="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig"><span class="pre">WorkflowIntrusionResponsePOMDPDefenderConfig</span></a></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_pomdp_defender_config.html#WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -499,7 +545,7 @@ defender opponent</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/dao/workflow_intrusion_response_pomdp_defender_config.html#WorkflowIntrusionResponsePOMDPDefenderConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>

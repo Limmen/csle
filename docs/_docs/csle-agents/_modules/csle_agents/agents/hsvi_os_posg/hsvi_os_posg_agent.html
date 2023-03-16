@@ -13,7 +13,9 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -242,7 +244,7 @@
         <span class="n">b0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI_OS_POSG</span><span class="o">.</span><span class="n">INITIAL_BELIEF</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
         <span class="n">epsilon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI_OS_POSG</span><span class="o">.</span><span class="n">EPSILON</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
         <span class="n">prune_frequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI_OS_POSG</span><span class="o">.</span><span class="n">PRUNE_FREQUENCY</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the HSVI algorithm of OS-POSGs&quot;</span><span class="p">)</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting the HSVI algorithm of OS-POSGs&quot;</span><span class="p">)</span>
         <span class="n">alpha_vectors</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">excesses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hsvi</span><span class="p">(</span>
             <span class="n">O</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">O</span><span class="p">),</span> <span class="n">Z</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="n">R</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">),</span> <span class="n">T</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">A1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">A1</span><span class="p">),</span> <span class="n">A2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">A2</span><span class="p">),</span>
             <span class="n">S</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">S</span><span class="p">),</span> <span class="n">gamma</span><span class="o">=</span><span class="n">discount_factor</span><span class="p">,</span> <span class="n">b0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b0</span><span class="p">),</span>

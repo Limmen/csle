@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.controllers.elk_controller</li>
       <li class="wy-breadcrumbs-aside">
@@ -88,13 +87,13 @@
 
 
 <div class="viewcode-block" id="ELKController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController">[docs]</a><span class="k">class</span> <span class="nc">ELKController</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Controller managing API calls to ELK-stacks running inside emulations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ELKController.start_elk_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.start_elk_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_elk_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting the ELK manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -139,7 +138,7 @@
 
 <div class="viewcode-block" id="ELKController.stop_elk_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.stop_elk_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_elk_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping the ELK manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -167,7 +166,7 @@
 <div class="viewcode-block" id="ELKController.get_elk_status"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.get_elk_status">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_elk_status</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for querying the ELKManager about the status of the ELK stack</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>
@@ -182,7 +181,7 @@
 <div class="viewcode-block" id="ELKController.get_elk_status_by_port_and_ip"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.get_elk_status_by_port_and_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_elk_status_by_port_and_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for querying the ElkManager about the status of the ELK stack</span>
 
 <span class="sd">        :param ip: the ip where the ElkManager is running</span>
@@ -200,7 +199,7 @@
 <div class="viewcode-block" id="ELKController.stop_elk_stack"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.stop_elk_stack">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_elk_stack</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to stop the ELK server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -221,7 +220,7 @@
 <div class="viewcode-block" id="ELKController.start_elk_stack"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.start_elk_stack">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_elk_stack</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start the ELK server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -245,7 +244,7 @@
 <div class="viewcode-block" id="ELKController.start_elastic"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.start_elastic">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_elastic</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start elasticsearch</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -267,7 +266,7 @@
 <div class="viewcode-block" id="ELKController.start_kibana"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.start_kibana">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_kibana</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start kibana</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -289,7 +288,7 @@
 <div class="viewcode-block" id="ELKController.start_logstash"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.start_logstash">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_logstash</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start Logstash</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -311,7 +310,7 @@
 <div class="viewcode-block" id="ELKController.stop_elastic"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.stop_elastic">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_elastic</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start elasticsearch</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -333,7 +332,7 @@
 <div class="viewcode-block" id="ELKController.stop_kibana"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.stop_kibana">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_kibana</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start kibana</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -355,7 +354,7 @@
 <div class="viewcode-block" id="ELKController.stop_logstash"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.stop_logstash">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_logstash</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the ELKManager to start Logstash</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -376,7 +375,7 @@
 
 <div class="viewcode-block" id="ELKController.get_elk_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.get_elk_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_elk_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the ELK managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -386,7 +385,7 @@
 
 <div class="viewcode-block" id="ELKController.get_elk_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.get_elk_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_elk_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the Elk managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -397,7 +396,7 @@
 <div class="viewcode-block" id="ELKController.get_elk_managers_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.elk_controller.ELKController.get_elk_managers_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_elk_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ELKManagersInfo</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the ELK managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_collector.elk_manager package &mdash; csle-collector 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-collector
+            <a href="index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -136,7 +135,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_collector.elk_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.elk_manager.rst.txt" rel="nofollow"> View page source</a>
@@ -165,13 +164,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">getElkStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetElkStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.getElkStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.getElkStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the state of the ELK server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK stack server</p>
 </dd>
 </dl>
@@ -182,13 +181,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">startElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartElasticMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElastic" title="Permalink to this definition"></a></dt>
 <dd><p>Starts elasticsearch</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -199,13 +198,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">startElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartElkMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElk" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the ELK stack</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -216,13 +215,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">startKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartKibanaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startKibana" title="Permalink to this definition"></a></dt>
 <dd><p>Starts Kibana</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -233,13 +232,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">startLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartLogstashMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.startLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startLogstash" title="Permalink to this definition"></a></dt>
 <dd><p>Starts Logstash</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -250,13 +249,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">stopElastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartElasticMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopElastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElastic" title="Permalink to this definition"></a></dt>
 <dd><p>Stops elasticsearch</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -267,13 +266,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">stopElk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopElkMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopElk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElk" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the ELK stack</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK stack</p>
 </dd>
 </dl>
@@ -284,13 +283,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">stopKibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopKibanaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopKibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopKibana" title="Permalink to this definition"></a></dt>
 <dd><p>Stops Kibana</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -301,13 +300,13 @@ state of the ELK stack.</p>
 <span class="sig-name descname"><span class="pre">stopLogstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopLogstashMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#ElkManagerServicer.stopLogstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopLogstash" title="Permalink to this definition"></a></dt>
 <dd><p>Stops Logstash</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO with the state of the ELK server</p>
 </dd>
 </dl>
@@ -320,7 +319,7 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.elk_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50045</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'elk_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager.serve" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the gRPC server for managing the ELK stack</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>port</strong> – the port that the server will listen to</p></li>
 <li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
@@ -328,7 +327,7 @@ state of the ELK stack.</p>
 <li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -479,7 +478,7 @@ state of the ELK stack.</p>
 <dt class="sig sig-object py" id="csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elk_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil.elk_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty ElkDTO</p>
 </dd>
 </dl>
@@ -490,10 +489,10 @@ state of the ELK stack.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elk_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil.elk_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of an ElkDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -504,10 +503,10 @@ state of the ELK stack.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elk_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elk_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElkDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/elk_manager_util.html#ElkManagerUtil.elk_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts an ElkDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>elk_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -523,13 +522,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">get_elk_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#get_elk_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.get_elk_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the server for the ELK stack status</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
 </dd>
 </dl>
@@ -540,13 +539,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_elastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_elastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_elastic" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to start Elasticsearch</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
 </dd>
 </dl>
@@ -557,13 +556,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_elk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_elk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_elk" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to start the ELK stack</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
 </dd>
 </dl>
@@ -574,13 +573,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_kibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_kibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_kibana" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to start Kibana</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
 </dd>
 </dl>
@@ -591,13 +590,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">start_logstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#start_logstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.start_logstash" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to start Logstash</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK server</p>
 </dd>
 </dl>
@@ -608,13 +607,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_elastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_elastic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_elastic" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to stop Elabticsearch</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
 </dd>
 </dl>
@@ -625,13 +624,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_elk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_elk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_elk" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to stop the whole ELK stack</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
 </dd>
 </dl>
@@ -642,13 +641,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_kibana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_kibana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_kibana" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to stop Kibana</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
 </dd>
 </dl>
@@ -659,13 +658,13 @@ state of the ELK stack.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.elk_manager.query_elk_server.</span></span><span class="sig-name descname"><span class="pre">stop_logstash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub" title="csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub"><span class="pre">ElkManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElkDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/elk_manager/query_elk_server.html#stop_logstash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.elk_manager.query_elk_server.stop_logstash" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the ELK server to stop Logstash</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an ElkDTO describing the status of the ELK stack</p>
 </dd>
 </dl>

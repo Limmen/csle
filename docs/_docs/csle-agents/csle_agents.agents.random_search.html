@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_agents.agents.random_search package &mdash; csle-agents 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-agents
+            <a href="index.html" class="icon icon-home"> csle-agents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,7 +58,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.random_search package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle-agents-agents-random-search-random-search-agent-module">csle_agents.agents.random_search.random_search_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.random_search.random_search_agent">csle_agents.agents.random_search.random_search_agent module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.random_search">Module contents</a></li>
 </ul>
 </li>
@@ -93,7 +92,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_agents.agents.html">csle_agents.agents package</a></li>
       <li class="breadcrumb-item active">csle_agents.agents.random_search package</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,8 +109,145 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="csle-agents-agents-random-search-random-search-agent-module">
-<h2>csle_agents.agents.random_search.random_search_agent module<a class="headerlink" href="#csle-agents-agents-random-search-random-search-agent-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_agents.agents.random_search.random_search_agent">
+<span id="csle-agents-agents-random-search-random-search-agent-module"></span><h2>csle_agents.agents.random_search.random_search_agent module<a class="headerlink" href="#module-csle_agents.agents.random_search.random_search_agent" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.random_search.random_search_agent.</span></span><span class="sig-name descname"><span class="pre">RandomSearchAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">EmulationEnvConfig</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Env</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAgent</span></code></a></p>
+<p>Random Search Agent</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.compute_avg_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_avg_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.compute_avg_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.compute_avg_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the average metrics of a dict with aggregated metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metrics</strong> – the dict with the aggregated metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.eval_theta">
+<span class="sig-name descname"><span class="pre">eval_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultiThresholdStoppingPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.eval_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.eval_theta" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluates a given threshold policy by running monte-carlo simulations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>policy</strong> – the policy to evaluate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average metrics of the evaluation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.hparam_names">
+<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.hparam_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list with the hyperparameter names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.initial_theta">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.initial_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.initial_theta" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes theta randomly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>L</strong> – the dimension of theta</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the initialized theta vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_perturbation">
+<span class="sig-name descname"><span class="pre">random_perturbation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.random_perturbation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_perturbation" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a random perturbation to the theta vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delta</strong> – the step size for the perturbation</p></li>
+<li><p><strong>theta</strong> – the current theta vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the perturbed theta vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_search">
+<span class="sig-name descname"><span class="pre">random_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainingJobConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.random_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_search" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the random search algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exp_result</strong> – the experiment result object to store the result</p></li>
+<li><p><strong>seed</strong> – the seed</p></li>
+<li><p><strong>training_job</strong> – the training job config</p></li>
+<li><p><strong>random_seeds</strong> – list of seeds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated experiment result and the trained policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.round_vec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.round_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.round_vec" title="Permalink to this definition"></a></dt>
+<dd><p>Rounds a vector to 3 decimals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec</strong> – the vector to round</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the rounded vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.train" title="Permalink to this definition"></a></dt>
+<dd><p>Performs the policy training for the given random seeds using random search</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the training metrics and the trained policies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.update_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/random_search/random_search_agent.html#RandomSearchAgent.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.update_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Update a dict with aggregated metrics using new information from the environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> – the dict with the aggregated metrics</p></li>
+<li><p><strong>info</strong> – the new information</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-csle_agents.agents.random_search">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.random_search" title="Permalink to this heading"></a></h2>

@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.util.plotting_util</li>
       <li class="wy-breadcrumbs-aside">
@@ -79,13 +78,13 @@
 
 
 <div class="viewcode-block" id="PlottingUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.plotting_util.PlottingUtil">[docs]</a><span class="k">class</span> <span class="nc">PlottingUtil</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility functions related to plotting</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PlottingUtil.running_average"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.plotting_util.PlottingUtil.running_average">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">running_average</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function used to compute the running average of the last N elements of a vector x</span>
 
 <span class="sd">        :param x: the vector to average</span>
@@ -101,7 +100,7 @@
 
 <div class="viewcode-block" id="PlottingUtil.running_average_list"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.plotting_util.PlottingUtil.running_average_list">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">running_average_list</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function used to compute the running average of the last N elements of a vector x</span>
 
 <span class="sd">        :param x: the vector to average</span>
@@ -117,7 +116,7 @@
 
 <div class="viewcode-block" id="PlottingUtil.mean_confidence_interval"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.plotting_util.PlottingUtil.mean_confidence_interval">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute confidence intervals</span>
 
 <span class="sd">        :param data: the data</span>
@@ -132,7 +131,7 @@
 
 <div class="viewcode-block" id="PlottingUtil.min_max_norm"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.plotting_util.PlottingUtil.min_max_norm">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">min_max_norm</span><span class="p">(</span><span class="n">vec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">max_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Min-max normalization of a vector</span>
 
 <span class="sd">        :param vec: the vector to normalize</span>

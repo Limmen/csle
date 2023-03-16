@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,11 +37,13 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.util.docker_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.util.docker_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,8 +72,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.util.docker_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">docker</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.docker.docker_container_metadata</span> <span class="kn">import</span> <span class="n">DockerContainerMetadata</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.docker.docker_env_metadata</span> <span class="kn">import</span> <span class="n">DockerEnvMetadata</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
@@ -89,23 +95,38 @@
 <span class="sd">        :return: a list of environment DTOs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-        <span class="n">client2</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
-        <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="o">=</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client2</span><span class="o">=</span><span class="n">client2</span><span class="p">)</span>
+        <span class="n">client_2</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
+        <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="o">=</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client_2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
         <span class="n">emulations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">emulation</span><span class="p">,</span> <span class="n">parsed_containers</span><span class="p">))))</span>
         <span class="n">parsed_envs</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_emulation_envs</span><span class="p">(</span><span class="n">emulations</span><span class="o">=</span><span class="n">emulations</span><span class="p">,</span> <span class="n">containers</span><span class="o">=</span><span class="n">parsed_containers</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parsed_envs</span></div>
 
+<div class="viewcode-block" id="DockerUtil.get_container_hex_id"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.get_container_hex_id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_container_hex_id</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the docker engine for the id of a container with a given name</span>
+
+<span class="sd">        :return: the id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+        <span class="n">client_2</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
+        <span class="n">containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="o">=</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client_2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">container</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="DockerUtil.parse_running_containers"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_running_containers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client_2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries docker to get a list of all running containers</span>
 
 <span class="sd">        :param client_1: docker client 1</span>
-<span class="sd">        :param client2:  docker client 2</span>
+<span class="sd">        :param client_2:  docker client 2</span>
 <span class="sd">        :return: list of parsed running containers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">containers</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-        <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_containers</span><span class="p">(</span><span class="n">containers</span><span class="o">=</span><span class="n">containers</span><span class="p">,</span> <span class="n">client2</span><span class="o">=</span><span class="n">client2</span><span class="p">)</span>
+        <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_containers</span><span class="p">(</span><span class="n">containers</span><span class="o">=</span><span class="n">containers</span><span class="p">,</span> <span class="n">client2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parsed_containers</span></div>
 
 <div class="viewcode-block" id="DockerUtil.parse_stopped_containers"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_stopped_containers">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -163,10 +184,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_containers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;csle-&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">CSLE_PREFIX</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                 <span class="n">name_parts</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
-                <span class="n">container_name_2</span> <span class="o">=</span> <span class="n">name_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">level</span> <span class="o">=</span> <span class="n">name_parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">container_name_2</span> <span class="o">=</span> <span class="n">name_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="n">name_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">inspect_info</span> <span class="o">=</span> <span class="n">client2</span><span class="o">.</span><span class="n">inspect_container</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
                 <span class="n">net</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORK_SETTINGS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORKS</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -216,7 +237,27 @@
                     <span class="n">net</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
                     <span class="n">container_handle</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">emulation</span><span class="p">,</span> <span class="n">kafka_container</span><span class="o">=</span><span class="n">kafka_config</span><span class="p">)</span>
                 <span class="n">parsed_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parsed_c</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">parsed_containers</span></div></div>
+        <span class="k">return</span> <span class="n">parsed_containers</span></div>
+
+<div class="viewcode-block" id="DockerUtil.get_docker_gw_bridge_ip"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.get_docker_gw_bridge_ip">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_docker_gw_bridge_ip</span><span class="p">(</span><span class="n">container_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the docker gw bridge ip of a container</span>
+
+<span class="sd">        :param container_id: the id of the container</span>
+<span class="sd">        :return: the ip in the gw bridge network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">INSPECT_DOCKER_GWBRIDGE</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">json_output</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">docker_gw_bridge_info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_output</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">containers</span> <span class="o">=</span> <span class="n">docker_gw_bridge_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONTAINERS_KEY</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">container_id</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
+            <span class="n">container</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">container_id</span><span class="p">]</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">IPV4_KEY</span><span class="p">]</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">ip</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The container with id:</span><span class="si">{</span><span class="n">container_id</span><span class="si">}</span><span class="s2"> does not have an IP in the docker gw bridge network&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
@@ -226,7 +267,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.host_manager.host_manager_util</li>
       <li class="wy-breadcrumbs-aside">
@@ -90,7 +89,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_latest_ts_auth"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_auth">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_latest_ts_auth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the timestamp of the latest failed login attempt</span>
 
 <span class="sd">        :return: the number of recently failed login attempts</span>
@@ -110,7 +109,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_failed_login_attempts"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_failed_login_attempts">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_failed_login_attempts</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of recent failed login attempts</span>
 
 <span class="sd">        :param emulation_config: configuration to connect to the node in the emulation</span>
@@ -129,7 +128,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_latest_ts_login"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_login">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_latest_ts_login</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the timestamp of the latest successful login attempt</span>
 
 <span class="sd">        :return: the number of recently failed login attempts</span>
@@ -147,7 +146,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_successful_login_events"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_successful_login_events">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_successful_login_events</span><span class="p">(</span><span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of recent successful login attempts</span>
 
 <span class="sd">        :param login_last_ts: the timestamp to use when filtering logins</span>
@@ -166,7 +165,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_open_connections"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_open_connections">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_open_connections</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of open connections to the server</span>
 
 <span class="sd">        :return: the number of open connections</span>
@@ -184,7 +183,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_users"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_users">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_users</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of user accounts on the server</span>
 
 <span class="sd">        :return: the number of user accounts</span>
@@ -197,7 +196,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_logged_in_users"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_logged_in_users">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_logged_in_users</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of logged-in users on the server</span>
 
 <span class="sd">        :return: the number of logged in users</span>
@@ -211,7 +210,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_processes"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_processes">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_processes</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of processes on the server</span>
 
 <span class="sd">        :param emulation_config: configuration to connect to the node in the emulation</span>
@@ -228,7 +227,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_host_metrics"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_host_metrics</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostMetrics</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the latest metrics from the host</span>
 
 <span class="sd">        :param failed_auth_last_ts: the last time-step of read failed authentication attempts</span>
@@ -259,7 +258,7 @@
 <div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_monitor_dto_to_dict</span><span class="p">(</span><span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a HostStatusDTO to a dict</span>
 
 <span class="sd">        :param host_dto: the dto to convert</span>
@@ -277,7 +276,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of a HostStatusDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -294,7 +293,7 @@
 <div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_to_dict</span><span class="p">(</span><span class="n">host_metrics_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a HostMetricsDTO to a dict</span>
 
 <span class="sd">        :param host_metrics_dto: the dto to convert</span>
@@ -313,7 +312,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of a HostMetricsDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -332,7 +331,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_empty"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: an empty HostMetricsDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">host_metrics_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">()</span>
@@ -348,7 +347,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: an empty HostStatusDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">()</span>
@@ -364,7 +363,7 @@
                         <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kafka_topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                         <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kafka</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the filebeat.yml config</span>
 
 <span class="sd">        :param log_files_paths: the list of log files that filebeat should monitor</span>
@@ -421,7 +420,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.write_yaml_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.write_yaml_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_yaml_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes a given filebeat config to disk</span>
 
 <span class="sd">        :param config: the filebeat config to write</span>
@@ -434,7 +433,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.filebeat_snort_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_snort_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filebeat_snort_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the snort filebeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">snort_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -453,7 +452,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.filebeat_elasticsearch_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_elasticsearch_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filebeat_elasticsearch_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the elasticsearch filebeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elastic_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -472,7 +471,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.filebeat_logstash_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_logstash_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filebeat_logstash_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the logstash filebeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logstash_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -496,7 +495,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.filebeat_kibana_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kibana_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filebeat_kibana_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the kibana filebeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">kibana_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -517,7 +516,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.filebeat_system_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_system_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filebeat_system_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the system filebeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">system_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -541,7 +540,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.filebeat_kafka_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kafka_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filebeat_kafka_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the kafka filebeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">system_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -563,7 +562,7 @@
 <div class="viewcode-block" id="HostManagerUtil.packetbeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.packetbeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">packetbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                           <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the packetbeat.yml config</span>
 
 <span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -661,7 +660,7 @@
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                           <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the metricbeat.yml config</span>
 
 <span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -695,7 +694,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_elasticsearch_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_elasticsearch_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_elasticsearch_module_config</span><span class="p">(</span><span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the elasticsearch metricbeat module config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elastic_config</span> <span class="o">=</span> <span class="p">[</span>
@@ -709,7 +708,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_kibana_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_kibana_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_kibana_module_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates the kibana metricbeat module configuration</span>
 
 <span class="sd">        :param kibana_ip: the kibana host IP</span>
@@ -727,7 +726,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_logstash_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_logstash_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_logstash_module_config</span><span class="p">(</span><span class="n">logstash_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logstash_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates the logstash metricbeat module configuration</span>
 
 <span class="sd">        :param logstash_ip: the kibana host IP</span>
@@ -745,7 +744,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_kafka_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_kafka_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_kafka_module_config</span><span class="p">(</span><span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates the kafka metricbeat module configuration</span>
 
 <span class="sd">        :param kafka_ip: the kibana host IP</span>
@@ -763,7 +762,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_system_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_system_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_system_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates the system metricbeat module configuration</span>
 
 <span class="sd">        :return: the system metricbeat module config</span>
@@ -792,7 +791,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.metricbeat_linux_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_linux_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">metricbeat_linux_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates the linux metricbeat module configuration</span>
 
 <span class="sd">        :return: the linux metricbeat module config</span>
@@ -813,7 +812,7 @@
 <div class="viewcode-block" id="HostManagerUtil.heartbeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.heartbeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">heartbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                          <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hosts_to_monitor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the heartbeat.yml config</span>
 
 <span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>

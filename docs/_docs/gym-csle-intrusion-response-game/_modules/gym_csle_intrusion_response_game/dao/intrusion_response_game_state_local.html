@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            gym-csle-intrusion-response-game
+            <a href="../../../index.html" class="icon icon-home"> gym-csle-intrusion-response-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +56,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local</li>
       <li class="wy-breadcrumbs-aside">
@@ -74,14 +73,14 @@
 
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseGameStateLocal</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the state of the intrusion response game (A PO-POSG, i.e a partially observed stochastic game</span>
 <span class="sd">    with public observations)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a_b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_1_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S_A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">S_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 <span class="sd">        :param d_b1: the initial belief of the defender</span>
 <span class="sd">        :param a_b1: the initial belief of the attakcer</span>
@@ -102,7 +101,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal.reset"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the state</span>
 
 <span class="sd">        :return: None</span>
@@ -113,37 +112,37 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">a_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_b1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal.attacker_observation"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.attacker_observation">[docs]</a>    <span class="k">def</span> <span class="nf">attacker_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the attacker&#39;s observation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_state</span><span class="p">()]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_b</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal.defender_observation"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.defender_observation">[docs]</a>    <span class="k">def</span> <span class="nf">defender_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the defender&#39;s observation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_state</span><span class="p">()]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_b</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal.state_vector"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.state_vector">[docs]</a>    <span class="k">def</span> <span class="nf">state_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the state vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">s_idx</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal.attacker_state"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.attacker_state">[docs]</a>    <span class="k">def</span> <span class="nf">attacker_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the attacker state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">s_idx</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameStateLocal.defender_state"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_state_local.IntrusionResponseGameStateLocal.defender_state">[docs]</a>    <span class="k">def</span> <span class="nf">defender_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the defender state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">s_idx</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;d_b1: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">d_b1</span><span class="si">}</span><span class="s2">, a_b1: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a_b1</span><span class="si">}</span><span class="s2">, s_1_idx:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">s_1_idx</span><span class="si">}</span><span class="s2">, S:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="si">}</span><span class="s2">, S_A:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">S_A</span><span class="si">}</span><span class="s2">, &quot;</span> \

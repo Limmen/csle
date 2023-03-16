@@ -13,7 +13,9 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -55,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_rest_api.resources.config.routes</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.resources.config.routes</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.cluster_util</span> <span class="kn">import</span> <span class="n">ClusterUtil</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.config</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 
@@ -85,8 +88,7 @@
     <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONFIG_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.config.html#csle_rest_api.resources.config.routes.config">[docs]</a><span class="nd">@config_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
-                              <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_PUT</span><span class="p">])</span>
+<div class="viewcode-block" id="config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.config.html#csle_rest_api.resources.config.routes.config">[docs]</a><span class="nd">@config_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_PUT</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">config</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /config resource.</span>
@@ -116,10 +118,27 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONFIG_PROPERTY</span><span class="p">]</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">from_param_dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">Config</span><span class="o">.</span><span class="n">save_config_file</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
-        <span class="n">Config</span><span class="o">.</span><span class="n">set_config_parameters_from_config_file</span><span class="p">()</span>
+        <span class="n">ClusterUtil</span><span class="o">.</span><span class="n">set_config_parameters_from_config_file</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_param_dict</span><span class="p">())</span>
         <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
+
+
+<div class="viewcode-block" id="registration_allowed"><a class="viewcode-back" href="../../../../csle_rest_api.resources.config.html#csle_rest_api.resources.config.routes.registration_allowed">[docs]</a><span class="nd">@config_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REGISTRATION_ALLOWED_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">registration_allowed</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The /config/registration-allowed resource.</span>
+
+<span class="sd">    :return: The CSLE configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">allow_registration</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">PARSED_CONFIG</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">PARSED_CONFIG</span><span class="o">.</span><span class="n">allow_registration</span><span class="p">:</span>
+        <span class="n">allow_registration</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">response_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">response_dict</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REGISTRATION_ALLOWED_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">allow_registration</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
 </pre></div>
 
            </div>

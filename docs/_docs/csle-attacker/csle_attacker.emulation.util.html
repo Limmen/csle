@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_attacker.emulation.util package &mdash; csle-attacker 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -25,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-attacker
+            <a href="index.html" class="icon icon-home"> csle-attacker
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -77,7 +76,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_attacker.emulation.html">csle_attacker.emulation package</a></li>
       <li class="breadcrumb-item active">csle_attacker.emulation.util package</li>
       <li class="wy-breadcrumbs-aside">
@@ -106,7 +105,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_if_rce_exploit_succeeded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxy_conn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.check_if_rce_exploit_succeeded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.check_if_rce_exploit_succeeded" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if a RCE exploit succeeded or not, i.e. if we got shell access</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>user</strong> – the user that should have access</p></li>
 <li><p><strong>pw</strong> – the password</p></li>
@@ -116,7 +115,7 @@
 <li><p><strong>proxy_conn</strong> – optional proxy connection (jumphost)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if the exploit succeeded, otherwise false</p>
 </dd>
 </dl>
@@ -127,13 +126,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cve_2010_0426_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerMachineObservationState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerMachineObservationState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">EmulationAttackerMachineObservationState</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Credential</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.cve_2010_0426_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.cve_2010_0426_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the CVE-2010-0426 privelege_escalation action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the CVE-2010-0425 privilege escalation action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>new_machine_obs, cost, successful, root_credential, service_name</p>
 </dd>
 </dl>
@@ -144,13 +143,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cve_2015_1427_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.cve_2015_1427_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.cve_2015_1427_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the CVE-2015-1427 exploit action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the CVE-2015-1427 exploit action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -161,13 +160,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cve_2015_3306_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.cve_2015_3306_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.cve_2015_3306_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the CVE-2015-3306 exploit action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the CVE-2015-3306 exploit action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -178,13 +177,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cve_2015_5602_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerMachineObservationState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerMachineObservationState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">EmulationAttackerMachineObservationState</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Credential</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.cve_2015_5602_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.cve_2015_5602_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the CVE-2015-5602 privilege escalation action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the CVE-2015-5602 privilege escalation action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime, cost, e_succ (flag), credentials, servicename</p>
 </dd>
 </dl>
@@ -195,13 +194,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cve_2016_10033_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.cve_2016_10033_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.cve_2016_10033_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the CVE-2016-10033 exploit action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the CVE-2016-10033 exploit action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -212,13 +211,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dvwa_sql_injection_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.dvwa_sql_injection_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.dvwa_sql_injection_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the DVWA SQL Injection exploit action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the DVWA SQL Injection exploit action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -247,13 +246,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sambacry_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.sambacry_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.sambacry_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the SambaCry exploit action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the SambaCry exploit action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -264,13 +263,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shellshock_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/exploit_util.html#ExploitUtil.shellshock_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.exploit_util.ExploitUtil.shellshock_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for executing the ShellShock exploit action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the Shellshock exploit action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -291,14 +290,14 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">merge_nikto_scan_result_with_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NiktoScanResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nikto_util.html#NiktoUtil.merge_nikto_scan_result_with_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nikto_util.NiktoUtil.merge_nikto_scan_result_with_state" title="Permalink to this definition"></a></dt>
 <dd><p>Merges a Nikto scan result with an existing observation state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scan_result</strong> – the scan result</p></li>
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the action just executed</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s’, reward, done</p>
 </dd>
 </dl>
@@ -309,14 +308,14 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nikto_scan_action_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nikto_util.html#NiktoUtil.nikto_scan_action_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nikto_util.NiktoUtil.nikto_scan_action_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper function for executing a NIKTO web scan action on the emulation. Implements caching.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current env state</p></li>
 <li><p><strong>a</strong> – the Nikto action to execute</p></li>
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s’, reward, done</p>
 </dd>
 </dl>
@@ -327,13 +326,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_nikto_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Element</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nikto_util.html#NiktoUtil.parse_nikto_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan" title="Permalink to this definition"></a></dt>
 <dd><p>Parses an XML file containing the result of an nikt scan</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_name</strong> – name of the file to parse</p></li>
 <li><p><strong>emulation_env_config</strong> – environment config</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the parsed xml file</p>
 </dd>
 </dl>
@@ -344,10 +343,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_nikto_scan_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NiktoScanResult</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nikto_util.html#NiktoUtil.parse_nikto_scan_xml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan_xml" title="Permalink to this definition"></a></dt>
 <dd><p>Parses an XML Tree with Nikto Scan Result into a Nikto Scan DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>xml_data</strong> – the xml tree of Nikto Scan Result to parse</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>parsed nikto scan result</p>
 </dd>
 </dl>
@@ -368,14 +367,14 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">merge_nmap_scan_result_with_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NmapScanResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.merge_nmap_scan_result_with_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.merge_nmap_scan_result_with_state" title="Permalink to this definition"></a></dt>
 <dd><p>Merges a NMAP scan result with an existing observation state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scan_result</strong> – the scan result</p></li>
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the action just executed</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s’</p>
 </dd>
 </dl>
@@ -386,13 +385,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">merge_nmap_scan_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan_result_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NmapScanResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_result_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NmapScanResult</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NmapScanResult</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.merge_nmap_scan_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.merge_nmap_scan_results" title="Permalink to this definition"></a></dt>
 <dd><p>Merges two nmap scan results</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scan_result_1</strong> – the first result to merge</p></li>
 <li><p><strong>scan_result_2</strong> – the second result to merge</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the merged result</p>
 </dd>
 </dl>
@@ -403,14 +402,14 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nmap_pivot_scan_action_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NmapScanResult</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.nmap_pivot_scan_action_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.nmap_pivot_scan_action_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Performs an NMAP pivot scan, utilizing many compromised hosts</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the curretn state</p></li>
 <li><p><strong>a</strong> – the attacker scan action</p></li>
 <li><p><strong>partial_result</strong> – the initial result before pivoting</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the new state</p>
 </dd>
 </dl>
@@ -421,14 +420,14 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nmap_scan_action_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masscan</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.nmap_scan_action_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.nmap_scan_action_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Helper function for executing a NMAP scan action on the emulation. Implements caching.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current env state</p></li>
 <li><p><strong>a</strong> – the NMAP action to execute</p></li>
 <li><p><strong>masscan</strong> – whether it is a masscan or not</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s’</p>
 </dd>
 </dl>
@@ -436,16 +435,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_attacker.emulation.util.nmap_util.NmapUtil.parse_nmap_scan">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_nmap_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Element</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.parse_nmap_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.parse_nmap_scan" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_nmap_scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Element</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.parse_nmap_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.parse_nmap_scan" title="Permalink to this definition"></a></dt>
 <dd><p>Parses an XML file containing the result of an nmap scan</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_name</strong> – name of the file to parse</p></li>
 <li><p><strong>emulation_env_config</strong> – environment config</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the parsed xml file</p>
 </dd>
 </dl>
@@ -456,14 +455,14 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_nmap_scan_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NmapScanResult</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/nmap_util.html#NmapUtil.parse_nmap_scan_xml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.nmap_util.NmapUtil.parse_nmap_scan_xml" title="Permalink to this definition"></a></dt>
 <dd><p>Parses an XML Tree into a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xml_data</strong> – the xml tree to parse</p></li>
 <li><p><strong>ips</strong> – ips of the source of the scan</p></li>
 <li><p><strong>action</strong> – the action of the scan</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>parsed nmap scan result</p>
 </dd>
 </dl>
@@ -500,13 +499,13 @@ from the args and kwargs arguments, respectively.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_service_login_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/shell_util.html#ShellUtil.execute_service_login_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.shell_util.ShellUtil.execute_service_login_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Executes a service login on the emulation using previously found credentials</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the action to take</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime, reward, done</p>
 </dd>
 </dl>
@@ -517,13 +516,13 @@ from the args and kwargs arguments, respectively.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_ssh_backdoor_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/shell_util.html#ShellUtil.execute_ssh_backdoor_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.shell_util.ShellUtil.execute_ssh_backdoor_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Uses compromised machines with root access to setup SSH backdoor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the action to take</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -534,13 +533,13 @@ from the args and kwargs arguments, respectively.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">install_tools_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/shell_util.html#ShellUtil.install_tools_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.shell_util.ShellUtil.install_tools_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Uses compromised machines with root access to install tools</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>a</strong> – the action to take</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -551,13 +550,13 @@ from the args and kwargs arguments, respectively.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_tools_installed_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_attacker/emulation/util/shell_util.html#ShellUtil.parse_tools_installed_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attacker.emulation.util.shell_util.ShellUtil.parse_tools_installed_file" title="Permalink to this definition"></a></dt>
 <dd><p>Parses a file containing cached results of a install-tools action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_name</strong> – name of the file to parse</p></li>
 <li><p><strong>emulation_env_config</strong> – environment config</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>boolean: if installed or not</p>
 </dd>
 </dl>

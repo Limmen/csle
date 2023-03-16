@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_csle_stopping_game package &mdash; gym-csle-stopping-game 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -24,15 +27,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            gym-csle-stopping-game
+            <a href="index.html" class="icon icon-home"> gym-csle-stopping-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -58,7 +57,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">gym_csle_stopping_game package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/gym_csle_stopping_game.rst.txt" rel="nofollow"> View page source</a>
@@ -154,10 +153,61 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.envs.html">gym_csle_stopping_game.envs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym-csle-stopping-game-envs-stopping-game-env-module">gym_csle_stopping_game.envs.stopping_game_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym-csle-stopping-game-envs-stopping-game-mdp-attacker-env-module">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym-csle-stopping-game-envs-stopping-game-pomdp-defender-env-module">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs.stopping_game_env">gym_csle_stopping_game.envs.stopping_game_env module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.emulation_evaluation"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.emulation_evaluation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.get_traces"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.get_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_attack_action_legal"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.is_attack_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_defense_action_legal"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.is_defense_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.manual_play"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.manual_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.mean"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.mean()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.render"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset_traces"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.reset_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.step"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.step_test"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.step_test()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.step_trace"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.step_trace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.weighted_intrusion_prediction_distance"><code class="docutils literal notranslate"><span class="pre">StoppingGameEnv.weighted_intrusion_prediction_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.calculate_stage_policy"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.calculate_stage_policy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.close"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.get_traces"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.get_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.is_attack_action_legal"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.is_attack_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.is_defense_action_legal"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.is_defense_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.manual_play"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.manual_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.render"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset_traces"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.reset_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.set_model"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.set_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.step"><code class="docutils literal notranslate"><span class="pre">StoppingGameMdpAttackerEnv.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.close"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.emulation_evaluation"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.emulation_evaluation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_traces"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.get_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_attack_action_legal"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.is_attack_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_defense_action_legal"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.is_defense_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.manual_play"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.manual_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.render"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset_traces"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.reset_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step_test"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.step_test()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step_trace"><code class="docutils literal notranslate"><span class="pre">StoppingGamePomdpDefenderEnv.step_trace()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.util.html">gym_csle_stopping_game.util package</a><ul>

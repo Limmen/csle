@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_rest_api.resources.login package &mdash; csle-rest-api 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-rest-api
+            <a href="index.html" class="icon icon-home"> csle-rest-api
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -68,7 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.images.html">csle_rest_api.resources.images package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_rest_api.resources.login package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle-rest-api-resources-login-routes-module">csle_rest_api.resources.login.routes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_rest_api.resources.login.routes">csle_rest_api.resources.login.routes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_rest_api.resources.login">Module contents</a></li>
 </ul>
 </li>
@@ -115,7 +114,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
       <li class="breadcrumb-item active">csle_rest_api.resources.login package</li>
       <li class="wy-breadcrumbs-aside">
@@ -132,8 +131,20 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="csle-rest-api-resources-login-routes-module">
-<h2>csle_rest_api.resources.login.routes module<a class="headerlink" href="#csle-rest-api-resources-login-routes-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_rest_api.resources.login.routes">
+<span id="csle-rest-api-resources-login-routes-module"></span><h2>csle_rest_api.resources.login.routes module<a class="headerlink" href="#module-csle_rest_api.resources.login.routes" title="Permalink to this heading"></a></h2>
+<p>Routes and sub-resources for the /login resource</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_rest_api.resources.login.routes.read_login">
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.login.routes.</span></span><span class="sig-name descname"><span class="pre">read_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_rest_api/resources/login/routes.html#read_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.login.routes.read_login" title="Permalink to this definition"></a></dt>
+<dd><p>The /login resource</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Authenticates the login information and returns the result</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-csle_rest_api.resources.login">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.resources.login" title="Permalink to this heading"></a></h2>

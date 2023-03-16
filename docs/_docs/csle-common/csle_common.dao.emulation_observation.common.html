@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_common.dao.emulation_observation.common package &mdash; csle-common 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-common
+            <a href="index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -87,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_common.dao.html">csle_common.dao package</a></li>
           <li class="breadcrumb-item"><a href="csle_common.dao.emulation_observation.html">csle_common.dao.emulation_observation package</a></li>
       <li class="breadcrumb-item active">csle_common.dao.emulation_observation.common package</li>
@@ -109,7 +108,7 @@
 <span id="csle-common-dao-emulation-observation-common-emulation-connection-observation-state-module"></span><h2>csle_common.dao.emulation_observation.common.emulation_connection_observation_state module<a class="headerlink" href="#module-csle_common.dao.emulation_observation.common.emulation_connection_observation_state" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_observation.common.emulation_connection_observation_state.</span></span><span class="sig-name descname"><span class="pre">EmulationConnectionObservationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credential</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.credential.Credential" title="csle_common.dao.emulation_config.credential.Credential"><span class="pre">Credential</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tunnel_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tunnel_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive_shell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState"><span class="pre">EmulationConnectionObservationState</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_observation.common.emulation_connection_observation_state.</span></span><span class="sig-name descname"><span class="pre">EmulationConnectionObservationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credential</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.credential.Credential" title="csle_common.dao.emulation_config.credential.Credential"><span class="pre">Credential</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tunnel_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tunnel_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive_shell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState"><span class="pre">EmulationConnectionObservationState</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A DTO representing a connection observation in the emulation</p>
 <dl class="py method">
@@ -117,7 +116,7 @@
 <span class="sig-name descname"><span class="pre">cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.cleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.cleanup" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for cleaning up the connection.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -128,10 +127,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState"><span class="pre">EmulationConnectionObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -142,10 +141,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState"><span class="pre">EmulationConnectionObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -155,7 +154,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attribute of the DTO</p>
 </dd>
 </dl>
@@ -165,7 +164,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState" title="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState"><span class="pre">EmulationConnectionObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -175,7 +174,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict represnetation of the object</p>
 </dd>
 </dl>
@@ -186,10 +185,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -200,7 +199,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_connection_observation_state.html#EmulationConnectionObservationState.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_connection_observation_state.EmulationConnectionObservationState.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -220,7 +219,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState" title="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState"><span class="pre">EmulationPortObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the object</p>
 </dd>
 </dl>
@@ -228,13 +227,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState" title="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState"><span class="pre">EmulationPortObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState" title="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState"><span class="pre">EmulationPortObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created object instance</p>
 </dd>
 </dl>
@@ -245,10 +244,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState" title="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState"><span class="pre">EmulationPortObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -259,13 +258,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_network_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.network_service.NetworkService" title="csle_common.dao.emulation_config.network_service.NetworkService"><span class="pre">NetworkService</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_lookup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState" title="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState"><span class="pre">EmulationPortObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.from_network_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_network_service" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a network service into a port observation state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>network_service</strong> – the network service to convert</p></li>
 <li><p><strong>service_lookup</strong> – a lookup table for converting between service names and service ids</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
 </dd>
 </dl>
@@ -275,7 +274,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attribute of the DTO</p>
 </dd>
 </dl>
@@ -285,7 +284,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState" title="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState"><span class="pre">EmulationPortObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -295,7 +294,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -306,10 +305,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -320,7 +319,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -331,7 +330,7 @@
 <span class="sig-name descname"><span class="pre">to_network_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.network_service.NetworkService" title="csle_common.dao.emulation_config.network_service.NetworkService"><span class="pre">NetworkService</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_port_observation_state.html#EmulationPortObservationState.to_network_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.to_network_service" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the object into a network service representation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the network service representation</p>
 </dd>
 </dl>
@@ -344,7 +343,7 @@
 <span id="csle-common-dao-emulation-observation-common-emulation-vulnerability-observation-state-module"></span><h2>csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state module<a class="headerlink" href="#module-csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.</span></span><span class="sig-name descname"><span class="pre">EmulationVulnerabilityObservationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.transport_protocol.TransportProtocol" title="csle_common.dao.emulation_config.transport_protocol.TransportProtocol"><span class="pre">TransportProtocol</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cvss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osvdbid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.credential.Credential" title="csle_common.dao.emulation_config.credential.Credential"><span class="pre">Credential</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.</span></span><span class="sig-name descname"><span class="pre">EmulationVulnerabilityObservationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.transport_protocol.TransportProtocol" title="csle_common.dao.emulation_config.transport_protocol.TransportProtocol"><span class="pre">TransportProtocol</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cvss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osvdbid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.credential.Credential" title="csle_common.dao.emulation_config.credential.Credential"><span class="pre">Credential</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A DTO representing an observed vulnerability in the emulation</p>
 <dl class="py method">
@@ -352,10 +351,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState" title="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState"><span class="pre">EmulationVulnerabilityObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -366,10 +365,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState" title="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState"><span class="pre">EmulationVulnerabilityObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -379,7 +378,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attribute of the DTO</p>
 </dd>
 </dl>
@@ -389,7 +388,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState" title="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState"><span class="pre">EmulationVulnerabilityObservationState</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -399,7 +398,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -410,10 +409,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -424,7 +423,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -435,7 +434,7 @@
 <span class="sig-name descname"><span class="pre">to_network_services</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.network_service.NetworkService" title="csle_common.dao.emulation_config.network_service.NetworkService"><span class="pre">NetworkService</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.to_network_services"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.to_network_services" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the object into a network service representation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the network service representation</p>
 </dd>
 </dl>
@@ -446,7 +445,7 @@
 <span class="sig-name descname"><span class="pre">to_vulnerability</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_vulnerability_config.NodeVulnerabilityConfig" title="csle_common.dao.emulation_config.node_vulnerability_config.NodeVulnerabilityConfig"><span class="pre">NodeVulnerabilityConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/common/emulation_vulnerability_observation_state.html#EmulationVulnerabilityObservationState.to_vulnerability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state.EmulationVulnerabilityObservationState.to_vulnerability" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the object into a vulnerability representation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A vulnerability representation of the object</p>
 </dd>
 </dl>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_system_identification package &mdash; csle-system-identification 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -24,15 +27,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-system-identification
+            <a href="index.html" class="icon icon-home"> csle-system-identification
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,7 +59,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_system_identification package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_system_identification.rst.txt" rel="nofollow"> View page source</a>
@@ -119,19 +118,40 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_system_identification.empirical.html">csle_system_identification.empirical package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.empirical.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.empirical.html#csle-system-identification-empirical-empirical-algorithm-module">csle_system_identification.empirical.empirical_algorithm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.empirical.html#module-csle_system_identification.empirical.empirical_algorithm">csle_system_identification.empirical.empirical_algorithm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.empirical.html#csle_system_identification.empirical.empirical_algorithm.EmpiricalAlgorithm"><code class="docutils literal notranslate"><span class="pre">EmpiricalAlgorithm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.empirical.html#csle_system_identification.empirical.empirical_algorithm.EmpiricalAlgorithm.fit"><code class="docutils literal notranslate"><span class="pre">EmpiricalAlgorithm.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.empirical.html#csle_system_identification.empirical.empirical_algorithm.EmpiricalAlgorithm.hparam_names"><code class="docutils literal notranslate"><span class="pre">EmpiricalAlgorithm.hparam_names()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.empirical.html#module-csle_system_identification.empirical">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#csle-system-identification-expectation-maximization-expectation-maximization-algorithm-module">csle_system_identification.expectation_maximization.expectation_maximization_algorithm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#module-csle_system_identification.expectation_maximization.expectation_maximization_algorithm">csle_system_identification.expectation_maximization.expectation_maximization_algorithm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#csle_system_identification.expectation_maximization.expectation_maximization_algorithm.ExpectationMaximizationAlgorithm"><code class="docutils literal notranslate"><span class="pre">ExpectationMaximizationAlgorithm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#csle_system_identification.expectation_maximization.expectation_maximization_algorithm.ExpectationMaximizationAlgorithm.fit"><code class="docutils literal notranslate"><span class="pre">ExpectationMaximizationAlgorithm.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#csle_system_identification.expectation_maximization.expectation_maximization_algorithm.ExpectationMaximizationAlgorithm.hparam_names"><code class="docutils literal notranslate"><span class="pre">ExpectationMaximizationAlgorithm.hparam_names()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.expectation_maximization.html#module-csle_system_identification.expectation_maximization">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_system_identification.gp.html">csle_system_identification.gp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.gp.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.gp.html#csle-system-identification-gp-gp-regression-algorithm-module">csle_system_identification.gp.gp_regression_algorithm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.gp.html#module-csle_system_identification.gp.gp_regression_algorithm">csle_system_identification.gp.gp_regression_algorithm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm"><code class="docutils literal notranslate"><span class="pre">GPRegressionAlgorithm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm.fit"><code class="docutils literal notranslate"><span class="pre">GPRegressionAlgorithm.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm.hparam_names"><code class="docutils literal notranslate"><span class="pre">GPRegressionAlgorithm.hparam_names()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.gp.html#module-csle_system_identification.gp.gp_regression_model_with_gauissan_noise">csle_system_identification.gp.gp_regression_model_with_gauissan_noise module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise"><code class="docutils literal notranslate"><span class="pre">GPRegressionModelWithGaussianNoise</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.forward"><code class="docutils literal notranslate"><span class="pre">GPRegressionModelWithGaussianNoise.forward()</span></code></a></li>
@@ -145,8 +165,22 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.job_controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle-system-identification-job-controllers-data-collection-job-manager-module">csle_system_identification.job_controllers.data_collection_job_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle-system-identification-job-controllers-system-identification-job-manager-module">csle_system_identification.job_controllers.system_identification_job_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.job_controllers.html#module-csle_system_identification.job_controllers.data_collection_job_manager">csle_system_identification.job_controllers.data_collection_job_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager"><code class="docutils literal notranslate"><span class="pre">DataCollectionJobManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.run_data_collection_job"><code class="docutils literal notranslate"><span class="pre">DataCollectionJobManager.run_data_collection_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.start_data_collection_job_in_background"><code class="docutils literal notranslate"><span class="pre">DataCollectionJobManager.start_data_collection_job_in_background()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_system_identification.job_controllers.html#module-csle_system_identification.job_controllers.system_identification_job_manager">csle_system_identification.job_controllers.system_identification_job_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager"><code class="docutils literal notranslate"><span class="pre">SystemIdentificationJobManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager.run_system_identification_job"><code class="docutils literal notranslate"><span class="pre">SystemIdentificationJobManager.run_system_identification_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_system_identification.job_controllers.html#csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager.start_system_identification_job_in_background"><code class="docutils literal notranslate"><span class="pre">SystemIdentificationJobManager.start_system_identification_job_in_background()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_system_identification.job_controllers.html#module-csle_system_identification.job_controllers">Module contents</a></li>
 </ul>
 </li>
@@ -156,8 +190,67 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="csle-system-identification-emulator-module">
-<h2>csle_system_identification.emulator module<a class="headerlink" href="#csle-system-identification-emulator-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_system_identification.emulator">
+<span id="csle-system-identification-emulator-module"></span><h2>csle_system_identification.emulator module<a class="headerlink" href="#module-csle_system_identification.emulator" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_system_identification.emulator.Emulator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_system_identification.emulator.</span></span><span class="sig-name descname"><span class="pre">Emulator</span></span><a class="reference internal" href="_modules/csle_system_identification/emulator.html#Emulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.emulator.Emulator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for running episodes in the emulation system</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_system_identification.emulator.Emulator.run_action_sequences">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_action_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_sequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">EmulationAttackerAction</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_sequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">EmulationDefenderAction</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_statistics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">EmulationStatistics</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_collection_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataCollectionJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_emulation_traces_every</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_traces_to_save_with_data_collection_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intrusion_start_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intrusion_continue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_system_identification/emulator.html#Emulator.run_action_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.emulator.Emulator.run_action_sequences" title="Permalink to this definition"></a></dt>
+<dd><p>Runs an attacker and defender sequence in the emulation &lt;repeat_times&gt; times</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_env_config</strong> – the configuration of the emulation</p></li>
+<li><p><strong>attacker_sequence</strong> – the sequence of attacker actions</p></li>
+<li><p><strong>defender_sequence</strong> – the sequenceo of defender actions</p></li>
+<li><p><strong>repeat_times</strong> – the number of times to repeat the sequences</p></li>
+<li><p><strong>sleep_time</strong> – the number of seconds to sleep between time-steps</p></li>
+<li><p><strong>save_dir</strong> – the directory to save the collected traces</p></li>
+<li><p><strong>emulation_statistics</strong> – the emulation statistics to update</p></li>
+<li><p><strong>descr</strong> – descr of the execution</p></li>
+<li><p><strong>save</strong> – boolean parameter indicating whether traces and statistics should be saved or not</p></li>
+<li><p><strong>data_collection_job</strong> – the system identification job configuration</p></li>
+<li><p><strong>save_emulation_traces_every</strong> – how frequently to save emulation traces</p></li>
+<li><p><strong>emulation_traces_to_save_with_data_collection_job</strong> – num traces to save with the job</p></li>
+<li><p><strong>intrusion_start_p</strong> – the p parameter for the geometric distribution that determines
+when an intrusion starts</p></li>
+<li><p><strong>intrusion_continue</strong> – the p parameter for the geometric distribution that determines
+when an intrusion continues</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_system_identification.emulator.Emulator.run_actions">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationTrace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">EmulationTrace</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">EmulationEnvState</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_system_identification/emulator.html#Emulator.run_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.emulator.Emulator.run_actions" title="Permalink to this definition"></a></dt>
+<dd><p>Runs a pair of actions in the emulation and updates a provided trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_env_config</strong> – configuration of the emulation environment</p></li>
+<li><p><strong>attacker_action</strong> – the attacker action</p></li>
+<li><p><strong>s</strong> – the current emulation state</p></li>
+<li><p><strong>defender_action</strong> – the defender action</p></li>
+<li><p><strong>trace</strong> – the trace to update</p></li>
+<li><p><strong>sleep_time</strong> – the time-step length</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated trace and state</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-csle_system_identification">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_system_identification" title="Permalink to this heading"></a></h2>

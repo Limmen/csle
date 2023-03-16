@@ -13,7 +13,9 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.agents.reinforce.reinforce_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.reinforce.reinforce_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -74,6 +76,7 @@
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">gym_csle_stopping_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_config</span> <span class="kn">import</span> <span class="n">ExperimentConfig</span>
@@ -87,7 +90,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
 <span class="kn">from</span> <span class="nn">csle_agents.agents.base.base_agent</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
 <span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agents_constants</span>
-<span class="kn">from</span> <span class="nn">csle_agents.common.fnn_w_softmax</span> <span class="kn">import</span> <span class="n">FNNwithSoftmax</span>
+<span class="kn">from</span> <span class="nn">csle_common.models.fnn_w_softmax</span> <span class="kn">import</span> <span class="n">FNNwithSoftmax</span>
 
 
 <div class="viewcode-block" id="ReinforceAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent">[docs]</a><span class="k">class</span> <span class="nc">ReinforceAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
@@ -253,8 +256,8 @@
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LEARNING_RATE_DECAY_RATE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LEARNING_RATE_EXP_DECAY</span><span class="p">,</span>
-                <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">,</span>
-                <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">ACTIVATION_FUNCTION</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OPTIMIZER</span><span class="p">]</span></div>
+                <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">ACTIVATION_FUNCTION</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OPTIMIZER</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="ReinforceAgent.reinforce"><a class="viewcode-back" href="../../../../csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.reinforce">[docs]</a>    <span class="k">def</span> <span class="nf">reinforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                   <span class="n">training_job</span><span class="p">:</span> <span class="n">TrainingJobConfig</span><span class="p">,</span> <span class="n">random_seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
@@ -274,13 +277,13 @@
         <span class="n">policy_network</span> <span class="o">=</span> <span class="n">FNNwithSoftmax</span><span class="p">(</span>
             <span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="n">output_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">,</span>
-            <span class="n">hidden_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="n">num_hidden_layers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="n">hidden_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">ACTIVATION_FUNCTION</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">hidden_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">num_hidden_layers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">hidden_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">ACTIVATION_FUNCTION</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
         <span class="p">)</span>
 
         <span class="c1"># Setup device</span>
-        <span class="n">policy_network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="n">policy_network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
 
         <span class="c1"># Setup optimizer</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OPTIMIZER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">ADAM</span><span class="p">:</span>
@@ -533,7 +536,7 @@
         <span class="c1"># perform backprop</span>
         <span class="n">policy_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="c1"># maybe clip gradient</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="n">policy_network</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
         <span class="c1"># gradient descent step</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>

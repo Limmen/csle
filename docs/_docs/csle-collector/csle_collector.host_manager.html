@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_collector.host_manager package &mdash; csle-collector 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-collector
+            <a href="index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -240,7 +239,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_collector.host_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.host_manager.rst.txt" rel="nofollow"> View page source</a>
@@ -268,10 +267,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_attempt_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/failed_login_attempt.html#FailedLoginAttempt.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt.parse_from_str" title="Permalink to this definition"></a></dt>
 <dd><p>Parses a failed login event DTO from a string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>login_attempt_str</strong> – the string to parse</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the parsed DTO</p>
 </dd>
 </dl>
@@ -292,13 +291,13 @@
 <span class="sig-name descname"><span class="pre">configFilebeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigFilebeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.configFilebeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configFilebeat" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the configuration of filebeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -309,13 +308,13 @@
 <span class="sig-name descname"><span class="pre">configHeartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigHeartbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.configHeartbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configHeartbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the configuration of heartbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -326,13 +325,13 @@
 <span class="sig-name descname"><span class="pre">configMetricbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigMetricbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.configMetricbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configMetricbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the configuration of metricbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -343,13 +342,13 @@
 <span class="sig-name descname"><span class="pre">configPacketbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigPacketbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.configPacketbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configPacketbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the configuration of packetbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -360,13 +359,13 @@
 <span class="sig-name descname"><span class="pre">getHostStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetHostStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getHostStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getHostStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the status of the host</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the host</p>
 </dd>
 </dl>
@@ -377,13 +376,13 @@
 <span class="sig-name descname"><span class="pre">getIdsAlerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetHostMetricsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getIdsAlerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the host metrics from given timestamps</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with IDS statistics</p>
 </dd>
 </dl>
@@ -394,7 +393,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_filebeat_elasticsearch_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_filebeat_elasticsearch_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_elasticsearch_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the filebeat elasticsearch module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -405,7 +404,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_filebeat_kafka_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_filebeat_kafka_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_kafka_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the filebeat kafka module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -416,7 +415,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_filebeat_kibana_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_filebeat_kibana_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_kibana_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the filebeat kibana module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -427,7 +426,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_filebeat_logstash_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_filebeat_logstash_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_logstash_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the filebeat logstash module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -438,7 +437,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_filebeat_snort_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_filebeat_snort_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_snort_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the filebeat snort module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -449,7 +448,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_filebeat_system_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_filebeat_system_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_system_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the filebeat system module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -460,13 +459,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_metricbeat_elasticsearch_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_metricbeat_elasticsearch_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_elasticsearch_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the metricbeat elastic module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>elastic_ip</strong> – ip of the elastic server</p></li>
 <li><p><strong>elastic_port</strong> – port of the elastic server</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -477,13 +476,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_metricbeat_kafka_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_metricbeat_kafka_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_kafka_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the metricbeat kafka module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kafka_ip</strong> – ip of the kafka server</p></li>
 <li><p><strong>kafka_port</strong> – port of the kafka server</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -494,13 +493,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_metricbeat_kibana_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_metricbeat_kibana_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_kibana_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the metricbeat kibana module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – ip of the kibana server</p></li>
 <li><p><strong>kibana_port</strong> – port of the kibana server</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -511,7 +510,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_metricbeat_linux_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_metricbeat_linux_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_linux_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the metricbeat system module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -522,13 +521,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_metricbeat_logstash_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logstash_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logstash_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_metricbeat_logstash_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_logstash_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the metricbeat logstas module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>logstash_ip</strong> – ip of the logstash server</p></li>
 <li><p><strong>logstash_port</strong> – port of the logstash server</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -539,7 +538,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_metricbeat_system_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.set_metricbeat_system_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_system_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the metricbeat system module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -550,13 +549,13 @@
 <span class="sig-name descname"><span class="pre">startFilebeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartFilebeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.startFilebeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.startFilebeat" title="Permalink to this definition"></a></dt>
 <dd><p>Starts filebeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -567,13 +566,13 @@
 <span class="sig-name descname"><span class="pre">startHeartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartHeartbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.startHeartbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.startHeartbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Starts heartbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -584,13 +583,13 @@
 <span class="sig-name descname"><span class="pre">startHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartHostMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.startHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.startHostMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the Host monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host monitor thread</p>
 </dd>
 </dl>
@@ -601,13 +600,13 @@
 <span class="sig-name descname"><span class="pre">startMetricbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartMetricbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.startMetricbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.startMetricbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Starts metricbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -618,13 +617,13 @@
 <span class="sig-name descname"><span class="pre">startPacketbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartPacketbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.startPacketbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.startPacketbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Starts packetbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -635,13 +634,13 @@
 <span class="sig-name descname"><span class="pre">stopFilebeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopFilebeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.stopFilebeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopFilebeat" title="Permalink to this definition"></a></dt>
 <dd><p>Stops filebeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -652,13 +651,13 @@
 <span class="sig-name descname"><span class="pre">stopHeartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopHeartbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.stopHeartbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopHeartbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Stops heartbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -669,13 +668,13 @@
 <span class="sig-name descname"><span class="pre">stopHostMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopHostMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.stopHostMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopHostMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the Host monitor thread if it is running</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host monitor thread</p>
 </dd>
 </dl>
@@ -686,13 +685,13 @@
 <span class="sig-name descname"><span class="pre">stopMetricbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopMetricbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.stopMetricbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopMetricbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Stops metricbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -703,13 +702,13 @@
 <span class="sig-name descname"><span class="pre">stopPacketbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopPacketbeatMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.stopPacketbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopPacketbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Stops packetbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the Host</p>
 </dd>
 </dl>
@@ -727,7 +726,7 @@
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostMonitorThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostMonitorThread.run" title="Permalink to this definition"></a></dt>
 <dd><p>Main loop of the thread. Parses log files and metrics on the host and pushes it to Kafka periodically</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -740,7 +739,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50049</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'host_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.serve" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the gRPC server for managing clients</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>port</strong> – the port that the server will listen to</p></li>
 <li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
@@ -748,7 +747,7 @@
 <li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -976,7 +975,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_files_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_topics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_config" title="Permalink to this definition"></a></dt>
 <dd><p>Generates the filebeat.yml config</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>log_files_paths</strong> – the list of log files that filebeat should monitor</p></li>
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
@@ -991,7 +990,7 @@
 <li><p><strong>kafka_ip</strong> – the kafka server ip</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the filebeat configuration dict</p>
 </dd>
 </dl>
@@ -1001,7 +1000,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_elasticsearch_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_elasticsearch_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_elasticsearch_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_elasticsearch_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the elasticsearch filebeat module config</p>
 </dd>
 </dl>
@@ -1011,7 +1010,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kafka_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_kafka_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_kafka_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kafka_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the kafka filebeat module config</p>
 </dd>
 </dl>
@@ -1021,7 +1020,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kibana_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_kibana_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_kibana_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kibana_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the kibana filebeat module config</p>
 </dd>
 </dl>
@@ -1031,7 +1030,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_logstash_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_logstash_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_logstash_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_logstash_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the logstash filebeat module config</p>
 </dd>
 </dl>
@@ -1041,7 +1040,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_snort_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_snort_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_snort_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_snort_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the snort filebeat module config</p>
 </dd>
 </dl>
@@ -1051,7 +1050,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_system_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_system_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_system_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_system_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the system filebeat module config</p>
 </dd>
 </dl>
@@ -1062,7 +1061,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">heartbeat_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hosts_to_monitor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.heartbeat_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.heartbeat_config" title="Permalink to this definition"></a></dt>
 <dd><p>Generates the heartbeat.yml config</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
 <li><p><strong>kibana_port</strong> – the port of Kibana where the data should be visualized</p></li>
@@ -1072,7 +1071,7 @@
 <li><p><strong>hosts_to_monitor</strong> – a list of host IP addresses to monitor</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the heartbeat configuration dict</p>
 </dd>
 </dl>
@@ -1082,7 +1081,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_metrics_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_metrics_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty HostMetricsDTO</p>
 </dd>
 </dl>
@@ -1093,10 +1092,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_metrics_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_metrics_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a HostMetricsDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -1107,10 +1106,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_metrics_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_metrics_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HostMetricsDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_metrics_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a HostMetricsDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>host_metrics_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -1120,7 +1119,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_monitor_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_monitor_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty HostStatusDTO</p>
 </dd>
 </dl>
@@ -1131,10 +1130,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_monitor_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_monitor_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a HostStatusDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -1145,10 +1144,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host_monitor_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HostStatusDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.host_monitor_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a HostStatusDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>host_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -1159,7 +1158,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_config" title="Permalink to this definition"></a></dt>
 <dd><p>Generates the metricbeat.yml config</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
 <li><p><strong>kibana_port</strong> – the port of Kibana where the data should be visualized</p></li>
@@ -1169,7 +1168,7 @@
 <li><p><strong>reload_enabled</strong> – whether automatic reload of modules should be enabled</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the metricbeat configuration dict</p>
 </dd>
 </dl>
@@ -1179,7 +1178,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_elasticsearch_module_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_elasticsearch_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_elasticsearch_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_elasticsearch_module_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the elasticsearch metricbeat module config</p>
 </dd>
 </dl>
@@ -1190,13 +1189,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_kafka_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_kafka_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_kafka_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the kafka metricbeat module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kafka_ip</strong> – the kibana host IP</p></li>
 <li><p><strong>kafka_port</strong> – the kibana host port</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the kafka metricbeat module config</p>
 </dd>
 </dl>
@@ -1207,13 +1206,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_kibana_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_kibana_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_kibana_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the kibana metricbeat module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the kibana host IP</p></li>
 <li><p><strong>kibana_port</strong> – the kibana host port</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the kibana metricbeat module config</p>
 </dd>
 </dl>
@@ -1224,7 +1223,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_linux_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_linux_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_linux_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the linux metricbeat module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the linux metricbeat module config</p>
 </dd>
 </dl>
@@ -1235,13 +1234,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_logstash_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logstash_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logstash_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_logstash_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_logstash_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the logstash metricbeat module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>logstash_ip</strong> – the kibana host IP</p></li>
 <li><p><strong>logstash_port</strong> – the kibana host port</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the kibana metricbeat module config</p>
 </dd>
 </dl>
@@ -1252,7 +1251,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metricbeat_system_module_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.metricbeat_system_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_system_module_config" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the system metricbeat module configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the system metricbeat module config</p>
 </dd>
 </dl>
@@ -1263,7 +1262,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">packetbeat_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.packetbeat_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.packetbeat_config" title="Permalink to this definition"></a></dt>
 <dd><p>Generates the packetbeat.yml config</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
 <li><p><strong>kibana_port</strong> – the port of Kibana where the data should be visualized</p></li>
@@ -1272,7 +1271,7 @@
 <li><p><strong>num_elastic_shards</strong> – the number of elastic shards</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the filebeat configuration dict</p>
 </dd>
 </dl>
@@ -1283,10 +1282,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_failed_login_attempts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_failed_login_attempts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_failed_login_attempts" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the number of recent failed login attempts</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>emulation_config</strong> – configuration to connect to the node in the emulation</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the number of recently failed login attempts</p>
 </dd>
 </dl>
@@ -1297,13 +1296,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_host_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics" title="Permalink to this definition"></a></dt>
 <dd><p>Reads the latest metrics from the host</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>failed_auth_last_ts</strong> – the last time-step of read failed authentication attempts</p></li>
 <li><p><strong>login_last_ts</strong> – the last time-step of read successful logins</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The parsed host metrics</p>
 </dd>
 </dl>
@@ -1314,7 +1313,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_latest_ts_auth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_latest_ts_auth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_auth" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the timestamp of the latest failed login attempt</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the number of recently failed login attempts</p>
 </dd>
 </dl>
@@ -1325,7 +1324,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_latest_ts_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_latest_ts_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_login" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the timestamp of the latest successful login attempt</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the number of recently failed login attempts</p>
 </dd>
 </dl>
@@ -1336,7 +1335,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_logged_in_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_logged_in_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_logged_in_users" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the number of logged-in users on the server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the number of logged in users</p>
 </dd>
 </dl>
@@ -1347,7 +1346,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_open_connections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_open_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_open_connections" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the number of open connections to the server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the number of open connections</p>
 </dd>
 </dl>
@@ -1358,10 +1357,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_processes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_processes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_processes" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the number of processes on the server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>emulation_config</strong> – configuration to connect to the node in the emulation</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the number of processes</p>
 </dd>
 </dl>
@@ -1372,10 +1371,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_successful_login_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_successful_login_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_successful_login_events" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the number of recent successful login attempts</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>login_last_ts</strong> – the timestamp to use when filtering logins</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the number of recently failed login attempts</p>
 </dd>
 </dl>
@@ -1386,7 +1385,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_users" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the number of user accounts on the server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the number of user accounts</p>
 </dd>
 </dl>
@@ -1394,16 +1393,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.write_yaml_config">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_yaml_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.write_yaml_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.write_yaml_config" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_yaml_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.write_yaml_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.write_yaml_config" title="Permalink to this definition"></a></dt>
 <dd><p>Writes a given filebeat config to disk</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> – the filebeat config to write</p></li>
 <li><p><strong>path</strong> – the path to write the file to</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -1416,14 +1415,14 @@
 <span id="csle-collector-host-manager-host-metrics-module"></span><h2>csle_collector.host_manager.host_metrics module<a class="headerlink" href="#module-csle_collector.host_manager.host_metrics" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_metrics.</span></span><span class="sig-name descname"><span class="pre">HostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_logged_in_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_failed_login_attempts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_open_connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_login_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_metrics.</span></span><span class="sig-name descname"><span class="pre">HostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_logged_in_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_failed_login_attempts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_open_connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_login_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>DTO class containing host metrics</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the object</p>
 </dd>
 </dl>
@@ -1434,10 +1433,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -1448,10 +1447,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the Kafka record string to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>record</strong> – the kafka record</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created DTO</p>
 </dd>
 </dl>
@@ -1462,13 +1461,13 @@
 <span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_deltas" title="Permalink to this definition"></a></dt>
 <dd><p>Get the deltas between two stats objects</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stats_prime</strong> – the stats object to compare with</p></li>
 <li><p><strong>max_counter</strong> – the maximum counter_value</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the deltas and the labels</p>
 </dd>
 </dl>
@@ -1479,7 +1478,7 @@
 <span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_values" title="Permalink to this definition"></a></dt>
 <dd><p>Get the current values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the values and the labels</p>
 </dd>
 </dl>
@@ -1489,7 +1488,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attributes of the DTO</p>
 </dd>
 </dl>
@@ -1499,7 +1498,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -1509,7 +1508,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the instance</p>
 </dd>
 </dl>
@@ -1520,10 +1519,10 @@
 <span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dto" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the object into a gRPC DTO for serialization</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO in addition to the metrics</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a csle_collector.host_manager.host_manager_pb2.HostMetricsDTO</p>
 </dd>
 </dl>
@@ -1534,10 +1533,10 @@
 <span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a Kafka record string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ip</strong> – the IP to add to the record in addition to the metrics</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a comma separated string representing the kafka record</p>
 </dd>
 </dl>
@@ -1548,13 +1547,13 @@
 <span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the DTO based on a kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>record</strong> – the kafka record</p></li>
 <li><p><strong>ip</strong> – the host ip</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -1570,7 +1569,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">config_filebeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_files_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_topics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filebeat_modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#config_filebeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.config_filebeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to update the filebeat configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>log_files_paths</strong> – the list of log files that filebeat should monitor</p></li>
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
@@ -1588,7 +1587,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1599,7 +1598,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">config_heartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hosts_to_monitor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#config_heartbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.config_heartbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to update the heartbeat configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
 <li><p><strong>kibana_port</strong> – the port of Kibana where the data should be visualized</p></li>
@@ -1611,7 +1610,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1622,7 +1621,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">config_metricbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metricbeat_modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#config_metricbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.config_metricbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to update the metricbeat configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
 <li><p><strong>kibana_port</strong> – the port of Kibana where the data should be visualized</p></li>
@@ -1637,7 +1636,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1648,7 +1647,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">config_packetbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#config_packetbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.config_packetbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to update the packetbeat configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kibana_ip</strong> – the IP of Kibana where the data should be visualized</p></li>
 <li><p><strong>kibana_port</strong> – the port of Kibana where the data should be visualized</p></li>
@@ -1659,7 +1658,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1670,7 +1669,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">get_host_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#get_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.get_host_metrics" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the Host manager for the data of the Host metrics from given timestamps</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>failed_auth_last_ts</strong> – the timtestamp to parse failed login from</p></li>
@@ -1678,7 +1677,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an HostMetricsDTO with host metrics</p>
 </dd>
 </dl>
@@ -1689,13 +1688,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">get_host_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#get_host_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.get_host_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the Host manager for the status of the Host monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1706,13 +1705,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">start_filebeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#start_filebeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.start_filebeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to start filebeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1723,13 +1722,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">start_heartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#start_heartbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.start_heartbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to start heartbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1740,7 +1739,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">start_host_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#start_host_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.start_host_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to start the Host monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kafka_ip</strong> – the ip of the Kafka server</p></li>
 <li><p><strong>kafka_port</strong> – the port of the Kafka server</p></li>
@@ -1749,7 +1748,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1760,13 +1759,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">start_metricbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#start_metricbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.start_metricbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to start metricbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1777,13 +1776,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">start_packetbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#start_packetbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.start_packetbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to start packetbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1794,13 +1793,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">stop_filebeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#stop_filebeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.stop_filebeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to stop filebeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1811,13 +1810,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">stop_heartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#stop_heartbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.stop_heartbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to stop heartbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1828,13 +1827,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">stop_host_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#stop_host_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.stop_host_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to stop the Host monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1845,13 +1844,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">stop_metricbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#stop_metricbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.stop_metricbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to stop metricbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1862,13 +1861,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.query_host_manager.</span></span><span class="sig-name descname"><span class="pre">stop_packetbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub" title="csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub"><span class="pre">HostManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/query_host_manager.html#stop_packetbeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.query_host_manager.stop_packetbeat" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Host manager to stop packetbeat</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a HostDTO describing the host status</p>
 </dd>
 </dl>
@@ -1887,13 +1886,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_attempt_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/successful_login.html#SuccessfulLogin.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.successful_login.SuccessfulLogin.parse_from_str" title="Permalink to this definition"></a></dt>
 <dd><p>Parses a login event from a string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>login_attempt_str</strong> – the string to parse</p></li>
 <li><p><strong>year</strong> – the current year</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the parsed login event</p>
 </dd>
 </dl>

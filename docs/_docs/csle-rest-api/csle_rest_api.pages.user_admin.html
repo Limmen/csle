@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_rest_api.pages.user_admin package &mdash; csle-rest-api 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-rest-api
+            <a href="index.html" class="icon icon-home"> csle-rest-api
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -94,7 +93,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
       <li class="breadcrumb-item active">csle_rest_api.pages.user_admin package</li>
       <li class="wy-breadcrumbs-aside">
@@ -119,10 +118,10 @@
 <span class="sig-prename descclassname"><span class="pre">csle_rest_api.pages.user_admin.routes.</span></span><span class="sig-name descname"><span class="pre">get_user_admin_page_bp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">static_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Blueprint</span></span></span><a class="reference internal" href="_modules/csle_rest_api/pages/user_admin/routes.html#get_user_admin_page_bp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.pages.user_admin.routes.get_user_admin_page_bp" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a blueprint “sub application” of the main REST app that represents the user-admin page</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>static_folder</strong> – the folder with the static resources</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created blueprint</p>
 </dd>
 </dl>

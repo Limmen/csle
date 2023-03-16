@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
@@ -84,7 +83,7 @@
 
 
 <div class="viewcode-block" id="HTTP"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.HTTP">[docs]</a><span class="k">class</span> <span class="nc">HTTP</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to HTTP</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">HTTP_PROTOCOL_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span>
@@ -100,7 +99,7 @@
 
 
 <div class="viewcode-block" id="BEATS"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.BEATS">[docs]</a><span class="k">class</span> <span class="nc">BEATS</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to beats</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">RELOAD_ENABLED_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;reload.enabled&quot;</span>
@@ -139,7 +138,7 @@
 
 
 <div class="viewcode-block" id="FILEBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.FILEBEAT">[docs]</a><span class="k">class</span> <span class="nc">FILEBEAT</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Filebeat</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">FILEBEAT_GROUP_ID</span> <span class="o">=</span> <span class="s2">&quot;filebeat&quot;</span>
@@ -168,7 +167,7 @@
 
 
 <div class="viewcode-block" id="PACKETBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.PACKETBEAT">[docs]</a><span class="k">class</span> <span class="nc">PACKETBEAT</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Packetbeat</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">FILEBEAT_GROUP_ID</span> <span class="o">=</span> <span class="s2">&quot;packetbeat&quot;</span>
@@ -218,7 +217,7 @@
 
 
 <div class="viewcode-block" id="METRICBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.METRICBEAT">[docs]</a><span class="k">class</span> <span class="nc">METRICBEAT</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Metricbeat</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/metricbeat/&quot;</span>
@@ -260,7 +259,7 @@
 
 
 <div class="viewcode-block" id="HEARTBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.HEARTBEAT">[docs]</a><span class="k">class</span> <span class="nc">HEARTBEAT</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to heartbeat</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/heartbeat/&quot;</span>
@@ -277,7 +276,7 @@
 
 
 <div class="viewcode-block" id="GRPC"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.GRPC">[docs]</a><span class="k">class</span> <span class="nc">GRPC</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to GRPC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30</span>
@@ -286,7 +285,7 @@
 
 
 <div class="viewcode-block" id="SYSTEM"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.SYSTEM">[docs]</a><span class="k">class</span> <span class="nc">SYSTEM</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to system</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">AUTH_LOG</span> <span class="o">=</span> <span class="s2">&quot;/var/log/auth.log&quot;</span>
@@ -294,7 +293,7 @@
 
 
 <div class="viewcode-block" id="LOG_FILES"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.LOG_FILES">[docs]</a><span class="k">class</span> <span class="nc">LOG_FILES</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the log files</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">KAFKA_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;kafka_manager.log&quot;</span>
@@ -321,7 +320,7 @@
 
 
 <div class="viewcode-block" id="TRAFFIC_GENERATOR"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.TRAFFIC_GENERATOR">[docs]</a><span class="k">class</span> <span class="nc">TRAFFIC_GENERATOR</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the traffic generator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">START_TRAFFIC_GENERATOR_CMD</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /traffic_generator.sh &amp;&quot;</span>
@@ -334,7 +333,7 @@
 
 
 <div class="viewcode-block" id="DOCKER_STATS"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.DOCKER_STATS">[docs]</a><span class="k">class</span> <span class="nc">DOCKER_STATS</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Docker stats</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CPU_STATS</span> <span class="o">=</span> <span class="s2">&quot;cpu_stats&quot;</span>
@@ -375,7 +374,7 @@
 
 
 <div class="viewcode-block" id="OSSEC"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.OSSEC">[docs]</a><span class="k">class</span> <span class="nc">OSSEC</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the OSSEC HIDS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">MAX_ALERTS</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -457,7 +456,7 @@
 
 
 <div class="viewcode-block" id="SNORT_IDS_ROUTER"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.SNORT_IDS_ROUTER">[docs]</a><span class="k">class</span> <span class="nc">SNORT_IDS_ROUTER</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Snort IDS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">MAX_ALERTS</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -550,7 +549,7 @@
 
 
 <div class="viewcode-block" id="HOST_METRICS"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.HOST_METRICS">[docs]</a><span class="k">class</span> <span class="nc">HOST_METRICS</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the defender&#39;s sensor commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">LIST_LOGGED_IN_USERS_CMD</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
@@ -562,14 +561,14 @@
 
 
 <div class="viewcode-block" id="EXTERNAL_NETWORK"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.EXTERNAL_NETWORK">[docs]</a><span class="k">class</span> <span class="nc">EXTERNAL_NETWORK</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the external network</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="ELK_CONFIG"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.ELK_CONFIG">[docs]</a><span class="k">class</span> <span class="nc">ELK_CONFIG</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the ELK container configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">253</span>
@@ -578,7 +577,7 @@
 
 
 <div class="viewcode-block" id="KAFKA_CONFIG"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.KAFKA_CONFIG">[docs]</a><span class="k">class</span> <span class="nc">KAFKA_CONFIG</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the kafka container configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">253</span>
@@ -697,7 +696,7 @@
 
 
 <div class="viewcode-block" id="KAFKA"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.KAFKA">[docs]</a><span class="k">class</span> <span class="nc">KAFKA</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants for managing Kafka</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">KAFKA_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service kafka status&quot;</span>
@@ -718,7 +717,7 @@
 
 
 <div class="viewcode-block" id="ELK"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.ELK">[docs]</a><span class="k">class</span> <span class="nc">ELK</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants for managing the ELK stack</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ELK_START</span> <span class="o">=</span> <span class="s2">&quot;nohup /usr/local/bin/start.sh &gt; /elk_server.log &amp;&quot;</span>
@@ -738,7 +737,7 @@
 
 
 <div class="viewcode-block" id="RYU"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.RYU">[docs]</a><span class="k">class</span> <span class="nc">RYU</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants for managing Ryu</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CHECK_IF_RYU_CONTROLLER_IS_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;ps -aux | grep ryu_controller.py&quot;</span>
@@ -756,7 +755,7 @@
 
 
 <div class="viewcode-block" id="INTERFACES"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.INTERFACES">[docs]</a><span class="k">class</span> <span class="nc">INTERFACES</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constrants related to networking interfaces</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ETH1</span> <span class="o">=</span> <span class="s2">&quot;eth1&quot;</span>

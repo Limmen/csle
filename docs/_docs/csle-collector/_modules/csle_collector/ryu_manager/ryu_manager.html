@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.ryu_manager.ryu_manager</li>
       <li class="wy-breadcrumbs-aside">
@@ -89,13 +88,13 @@
 
 
 <div class="viewcode-block" id="RyuManagerServicer"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">RyuManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2_grpc</span><span class="o">.</span><span class="n">RyuManagerServicer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing a Ryu controller. Allows to start/stop the ryu controller remotely and also to query the</span>
 <span class="sd">    state of the controller</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">RYU_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -111,7 +110,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up RyuManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_ryu_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of Ryu</span>
 
 <span class="sd">        :return: status</span>
@@ -130,7 +129,7 @@
         <span class="k">return</span> <span class="n">running</span>
 
     <span class="k">def</span> <span class="nf">_get_monitor_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of the monitor</span>
 
 <span class="sd">        :return: status</span>
@@ -148,7 +147,7 @@
 <div class="viewcode-block" id="RyuManagerServicer.getRyuStatus"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.getRyuStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getRyuStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">GetRyuStatusMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the Ryu controller</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -171,7 +170,7 @@
 
 <div class="viewcode-block" id="RyuManagerServicer.stopRyu"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.stopRyu">[docs]</a>    <span class="k">def</span> <span class="nf">stopRyu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StopRyuMsg</span><span class="p">,</span>
                 <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Ryu controller</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -192,7 +191,7 @@
 
 <div class="viewcode-block" id="RyuManagerServicer.startRyu"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.startRyu">[docs]</a>    <span class="k">def</span> <span class="nf">startRyu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StartRyuMsg</span><span class="p">,</span>
                  <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the ryu server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -226,7 +225,7 @@
 
 <div class="viewcode-block" id="RyuManagerServicer.stopRyuMonitor"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.stopRyuMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">stopRyuMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StopRyuMsg</span><span class="p">,</span>
                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Ryu monitor</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -250,7 +249,7 @@
 
 <div class="viewcode-block" id="RyuManagerServicer.startRyuMonitor"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.startRyuMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">startRyuMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StartRyuMsg</span><span class="p">,</span>
                         <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the ryu monitor</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -287,7 +286,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50042</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ryu_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing the ryu controller</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

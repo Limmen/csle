@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_collector.ossec_ids_manager package &mdash; csle-collector 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-collector
+            <a href="index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -161,7 +160,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_collector.ossec_ids_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.ossec_ids_manager.rst.txt" rel="nofollow"> View page source</a>
@@ -187,7 +186,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert" title="csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert"><span class="pre">OSSECIDSAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert.html#OSSECIDSAlert.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the DTO</p>
 </dd>
 </dl>
@@ -198,10 +197,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert" title="csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert"><span class="pre">OSSECIDSAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert.html#OSSECIDSAlert.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representaion of the object into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the DTO</p>
 </dd>
 </dl>
@@ -212,10 +211,10 @@
 <span class="sig-name descname"><span class="pre">get_group_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert.html#OSSECIDSAlert.get_group_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert.get_group_id" title="Permalink to this definition"></a></dt>
 <dd><p>Get the id of a group</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>group</strong> – the group to get the id of</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the id</p>
 </dd>
 </dl>
@@ -225,7 +224,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert.html#OSSECIDSAlert.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -246,10 +245,10 @@
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.add" title="Permalink to this definition"></a></dt>
 <dd><p>Adds another alert counters object to this one</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>alert_counters</strong> – the counters to add</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -259,7 +258,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the object</p>
 </dd>
 </dl>
@@ -270,10 +269,10 @@
 <span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert" title="csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert"><span class="pre">OSSECIDSAlert</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.count" title="Permalink to this definition"></a></dt>
 <dd><p>Counts the list of alerts</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>alerts</strong> – list of alerts from the log</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -284,10 +283,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the DTO</p>
 </dd>
 </dl>
@@ -298,10 +297,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a kafka record to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>record</strong> – the kafka record to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the DTO</p>
 </dd>
 </dl>
@@ -312,10 +311,10 @@
 <span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counters_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.get_deltas" title="Permalink to this definition"></a></dt>
 <dd><p>Get the deltas between two counters objects</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>counters_prime</strong> – the counters object to compare with</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the deltas and the labels</p>
 </dd>
 </dl>
@@ -325,7 +324,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attributes of the DTO</p>
 </dd>
 </dl>
@@ -335,7 +334,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -345,7 +344,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -356,10 +355,10 @@
 <span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dto" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the object into a gRPC DTO for serialization</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO in addition to the statistics</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb</p>
 </dd>
 </dl>
@@ -370,10 +369,10 @@
 <span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ip</strong> – the ip to add to the record in addition to the IDS statistics</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a comma-separated string representing the kafka record</p>
 </dd>
 </dl>
@@ -384,10 +383,10 @@
 <span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html#OSSECIdsAlertCounters.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.update_with_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the DTO with a kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>record</strong> – the kafka record to use for updating</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -408,13 +407,13 @@
 <span class="sig-name descname"><span class="pre">getOSSECIdsAlerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetOSSECIdsAlertsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSECIdsManagerServicer.getOSSECIdsAlerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.getOSSECIdsAlerts" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the statistics of the OSSEC IDS log from a given timestamp</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with IDS statistics</p>
 </dd>
 </dl>
@@ -425,13 +424,13 @@
 <span class="sig-name descname"><span class="pre">getOSSECIdsMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetOSSECIdsMonitorStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSECIdsManagerServicer.getOSSECIdsMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.getOSSECIdsMonitorStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the status of the OSSEC IDS Monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the IDS monitor</p>
 </dd>
 </dl>
@@ -442,13 +441,13 @@
 <span class="sig-name descname"><span class="pre">startOSSECIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartOSSECIdsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSECIdsManagerServicer.startOSSECIds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.startOSSECIds" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the OSSEC IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -459,13 +458,13 @@
 <span class="sig-name descname"><span class="pre">startOSSECIdsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartOSSECIdsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSECIdsManagerServicer.startOSSECIdsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.startOSSECIdsMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the OSSEC IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -476,13 +475,13 @@
 <span class="sig-name descname"><span class="pre">stopOSSECIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartOSSECIdsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSECIdsManagerServicer.stopOSSECIds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.stopOSSECIds" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the OSSEC IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -493,13 +492,13 @@
 <span class="sig-name descname"><span class="pre">stopOSSECIdsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartOSSECIdsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSECIdsManagerServicer.stopOSSECIdsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.stopOSSECIdsMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the OSSEC IDS monitor thread if it is running</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -517,7 +516,7 @@
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#OSSecIdsMonitorThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSecIdsMonitorThread.run" title="Permalink to this definition"></a></dt>
 <dd><p>Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -530,7 +529,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50047</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ossec_ids_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager.serve" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the gRPC server for managing clients</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>port</strong> – the port that the server will listen to</p></li>
 <li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
@@ -538,7 +537,7 @@
 <li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -657,7 +656,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ossec_ids_alerts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert" title="csle_collector.ossec_ids_manager.ossec_ids_alert.OSSECIDSAlert"><span class="pre">OSSECIDSAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.check_ossec_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.check_ossec_ids_alerts" title="Permalink to this definition"></a></dt>
 <dd><p>Reads alerts from the OSSEC IDS alerts log</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a list of alerts</p>
 </dd>
 </dl>
@@ -667,7 +666,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ossec_ids_log_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.ossec_ids_log_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty OSSECIdsLogDTO</p>
 </dd>
 </dl>
@@ -678,10 +677,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ossec_ids_log_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.ossec_ids_log_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a OSSECIDSLogDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -692,10 +691,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ossec_ids_log_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ossec_ids_log_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OSSECIdsLogDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.ossec_ids_log_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a OSSECIdsLogDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ossec_ids_log_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -705,7 +704,7 @@
 <dt class="sig sig-object py" id="csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ossec_ids_monitor_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.ossec_ids_monitor_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>An empty OSSECIdsMonitorDTO</p>
 </dd>
 </dl>
@@ -716,10 +715,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ossec_ids_monitor_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.ossec_ids_monitor_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a OSSECIDSMonitorDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -730,10 +729,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ossec_ids_monitor_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ossec_ids_monitor_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OSSECIdsMonitorDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.ossec_ids_monitor_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a OSSECIdsMonitorDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ossec_ids_monitor_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -744,13 +743,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_ossec_ids_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">episode_last_alert_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters" title="csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters"><span class="pre">OSSECIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/ossec_ids_manager_util.html#OSSecManagerUtil.read_ossec_ids_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.read_ossec_ids_data" title="Permalink to this definition"></a></dt>
 <dd><p>Measures metrics from the OSSEC ids</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env_config</strong> – environment configuration</p></li>
 <li><p><strong>episode_last_alert_ts</strong> – timestamp when the episode started</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>ids statistics</p>
 </dd>
 </dl>
@@ -766,7 +765,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.query_ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">get_ossec_ids_alerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub" title="csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub"><span class="pre">OSSECIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/query_ossec_ids_manager.html#get_ossec_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_alerts" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the IDS manager for the data of the IDS log from a given time-step</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timestamp</strong> – the timtestamp to parse the log from</p></li>
@@ -774,7 +773,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an IdsLogDTO with data of the IDS log</p>
 </dd>
 </dl>
@@ -785,10 +784,10 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.query_ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">get_ossec_ids_monitor_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub" title="csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub"><span class="pre">OSSECIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/query_ossec_ids_manager.html#get_ossec_ids_monitor_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the IDS manager for the status of the IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -799,13 +798,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.query_ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">start_ossec_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub" title="csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub"><span class="pre">OSSECIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/query_ossec_ids_manager.html#start_ossec_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the OSSEC IDS manager to start the IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an OSSECIdsMonitorDTO describing the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -816,7 +815,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.query_ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">start_ossec_ids_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub" title="csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub"><span class="pre">OSSECIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/query_ossec_ids_manager.html#start_ossec_ids_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the IDS manager to start the IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kafka_ip</strong> – the ip of the Kafka server</p></li>
 <li><p><strong>kafka_port</strong> – the port of the Kafka server</p></li>
@@ -826,7 +825,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -837,13 +836,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.query_ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">stop_ossec_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub" title="csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub"><span class="pre">OSSECIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/query_ossec_ids_manager.html#stop_ossec_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the OSSEC IDS manager to stop the IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an OSSECIdsMonitorDTO describing the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -854,13 +853,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.ossec_ids_manager.query_ossec_ids_manager.</span></span><span class="sig-name descname"><span class="pre">stop_ossec_ids_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub" title="csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub"><span class="pre">OSSECIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSSECIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/ossec_ids_manager/query_ossec_ids_manager.html#stop_ossec_ids_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the IDS manager to stop the IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS monitor thread</p>
 </dd>
 </dl>

@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_system_identification.job_controllers.data_collection_job_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_system_identification.job_controllers.data_collection_job_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -89,7 +91,7 @@
 <span class="sd">        :param job_config: the configuration of the job</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">emulation_env_config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_by_name</span><span class="p">(</span><span class="s2">&quot;csle-level9-001&quot;</span><span class="p">)</span>
+        <span class="n">emulation_env_config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_by_name</span><span class="p">(</span><span class="s2">&quot;csle-level9-002&quot;</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">is_emulation_running</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
         <span class="n">em_statistic</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_statistic</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">job_config</span><span class="o">.</span><span class="n">emulation_statistic_id</span><span class="p">)</span>

@@ -13,7 +13,9 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.agents.dqn.dqn_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.dqn.dqn_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -76,6 +78,7 @@
 <span class="kn">from</span> <span class="nn">stable_baselines3.common.vec_env.vec_monitor</span> <span class="kn">import</span> <span class="n">VecMonitor</span>
 <span class="kn">from</span> <span class="nn">stable_baselines3.common.vec_env.dummy_vec_env</span> <span class="kn">import</span> <span class="n">DummyVecEnv</span>
 <span class="kn">from</span> <span class="nn">stable_baselines3.common.env_util</span> <span class="kn">import</span> <span class="n">make_vec_env</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_config</span> <span class="kn">import</span> <span class="n">ExperimentConfig</span>
@@ -180,13 +183,13 @@
 
             <span class="c1"># Create DQN Agent</span>
             <span class="n">policy_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                <span class="n">net_arch</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-                          <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">net_arch</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+                          <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">DQN</span><span class="p">(</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">MLP_POLICY</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">policy_kwargs</span><span class="o">=</span><span class="n">policy_kwargs</span><span class="p">,</span>
                 <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">DQN_BATCH_SIZE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
                 <span class="n">learning_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LEARNING_RATE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
                 <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
                 <span class="n">exploration_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">EXPLORATION_FRACTION</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
                 <span class="n">exploration_final_eps</span><span class="o">=</span><span class="p">(</span>
@@ -261,11 +264,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list with the hyperparameter names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">,</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LEARNING_RATE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">BATCH_SIZE</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_TRAINING_TIMESTEPS</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_EVERY</span><span class="p">,</span>
-                <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">,</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">SAVE_EVERY</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">EXPLORATION_INITIAL_EPS</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">EXPLORATION_FINAL_EPS</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">EXPLORATION_FRACTION</span><span class="p">,</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">MLP_POLICY</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">DQN</span><span class="o">.</span><span class="n">MAX_GRAD_NORM</span><span class="p">,</span>

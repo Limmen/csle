@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_rest_api.web_sockets.container_terminal.container_terminal &mdash; csle-rest-api 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-rest-api
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.constants.html">csle_rest_api.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.util.html">csle_rest_api.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.web_sockets.html">csle_rest_api.web_sockets package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-rest-api</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.web_sockets.container_terminal.container_terminal</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_rest_api.web_sockets.container_terminal.container_terminal</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
+<span class="kn">from</span> <span class="nn">flask_socketio</span> <span class="kn">import</span> <span class="ne">ConnectionRefusedError</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">import</span> <span class="nn">paramiko</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api</span> <span class="kn">import</span> <span class="n">socketio</span>
+
+
+<div class="viewcode-block" id="get_container_terminal_bp"><a class="viewcode-back" href="../../../../csle_rest_api.web_sockets.container_terminal.html#csle_rest_api.web_sockets.container_terminal.container_terminal.get_container_terminal_bp">[docs]</a><span class="k">def</span> <span class="nf">get_container_terminal_bp</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the blue print of the Web socket API for the container terminal</span>
+
+<span class="sd">    :param app: the Flask app</span>
+<span class="sd">    :return: the blue print</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">set_container_terminal_winsize</span><span class="p">(</span><span class="n">ssh_channel</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xpix</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ypix</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set shell window size of the host terminal</span>
+
+<span class="sd">        :param ssh_channel: the ssh_channel of the shell</span>
+<span class="sd">        :param row: the number of rows of the new window size</span>
+<span class="sd">        :param col: the number of cols of the new window size</span>
+<span class="sd">        :param xpix: the number of x pixels of the new size</span>
+<span class="sd">        :param ypix: the number of y pixels of the new size</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ssh_channel</span><span class="o">.</span><span class="n">resize_pty</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">width_pixels</span><span class="o">=</span><span class="n">xpix</span><span class="p">,</span> <span class="n">height_pixels</span><span class="o">=</span><span class="n">ypix</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ssh_connect</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets up an SSH connection to a given IP using the CSLE admin account</span>
+
+<span class="sd">        :param ip: the IP to connect to</span>
+<span class="sd">        :return: the created ssh connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE_ADMIN</span><span class="o">.</span><span class="n">SSH_USER</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE_ADMIN</span><span class="o">.</span><span class="n">SSH_PW</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">conn</span>
+
+    <span class="k">def</span> <span class="nf">read_and_forward_container_terminal_output</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads output from a given file descriptor and sends the output to the web socket</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_read_bytes</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">20</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">socketio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+            <span class="n">ssh_channel</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTAINER_TERMINAL_SSH_SHELL</span><span class="p">]</span>
+            <span class="n">data_ready</span> <span class="o">=</span> <span class="n">ssh_channel</span><span class="o">.</span><span class="n">recv_ready</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">data_ready</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">ssh_channel</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">max_read_bytes</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+                <span class="n">socketio</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_OUTPUT_MSG</span><span class="p">,</span>
+                              <span class="p">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">OUTPUT_PROPERTY</span><span class="p">:</span> <span class="n">output</span><span class="p">},</span>
+                              <span class="n">namespace</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@socketio</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_INPUT_MSG</span><span class="p">,</span>
+                 <span class="n">namespace</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">container_terminal_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Receives input msg on a websocket and writes it to the PTY representing the bash shell</span>
+<span class="sd">        of the Container terminal.</span>
+<span class="sd">        The pty sees this as if you are typing in a real terminal.</span>
+
+<span class="sd">        :param data: the input data to write</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">INPUT_PROPERTY</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="n">ssh_channel</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTAINER_TERMINAL_SSH_SHELL</span><span class="p">]</span>
+        <span class="n">ssh_channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="nd">@socketio</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_RESIZE_MSG</span><span class="p">,</span>
+                 <span class="n">namespace</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">container_terminal_resize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handler when receiving a message on a websocket to resize the PTY window of a container terminal.</span>
+<span class="sd">        The handler parses the data and resizes the window accordingly.</span>
+
+<span class="sd">        :param data: data with information about the new PTY size</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_container_terminal_winsize</span><span class="p">(</span><span class="n">ssh_channel</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTAINER_TERMINAL_SSH_SHELL</span><span class="p">],</span>
+                                       <span class="n">row</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ROWS_PROPERTY</span><span class="p">],</span>
+                                       <span class="n">col</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">COLS_PROPERTY</span><span class="p">])</span>
+
+    <span class="nd">@socketio</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONNECT_MSG</span><span class="p">,</span>
+                 <span class="n">namespace</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">container_terminal_connect</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handler for new websocket connection requests for the /container-terminal namespace.</span>
+
+<span class="sd">        First checks if the user is authorized and then sets up the connection</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">PARSED_CONFIG</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ConnectionRefusedError</span><span class="p">()</span>
+        <span class="n">ip_str</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_QUERY_PARAM</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ip_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">ip_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;xterm&#39;</span>
+            <span class="n">ssh_conn</span> <span class="o">=</span> <span class="n">ssh_connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+            <span class="n">ssh_channel</span> <span class="o">=</span> <span class="n">ssh_conn</span><span class="o">.</span><span class="n">invoke_shell</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">term</span><span class="p">)</span>
+            <span class="n">ssh_channel</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">set_container_terminal_winsize</span><span class="p">(</span><span class="n">ssh_channel</span><span class="o">=</span><span class="n">ssh_channel</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTAINER_TERMINAL_SSH_SHELL</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh_channel</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTAINER_TERMINAL_SSH_CONNECTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh_conn</span>
+            <span class="n">socketio</span><span class="o">.</span><span class="n">start_background_task</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">read_and_forward_container_terminal_output</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="ne">ConnectionRefusedError</span><span class="p">()</span>
+
+    <span class="n">container_terminal_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">container_terminal_bp</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

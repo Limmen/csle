@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_agents.agents.t_spsa package &mdash; csle-agents 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-agents
+            <a href="index.html" class="icon icon-home"> csle-agents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -65,7 +64,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.t_spsa package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle-agents-agents-t-spsa-t-spsa-agent-module">csle_agents.agents.t_spsa.t_spsa_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.t_spsa.t_spsa_agent">csle_agents.agents.t_spsa.t_spsa_agent module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.t_spsa">Module contents</a></li>
 </ul>
 </li>
@@ -93,7 +92,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_agents.agents.html">csle_agents.agents package</a></li>
       <li class="breadcrumb-item active">csle_agents.agents.t_spsa package</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,8 +109,222 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="csle-agents-agents-t-spsa-t-spsa-agent-module">
-<h2>csle_agents.agents.t_spsa.t_spsa_agent module<a class="headerlink" href="#csle-agents-agents-t-spsa-t-spsa-agent-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_agents.agents.t_spsa.t_spsa_agent">
+<span id="csle-agents-agents-t-spsa-t-spsa-agent-module"></span><h2>csle_agents.agents.t_spsa.t_spsa_agent module<a class="headerlink" href="#module-csle_agents.agents.t_spsa.t_spsa_agent" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.t_spsa.t_spsa_agent.</span></span><span class="sig-name descname"><span class="pre">TSPSAAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">EmulationEnvConfig</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Env</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAgent</span></code></a></p>
+<p>RL Agent implementing the T-SPSA algorithm from
+(Hammar, Stadler 2021 - Intrusion Prevention through Optimal Stopping))</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.batch_gradient">
+<span class="sig-name descname"><span class="pre">batch_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.batch_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.batch_gradient" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a batch of gradients and returns the average</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> – the current parameter vector</p></li>
+<li><p><strong>k</strong> – the current training iteration</p></li>
+<li><p><strong>ck</strong> – the perturbation step size</p></li>
+<li><p><strong>L</strong> – the total number of stops for the defender</p></li>
+<li><p><strong>gradient_batch_size</strong> – the number of gradients to include in the batch</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average of the batch of gradients</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.compute_avg_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_avg_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.compute_avg_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.compute_avg_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the average metrics of a dict with aggregated metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metrics</strong> – the dict with the aggregated metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.estimate_gk">
+<span class="sig-name descname"><span class="pre">estimate_gk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltak</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.estimate_gk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.estimate_gk" title="Permalink to this definition"></a></dt>
+<dd><p>Estimate the gradient at iteration k of the T-SPSA algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> – the current parameter vector</p></li>
+<li><p><strong>deltak</strong> – the perturbation direction vector</p></li>
+<li><p><strong>ck</strong> – the perturbation step size</p></li>
+<li><p><strong>L</strong> – the total number of stops for the defender</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the estimated gradient</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.eval_theta">
+<span class="sig-name descname"><span class="pre">eval_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultiThresholdStoppingPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.eval_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.eval_theta" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluates a given threshold policy by running monte-carlo simulations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>policy</strong> – the policy to evaluate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average metrics of the evaluation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.hparam_names">
+<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.hparam_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list with the hyperparameter names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.initial_theta">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.initial_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.initial_theta" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes theta randomly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>L</strong> – the dimension of theta</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the initialized theta vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.round_vec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.round_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.round_vec" title="Permalink to this definition"></a></dt>
+<dd><p>Rounds a vector to 3 decimals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec</strong> – the vector to round</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the rounded vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.spsa">
+<span class="sig-name descname"><span class="pre">spsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainingJobConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.spsa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.spsa" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the SPSA algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exp_result</strong> – the experiment result object to store the result</p></li>
+<li><p><strong>seed</strong> – the seed</p></li>
+<li><p><strong>training_job</strong> – the training job config</p></li>
+<li><p><strong>random_seeds</strong> – list of seeds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated experiment result and the trained policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ak">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">standard_ak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.standard_ak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ak" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the step size for gradient ascent at iteration k</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – a scalar hyperparameter</p></li>
+<li><p><strong>A</strong> – a scalar hyperparameter</p></li>
+<li><p><strong>epsilon</strong> – the epsilon scalar hyperparameter</p></li>
+<li><p><strong>k</strong> – the iteration index</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the step size a_k</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ck">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">standard_ck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lamb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.standard_ck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ck" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the step size of perturbations at iteration k</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c</strong> – a scalar hyperparameter</p></li>
+<li><p><strong>lamb</strong> – (lambda) a scalar hyperparameter</p></li>
+<li><p><strong>k</strong> – the iteration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the pertrubation step size</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_deltak">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">standard_deltak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.standard_deltak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_deltak" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the perturbation direction at iteration k</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> – the iteration</p></li>
+<li><p><strong>dimension</strong> – the dimension of the perturbation vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>delta_k the perturbation vector at iteration k</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.train" title="Permalink to this definition"></a></dt>
+<dd><p>Performs the policy training for the given random seeds using T-SPSA</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the training metrics and the trained policies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.update_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_spsa/t_spsa_agent.html#TSPSAAgent.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.update_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Update a dict with aggregated metrics using new information from the environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> – the dict with the aggregated metrics</p></li>
+<li><p><strong>info</strong> – the new information</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-csle_agents.agents.t_spsa">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.t_spsa" title="Permalink to this heading"></a></h2>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_csle_intrusion_response_game.envs package &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            gym-csle-intrusion-response-game
+            <a href="index.html" class="icon icon-home"> gym-csle-intrusion-response-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -128,7 +127,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">gym_csle_intrusion_response_game.envs package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/gym_csle_intrusion_response_game.envs.rst.txt" rel="nofollow"> View page source</a>
@@ -165,10 +164,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">get_random_baseline_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.get_random_baseline_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.get_random_baseline_return" title="Permalink to this definition"></a></dt>
 <dd><p>Utiltiy function for estimating the average return of a random defender strategy</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>samples</strong> – the number of samples to use for estimation</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the estimated return</p>
 </dd>
 </dl>
@@ -178,7 +177,7 @@ is fixed)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.get_traces">
 <span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.get_traces" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the list of simulation traces</p>
 </dd>
 </dl>
@@ -189,10 +188,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">get_upper_bound_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.get_upper_bound_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.get_upper_bound_return" title="Permalink to this definition"></a></dt>
 <dd><p>Utiltiy method for getting an upper bound on the average return</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>samples</strong> – the number of sample returns to average</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the estimated upper bound</p>
 </dd>
 </dl>
@@ -203,10 +202,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether an attacker action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -217,10 +216,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether a defender action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -231,7 +230,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.manual_play" title="Permalink to this definition"></a></dt>
 <dd><p>An interactive loop to test the environment manually</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -242,10 +241,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.render" title="Permalink to this definition"></a></dt>
 <dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
 </dd>
 </dl>
@@ -256,7 +255,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>initial observation</p>
 </dd>
 </dl>
@@ -267,7 +266,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.reset_traces" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the list of traces</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -275,13 +274,13 @@ is fixed)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.step" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_attacker.html#IntrusionResponseGameLocalPOMDPAttackerEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_attacker.IntrusionResponseGameLocalPOMDPAttackerEnv.step" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a step in the environment by executing the given action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>a2</strong> – defender action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(obs, reward, done, info)</p>
 </dd>
 </dl>
@@ -311,10 +310,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">get_random_baseline_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.get_random_baseline_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.get_random_baseline_return" title="Permalink to this definition"></a></dt>
 <dd><p>Utiltiy function for estimating the average return of a random defender strategy</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>samples</strong> – the number of samples to use for estimation</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the estimated return</p>
 </dd>
 </dl>
@@ -324,7 +323,7 @@ is fixed)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.get_traces">
 <span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.get_traces" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the list of simulation traces</p>
 </dd>
 </dl>
@@ -335,10 +334,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">get_upper_bound_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.get_upper_bound_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.get_upper_bound_return" title="Permalink to this definition"></a></dt>
 <dd><p>Utiltiy method for getting an upper bound on the average return</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>samples</strong> – the number of sample returns to average</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the estimated upper bound</p>
 </dd>
 </dl>
@@ -349,10 +348,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether an attacker action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -363,10 +362,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether a defender action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -377,7 +376,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.manual_play" title="Permalink to this definition"></a></dt>
 <dd><p>An interactive loop to test the environment manually</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -388,10 +387,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.render" title="Permalink to this definition"></a></dt>
 <dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
 </dd>
 </dl>
@@ -402,7 +401,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>initial observation</p>
 </dd>
 </dl>
@@ -413,7 +412,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.reset_traces" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the list of traces</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -421,13 +420,13 @@ is fixed)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.step" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_local_pomdp_defender.html#IntrusionResponseGameLocalPOMDPDefenderEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender.IntrusionResponseGameLocalPOMDPDefenderEnv.step" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a step in the environment by executing the given action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>a1</strong> – defender action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(obs, reward, done, info)</p>
 </dd>
 </dl>
@@ -456,7 +455,7 @@ is fixed)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.get_traces">
 <span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.get_traces" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the list of simulation traces</p>
 </dd>
 </dl>
@@ -467,10 +466,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether an attacker action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -481,10 +480,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether a defender action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -495,7 +494,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.manual_play" title="Permalink to this definition"></a></dt>
 <dd><p>An interactive loop to test the environment manually</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -506,10 +505,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.render" title="Permalink to this definition"></a></dt>
 <dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
 </dd>
 </dl>
@@ -520,7 +519,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>initial observation</p>
 </dd>
 </dl>
@@ -531,7 +530,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.reset_traces" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the list of traces</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -539,13 +538,13 @@ is fixed)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.step" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_attacker.html#IntrusionResponseGameWorkflowPOMDPAttackerEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker.IntrusionResponseGameWorkflowPOMDPAttackerEnv.step" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a step in the environment by executing the given action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>a1</strong> – defender action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(obs, reward, done, info)</p>
 </dd>
 </dl>
@@ -574,7 +573,7 @@ is fixed)</p>
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.get_traces">
 <span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.get_traces" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the list of simulation traces</p>
 </dd>
 </dl>
@@ -585,10 +584,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether an attacker action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -599,10 +598,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether a defender action in the environment is legal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True or False</p>
 </dd>
 </dl>
@@ -613,7 +612,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.manual_play" title="Permalink to this definition"></a></dt>
 <dd><p>An interactive loop to test the environment manually</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -624,10 +623,10 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.render" title="Permalink to this definition"></a></dt>
 <dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
 </dd>
 </dl>
@@ -638,7 +637,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>initial observation</p>
 </dd>
 </dl>
@@ -649,7 +648,7 @@ is fixed)</p>
 <span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset_traces" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the list of traces</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -657,13 +656,13 @@ is fixed)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.step" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/envs/intrusion_response_game_workflow_pomdp_defender.html#IntrusionResponseGameWorkflowPOMDPDefenderEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.step" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a step in the environment by executing the given action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>a1</strong> – defender action</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(obs, reward, done, info)</p>
 </dd>
 </dl>

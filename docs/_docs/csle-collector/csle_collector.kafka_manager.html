@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_collector.kafka_manager package &mdash; csle-collector 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-collector
+            <a href="index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -119,7 +118,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_collector.kafka_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.kafka_manager.rst.txt" rel="nofollow"> View page source</a>
@@ -148,13 +147,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-name descname"><span class="pre">createTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CreateTopicMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.createTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.createTopic" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a new Kafka topic</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
 </dd>
 </dl>
@@ -165,13 +164,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-name descname"><span class="pre">getKafkaStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetKafkaStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.getKafkaStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.getKafkaStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the state of the kafka server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
 </dd>
 </dl>
@@ -182,10 +181,10 @@ state of the server and create/delete topics.</p>
 <span class="sig-name descname"><span class="pre">hours_to_ms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.hours_to_ms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms" title="Permalink to this definition"></a></dt>
 <dd><p>Convert hours to ms</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>hours</strong> – the hours to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the ms</p>
 </dd>
 </dl>
@@ -196,13 +195,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-name descname"><span class="pre">startKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartKafkaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.startKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.startKafka" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the kafka server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
 </dd>
 </dl>
@@ -213,13 +212,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-name descname"><span class="pre">stopKafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopKafkaMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.stopKafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.stopKafka" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the kafka server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
 </dd>
 </dl>
@@ -232,7 +231,7 @@ state of the server and create/delete topics.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.kafka_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50051</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kafka_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.serve" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the gRPC server for managing the kafka server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>port</strong> – the port that the server will listen to</p></li>
 <li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
@@ -240,7 +239,7 @@ state of the server and create/delete topics.</p>
 <li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -347,7 +346,7 @@ state of the server and create/delete topics.</p>
 <dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty KafkaDTO</p>
 </dd>
 </dl>
@@ -358,10 +357,10 @@ state of the server and create/delete topics.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a KafkaDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -372,10 +371,10 @@ state of the server and create/delete topics.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">KafkaDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a KafkaDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>kafka_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -391,7 +390,7 @@ state of the server and create/delete topics.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">create_topic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partitions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replicas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retention_time_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#create_topic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.create_topic" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the KafkaManager to create a new Kafka topic</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>name</strong> – the name of the Kafka topic</p></li>
@@ -401,7 +400,7 @@ state of the server and create/delete topics.</p>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
 </dd>
 </dl>
@@ -412,13 +411,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">get_kafka_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#get_kafka_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.get_kafka_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the server for the kafka server status</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
 </dd>
 </dl>
@@ -429,13 +428,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">start_kafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#start_kafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.start_kafka" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Kafka server to start the Kafka server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
 </dd>
 </dl>
@@ -446,13 +445,13 @@ state of the server and create/delete topics.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.kafka_manager.query_kafka_server.</span></span><span class="sig-name descname"><span class="pre">stop_kafka</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub" title="csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub"><span class="pre">KafkaManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/query_kafka_server.html#stop_kafka"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.query_kafka_server.stop_kafka" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the Kafka server to stop the Kafka server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a KafkaDTO describing the status of the kafka server</p>
 </dd>
 </dl>

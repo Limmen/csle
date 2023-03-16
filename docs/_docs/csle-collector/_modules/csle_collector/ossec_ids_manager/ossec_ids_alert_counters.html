@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</li>
       <li class="wy-breadcrumbs-aside">
@@ -83,11 +82,11 @@
 
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters">[docs]</a><span class="k">class</span> <span class="nc">OSSECIdsAlertCounters</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO containing statistics from the OSSEC log</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level_alerts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
@@ -100,7 +99,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.add"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alert_counters</span><span class="p">:</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds another alert counters object to this one</span>
 
 <span class="sd">        :param alert_counters: the counters to add</span>
@@ -116,7 +115,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">group_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.count"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alerts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OSSECIDSAlert</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Counts the list of alerts</span>
 
 <span class="sd">        :param alerts: list of alerts from the log</span>
@@ -139,7 +138,7 @@
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.from_kafka_record"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a kafka record to a DTO</span>
 
 <span class="sd">        :param record: the kafka record to convert</span>
@@ -164,7 +163,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.update_with_kafka_record"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.update_with_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the DTO with a kafka record</span>
 
 <span class="sd">        :param record: the kafka record to use for updating</span>
@@ -188,7 +187,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">group_alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.to_kafka_record"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a kafka record</span>
 
 <span class="sd">        :param ip: the ip to add to the record in addition to the IDS statistics</span>
@@ -201,7 +200,7 @@
         <span class="k">return</span> <span class="n">record_str</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.to_dto"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dto">[docs]</a>    <span class="k">def</span> <span class="nf">to_dto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the object into a gRPC DTO for serialization</span>
 
 <span class="sd">        :param ip: the ip to add to the DTO in addition to the statistics</span>
@@ -246,7 +245,7 @@
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;total_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span><span class="si">}</span><span class="s2">, warning_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -256,7 +255,7 @@
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.from_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of the object into an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -274,7 +273,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.to_dict"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -289,7 +288,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.copy"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
@@ -304,7 +303,7 @@
         <span class="k">return</span> <span class="n">c</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.get_deltas"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.get_deltas">[docs]</a>    <span class="k">def</span> <span class="nf">get_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counters_prime</span><span class="p">:</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the deltas between two counters objects</span>
 
 <span class="sd">        :param counters_prime: the counters object to compare with</span>
@@ -320,14 +319,14 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">deltas</span><span class="p">),</span> <span class="n">labels</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.num_attributes"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: The number of attributes of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">22</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_IDS_ALERT_GROUP_ID</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="OSSECIdsAlertCounters.schema"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_alert_counters.OSSECIdsAlertCounters.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;OSSECIdsAlertCounters&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span></div></div>

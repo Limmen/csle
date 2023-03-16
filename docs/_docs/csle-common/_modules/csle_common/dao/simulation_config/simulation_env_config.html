@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.dao.simulation_config.simulation_env_config</li>
       <li class="wy-breadcrumbs-aside">
@@ -99,7 +98,7 @@
 
 
 <div class="viewcode-block" id="SimulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">SimulationEnvConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A DTO class representing the configuration of a simulation environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -115,7 +114,7 @@
                  <span class="n">env_parameters_config</span><span class="p">:</span> <span class="n">EnvParametersConfig</span><span class="p">,</span> <span class="n">plot_transition_probabilities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">plot_observation_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">plot_reward_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
                  <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param name: the name of the simulation</span>
@@ -161,7 +160,7 @@
 
 <div class="viewcode-block" id="SimulationEnvConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -206,7 +205,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="SimulationEnvConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -233,7 +232,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, descr: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -252,7 +251,7 @@
                <span class="sa">f</span><span class="s2">&quot;plot_reward_function: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_reward_function</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="SimulationEnvConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div></div>

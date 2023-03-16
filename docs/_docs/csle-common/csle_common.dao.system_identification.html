@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_common.dao.system_identification package &mdash; csle-common 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-common
+            <a href="index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -97,7 +96,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_common.dao.html">csle_common.dao package</a></li>
       <li class="breadcrumb-item active">csle_common.dao.system_identification package</li>
       <li class="wy-breadcrumbs-aside">
@@ -126,10 +125,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional" title="csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional"><span class="pre">EmpiricalConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_conditional.html#EmpiricalConditional.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted instance</p>
 </dd>
 </dl>
@@ -140,10 +139,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional" title="csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional"><span class="pre">EmpiricalConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_conditional.html#EmpiricalConditional.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -153,7 +152,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_conditional.html#EmpiricalConditional.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -164,10 +163,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_conditional.html#EmpiricalConditional.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -178,7 +177,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_conditional.html#EmpiricalConditional.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_conditional.EmpiricalConditional.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -199,7 +198,7 @@
 <span class="sig-name descname"><span class="pre">compute_kl_divergences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.compute_kl_divergences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.compute_kl_divergences" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the KL-divergences betwen different conditional distributions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -209,7 +208,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel" title="csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel"><span class="pre">EmpiricalSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the DTO</p>
 </dd>
 </dl>
@@ -220,10 +219,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel" title="csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel"><span class="pre">EmpiricalSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted instance</p>
 </dd>
 </dl>
@@ -234,10 +233,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel" title="csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel"><span class="pre">EmpiricalSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -247,7 +246,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -258,10 +257,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -272,7 +271,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/empirical_system_model.html#EmpiricalSystemModel.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.empirical_system_model.EmpiricalSystemModel.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -293,7 +292,7 @@
 <span class="sig-name descname"><span class="pre">compute_descriptive_statistics_and_distributions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.compute_descriptive_statistics_and_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.compute_descriptive_statistics_and_distributions" title="Permalink to this definition"></a></dt>
 <dd><p>Computes descriptive statistics and empirical probability distributions based on the counters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -304,10 +303,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics" title="csle_common.dao.system_identification.emulation_statistics.EmulationStatistics"><span class="pre">EmulationStatistics</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -318,10 +317,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics" title="csle_common.dao.system_identification.emulation_statistics.EmulationStatistics"><span class="pre">EmulationStatistics</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -332,7 +331,7 @@
 <span class="sig-name descname"><span class="pre">get_number_of_samples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.get_number_of_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.get_number_of_samples" title="Permalink to this definition"></a></dt>
 <dd><p>Counts the number of samples</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the number of samples</p>
 </dd>
 </dl>
@@ -351,10 +350,10 @@
 <span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">second_statistic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics" title="csle_common.dao.system_identification.emulation_statistics.EmulationStatistics"><span class="pre">EmulationStatistics</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.merge" title="Permalink to this definition"></a></dt>
 <dd><p>Merges the statistic with another statistic by adding the counts</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>second_statistic</strong> – the statistic to merge with</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -364,7 +363,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -375,10 +374,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -389,7 +388,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -400,14 +399,14 @@
 <span class="sig-name descname"><span class="pre">update_counters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState" title="csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState"><span class="pre">EmulationEnvState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState" title="csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState"><span class="pre">EmulationEnvState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.update_counters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.update_counters" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the delta counters for a specific dict based on a state transition s-&gt;s’</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d</strong> – the dict to update</p></li>
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>s_prime</strong> – the new state</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -418,7 +417,7 @@
 <span class="sig-name descname"><span class="pre">update_delta_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState" title="csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState"><span class="pre">EmulationEnvState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState" title="csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState"><span class="pre">EmulationEnvState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction" title="csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction"><span class="pre">EmulationAttackerAction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.update_delta_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.update_delta_statistics" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the emulation statistics (delta counters) with a given transition (s, a1, a2) -&gt; (s’)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the previous state</p></li>
 <li><p><strong>s_prime</strong> – the new state</p></li>
@@ -426,7 +425,7 @@
 <li><p><strong>a2</strong> – the attacker action</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -437,10 +436,10 @@
 <span class="sig-name descname"><span class="pre">update_initial_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState" title="csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState"><span class="pre">EmulationEnvState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/emulation_statistics.html#EmulationStatistics.update_initial_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.update_initial_statistics" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the emulation statistics for the initial state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>s</strong> – the initial state</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -461,10 +460,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional" title="csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional"><span class="pre">GaussianMixtureConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_conditional.html#GaussianMixtureConditional.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted instance</p>
 </dd>
 </dl>
@@ -475,10 +474,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional" title="csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional"><span class="pre">GaussianMixtureConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_conditional.html#GaussianMixtureConditional.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -489,7 +488,7 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_sklearn_gaussian_mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gmm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GaussianMixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditional_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional" title="csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional"><span class="pre">GaussianMixtureConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_conditional.html#GaussianMixtureConditional.from_sklearn_gaussian_mixture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.from_sklearn_gaussian_mixture" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the DTO from a Gaussian mixture fitted with sklearn</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gmm</strong> – the sklearn model</p></li>
 <li><p><strong>conditional_name</strong> – the name of the conditional</p></li>
@@ -499,7 +498,7 @@
 <li><p><strong>sample_space</strong> – the sample space</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a GaussianMixtureConditional instance</p>
 </dd>
 </dl>
@@ -519,7 +518,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_conditional.html#GaussianMixtureConditional.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -530,10 +529,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_conditional.html#GaussianMixtureConditional.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -544,7 +543,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_conditional.html#GaussianMixtureConditional.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_conditional.GaussianMixtureConditional.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -565,7 +564,7 @@
 <span class="sig-name descname"><span class="pre">compute_kl_divergences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.compute_kl_divergences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.compute_kl_divergences" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the KL-divergences betwen different conditional distributions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -575,7 +574,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel" title="csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel"><span class="pre">GaussianMixtureSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the DTO</p>
 </dd>
 </dl>
@@ -586,10 +585,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel" title="csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel"><span class="pre">GaussianMixtureSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted instance</p>
 </dd>
 </dl>
@@ -600,10 +599,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel" title="csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel"><span class="pre">GaussianMixtureSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -613,7 +612,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -624,10 +623,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -638,7 +637,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gaussian_mixture_system_model.html#GaussianMixtureSystemModel.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -651,7 +650,7 @@
 <span id="csle-common-dao-system-identification-gp-conditional-module"></span><h2>csle_common.dao.system_identification.gp_conditional module<a class="headerlink" href="#module-csle_common.dao.system_identification.gp_conditional" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gp_conditional.GPConditional">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.system_identification.gp_conditional.</span></span><span class="sig-name descname"><span class="pre">GPConditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditional_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observed_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observed_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.system_identification.gp_conditional.</span></span><span class="sig-name descname"><span class="pre">GPConditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditional_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observed_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observed_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A DTO representing a Gaussian process conditional distribution</p>
 <dl class="py method">
@@ -659,10 +658,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gp_conditional.GPConditional" title="csle_common.dao.system_identification.gp_conditional.GPConditional"><span class="pre">GPConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted instance</p>
 </dd>
 </dl>
@@ -673,10 +672,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gp_conditional.GPConditional" title="csle_common.dao.system_identification.gp_conditional.GPConditional"><span class="pre">GPConditional</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -687,7 +686,7 @@
 <span class="sig-name descname"><span class="pre">generate_distribution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.generate_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.generate_distribution" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the distribution</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -698,10 +697,10 @@
 <span class="sig-name descname"><span class="pre">generate_distributions_for_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.generate_distributions_for_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.generate_distributions_for_samples" title="Permalink to this definition"></a></dt>
 <dd><p>Generates distributions for a given sample</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>samples</strong> – the sample</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created distributions</p>
 </dd>
 </dl>
@@ -711,7 +710,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gp_conditional.GPConditional.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -722,10 +721,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -736,7 +735,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_conditional.html#GPConditional.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_conditional.GPConditional.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -757,7 +756,7 @@
 <span class="sig-name descname"><span class="pre">compute_kl_divergences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.compute_kl_divergences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.compute_kl_divergences" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the KL-divergences betwen different conditional distributions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -767,7 +766,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gp_system_model.GPSystemModel.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel" title="csle_common.dao.system_identification.gp_system_model.GPSystemModel"><span class="pre">GPSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the DTO</p>
 </dd>
 </dl>
@@ -778,10 +777,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel" title="csle_common.dao.system_identification.gp_system_model.GPSystemModel"><span class="pre">GPSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted instance</p>
 </dd>
 </dl>
@@ -792,10 +791,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel" title="csle_common.dao.system_identification.gp_system_model.GPSystemModel"><span class="pre">GPSystemModel</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -805,7 +804,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.gp_system_model.GPSystemModel.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -816,10 +815,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -830,7 +829,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/gp_system_model.html#GPSystemModel.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.gp_system_model.GPSystemModel.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -848,13 +847,13 @@
 <p>DTO representing the configuration of a system identification job</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig" title="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig"><span class="pre">SystemIdentificationConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/system_identification_config.html#SystemIdentificationConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig" title="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig"><span class="pre">SystemIdentificationConfig</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/system_identification_config.html#SystemIdentificationConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -865,10 +864,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig" title="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig"><span class="pre">SystemIdentificationConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/system_identification_config.html#SystemIdentificationConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -878,7 +877,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/system_identification_config.html#SystemIdentificationConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -889,10 +888,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/system_identification_config.html#SystemIdentificationConfig.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -903,7 +902,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/system_identification/system_identification_config.html#SystemIdentificationConfig.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>

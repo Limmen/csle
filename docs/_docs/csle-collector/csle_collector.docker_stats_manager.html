@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_collector.docker_stats_manager package &mdash; csle-collector 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-collector
+            <a href="index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -142,7 +141,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_collector.docker_stats_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.docker_stats_manager.rst.txt" rel="nofollow"> View page source</a>
@@ -162,7 +161,7 @@
 <span id="csle-collector-docker-stats-manager-docker-stats-module"></span><h2>csle_collector.docker_stats_manager.docker_stats module<a class="headerlink" href="#module-csle_collector.docker_stats_manager.docker_stats" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.docker_stats.</span></span><span class="sig-name descname"><span class="pre">DockerStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpu_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blk_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blk_write</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_rx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_tx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.docker_stats.</span></span><span class="sig-name descname"><span class="pre">DockerStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpu_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blk_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blk_write</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_rx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_tx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>DTO class containing docker statistics</p>
 <dl class="py method">
@@ -170,10 +169,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_averages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.compute_averages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.compute_averages" title="Permalink to this definition"></a></dt>
 <dd><p>Compute average stats from a list</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>stats_list</strong> – the list to use to compute averages</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a new DockerStats object with the averages</p>
 </dd>
 </dl>
@@ -183,7 +182,7 @@
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the object</p>
 </dd>
 </dl>
@@ -194,10 +193,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parsed_stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Parses a DockerStats object from a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>parsed_stats_dict</strong> – the dict to parse</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the parsed DockerStats object</p>
 </dd>
 </dl>
@@ -208,10 +207,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a kafka record to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>record</strong> – the recordto convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created DTO</p>
 </dd>
 </dl>
@@ -222,13 +221,13 @@
 <span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_deltas" title="Permalink to this definition"></a></dt>
 <dd><p>Get the deltas between two stats objects</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stats_prime</strong> – the stats object to compare with</p></li>
 <li><p><strong>max_counter</strong> – the maximum counter_value</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the deltas and the labels</p>
 </dd>
 </dl>
@@ -239,7 +238,7 @@
 <span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_values" title="Permalink to this definition"></a></dt>
 <dd><p>Get the current values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the values and the labels</p>
 </dd>
 </dl>
@@ -249,7 +248,7 @@
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attributes of the DTO</p>
 </dd>
 </dl>
@@ -259,7 +258,7 @@
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -269,7 +268,7 @@
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -280,10 +279,10 @@
 <span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO to a kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the Kafka record</p>
 </dd>
 </dl>
@@ -294,10 +293,10 @@
 <span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the DTO with a given kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>record</strong> – the record to update with</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -308,13 +307,13 @@
 <span class="sig-name descname"><span class="pre">update_with_kafka_record_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.update_with_kafka_record_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record_ip" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the DTO with a given kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>record</strong> – the record to update with</p></li>
 <li><p><strong>ip</strong> – the ip of the host</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -337,13 +336,13 @@ state of the server.</p>
 <span class="sig-name descname"><span class="pre">getDockerStatsMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetDockerStatsMonitorStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsManagerServicer.getDockerStatsMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.getDockerStatsMonitorStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the state of the docker stats monitors</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the docker stats manager</p>
 </dd>
 </dl>
@@ -354,13 +353,13 @@ state of the server.</p>
 <span class="sig-name descname"><span class="pre">startDockerStatsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartDockerStatsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsManagerServicer.startDockerStatsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.startDockerStatsMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Starts a new docker stats monitor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the docker stats monitor</p>
 </dd>
 </dl>
@@ -371,13 +370,13 @@ state of the server.</p>
 <span class="sig-name descname"><span class="pre">stopDockerStatsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopDockerStatsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsManagerServicer.stopDockerStatsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.stopDockerStatsMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the docker stats monitor server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the docker stats monitor server</p>
 </dd>
 </dl>
@@ -402,10 +401,10 @@ state of the server.</p>
 <span class="sig-name descname"><span class="pre">get_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsThread.get_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the ip of a given container name</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>container_name</strong> – the name of the container</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the ip of the container</p>
 </dd>
 </dl>
@@ -416,7 +415,7 @@ state of the server.</p>
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run" title="Permalink to this definition"></a></dt>
 <dd><p>Main loop of the thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -429,7 +428,7 @@ state of the server.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.docker_stats_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50046</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/var/log/csle/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'docker_stats_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.serve" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the gRPC server for managing docker stats collection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>port</strong> – the port that the server will listen to</p></li>
 <li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
@@ -437,7 +436,7 @@ state of the server.</p>
 <li><p><strong>max_workers</strong> – the maximum number of parallel gRPC workers</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -521,10 +520,10 @@ state of the server.</p>
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_blkio_mb">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_blkio_mb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.calculate_blkio_mb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_blkio_mb" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>stats_dict</strong> – the stats dict from the Docker API</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(read_mb, wrote_mb)</p>
 </dd>
 </dl>
@@ -535,10 +534,10 @@ state of the server.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_cpu_percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.calculate_cpu_percent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_cpu_percent" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the CPU utilization percentage</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>stats_dict</strong> – the stats dict from the Docker API</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the CPU percentage</p>
 </dd>
 </dl>
@@ -546,17 +545,17 @@ state of the server.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_cpu_percent2">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_cpu_percent2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_cpu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.calculate_cpu_percent2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_cpu_percent2" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_cpu_percent2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_cpu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.calculate_cpu_percent2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_cpu_percent2" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the CPU utilization percentage when precpu is broken in later versions of Docker</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stats_dict</strong> – the stats dict from the Docker API</p></li>
 <li><p><strong>previous_cpu</strong> – previous cpu percentage</p></li>
 <li><p><strong>previous_system</strong> – previous system percentage</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the CPU percentage</p>
 </dd>
 </dl>
@@ -566,10 +565,10 @@ state of the server.</p>
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_network_mb">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_network_mb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.calculate_network_mb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.calculate_network_mb" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>stats_dict</strong> – the stats dict from the Docker API</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(received_mb, transceived_mb)</p>
 </dd>
 </dl>
@@ -579,7 +578,7 @@ state of the server.</p>
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">docker_stats_monitor_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.docker_stats_monitor_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty DockerStatsMonitorDTO</p>
 </dd>
 </dl>
@@ -590,10 +589,10 @@ state of the server.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">docker_stats_monitor_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.docker_stats_monitor_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a DockerStatsMonitorDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -604,10 +603,10 @@ state of the server.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">docker_stats_monitor_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docker_stats_monitor_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DockerStatsMonitorDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.docker_stats_monitor_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a docker_stats_monitor_dto to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>docker_stats_monitor_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -618,14 +617,14 @@ state of the server.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">graceful_chain_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.graceful_chain_get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.graceful_chain_get" title="Permalink to this definition"></a></dt>
 <dd><p>Wrapper to handle errors</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stats_dict</strong> – stats dict to handle</p></li>
 <li><p><strong>args</strong> – extra arguments</p></li>
 <li><p><strong>default</strong> – default return in case of errors</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>default or parsed value</p>
 </dd>
 </dl>
@@ -636,13 +635,13 @@ state of the server.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.parse_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.parse_stats" title="Permalink to this definition"></a></dt>
 <dd><p>Parses a stats dict into a DockerStats object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stats_dict</strong> – the dict to parse</p></li>
 <li><p><strong>container</strong> – the container that the stats concerns</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the parsed DockerStats object</p>
 </dd>
 </dl>
@@ -658,13 +657,13 @@ state of the server.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.query_docker_stats_manager.</span></span><span class="sig-name descname"><span class="pre">get_docker_stats_manager_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub" title="csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub"><span class="pre">DockerStatsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/query_docker_stats_manager.html#get_docker_stats_manager_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the docker stats manager for the status</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DockerStatsManagerDTO describing the status of the server</p>
 </dd>
 </dl>
@@ -675,7 +674,7 @@ state of the server.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.query_docker_stats_manager.</span></span><span class="sig-name descname"><span class="pre">start_docker_stats_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub" title="csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub"><span class="pre">DockerStatsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_first_ip_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_queue_maxsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ContainerIp</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/query_docker_stats_manager.html#start_docker_stats_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the docker stats manager to start a new monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>emulation</strong> – the name of the emulation</p></li>
@@ -697,7 +696,7 @@ state of the server.</p>
 <span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.query_docker_stats_manager.</span></span><span class="sig-name descname"><span class="pre">stop_docker_stats_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub" title="csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub"><span class="pre">DockerStatsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_first_ip_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStatsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/query_docker_stats_manager.html#stop_docker_stats_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the docker stats manager to start a new monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>emulation</strong> – the emulation for which the monitor should be stopped</p></li>
@@ -705,7 +704,7 @@ state of the server.</p>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DockerStatsManagerDTO describing the status of the server</p>
 </dd>
 </dl>

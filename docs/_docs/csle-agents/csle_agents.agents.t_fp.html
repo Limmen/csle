@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_agents.agents.t_fp package &mdash; csle-agents 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-agents
+            <a href="index.html" class="icon icon-home"> csle-agents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -64,7 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.t_fp package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle-agents-agents-t-fp-t-fp-agent-module">csle_agents.agents.t_fp.t_fp_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.t_fp.t_fp_agent">csle_agents.agents.t_fp.t_fp_agent module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.t_fp">Module contents</a></li>
 </ul>
 </li>
@@ -93,7 +92,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_agents.agents.html">csle_agents.agents package</a></li>
       <li class="breadcrumb-item active">csle_agents.agents.t_fp package</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,8 +109,231 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="csle-agents-agents-t-fp-t-fp-agent-module">
-<h2>csle_agents.agents.t_fp.t_fp_agent module<a class="headerlink" href="#csle-agents-agents-t-fp-t-fp-agent-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_agents.agents.t_fp.t_fp_agent">
+<span id="csle-agents-agents-t-fp-t-fp-agent-module"></span><h2>csle_agents.agents.t_fp.t_fp_agent module<a class="headerlink" href="#module-csle_agents.agents.t_fp.t_fp_agent" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.t_fp.t_fp_agent.</span></span><span class="sig-name descname"><span class="pre">TFPAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defender_simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">EmulationEnvConfig</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAgent</span></code></a></p>
+<p>RL Agent implementing the T-FP algorithm from TODO</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.attacker_best_response">
+<span class="sig-name descname"><span class="pre">attacker_best_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.attacker_best_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.attacker_best_response" title="Permalink to this definition"></a></dt>
+<dd><p>Learns a threshold best response strategy for the attacker against a given defender strategy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the random seed</p></li>
+<li><p><strong>defender_strategy</strong> – the defender strategy</p></li>
+<li><p><strong>attacker_strategy</strong> – the attacker strategy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the learned threshold strategy and its estimated value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.compute_avg_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_avg_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.compute_avg_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.compute_avg_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the average metrics of a dict with aggregated metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metrics</strong> – the dict with the aggregated metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.defender_best_response">
+<span class="sig-name descname"><span class="pre">defender_best_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.defender_best_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.defender_best_response" title="Permalink to this definition"></a></dt>
+<dd><p>Learns a best response for the defender against a given attacker strategy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the random seed</p></li>
+<li><p><strong>attacker_strategy</strong> – the attacker strategy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the learned thresholds and the value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_attacker_policy">
+<span class="sig-name descname"><span class="pre">evaluate_attacker_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker_thresholds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.evaluate_attacker_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_attacker_policy" title="Permalink to this definition"></a></dt>
+<dd><p>Monte-Carlo evaluation of the game value of a given attacker policy against the average defender strategy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>defender_thresholds</strong> – the defender strategy to evaluate</p></li>
+<li><p><strong>defender_strategy</strong> – the average defender strategy</p></li>
+<li><p><strong>attacker_strategy</strong> – the average attacker strategy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average reward</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_defender_policy">
+<span class="sig-name descname"><span class="pre">evaluate_defender_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defender_thresholds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.evaluate_defender_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_defender_policy" title="Permalink to this definition"></a></dt>
+<dd><p>Monte-Carlo evaluation of the game value of a given defender policy against the average attacker strategy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>defender_thresholds</strong> – the defender strategy to evaluate</p></li>
+<li><p><strong>attacker_strategy</strong> – the average attacker strategy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average reward</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_strategy_profile">
+<span class="sig-name descname"><span class="pre">evaluate_strategy_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defender_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MixedMultiThresholdStoppingPolicy</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.evaluate_strategy_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_strategy_profile" title="Permalink to this definition"></a></dt>
+<dd><p>Monte-Carlo evaluation of the game value following a given strategy profile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>defender_strategy</strong> – the average defender strategy</p></li>
+<li><p><strong>attacker_strategy</strong> – the average attacker strategy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average reward</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.exploitability">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exploitability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.exploitability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.exploitability" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the exploitability metric given the value of the attacker when following a best response
+against the current defender strategy and the value of the defender when following a best response against
+the current attacker strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attacker_val</strong> – the value of the attacker when following a best response against
+the current defender strategy</p></li>
+<li><p><strong>defender_val</strong> – the value of the defender when following a best response against the
+current attacker strategy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the exploitability</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_attacker_experiment_config">
+<span class="sig-name descname"><span class="pre">get_attacker_experiment_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentConfig</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.get_attacker_experiment_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_attacker_experiment_config" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the experiment configuration for learning a best response of the attacker</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_defender_experiment_config">
+<span class="sig-name descname"><span class="pre">get_defender_experiment_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentConfig</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.get_defender_experiment_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_defender_experiment_config" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the experiment configuration for learning a best response of the defender</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.hparam_names">
+<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.hparam_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list with the hyperparameter names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.round_vec">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.round_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.round_vec" title="Permalink to this definition"></a></dt>
+<dd><p>Rounds a vector to 3 decimals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vec</strong> – the vector to round</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the rounded vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.running_average">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">running_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.running_average"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.running_average" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the running average of the last N elements of vector x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the vector</p></li>
+<li><p><strong>N</strong> – the number of elements to use for average calculation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the running average vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.t_fp">
+<span class="sig-name descname"><span class="pre">t_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainingJobConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.t_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.t_fp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.train" title="Permalink to this definition"></a></dt>
+<dd><p>Performs the policy training for the given random seeds using T-FP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the training metrics and the trained policies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.t_fp.t_fp_agent.TFPAgent.update_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/t_fp/t_fp_agent.html#TFPAgent.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.update_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Update a dict with aggregated metrics using new information from the environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> – the dict with the aggregated metrics</p></li>
+<li><p><strong>info</strong> – the new information</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-csle_agents.agents.t_fp">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.t_fp" title="Permalink to this heading"></a></h2>

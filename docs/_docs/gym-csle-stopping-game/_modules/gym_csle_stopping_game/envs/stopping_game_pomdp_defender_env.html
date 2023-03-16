@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -125,7 +127,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get attacker action from static strategy</span>
         <span class="n">pi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_attacker_strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span><span class="p">))</span>
-        <span class="n">a2</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">state_idx</span><span class="p">)</span>
 
         <span class="c1"># Step the game</span>
         <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">step</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">pi2</span><span class="p">,</span> <span class="n">a2</span><span class="p">)))</span>
@@ -143,7 +145,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get attacker action from static strategy</span>
         <span class="n">pi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_attacker_strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span><span class="p">))</span>
-        <span class="n">a2</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">state_idx</span><span class="p">)</span>
 
         <span class="c1"># Step the game</span>
         <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">step_test</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">pi2</span><span class="p">,</span> <span class="n">a2</span><span class="p">)),</span> <span class="n">sample_Z</span><span class="o">=</span><span class="n">sample_Z</span><span class="p">)</span>

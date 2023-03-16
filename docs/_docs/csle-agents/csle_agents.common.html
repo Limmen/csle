@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_agents.common package &mdash; csle-agents 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-agents
+            <a href="index.html" class="icon icon-home"> csle-agents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -91,7 +90,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">csle_agents.common package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_agents.common.rst.txt" rel="nofollow"> View page source</a>
@@ -123,10 +122,10 @@
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/common/fnn_w_gaussian.html#FNNwithGaussian.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.forward" title="Permalink to this definition"></a></dt>
 <dd><p>Forward propagation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>x</strong> – input tensor</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output prediction</p>
 </dd>
 </dl>
@@ -137,7 +136,7 @@
 <span class="sig-name descname"><span class="pre">get_hidden_activation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/common/fnn_w_gaussian.html#FNNwithGaussian.get_hidden_activation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.get_hidden_activation" title="Permalink to this definition"></a></dt>
 <dd><p>Interprets the hidden activation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the hidden activation function</p>
 </dd>
 </dl>
@@ -155,7 +154,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_agents.common.fnn_w_gaussian.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/common/fnn_w_gaussian.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.fnn_w_gaussian.test" title="Permalink to this definition"></a></dt>
 <dd><p>A basic test-case to verify that the model can fit some randomly generated data</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -175,10 +174,10 @@
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/common/fnn_w_linear.html#FNNwithLinear.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.fnn_w_linear.FNNwithLinear.forward" title="Permalink to this definition"></a></dt>
 <dd><p>Forward propagation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>x</strong> – input tensor</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Output prediction</p>
 </dd>
 </dl>
@@ -189,7 +188,7 @@
 <span class="sig-name descname"><span class="pre">get_hidden_activation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/common/fnn_w_linear.html#FNNwithLinear.get_hidden_activation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.fnn_w_linear.FNNwithLinear.get_hidden_activation" title="Permalink to this definition"></a></dt>
 <dd><p>Interprets the hidden activation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the hidden activation function</p>
 </dd>
 </dl>
@@ -207,7 +206,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_agents.common.fnn_w_linear.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/common/fnn_w_linear.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.fnn_w_linear.test" title="Permalink to this definition"></a></dt>
 <dd><p>A basic test-case to verify that the model can fit some randomly generated data</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -221,13 +220,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_agents.common.pruning.</span></span><span class="sig-name descname"><span class="pre">check_dominance_lp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/common/pruning.html#check_dominance_lp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.pruning.check_dominance_lp" title="Permalink to this definition"></a></dt>
 <dd><p>Uses LP to check whether a given alpha vector is dominated or not (Cassandra, Littman, Zhang, 1997)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>alpha_vec</strong> – the alpha vector to check</p></li>
 <li><p><strong>Q</strong> – the set of vectors to check dominance against</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None if dominated, otherwise return the vector</p>
 </dd>
 </dl>
@@ -238,13 +237,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_agents.common.pruning.</span></span><span class="sig-name descname"><span class="pre">check_duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_agents/common/pruning.html#check_duplicate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.pruning.check_duplicate" title="Permalink to this definition"></a></dt>
 <dd><p>Check whether alpha vector av is already in set a</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>alpha_set</strong> – the set of alpha vectors</p></li>
 <li><p><strong>alpha</strong> – the vector to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>true or false</p>
 </dd>
 </dl>
@@ -255,13 +254,13 @@
 <span class="sig-prename descclassname"><span class="pre">csle_agents.common.pruning.</span></span><span class="sig-name descname"><span class="pre">prune_lower_bound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/common/pruning.html#prune_lower_bound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.common.pruning.prune_lower_bound" title="Permalink to this definition"></a></dt>
 <dd><p>Lark’s filtering algorithm to prune the lower bound, (Cassandra, Littman, Zhang, 1997)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lower_bound</strong> – the current lower bound</p></li>
 <li><p><strong>S</strong> – the set of states</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the pruned lower bound</p>
 </dd>
 </dl>

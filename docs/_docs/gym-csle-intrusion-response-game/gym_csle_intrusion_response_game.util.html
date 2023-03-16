@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_csle_intrusion_response_game.util package &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -25,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            gym-csle-intrusion-response-game
+            <a href="index.html" class="icon icon-home"> gym-csle-intrusion-response-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -108,7 +107,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">gym_csle_intrusion_response_game.util package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/gym_csle_intrusion_response_game.util.rst.txt" rel="nofollow"> View page source</a>
@@ -136,13 +135,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">are_local_attack_states_equal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.are_local_attack_states_equal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_attack_states_equal" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if two local attack states are equal</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the first local state to check</p></li>
 <li><p><strong>s_prime</strong> – the second local state to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if equal, otherwise False</p>
 </dd>
 </dl>
@@ -153,13 +152,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">are_local_defense_states_equal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.are_local_defense_states_equal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_defense_states_equal" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if two local defense states are equal</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the first local state to check</p></li>
 <li><p><strong>s_prime</strong> – the second local state to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if equal, otherwise False</p>
 </dd>
 </dl>
@@ -170,13 +169,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">are_local_states_equal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.are_local_states_equal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_states_equal" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if two local states are equal</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the first local state to check</p></li>
 <li><p><strong>s_prime</strong> – the second local state to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if equal, otherwise False</p>
 </dd>
 </dl>
@@ -188,7 +187,7 @@
 <dd><p>A Bayesian filter to compute the belief of player 2 of being in s_prime when observing o after
 taking action a in belief b given that the opponent follows strategy pi1</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s_a_prime</strong> – the current attacker state</p></li>
 <li><p><strong>s_a_prime</strong> – the previous attacker state</p></li>
@@ -199,7 +198,7 @@ taking action a in belief b given that the opponent follows strategy pi1</p>
 <li><p><strong>s_d_prime</strong> – the defender state  to compute the belief of</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>b_prime(s_prime_d)</p>
 </dd>
 </dl>
@@ -211,7 +210,7 @@ taking action a in belief b given that the opponent follows strategy pi1</p>
 <dd><p>A Bayesian filter to compute the belief of player 1 of being in s_prime when observing o after
 taking action a in belief b given that the opponent follows strategy pi2</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s_a_prime</strong> – the attacker state to compute the belief of</p></li>
 <li><p><strong>o</strong> – the observation</p></li>
@@ -222,7 +221,7 @@ taking action a in belief b given that the opponent follows strategy pi2</p>
 <li><p><strong>s_d</strong> – the previous defender state</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>b_prime(s_prime)</p>
 </dd>
 </dl>
@@ -233,13 +232,13 @@ taking action a in belief b given that the opponent follows strategy pi2</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constant_defender_action_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.constant_defender_action_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_defender_action_costs" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a vector with the local defender action costs where each action has the same constant cost</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>A1</strong> – a vector with the actions of the defender in the local game</p></li>
 <li><p><strong>constant_cost</strong> – the constant action cost</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a vector with the action costs</p>
 </dd>
 </dl>
@@ -251,13 +250,13 @@ taking action a in belief b given that the opponent follows strategy pi2</p>
 <dd><p>Returns a vector with the zone detection probabilities where each zone as the same uniform detection
 probability</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>zones</strong> – the vector with zones</p></li>
 <li><p><strong>constant_detection_prob</strong> – the constant detection probability</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the vector with zone detection probabilities</p>
 </dd>
 </dl>
@@ -268,13 +267,13 @@ probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constant_zone_utilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zones</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.constant_zone_utilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_utilities" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a vector with the zone utilities where each zone has the same constant utility</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>zones</strong> – the vector with zones</p></li>
 <li><p><strong>constant_utility</strong> – the constant utility of a zone</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the vector with zone utilities</p>
 </dd>
 </dl>
@@ -285,10 +284,10 @@ probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_local_state_compromised</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.is_local_state_compromised"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_compromised" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if a local state has been compromised</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>s</strong> – the local state to check</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if compromised, otherwise False</p>
 </dd>
 </dl>
@@ -299,10 +298,10 @@ probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_local_state_healthy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.is_local_state_healthy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_healthy" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if a local state is healthy and not discovered nor compromised</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>s</strong> – the local state to check</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if compromised, otherwise False</p>
 </dd>
 </dl>
@@ -313,13 +312,13 @@ probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_local_state_in_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.is_local_state_in_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_in_zone" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if a local state is in a given zone or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the local state to check</p></li>
 <li><p><strong>zone</strong> – the zone to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if the state is in the given zone, false otherwise</p>
 </dd>
 </dl>
@@ -330,10 +329,10 @@ probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_local_state_recon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.is_local_state_recon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_recon" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if a local state has been discovered by the attacker</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>s</strong> – the local state to check</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if compromised, otherwise False</p>
 </dd>
 </dl>
@@ -344,10 +343,10 @@ probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_local_state_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.is_local_state_terminal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_terminal" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for checking if a local state is terminal or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>s</strong> – the local state to check</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if terminal, otherwise False</p>
 </dd>
 </dl>
@@ -359,10 +358,10 @@ probability</p>
 <dd><p>Returns a vector with the success probabilities of the attacker actions for the local version of the game
 where the attacks have the same constant success probability</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>A2</strong> – the local action space of the attacker</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a vector with the attack success probabilities</p>
 </dd>
 </dl>
@@ -373,7 +372,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_attacker_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_attacker_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attacker_actions" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the attacker’s action space in the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a vector with the actions of the defender</p>
 </dd>
 </dl>
@@ -384,7 +383,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_attacker_state_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_attacker_state_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attacker_state_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the attacker state space of the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the local attacker state space</p>
 </dd>
 </dl>
@@ -395,10 +394,10 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_defender_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_zones</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_defender_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_actions" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the defender’s action space in the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>number_of_zones</strong> – the number of zones in the game</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a vector with the actions of the defender</p>
 </dd>
 </dl>
@@ -409,10 +408,10 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_defender_state_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_zones</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_defender_state_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_state_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the defender state space of the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>number_of_zones</strong> – the number of zones in the network</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the local defender state space</p>
 </dd>
 </dl>
@@ -423,7 +422,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_defender_utility_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reachable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z_U</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_defender_utility_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_utility_function" title="Permalink to this definition"></a></dt>
 <dd><p>The local utility function of the defender</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state of the local game</p></li>
 <li><p><strong>a1</strong> – the defender action</p></li>
@@ -435,7 +434,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>Z_U</strong> – the utilities of the zones in the network</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the utility of the defender</p>
 </dd>
 </dl>
@@ -446,13 +445,13 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_initial_attacker_belief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S_D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_zone</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_initial_attacker_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_attacker_belief" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the initial attacker belief for a local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>S_D</strong> – the defender’s state space of the local game</p></li>
 <li><p><strong>initial_zone</strong> – the initial zone of the node</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the initial defender belief</p>
 </dd>
 </dl>
@@ -463,10 +462,10 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_initial_defender_belief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S_A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_initial_defender_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_defender_belief" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the initial defender belief for a local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>S_A</strong> – the attacker’s state space of the local game</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the initial defender belief</p>
 </dd>
 </dl>
@@ -477,13 +476,13 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_initial_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_initial_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the initial state for a local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>initial_zone</strong> – the initial zone of the local node</p></li>
 <li><p><strong>S</strong> – the state space of the local game</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the initial state belief</p>
 </dd>
 </dl>
@@ -494,13 +493,13 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_initial_state_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_initial_state_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_distribution" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the initial state distribution</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>initial_state_idx</strong> – the initial state index</p></li>
 <li><p><strong>S</strong> – the state space</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the initial state distribution</p>
 </dd>
 </dl>
@@ -511,13 +510,13 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_initial_state_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_initial_state_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the initial state for a local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>initial_zone</strong> – the initial zone of the local node</p></li>
 <li><p><strong>S</strong> – the state space of the local game</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the initial state belief</p>
 </dd>
 </dl>
@@ -528,7 +527,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_intrusion_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D_C</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reachable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z_U</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_intrusion_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_intrusion_cost" title="Permalink to this definition"></a></dt>
 <dd><p>The defender’s local cost function for intrusions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a1</strong> – the defender action</p></li>
 <li><p><strong>D_C</strong> – the vector with the costs of the defender actions</p></li>
@@ -537,7 +536,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>Z_U</strong> – the vector with zone utilities</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the intrusion cost</p>
 </dd>
 </dl>
@@ -548,10 +547,10 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_observation_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_observation_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_observation_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the observation space of the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X_max</strong> – the maximum observation</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a vector with all possible observations</p>
 </dd>
 </dl>
@@ -562,7 +561,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_observation_tensor_betabinom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">O</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_observation_tensor_betabinom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_observation_tensor_betabinom" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the observation tensor of the local game where the observations follow beta-binomial distributions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>S</strong> – the local state space of the game</p></li>
 <li><p><strong>A1</strong> – the local action space of the defender</p></li>
@@ -570,8 +569,8 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>O</strong> – the local observation space</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>a <a href="#id3"><span class="problematic" id="id4">|A1|x|A2|x|S|x|O|</span></a> tensor</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a (A1)(A2)(S)(O) tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -581,7 +580,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_reward_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reachable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z_U</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_reward_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_reward_tensor" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the defender’s utility tensor of the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eta</strong> – a scaling parameter for the local rewards</p></li>
 <li><p><strong>C_D</strong> – the vector with the costs of the local defender actions</p></li>
@@ -594,8 +593,8 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>A2</strong> – teh local action space of the attacker</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>a <a href="#id5"><span class="problematic" id="id6">|A1|x|A2|x|S|</span></a> tensor giving the rewards of the state transitions in the local game</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a (A1)(A2)(S) tensor giving the rewards of the state transitions in the local game</p>
 </dd>
 </dl>
 </dd></dl>
@@ -605,10 +604,10 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_state_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_zones</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_state_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_state_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the state space of the local version of the game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>number_of_zones</strong> – the number of zones in the network</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the state space</p>
 </dd>
 </dl>
@@ -619,7 +618,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_transition_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z_D_P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_transition_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_transition_probability" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the probability of a local state transition</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>s_prime</strong> – the next  state</p></li>
@@ -629,7 +628,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>A_P</strong> – the attack success probabilities</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the transition probabilitiy</p>
 </dd>
 </dl>
@@ -640,7 +639,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_transition_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Z_D</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_transition_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_transition_tensor" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the transition tensor of the local game</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Z_D</strong> – the zone detection probabilities</p></li>
 <li><p><strong>A_P</strong> – the attack success probabilities</p></li>
@@ -649,8 +648,8 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>A2</strong> – the local action space of the attacker</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>a <a href="#id1"><span class="problematic" id="id2">|</span></a>A1|x|A2||S|^2 tensor</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a (A1)(A2)(S)(S) tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -660,7 +659,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_workflow_utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reachable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_zone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.local_workflow_utility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_workflow_utility" title="Permalink to this definition"></a></dt>
 <dd><p>The local utility function for workflow QoS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>beta</strong> – a scaling parameter indicating how important the workflow is</p></li>
 <li><p><strong>reachable</strong> – a boolean flag indicating whether the node is reachable from the public gateway or not</p></li>
@@ -668,7 +667,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>initial_zone</strong> – the initial zone of the node in the local version of the game</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the workflow utility</p>
 </dd>
 </dl>
@@ -679,7 +678,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_local_attacker_belief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig" title="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig"><span class="pre">LocalIntrusionResponseGameConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_a_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.next_local_attacker_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.next_local_attacker_belief" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the next local belief of the attacker using a Bayesian filter</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>o</strong> – the latest observation</p></li>
 <li><p><strong>a1</strong> – the latest action of player 1 (for debugging, should be consistent with pi1)</p></li>
@@ -692,7 +691,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>s_a</strong> – the previous attacker state</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the new belief</p>
 </dd>
 </dl>
@@ -703,7 +702,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_local_defender_belief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig" title="gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config.LocalIntrusionResponseGameConfig"><span class="pre">LocalIntrusionResponseGameConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_d_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.next_local_defender_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.next_local_defender_belief" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the next local belief of the defender using a Bayesian filter</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>o</strong> – the latest observation</p></li>
 <li><p><strong>a1</strong> – the latest action of player 1</p></li>
@@ -716,7 +715,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>s_d_prime</strong> – the new defender state</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the new belief</p>
 </dd>
 </dl>
@@ -727,13 +726,13 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_attacker_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pi2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.sample_attacker_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_attacker_action" title="Permalink to this definition"></a></dt>
 <dd><p>Samples the attacker action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pi2</strong> – the attacker action</p></li>
 <li><p><strong>s</strong> – the game state</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a2 (the attacker action</p>
 </dd>
 </dl>
@@ -744,13 +743,13 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_defender_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pi1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.sample_defender_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_defender_action" title="Permalink to this definition"></a></dt>
 <dd><p>Samples the defender action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pi1</strong> – the attacker action</p></li>
 <li><p><strong>s</strong> – the game state</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a1 (the defender action</p>
 </dd>
 </dl>
@@ -767,7 +766,7 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_next_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.sample_next_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_next_state" title="Permalink to this definition"></a></dt>
 <dd><p>Samples the next state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T</strong> – the transition operator</p></li>
 <li><p><strong>s_idx</strong> – the current state index</p></li>
@@ -777,7 +776,7 @@ where the attacks have the same constant success probability</p>
 <li><p><strong>l</strong> – the number of stops remaining</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>s’</p>
 </dd>
 </dl>
@@ -788,10 +787,10 @@ where the attacks have the same constant success probability</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_zones</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gym_csle_intrusion_response_game/util/intrusion_response_game_util.html#IntrusionResponseGameUtil.zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.zones" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the vector with the network zones</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>num_zones</strong> – the number of zones</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a vector with the zones</p>
 </dd>
 </dl>

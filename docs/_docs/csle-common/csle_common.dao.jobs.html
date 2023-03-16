@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_common.dao.jobs package &mdash; csle-common 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-common
+            <a href="index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -90,7 +89,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_common.dao.html">csle_common.dao package</a></li>
       <li class="breadcrumb-item active">csle_common.dao.jobs package</li>
       <li class="wy-breadcrumbs-aside">
@@ -119,10 +118,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig" title="csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig"><span class="pre">DataCollectionJobConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/data_collection_job_config.html#DataCollectionJobConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -133,10 +132,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig" title="csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig"><span class="pre">DataCollectionJobConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/data_collection_job_config.html#DataCollectionJobConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -146,7 +145,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/data_collection_job_config.html#DataCollectionJobConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -157,10 +156,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/data_collection_job_config.html#DataCollectionJobConfig.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -171,7 +170,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/data_collection_job_config.html#DataCollectionJobConfig.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -184,7 +183,7 @@
 <span id="csle-common-dao-jobs-system-identification-job-config-module"></span><h2>csle_common.dao.jobs.system_identification_job_config module<a class="headerlink" href="#module-csle_common.dao.jobs.system_identification_job_config" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.jobs.system_identification_job_config.</span></span><span class="sig-name descname"><span class="pre">SystemIdentificationJobConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_statistics_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_percentage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_identification_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.system_identification.html#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig" title="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig"><span class="pre">SystemIdentificationConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.system_identification.html#csle_common.dao.system_identification.system_model.SystemModel" title="csle_common.dao.system_identification.system_model.SystemModel"><span class="pre">SystemModel</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.jobs.system_identification_job_config.</span></span><span class="sig-name descname"><span class="pre">SystemIdentificationJobConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_statistics_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_percentage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_identification_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.system_identification.html#csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig" title="csle_common.dao.system_identification.system_identification_config.SystemIdentificationConfig"><span class="pre">SystemIdentificationConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.system_identification.html#csle_common.dao.system_identification.system_model.SystemModel" title="csle_common.dao.system_identification.system_model.SystemModel"><span class="pre">SystemModel</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>DTO representing a system identification job</p>
 <dl class="py method">
@@ -192,10 +191,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig" title="csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig"><span class="pre">SystemIdentificationJobConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the object to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -206,10 +205,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig" title="csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig"><span class="pre">SystemIdentificationJobConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -219,7 +218,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -230,10 +229,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -244,7 +243,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/system_identification_job_config.html#SystemIdentificationJobConfig.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -257,7 +256,7 @@
 <span id="csle-common-dao-jobs-training-job-config-module"></span><h2>csle_common.dao.jobs.training_job_config module<a class="headerlink" href="#module-csle_common.dao.jobs.training_job_config" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.jobs.training_job_config.TrainingJobConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.jobs.training_job_config.</span></span><span class="sig-name descname"><span class="pre">TrainingJobConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.training.html#csle_common.dao.training.experiment_config.ExperimentConfig" title="csle_common.dao.training.experiment_config.ExperimentConfig"><span class="pre">ExperimentConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_percentage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.training.html#csle_common.dao.training.experiment_result.ExperimentResult" title="csle_common.dao.training.experiment_result.ExperimentResult"><span class="pre">ExperimentResult</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_trace.SimulationTrace" title="csle_common.dao.simulation_config.simulation_trace.SimulationTrace"><span class="pre">SimulationTrace</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cached_traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/jobs/training_job_config.html#TrainingJobConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.jobs.training_job_config.</span></span><span class="sig-name descname"><span class="pre">TrainingJobConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.training.html#csle_common.dao.training.experiment_config.ExperimentConfig" title="csle_common.dao.training.experiment_config.ExperimentConfig"><span class="pre">ExperimentConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_percentage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.training.html#csle_common.dao.training.experiment_result.ExperimentResult" title="csle_common.dao.training.experiment_result.ExperimentResult"><span class="pre">ExperimentResult</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_trace.SimulationTrace" title="csle_common.dao.simulation_config.simulation_trace.SimulationTrace"><span class="pre">SimulationTrace</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cached_traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/jobs/training_job_config.html#TrainingJobConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>DTO representing the configuration of a training job</p>
 <dl class="py method">
@@ -273,10 +272,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig" title="csle_common.dao.jobs.training_job_config.TrainingJobConfig"><span class="pre">TrainingJobConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/training_job_config.html#TrainingJobConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -286,7 +285,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/training_job_config.html#TrainingJobConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -297,10 +296,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/training_job_config.html#TrainingJobConfig.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -311,7 +310,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/jobs/training_job_config.html#TrainingJobConfig.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>

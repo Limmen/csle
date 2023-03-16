@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,11 +37,13 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.util.export_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.util.export_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -214,13 +218,34 @@
                      <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">metadata_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">metadata_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">schema</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">SCHEMA_PROPERTY</span><span class="p">]</span>
-            <span class="n">num_traces</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PROPERTY</span><span class="p">]</span>
-            <span class="n">num_attributes_per_time_step</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span><span class="p">]</span>
-            <span class="n">num_traces_per_file</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span><span class="p">]</span>
-            <span class="n">file_format</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">FILE_FORMAT_PROPERTY</span><span class="p">]</span>
-            <span class="n">added_by</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span><span class="p">]</span>
-            <span class="n">columns</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">COLUMNS_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">SCHEMA_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">schema</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">SCHEMA_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">schema</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">num_traces</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">num_traces</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">num_attributes_per_time_step</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">num_attributes_per_time_step</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">num_traces_per_file</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">num_traces_per_file</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">FILE_FORMAT_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">file_format</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">FILE_FORMAT_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file_format</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">added_by</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">added_by</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">COLUMNS_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">COLUMNS_PROPERTY</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">name</span><span class="p">))])</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="n">size_compressed_gb</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">zip_file_path</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000000000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -304,7 +329,7 @@
     <span class="k">def</span> <span class="nf">export_emulation_statistics_to_disk_json</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">zip_file_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">statistics_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                                  <span class="n">added_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Exports emulation traces from the metastore to disk</span>
+<span class="sd">        Exports emulation statistics from the metastore to disk</span>
 
 <span class="sd">        :param output_dir: the output directory</span>
 <span class="sd">        :param zip_file_output: the compressed zip file path</span>
@@ -312,12 +337,12 @@
 <span class="sd">        :param statistics_id: the id of the statistics to fetch</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exporting emulation traces to disk (json), output dir: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exporting emulation statistics to disk (json), output dir: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">, &quot;</span>
                                             <span class="sa">f</span><span class="s2">&quot;output zip file: </span><span class="si">{</span><span class="n">zip_file_output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
         <span class="n">emulation_statistic</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_statistic</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">statistics_id</span><span class="p">)</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;statistics.json&quot;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;statistics.json&quot;</span>
         <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exporting statistics with id </span><span class="si">{</span><span class="n">statistics_id</span><span class="si">}</span><span class="s2"> to file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">compute_descriptive_statistics_and_distributions</span><span class="p">()</span>
         <span class="n">num_measurements</span> <span class="o">=</span> <span class="n">emulation_statistic</span><span class="o">.</span><span class="n">num_measurements</span>
@@ -366,13 +391,20 @@
                      <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">metadata_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">metadata_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">file_format</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">FILE_FORMAT_PROPERTY</span><span class="p">]</span>
-            <span class="n">added_by</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span><span class="p">]</span>
-            <span class="n">num_measurements</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_MEASUREMENTS_PROPERTY</span><span class="p">]</span>
-            <span class="n">num_metrics</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_METRICS_PROPERTY</span><span class="p">]</span>
-            <span class="n">metrics</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">METRICS_PROPERTY</span><span class="p">]</span>
-            <span class="n">conditions</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">CONDITIONS_PROPERTY</span><span class="p">]</span>
-            <span class="n">num_conditions</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_CONDITIONS_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">FILE_FORMAT_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">file_format</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">FILE_FORMAT_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">added_by</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_MEASUREMENTS_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">num_measurements</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_MEASUREMENTS_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_METRICS_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">num_metrics</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_METRICS_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">METRICS_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">metrics</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">METRICS_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">CONDITIONS_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">conditions</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">CONDITIONS_PROPERTY</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_CONDITIONS_PROPERTY</span> <span class="ow">in</span> <span class="n">metadata_dict</span><span class="p">:</span>
+                <span class="n">num_conditions</span> <span class="o">=</span> <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_CONDITIONS_PROPERTY</span><span class="p">]</span>
 
         <span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">name</span><span class="p">))])</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="n">size_compressed_gb</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">zip_file_path</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000000000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -388,7 +420,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

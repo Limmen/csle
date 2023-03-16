@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.client_manager.client_manager</li>
       <li class="wy-breadcrumbs-aside">
@@ -94,12 +93,12 @@
 
 
 <div class="viewcode-block" id="ClientThread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientThread">[docs]</a><span class="k">class</span> <span class="nc">ClientThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Thread representing a client</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the client</span>
 
 <span class="sd">        :param service_time: the service time of the client</span>
@@ -110,7 +109,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">time_step_len_seconds</span>
 
 <div class="viewcode-block" id="ClientThread.run"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The main function of the client</span>
 
 <span class="sd">        :return: None</span>
@@ -135,14 +134,14 @@
 
 
 <div class="viewcode-block" id="ArrivalThread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread">[docs]</a><span class="k">class</span> <span class="nc">ArrivalThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Thread that generates client arrivals (starts client threads according to a Poisson process)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lamb</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
                  <span class="n">num_commands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sine_modulated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">time_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">period_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the arrival thread</span>
 
 <span class="sd">        :param time_step_len_seconds: the number of seconds that one time-unit of the Poisson process corresponds to</span>
@@ -170,7 +169,7 @@
                      <span class="sa">f</span><span class="s2">&quot;time_scaling_factor: </span><span class="si">{</span><span class="n">time_scaling_factor</span><span class="si">}</span><span class="s2">, period_scaling_factor: </span><span class="si">{</span><span class="n">period_scaling_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ArrivalThread.sine_modulated_poisson_rate"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread.sine_modulated_poisson_rate">[docs]</a>    <span class="k">def</span> <span class="nf">sine_modulated_poisson_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that returns the rate of a sine-modulated Poisson process</span>
 
 <span class="sd">        :param t: the time-step</span>
@@ -179,7 +178,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamb</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">period_scaling_factor</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scaling_factor</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ArrivalThread.run"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the arrival generator, generates new clients dynamically according to a Poisson process</span>
 
 <span class="sd">        :return: None</span>
@@ -208,12 +207,12 @@
 
 
 <div class="viewcode-block" id="ProducerThread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ProducerThread">[docs]</a><span class="k">class</span> <span class="nc">ProducerThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Thread that pushes statistics to Kafka</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrival_thread</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the thread</span>
 
 <span class="sd">        :param arrival_thread: the thread that manages the client arrivals, used to extract statistics</span>
@@ -237,7 +236,7 @@
                      <span class="sa">f</span><span class="s2">&quot;time_step_len:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">, kafka_ip:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ProducerThread.run"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ProducerThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Main loop of the thread, pushes data to Kafka periodically</span>
 
 <span class="sd">        :return: None</span>
@@ -254,13 +253,13 @@
 
 
 <div class="viewcode-block" id="ClientManagerServicer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">ClientManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerServicer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing the running clients. Allows to start/stop clients remotely and also to query the</span>
 <span class="sd">    state of the clients.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="kc">None</span>
@@ -270,7 +269,7 @@
 
 <div class="viewcode-block" id="ClientManagerServicer.getClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.getClients">[docs]</a>    <span class="k">def</span> <span class="nf">getClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">GetClientsMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the clients</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -300,7 +299,7 @@
 
 <div class="viewcode-block" id="ClientManagerServicer.stopClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.stopClients">[docs]</a>    <span class="k">def</span> <span class="nf">stopClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StopClientsMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Poisson-process that generates new clients</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -329,7 +328,7 @@
 
 <div class="viewcode-block" id="ClientManagerServicer.startClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.startClients">[docs]</a>    <span class="k">def</span> <span class="nf">startClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StartClientsMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts/Restarts the Poisson process that generates clients</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -371,7 +370,7 @@
 
 <div class="viewcode-block" id="ClientManagerServicer.startProducer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.startProducer">[docs]</a>    <span class="k">def</span> <span class="nf">startProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StartProducerMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts/Restarts the producer thread that pushes data to Kafka</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -410,7 +409,7 @@
 
 <div class="viewcode-block" id="ClientManagerServicer.stopProducer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.stopProducer">[docs]</a>    <span class="k">def</span> <span class="nf">stopProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StopProducerMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the producer thread that pushes data to Kafka</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -441,7 +440,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50044</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;client_manager.log&quot;</span><span class="p">,</span>
           <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing clients</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

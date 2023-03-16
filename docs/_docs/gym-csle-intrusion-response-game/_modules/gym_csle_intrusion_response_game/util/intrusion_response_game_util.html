@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            gym-csle-intrusion-response-game
+            <a href="../../../index.html" class="icon icon-home"> gym-csle-intrusion-response-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +56,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">gym_csle_intrusion_response_game.util.intrusion_response_game_util</li>
       <li class="wy-breadcrumbs-aside">
@@ -77,13 +76,13 @@
 
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseGameUtil</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility functions for the intrusion response game environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_terminal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_terminal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_local_state_terminal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if a local state is terminal or not</span>
 
 <span class="sd">        :param s: the local state to check</span>
@@ -93,7 +92,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_in_zone"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_in_zone">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if a local state is in a given zone or not</span>
 
 <span class="sd">        :param s: the local state to check</span>
@@ -104,7 +103,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_compromised"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_compromised">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if a local state has been compromised</span>
 
 <span class="sd">        :param s: the local state to check</span>
@@ -114,7 +113,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_healthy"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_healthy">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_local_state_healthy</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if a local state is healthy and not discovered nor compromised</span>
 
 <span class="sd">        :param s: the local state to check</span>
@@ -124,7 +123,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_recon"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_recon">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_local_state_recon</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if a local state has been discovered by the attacker</span>
 
 <span class="sd">        :param s: the local state to check</span>
@@ -134,7 +133,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.are_local_states_equal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_states_equal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">are_local_states_equal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if two local states are equal</span>
 
 <span class="sd">        :param s: the first local state to check</span>
@@ -146,7 +145,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.are_local_defense_states_equal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_defense_states_equal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">are_local_defense_states_equal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if two local defense states are equal</span>
 
 <span class="sd">        :param s: the first local state to check</span>
@@ -157,7 +156,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.are_local_attack_states_equal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_attack_states_equal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">are_local_attack_states_equal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for checking if two local attack states are equal</span>
 
 <span class="sd">        :param s: the first local state to check</span>
@@ -168,7 +167,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_initial_state</span><span class="p">(</span><span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial state for a local version of the game</span>
 
 <span class="sd">        :param initial_zone: the initial zone of the local node</span>
@@ -183,7 +182,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state_idx"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_idx">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_initial_state_idx</span><span class="p">(</span><span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial state for a local version of the game</span>
 
 <span class="sd">        :param initial_zone: the initial zone of the local node</span>
@@ -198,7 +197,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state_distribution"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_distribution">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_initial_state_distribution</span><span class="p">(</span><span class="n">initial_state_idx</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial state distribution</span>
 
 <span class="sd">        :param initial_state_idx: the initial state index</span>
@@ -211,7 +210,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_defender_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_defender_belief">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_initial_defender_belief</span><span class="p">(</span><span class="n">S_A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial defender belief for a local version of the game</span>
 
 <span class="sd">        :param S_A: the attacker&#39;s state space of the local game</span>
@@ -223,7 +222,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_attacker_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_attacker_belief">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_initial_attacker_belief</span><span class="p">(</span><span class="n">S_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial attacker belief for a local version of the game</span>
 
 <span class="sd">        :param S_D: the defender&#39;s state space of the local game</span>
@@ -238,7 +237,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_state_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_state_space">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_state_space</span><span class="p">(</span><span class="n">number_of_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state space of the local version of the game</span>
 
 <span class="sd">        :param number_of_zones: the number of zones in the network</span>
@@ -254,7 +253,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_defender_state_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_state_space">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_defender_state_space</span><span class="p">(</span><span class="n">number_of_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the defender state space of the local version of the game</span>
 
 <span class="sd">        :param number_of_zones: the number of zones in the network</span>
@@ -267,7 +266,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_attacker_state_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attacker_state_space">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_attacker_state_space</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the attacker state space of the local version of the game</span>
 
 <span class="sd">        :return: the local attacker state space</span>
@@ -280,7 +279,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_defender_actions"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_actions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_defender_actions</span><span class="p">(</span><span class="n">number_of_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the defender&#39;s action space in the local version of the game</span>
 
 <span class="sd">        :param number_of_zones: the number of zones in the game</span>
@@ -290,7 +289,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_attacker_actions"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attacker_actions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_attacker_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the attacker&#39;s action space in the local version of the game</span>
 
 <span class="sd">        :return: a vector with the actions of the defender</span>
@@ -300,7 +299,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_observation_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_observation_space">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_observation_space</span><span class="p">(</span><span class="n">X_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the observation space of the local version of the game</span>
 
 <span class="sd">        :param X_max: the maximum observation</span>
@@ -310,7 +309,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_workflow_utility"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_workflow_utility">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_workflow_utility</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The local utility function for workflow QoS</span>
 
 <span class="sd">        :param beta: a scaling parameter indicating how important the workflow is</span>
@@ -328,7 +327,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.constant_defender_action_costs"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_defender_action_costs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">constant_defender_action_costs</span><span class="p">(</span><span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">constant_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the local defender action costs where each action has the same constant cost</span>
 
 <span class="sd">        :param A1: a vector with the actions of the defender in the local game</span>
@@ -345,7 +344,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.zones"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.zones">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">zones</span><span class="p">(</span><span class="n">num_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the vector with the network zones</span>
 
 <span class="sd">        :param num_zones: the number of zones</span>
@@ -355,7 +354,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.constant_zone_utilities"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_utilities">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">constant_zone_utilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">constant_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the zone utilities where each zone has the same constant utility</span>
 
 <span class="sd">        :param zones: the vector with zones</span>
@@ -369,7 +368,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.constant_zone_detection_probabilities"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_detection_probabilities">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">constant_zone_detection_probabilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">constant_detection_prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the zone detection probabilities where each zone as the same uniform detection</span>
 <span class="sd">        probability</span>
 
@@ -387,7 +386,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_attack_success_probabilities_uniform"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attack_success_probabilities_uniform">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_attack_success_probabilities_uniform</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the success probabilities of the attacker actions for the local version of the game</span>
 <span class="sd">        where the attacks have the same constant success probability</span>
 
@@ -405,7 +404,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_intrusion_cost"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_intrusion_cost">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_intrusion_cost</span><span class="p">(</span><span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">D_C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z_U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The defender&#39;s local cost function for intrusions</span>
 
 <span class="sd">        :param a1: the defender action</span>
@@ -423,7 +422,7 @@
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_defender_utility_function"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_utility_function">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_defender_utility_function</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                         <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z_U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The local utility function of the defender</span>
 
 <span class="sd">        :param s: the current state of the local game</span>
@@ -447,7 +446,7 @@
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_reward_tensor"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_reward_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_reward_tensor</span><span class="p">(</span><span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Z_U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                             <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the defender&#39;s utility tensor of the local version of the game</span>
 
 <span class="sd">        :param eta: a scaling parameter for the local rewards</span>
@@ -459,7 +458,7 @@
 <span class="sd">        :param S: the local state space of the game</span>
 <span class="sd">        :param A1: the local action space of the defender</span>
 <span class="sd">        :param A2: teh local action space of the attacker</span>
-<span class="sd">        :return: a |A1|x|A2|x|S| tensor giving the rewards of the state transitions in the local game</span>
+<span class="sd">        :return: a (A1)(A2)(S) tensor giving the rewards of the state transitions in the local game</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">R</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
@@ -479,7 +478,7 @@
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_transition_probability"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_transition_probability">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_transition_probability</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Z_D_P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                      <span class="n">A_P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the probability of a local state transition</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -596,7 +595,7 @@
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_transition_tensor"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_transition_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_transition_tensor</span><span class="p">(</span><span class="n">Z_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A_P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                 <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the transition tensor of the local game</span>
 
 <span class="sd">        :param Z_D: the zone detection probabilities</span>
@@ -604,7 +603,7 @@
 <span class="sd">        :param S: the local state space</span>
 <span class="sd">        :param A1: the local action space of the defender</span>
 <span class="sd">        :param A2: the local action space of the attacker</span>
-<span class="sd">        :return: a |A1|x|A2||S|^2 tensor</span>
+<span class="sd">        :return: a (A1)(A2)(S)(S) tensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">T</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
@@ -626,14 +625,14 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_observation_tensor_betabinom"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_observation_tensor_betabinom">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">local_observation_tensor_betabinom</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the observation tensor of the local game where the observations follow beta-binomial distributions</span>
 
 <span class="sd">        :param S: the local state space of the game</span>
 <span class="sd">        :param A1: the local action space of the defender</span>
 <span class="sd">        :param A2: the local action space of the attacker</span>
 <span class="sd">        :param O: the local observation space</span>
-<span class="sd">        :return: a |A1|x|A2|x|S|x|O| tensor</span>
+<span class="sd">        :return: a (A1)(A2)(S)(O) tensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">brute_force_dist</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">exploit_dist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -706,7 +705,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.sample_next_state"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_next_state">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_next_state</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the next state</span>
 
 <span class="sd">        :param T: the transition operator</span>
@@ -725,7 +724,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.sample_next_observation"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_next_observation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_prime_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the next observation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">O</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">]))</span></div>
@@ -733,7 +732,7 @@
 <div class="viewcode-block" id="IntrusionResponseGameUtil.bayes_filter_defender_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.bayes_filter_defender_belief">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">bayes_filter_defender_belief</span><span class="p">(</span><span class="n">s_a_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">d_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                      <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">s_d_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_d</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A Bayesian filter to compute the belief of player 1 of being in s_prime when observing o after</span>
 <span class="sd">        taking action a in belief b given that the opponent follows strategy pi2</span>
 
@@ -773,7 +772,7 @@
     <span class="k">def</span> <span class="nf">next_local_defender_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">d_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                    <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                    <span class="n">s_d_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_d</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the next local belief of the defender using a Bayesian filter</span>
 
 <span class="sd">        :param o: the latest observation</span>
@@ -799,7 +798,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.sample_attacker_action"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_attacker_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the attacker action</span>
 
 <span class="sd">        :param pi2: the attacker action</span>
@@ -811,7 +810,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.sample_defender_action"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_defender_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_defender_action</span><span class="p">(</span><span class="n">pi1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the defender action</span>
 
 <span class="sd">        :param pi1: the attacker action</span>
@@ -825,7 +824,7 @@
     <span class="k">def</span> <span class="nf">next_local_attacker_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                    <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_d</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                    <span class="n">s_a_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the next local belief of the attacker using a Bayesian filter</span>
 
 <span class="sd">        :param o: the latest observation</span>
@@ -852,7 +851,7 @@
 <div class="viewcode-block" id="IntrusionResponseGameUtil.bayes_filter_attacker_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.bayes_filter_attacker_belief">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">bayes_filter_attacker_belief</span><span class="p">(</span><span class="n">s_a_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                      <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">s_d_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A Bayesian filter to compute the belief of player 2 of being in s_prime when observing o after</span>
 <span class="sd">        taking action a in belief b given that the opponent follows strategy pi1</span>
 

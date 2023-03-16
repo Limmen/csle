@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_common.dao.emulation_action.defender package &mdash; csle-common 0.0.1 documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -26,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            csle-common
+            <a href="index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -87,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="csle_common.dao.html">csle_common.dao package</a></li>
           <li class="breadcrumb-item"><a href="csle_common.dao.emulation_action.html">csle_common.dao.emulation_action package</a></li>
       <li class="breadcrumb-item active">csle_common.dao.emulation_action.defender package</li>
@@ -109,14 +108,14 @@
 <span id="csle-common-dao-emulation-action-defender-emulation-defender-action-module"></span><h2>csle_common.dao.emulation_action.defender.emulation_defender_action module<a class="headerlink" href="#module-csle_common.dao.emulation_action.defender.emulation_defender_action" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.</span></span><span class="sig-name descname"><span class="pre">EmulationDefenderAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId" title="csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId"><span class="pre">EmulationDefenderActionId</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_type.EmulationDefenderActionType" title="csle_common.dao.emulation_action.defender.emulation_defender_action_type.EmulationDefenderActionType"><span class="pre">EmulationDefenderActionType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_outcome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_outcome.EmulationDefenderActionOutcome" title="csle_common.dao.emulation_action.defender.emulation_defender_action_outcome.EmulationDefenderActionOutcome"><span class="pre">EmulationDefenderActionOutcome</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">EmulationDefenderActionOutcome.GAME_END</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_cmds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.</span></span><span class="sig-name descname"><span class="pre">EmulationDefenderAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId" title="csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId"><span class="pre">EmulationDefenderActionId</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_type.EmulationDefenderActionType" title="csle_common.dao.emulation_action.defender.emulation_defender_action_type.EmulationDefenderActionType"><span class="pre">EmulationDefenderActionType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_outcome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_outcome.EmulationDefenderActionOutcome" title="csle_common.dao.emulation_action.defender.emulation_defender_action_outcome.EmulationDefenderActionOutcome"><span class="pre">EmulationDefenderActionOutcome</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">EmulationDefenderActionOutcome.GAME_END</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_cmds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class representing an action of the defender in the environment</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a copy of the DTO</p>
 </dd>
 </dl>
@@ -127,10 +126,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation to an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the instance</p>
 </dd>
 </dl>
@@ -141,10 +140,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -155,10 +154,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.from_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a kafka record into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>record</strong> – the record to convert</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the created instance</p>
 </dd>
 </dl>
@@ -169,10 +168,10 @@
 <span class="sig-name descname"><span class="pre">ips_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.ips_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.ips_match" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if a list of ips overlap with the ips of this host</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ips</strong> – the list of ips to check</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if they match, False otherwise</p>
 </dd>
 </dl>
@@ -182,7 +181,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of attributes of the DTO</p>
 </dd>
 </dl>
@@ -192,7 +191,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.schema">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -202,7 +201,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dicr representation of the object</p>
 </dd>
 </dl>
@@ -213,10 +212,10 @@
 <span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the DTO to a json file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -227,7 +226,7 @@
 <span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_json_str" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a json string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
@@ -238,10 +237,10 @@
 <span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action.html#EmulationDefenderAction.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the instance into a kafka record format</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>total_time</strong> – the total time of execution</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the kafka record</p>
 </dd>
 </dl>
@@ -254,7 +253,7 @@
 <span id="csle-common-dao-emulation-action-defender-emulation-defender-action-config-module"></span><h2>csle_common.dao.emulation_action.defender.emulation_defender_action_config module<a class="headerlink" href="#module-csle_common.dao.emulation_action.defender.emulation_defender_action_config" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action_config.</span></span><span class="sig-name descname"><span class="pre">EmulationDefenderActionConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_action_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId" title="csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId"><span class="pre">EmulationDefenderActionId</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiple_stop_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiple_stop_actions_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId" title="csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId"><span class="pre">EmulationDefenderActionId</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action_config.html#EmulationDefenderActionConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action_config.</span></span><span class="sig-name descname"><span class="pre">EmulationDefenderActionConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_action_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId" title="csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId"><span class="pre">EmulationDefenderActionId</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiple_stop_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiple_stop_actions_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId" title="csle_common.dao.emulation_action.defender.emulation_defender_action_id.EmulationDefenderActionId"><span class="pre">EmulationDefenderActionId</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action_config.html#EmulationDefenderActionConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Configuration of the action space for the defender</p>
 <dl class="py method">
@@ -262,13 +261,13 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_actions_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet_masks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig" title="csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig"><span class="pre">EmulationDefenderActionConfig</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action_config.html#EmulationDefenderActionConfig.all_actions_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.all_actions_config" title="Permalink to this definition"></a></dt>
 <dd><p>Creates an action configuration for the defender with all actions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_nodes</strong> – the number of nodes in the environment</p></li>
 <li><p><strong>subnet_masks</strong> – the the subnet masks in the environment</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the action configuration</p>
 </dd>
 </dl>
@@ -278,7 +277,7 @@
 <dt class="sig sig-object py" id="csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.get_continue_action_idx">
 <span class="sig-name descname"><span class="pre">get_continue_action_idx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action_config.html#EmulationDefenderActionConfig.get_continue_action_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.get_continue_action_idx" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the index of the continue action</p>
 </dd>
 </dl>
@@ -289,7 +288,7 @@
 <span class="sig-name descname"><span class="pre">print_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_action_config.html#EmulationDefenderActionConfig.print_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.print_actions" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for printing the list of actions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -403,10 +402,10 @@
 <dd><p>A non terminal stop action, the defender blacklists all IPs that generate IDS alerts that exceed a threshold,
 the blacklist is implemented using the firewall.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>index</strong> – index of the machine to apply the action to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the action</p>
 </dd>
 </dl>
@@ -417,10 +416,10 @@ the blacklist is implemented using the firewall.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CONTINUE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_stopping_actions.html#EmulationDefenderStoppingActions.CONTINUE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.CONTINUE" title="Permalink to this definition"></a></dt>
 <dd><p>A “continue” action, the defender chooses to not make any action</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>index</strong> – index of the machine to apply the action to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the action</p>
 </dd>
 </dl>
@@ -431,10 +430,10 @@ the blacklist is implemented using the firewall.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ENABLE_DPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_stopping_actions.html#EmulationDefenderStoppingActions.ENABLE_DPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.ENABLE_DPI" title="Permalink to this definition"></a></dt>
 <dd><p>A non terminal stop action, the defender enables DPI by starting the IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>index</strong> – index of the machine to apply the action to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the action</p>
 </dd>
 </dl>
@@ -446,10 +445,10 @@ the blacklist is implemented using the firewall.</p>
 <dd><p>A non terminal stop action, the defender resets all user accounts, which means that password vulnerabilities
 are mitigated.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>index</strong> – index of the machine to apply the action to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the action</p>
 </dd>
 </dl>
@@ -460,10 +459,10 @@ are mitigated.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">STOP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_action/defender/emulation_defender_stopping_actions.html#EmulationDefenderStoppingActions.STOP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions.EmulationDefenderStoppingActions.STOP" title="Permalink to this definition"></a></dt>
 <dd><p>Reports a detected intrusion and stops</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>index</strong> – index of the machine to apply the action to</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the action</p>
 </dd>
 </dl>

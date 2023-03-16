@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.controllers.traffic_controller</li>
       <li class="wy-breadcrumbs-aside">
@@ -96,14 +95,14 @@
 
 
 <div class="viewcode-block" id="TrafficController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController">[docs]</a><span class="k">class</span> <span class="nc">TrafficController</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class managing traffic generators in the emulation environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TrafficController.start_traffic_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_traffic_managers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_traffic_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for checking if the traffic manager is running and starting it if it is not running</span>
 <span class="sd">        on every node</span>
 
@@ -124,7 +123,7 @@
     <span class="k">def</span> <span class="nf">start_traffic_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                               <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting traffic manager on a specific container</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -165,7 +164,7 @@
 <div class="viewcode-block" id="TrafficController.stop_traffic_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_traffic_managers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_traffic_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping traffic managers on a given server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -181,7 +180,7 @@
 <div class="viewcode-block" id="TrafficController.stop_traffic_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_traffic_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_traffic_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span>
                              <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping a specific traffic manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -203,7 +202,7 @@
 
 <div class="viewcode-block" id="TrafficController.start_client_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_client_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_client_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method starting the client manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -247,7 +246,7 @@
 
 <div class="viewcode-block" id="TrafficController.stop_client_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_client_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_client_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method starting the client manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -268,7 +267,7 @@
 
 <div class="viewcode-block" id="TrafficController.stop_client_population"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_client_population">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_client_population</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function for stopping the client arrival process of an emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -296,7 +295,7 @@
 <div class="viewcode-block" id="TrafficController.start_client_producer"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_client_producer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_client_producer</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Kafka producer for client metrics</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -332,7 +331,7 @@
 <div class="viewcode-block" id="TrafficController.stop_client_producer"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_client_producer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_client_producer</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                              <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Kafka producer for client metrics</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -367,7 +366,7 @@
 <div class="viewcode-block" id="TrafficController.start_client_population"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_client_population">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_client_population</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the arrival process of clients</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -442,7 +441,7 @@
 <div class="viewcode-block" id="TrafficController.get_num_active_clients"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_num_active_clients">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_num_active_clients</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the number of active clients</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
@@ -460,7 +459,7 @@
 <div class="viewcode-block" id="TrafficController.get_clients_dto_by_ip_and_port"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_clients_dto_by_ip_and_port">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_clients_dto_by_ip_and_port</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the ClientManager on a specific container</span>
 <span class="sd">        to get its status</span>
 
@@ -477,7 +476,7 @@
 <div class="viewcode-block" id="TrafficController.stop_internal_traffic_generators"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_internal_traffic_generators">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_internal_traffic_generators</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
                                          <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping internal traffic generators</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -494,7 +493,7 @@
 <div class="viewcode-block" id="TrafficController.stop_internal_traffic_generator"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_internal_traffic_generator">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_internal_traffic_generator</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                                         <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping a specific internal traffic generator</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -516,7 +515,7 @@
 <div class="viewcode-block" id="TrafficController.start_internal_traffic_generators"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_internal_traffic_generators">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_internal_traffic_generators</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                           <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting internal traffic generators</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -543,7 +542,7 @@
     <span class="k">def</span> <span class="nf">start_internal_traffic_generator</span><span class="p">(</span>
             <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span>
             <span class="n">container</span><span class="p">:</span> <span class="n">NodeContainerConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting internal traffic generators</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -589,7 +588,7 @@
 
 <div class="viewcode-block" id="TrafficController.get_client_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_client_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_client_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the Client managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -599,7 +598,7 @@
 
 <div class="viewcode-block" id="TrafficController.get_client_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_client_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_client_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the Client managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -610,7 +609,7 @@
 <div class="viewcode-block" id="TrafficController.get_client_managers_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_client_managers_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_client_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                  <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientManagersInfo</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the Client managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
@@ -652,7 +651,7 @@
 <div class="viewcode-block" id="TrafficController.get_traffic_manager_status_by_port_and_ip"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_traffic_manager_status_by_port_and_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_traffic_manager_status_by_port_and_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the TrafficManager on a specific container</span>
 <span class="sd">        to get its status</span>
 
@@ -668,7 +667,7 @@
 
 <div class="viewcode-block" id="TrafficController.get_traffic_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_traffic_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_traffic_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ips of the traffic managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -681,7 +680,7 @@
 
 <div class="viewcode-block" id="TrafficController.get_traffic_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_traffic_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_traffic_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the Traffic managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -696,7 +695,7 @@
     <span class="k">def</span> <span class="nf">get_traffic_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                   <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">TrafficManagersInfo</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the traffic managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
