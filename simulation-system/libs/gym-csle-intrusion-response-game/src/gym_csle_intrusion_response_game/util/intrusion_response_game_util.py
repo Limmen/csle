@@ -388,7 +388,7 @@ class IntrusionResponseGameUtil:
         :param S: the local state space of the game
         :param A1: the local action space of the defender
         :param A2: teh local action space of the attacker
-        :return: a |A1|x|A2|x|S| tensor giving the rewards of the state transitions in the local game
+        :return: a (A1)(A2)(S) tensor giving the rewards of the state transitions in the local game
         """
         R = []
         for a1 in A1:
@@ -533,7 +533,7 @@ class IntrusionResponseGameUtil:
         :param S: the local state space
         :param A1: the local action space of the defender
         :param A2: the local action space of the attacker
-        :return: a |A1|x|A2||S|^2 tensor
+        :return: a (A1)(A2)(S)(S) tensor
         """
         T = []
         for a1 in A1:
@@ -562,7 +562,7 @@ class IntrusionResponseGameUtil:
         :param A1: the local action space of the defender
         :param A2: the local action space of the attacker
         :param O: the local observation space
-        :return: a |A1|x|A2|x|S|x|O| tensor
+        :return: a (A1)(A2)(S)(O) tensor
         """
         brute_force_dist = []
         exploit_dist = []
