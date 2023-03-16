@@ -95,7 +95,7 @@ class ReadEmulationStatisticsUtil:
         kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
                 f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}:"
-                f"{collector_constants.KAFKA.EXTERNAL_PORT}",
+                f"{emulation_env_config.kafka_config.kafka_port_external}",
             collector_constants.KAFKA.GROUP_ID_PROPERTY: f"emulation_data_consumer_thread_{start_consume_ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: collector_constants.KAFKA.EARLIEST_OFFSET}
         consumer = Consumer(**kafka_conf)

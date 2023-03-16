@@ -25,7 +25,7 @@ psql:
 
 # Drop db
 clean:
-	-sudo psql -U postgres -a --command='drop database csle'
+	sudo psql -U postgres -a -f drop_db.sql
 
 # Restarts postgresql
 restart:

@@ -14,7 +14,8 @@ class KafkaConfig:
                  firewall_config: NodeFirewallConfig,
                  topics: List[KafkaTopic],
                  kafka_manager_log_file: str, kafka_manager_log_dir: str, kafka_manager_max_workers: int,
-                 kafka_port: int = 9092, time_step_len_seconds: int = 15, kafka_manager_port: int = 50051,
+                 kafka_port: int = 9092, kafka_port_external: int = 9292,
+                 time_step_len_seconds: int = 15, kafka_manager_port: int = 50051,
                  version: str = "0.0.1") -> None:
         """
         Initializes the DTO
@@ -22,6 +23,7 @@ class KafkaConfig:
         :param container: the container for the Kafka server
         :param network: the network
         :param kafka_port: the port that the Kafka server is listening to
+        :param kafka_port_external: the external port that the Kafka server is listening to
         :param kafka_manager_port: the default port for gRPC
         :param time_step_len_seconds: the length of a time-step (period for logging)
         :param firewall_config: the firewall configuration
@@ -38,6 +40,7 @@ class KafkaConfig:
         self.version = version
         self.container = container
         self.resources = resources
+        self.kafka_port_external = kafka_port_external
         self.topics = topics
         self.firewall_config = firewall_config
         self.kafka_manager_log_file = kafka_manager_log_file
@@ -62,7 +65,8 @@ class KafkaConfig:
             firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"]),
             kafka_manager_log_file=d["kafka_manager_log_file"],
             kafka_manager_log_dir=d["kafka_manager_log_dir"],
-            kafka_manager_max_workers=d["kafka_manager_max_workers"]
+            kafka_manager_max_workers=d["kafka_manager_max_workers"],
+            kafka_port_external=d["kafka_port_external"]
         )
         return obj
 
@@ -82,6 +86,7 @@ class KafkaConfig:
         d["kafka_manager_max_workers"] = self.kafka_manager_max_workers
         d["kafka_manager_log_dir"] = self.kafka_manager_log_dir
         d["kafka_manager_log_file"] = self.kafka_manager_log_file
+        d["kafka_port_external"] = self.kafka_port_external
         return d
 
     def __str__(self) -> str:
@@ -95,7 +100,8 @@ class KafkaConfig:
                f"firewall_config: {self.firewall_config}, " \
                f"kafka_manager_log_file: {self.kafka_manager_log_file}, " \
                f"kafka_manager_log_dir: {self.kafka_manager_log_dir}, " \
-               f"kafka_manager_max_workers: {self.kafka_manager_max_workers}"
+               f"kafka_manager_max_workers: {self.kafka_manager_max_workers}," \
+               f"kafka_port_external: {self.kafka_port_external}"
 
     def to_json_str(self) -> str:
         """

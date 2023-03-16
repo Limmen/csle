@@ -483,7 +483,7 @@ class ContainerController:
                 kafka_ip=execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
                 stats_queue_maxsize=1000,
                 time_step_len_seconds=execution.emulation_env_config.docker_stats_manager_config.time_step_len_seconds,
-                kafka_port=collector_constants.KAFKA.EXTERNAL_PORT,
+                kafka_port=execution.emulation_env_config.kafka_config.kafka_port_external,
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
